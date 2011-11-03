@@ -1,0 +1,12 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>br.unifesp.maritaca</groupId>
+  <version>0.0.1-SNAPSHOT</version>
+  <artifactId>maritaca</artifactId>
+  <packaging>pom</packaging>
+  <modules>
+    <module>core</module>
+    <module>webservices</module>
+    <module>web</module>
+  </modules>
+</project>
