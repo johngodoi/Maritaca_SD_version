@@ -1,6 +1,7 @@
 package br.unifesp.maritaca.persistence;
 
 import static me.prettyprint.hector.api.factory.HFactory.createColumn;
+import static me.prettyprint.hector.api.factory.HFactory.createColumnFamilyDefinition;
 import static me.prettyprint.hector.api.factory.HFactory.createColumnQuery;
 import static me.prettyprint.hector.api.factory.HFactory.createIndexedSlicesQuery;
 import static me.prettyprint.hector.api.factory.HFactory.createMutator;
@@ -15,14 +16,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.thrift.protocol.TJSONProtocol;
-
-import me.prettyprint.cassandra.model.BasicColumnFamilyDefinition;
 import me.prettyprint.cassandra.model.IndexedSlicesQuery;
 import me.prettyprint.cassandra.serializers.StringSerializer;
 import me.prettyprint.cassandra.serializers.UUIDSerializer;
 import me.prettyprint.cassandra.service.CassandraHost;
-import me.prettyprint.cassandra.service.ThriftCfDef;
+import me.prettyprint.cassandra.utils.TimeUUIDUtils;
 import me.prettyprint.hector.api.Cluster;
 import me.prettyprint.hector.api.Keyspace;
 import me.prettyprint.hector.api.beans.HColumn;
@@ -31,12 +29,12 @@ import me.prettyprint.hector.api.beans.Row;
 import me.prettyprint.hector.api.ddl.ColumnFamilyDefinition;
 import me.prettyprint.hector.api.ddl.ComparatorType;
 import me.prettyprint.hector.api.ddl.KeyspaceDefinition;
-import me.prettyprint.hector.api.exceptions.HectorException;
-import me.prettyprint.hector.api.factory.HFactory;
 import me.prettyprint.hector.api.mutation.MutationResult;
 import me.prettyprint.hector.api.mutation.Mutator;
 import me.prettyprint.hector.api.query.ColumnQuery;
 import me.prettyprint.hector.api.query.QueryResult;
+
+import org.apache.cassandra.db.marshal.TimeUUIDType;
 
 public class EntityManagerHectorImpl implements EntityManager {
 
@@ -51,10 +49,10 @@ public class EntityManagerHectorImpl implements EntityManager {
 	}
 
 	@Override
-	public <T> boolean persist(T obj, boolean createTable) throws IllegalArgumentException,
-			IllegalAccessException, SecurityException, NoSuchMethodException,
-			InvocationTargetException {
-		if(!tableExists(obj.getClass()) && createTable){
+	public <T> boolean persist(T obj, boolean createTable)
+			throws IllegalArgumentException, IllegalAccessException,
+			SecurityException, NoSuchMethodException, InvocationTargetException {
+		if (!tableExists(obj.getClass()) && createTable) {
 			try {
 				createTable(obj.getClass());
 			} catch (Exception e) {
@@ -87,7 +85,13 @@ public class EntityManagerHectorImpl implements EntityManager {
 				}
 			}
 		}
-		MutationResult mutationResult = mutator.execute();
+		
+		try {
+			mutator.execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 
 		return true;
 	}
@@ -266,7 +270,7 @@ public class EntityManagerHectorImpl implements EntityManager {
 	}
 
 	private UUID getUUID(Object obj) {
-		return UUID.randomUUID();
+		return TimeUUIDUtils.getUniqueTimeUUIDinMillis();
 	}
 
 	public void addHost(String host, int port) {
@@ -277,11 +281,11 @@ public class EntityManagerHectorImpl implements EntityManager {
 	@Override
 	public <T> boolean createTable(Class<T> cl) throws Exception {
 		if (!tableExists(cl)) {
-			BasicColumnFamilyDefinition cfdef = new BasicColumnFamilyDefinition();
-			cfdef.setKeyspaceName(keyspace.getKeyspaceName());
-			cfdef.setName(cl.getSimpleName());
-			ThriftCfDef thriftCfdef = new ThriftCfDef(cfdef);
-			cluster.addColumnFamily(thriftCfdef);
+			ColumnFamilyDefinition cfdef = createColumnFamilyDefinition(
+					keyspace.getKeyspaceName(), cl.getSimpleName());
+			cfdef.setKeyValidationClass(TimeUUIDType.class.getSimpleName());
+			cfdef.setComparatorType(ComparatorType.BYTESTYPE);
+			cluster.addColumnFamily(cfdef);
 			return true;
 		}
 		return false;
@@ -291,6 +295,9 @@ public class EntityManagerHectorImpl implements EntityManager {
 	public <T> boolean tableExists(Class<T> cl) {
 		KeyspaceDefinition ksdef = cluster.describeKeyspace(keyspace
 				.getKeyspaceName());
+		if(ksdef==null){
+			return false;
+		}
 		for (ColumnFamilyDefinition cfd : ksdef.getCfDefs()) {
 			if (cfd.getName().equals(cl.getSimpleName())) {
 				return true;
@@ -310,9 +317,9 @@ public class EntityManagerHectorImpl implements EntityManager {
 	}
 
 	@Override
-	public <T> boolean persist(T obj)
-			throws IllegalArgumentException, IllegalAccessException,
-			SecurityException, NoSuchMethodException, InvocationTargetException {
+	public <T> boolean persist(T obj) throws IllegalArgumentException,
+			IllegalAccessException, SecurityException, NoSuchMethodException,
+			InvocationTargetException {
 		return persist(obj, true);
 	}
 
