@@ -9,4 +9,9 @@
     <module>webservices</module>
     <module>web</module>
   </modules>
+  
+  <properties>
+    <org.springframework.version>3.0.6.RELEASE</org.springframework.version>
+  </properties>
+
 </project>
