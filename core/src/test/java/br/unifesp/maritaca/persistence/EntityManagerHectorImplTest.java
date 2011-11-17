@@ -37,6 +37,7 @@ public class EntityManagerHectorImplTest extends BaseEmbededServerSetupTest {
 			assertFalse(emHectorImpl.tableExists(CFTest.class));
 		} catch (Exception e) {
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 		
 	}
@@ -44,7 +45,6 @@ public class EntityManagerHectorImplTest extends BaseEmbededServerSetupTest {
 	@Test
 	public void testInsertGetDelete() {
 		CFTest CFTest = new CFTest();
-		CFTest.setKey(UUID.randomUUID());
 		CFTest.setName("myname");
 		try {
 			emHectorImpl.persist(CFTest);
