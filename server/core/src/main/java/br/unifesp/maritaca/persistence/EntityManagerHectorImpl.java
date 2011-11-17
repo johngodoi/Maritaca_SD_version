@@ -284,7 +284,6 @@ public class EntityManagerHectorImpl implements EntityManager {
 			ColumnFamilyDefinition cfdef = createColumnFamilyDefinition(
 					keyspace.getKeyspaceName(), cl.getSimpleName());
 			cfdef.setKeyValidationClass(TimeUUIDType.class.getSimpleName());
-			cfdef.setComparatorType(ComparatorType.BYTESTYPE);
 			cluster.addColumnFamily(cfdef);
 			return true;
 		}

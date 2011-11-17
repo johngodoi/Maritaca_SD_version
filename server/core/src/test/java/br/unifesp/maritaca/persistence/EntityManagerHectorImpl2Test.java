@@ -71,8 +71,8 @@ public class EntityManagerHectorImpl2Test {
 			e.printStackTrace();
 			fail(e.getMessage());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 	
