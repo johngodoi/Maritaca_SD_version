@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<!--declaração de variáveis simples - -> <xs: element name="item" type="string"> 
+		<xs: element name="item2" type="int"> <xs: element name="textArea" type="string"> 
+		<xs: element name ="number" type="positiveInteger"> <xs: element name="label" 
+		type ="string"> <xs: element name="help" type ="string"> <xs: element name="date" 
+		type="date"> <xs: element name="time" type = "time"> <xs: element name="form"> 
+		<xs: complexType> <xs:sequence> <xs: element name="component"> <xs: complexType> 
+		<xs:sequence> <xs: element ref="item"> <xs: element ref="textArea"> <xs: 
+		element ref="number"> <xs: element ref="label"> <xs: element ref="help"> 
+		<xs: element ref="date"> <xs: element ref="time"> <xs: element ref="combo_box"> 
+		<xs: element ref="check_box"> <xs: element ref="radiobutton"> </xs:sequence> 
+		</xs:complexType> </xs:element><!--termina aqui o "component" -->
+
+	<xs:element name="radiobutton" id="0">
+		<xs:simpleType>
+			<xs:sequence>
+				<xs: element ref="label">
+					<xs: element ref="help">
+						<xs:restriction base="xs:string">
+							<xs: group name="items" minOccurs="nonNegativeInteger:1">
+								<xs:enumeration value="item">
+								</xs:group>
+						</xs:restriction>
+
+			</xs:sequence>
+		</xs:simpleType>
+	</xs:element><!--termina aqui o "radiobutton" -->
+
+
+		<xs: element name="checkbox">
+			<xs:complexType>
+				<xs:sequence>
+					<xs: element ref="label">
+						<xs: element ref="help">
+							<xs: group name="items" id="id" minOccurs="nonNegativeInteger:1">
+								<xs:element ref="item">
+								</xs:group>
+				</xs:sequence>
+			</xs:simpleType>
+			</xs:element><!--termina aqui o "checkbox" -->
+
+
+				<xs: element name="combo_box">
+					<xs: simpleType>
+						<xs:sequence>
+							<xs: element ref="label">
+								<xs: element ref="help">
+									<xs: element name="items">
+										<xs: sequence>
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+
+													<xs:enumeration value="item" />
+												</xs:restriction>
+											</xs:simpleType>
+										</xs: sequence>
+									</xs: element>
+						</xs:sequence><!--referente a "combo_box" -->
+					</xs: simpleType><!--referente a "combo_box" -->
+				</xs:element><!--referente a "combo_box" -->
+				</xs:sequence>
+			</xs:complexType>
+		</xs:element><!--termina aqui o "form" -->
+
+</xs:schema>
