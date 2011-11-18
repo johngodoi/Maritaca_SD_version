@@ -146,7 +146,8 @@ public class EntityManagerHectorImpl implements EntityManager {
 
 		UUID uid = (UUID) getMethod(obj, "getKey").invoke(obj);
 		mutator.addDeletion(uid, obj.getClass().getSimpleName());
-		MutationResult mutationResult = mutator.execute();
+		mutator.execute();
+	
 		return true;
 	}
 
