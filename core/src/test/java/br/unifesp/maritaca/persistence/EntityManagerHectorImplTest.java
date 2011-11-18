@@ -44,15 +44,16 @@ public class EntityManagerHectorImplTest extends BaseEmbededServerSetupTest {
 
 	@Test
 	public void testInsertGetDelete() {
-		CFTest CFTest = new CFTest();
-		CFTest.setName("myname");
+		CFTest cfTest = new CFTest();
+		cfTest.setName("myname");
 		try {
-			emHectorImpl.persist(CFTest);
-			CFTest CFTest2 = emHectorImpl.find(CFTest.getClass(), CFTest.getKey());
-			assertEquals(CFTest.getKey(), CFTest2.getKey());
-			assertEquals(CFTest.getName(), CFTest2.getName());
-			emHectorImpl.delete(CFTest);
-			assertNull(emHectorImpl.find(CFTest.getClass(), CFTest.getKey()));
+			emHectorImpl.persist(cfTest);//create a CF if doesn't exists
+			CFTest cfTest2 = emHectorImpl.find(cfTest.getClass(), cfTest.getKey());
+			assertEquals(cfTest.getKey(), cfTest2.getKey());
+			assertEquals(cfTest.getName(), cfTest2.getName());
+			emHectorImpl.delete(cfTest);
+			cfTest = emHectorImpl.find(cfTest.getClass(), cfTest.getKey());
+			assertNull(cfTest.getName());
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 			fail(e.getMessage());
