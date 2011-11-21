@@ -2,6 +2,9 @@ package br.unifesp.maritaca.core;
 
 import java.util.UUID;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class Form {
 	private UUID key;
 	private String xml;
