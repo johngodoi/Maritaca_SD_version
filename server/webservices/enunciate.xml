@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<enunciate label="maritaca" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://enunciate.codehaus.org/schemas/enunciate-1.24.xsd">
+	<namespaces>
+		<namespace id="ws" uri="http://api.example.com/" />
+		<!-- <namespace id="link" uri="http://api.example.com/link" />
+		<namespace id="persona" uri="http://api.example.com/persona" /> -->
+	</namespaces>
+	<services>
+	<rest defaultRestSubcontext="/ws"/>
+	</services>
+	<modules>
+		<!-- Docs -->
+		<docs splashPackage="br.unifesp.maritaca" title="maritaca"
+			copyright="Maritaca project" />
+	</modules>
+</enunciate>
