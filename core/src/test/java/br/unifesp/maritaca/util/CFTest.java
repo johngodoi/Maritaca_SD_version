@@ -2,6 +2,9 @@ package br.unifesp.maritaca.util;
 
 import java.util.UUID;
 
+import org.junit.Ignore;
+
+@Ignore
 public class CFTest{
 	private UUID key;
 	private String name;
