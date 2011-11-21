@@ -77,20 +77,5 @@ public class EntityManagerHectorImpl2Test {
 			fail(e.getMessage());
 		}
 	}
-	
-//	@Test
-//	public void testCreateExistsDeleteColumnFamily(){
-//		try {
-//			//assertFalse(em.tableExists(CFTest.class));
-//			//assertTrue(em.createTable(CFTest.class));
-//			//assertTrue(em.tableExists(CFTest.class));
-//			//assertTrue(em.dropTable(CFTest.class));
-//			//assertFalse(em.tableExists(CFTest.class));
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			fail(e.getMessage());
-//		}
-//		
-//	}
-//
+
 }
