@@ -13,5 +13,6 @@
 		<!-- Docs -->
 		<docs splashPackage="br.unifesp.maritaca" title="maritaca"
 			copyright="Maritaca project" />
+			<java-client disabled="true"></java-client>
 	</modules>
 </enunciate>
