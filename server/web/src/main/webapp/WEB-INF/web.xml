@@ -10,13 +10,34 @@
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
     <init-param>
       <param-name>com.sun.jersey.config.property.packages</param-name>
-      <param-value>br.unifesp.maritaca</param-value>
+      <param-value>br.unifesp.maritaca.ws</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet>
+  	<servlet-name>MaritacaInitServlet</servlet-name>
+  	<display-name>MaritacaInitServlet</display-name>
+  	<description></description>
+  	<servlet-class>br.unifesp.maritaca.web.servlet.MaritacaInitServlet</servlet-class>
+  	<init-param>
+  		<param-name>cluster</param-name>
+  		<param-value>localhost:9160</param-value>
+  		<description>cassandra cluster host</description>
+  	</init-param>
+  	<init-param>
+  		<param-name>keyspace</param-name>
+  		<param-value>Maritaca</param-value>
+  		<description>Maritaca keyspace on cassandra</description>
+  	</init-param>
+  	<load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
     <servlet-name>Jersey REST Service</servlet-name>
     <url-pattern>/ws/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>MaritacaInitServlet</servlet-name>
+  	<url-pattern>/admin/MaritacaInit</url-pattern>
   </servlet-mapping>
   
 </web-app>
