@@ -32,7 +32,8 @@ public class FormResponseCtrlImpl implements FormResponseController {
 	@Override
 	public Form getForm(UUID uid) throws IllegalArgumentException,
 			SecurityException, InstantiationException, IllegalAccessException,
-			InvocationTargetException, NoSuchMethodException {
+			InvocationTargetException, NoSuchMethodException,
+			NoSuchFieldException {
 		if (entityManager == null)
 			return null;
 
@@ -49,10 +50,11 @@ public class FormResponseCtrlImpl implements FormResponseController {
 
 		return entityManager.listAll(Form.class);
 	}
-	
+
 	@Override
-	public Collection<Form> listAllFormsMinimal() throws IllegalArgumentException,
-			SecurityException, InstantiationException, IllegalAccessException,
+	public Collection<Form> listAllFormsMinimal()
+			throws IllegalArgumentException, SecurityException,
+			InstantiationException, IllegalAccessException,
 			InvocationTargetException, NoSuchMethodException,
 			NoSuchFieldException {
 		if (entityManager == null)
@@ -60,6 +62,5 @@ public class FormResponseCtrlImpl implements FormResponseController {
 
 		return entityManager.listAllMinimal(Form.class);
 	}
-
 
 }

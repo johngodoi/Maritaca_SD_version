@@ -14,7 +14,8 @@ public interface FormResponseController {
 	
 	Form getForm(UUID uid)throws IllegalArgumentException,
 	SecurityException, InstantiationException, IllegalAccessException,
-	InvocationTargetException, NoSuchMethodException;
+	InvocationTargetException, NoSuchMethodException,
+	NoSuchFieldException;
 	
 	void setEntityManager(EntityManager em);
 	

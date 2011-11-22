@@ -53,26 +53,11 @@ public class EntityManagerHectorImplTest extends BaseEmbededServerSetupTest {
 			assertEquals(cfTest.getName(), cfTest2.getName());
 			emHectorImpl.delete(cfTest);
 			cfTest = emHectorImpl.find(cfTest.getClass(), cfTest.getKey());
-			assertNull(cfTest.getName());
-		} catch (IllegalArgumentException e) {
+			assertNull(cfTest);
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
-		} catch (SecurityException e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
+		} 
 	}
 
 }

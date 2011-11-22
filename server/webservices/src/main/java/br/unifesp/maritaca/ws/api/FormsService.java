@@ -17,7 +17,7 @@ import br.unifesp.maritaca.ws.api.resp.MaritacaResponse;
 public interface FormsService {
 	@GET
 	@Path("/{id}")
-	Form getForm(@PathParam("id") String formId);
+	Form getForm(@PathParam("id") String formId) throws Exception;
 	
 	/**
 	 * 
@@ -27,10 +27,10 @@ public interface FormsService {
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	MaritacaResponse saveForm(@FormParam("xml")String xmlForm);
+	MaritacaResponse saveForm(@FormParam("xml")String xmlForm) throws Exception ;
 	
 	@GET
 	@Path("/list")
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	MaritacaResponse listFormsMinimal();
+	MaritacaResponse listFormsMinimal() throws Exception ;
 }
