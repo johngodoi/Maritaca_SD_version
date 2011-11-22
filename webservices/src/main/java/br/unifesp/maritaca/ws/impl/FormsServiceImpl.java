@@ -10,8 +10,9 @@ import br.unifesp.maritaca.control.FormResponseController;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.ws.api.FormsService;
 import br.unifesp.maritaca.ws.api.resp.ErrorResponse;
-import br.unifesp.maritaca.ws.api.resp.XmlSavedResponse;
 import br.unifesp.maritaca.ws.api.resp.MaritacaResponse;
+import br.unifesp.maritaca.ws.api.resp.ResultSetResponse;
+import br.unifesp.maritaca.ws.api.resp.XmlSavedResponse;
 
 @Path("/forms")
 public class FormsServiceImpl implements FormsService {
@@ -62,10 +63,9 @@ public class FormsServiceImpl implements FormsService {
 	public MaritacaResponse saveForm(String xmlForm) {
 		Form form = new Form();
 		form.setXml(xmlForm);
-		boolean result = false;
 		MaritacaResponse resp;
 		try {
-			if(result = formRespCtlr.saveForm(form)){
+			if(formRespCtlr.saveForm(form)){
 				XmlSavedResponse okresp = new XmlSavedResponse();
 				okresp.setId(form.getKey());
 				okresp.setType(MaritacaResponse.FORM_TYPE);
@@ -82,6 +82,20 @@ public class FormsServiceImpl implements FormsService {
 		
 		return resp;
 		
+	}
+
+	@Override
+	public MaritacaResponse listFormsMinimal() {
+		try {
+			ResultSetResponse<Form> resp = new ResultSetResponse<Form>();
+			resp.setList(formRespCtlr.listAllFormsMinimal());
+			return resp;
+
+		} catch (Throwable e) {
+			e.printStackTrace();
+			ErrorResponse resp = new ErrorResponse(e);
+			return resp;
+		} 
 	}
 
 }

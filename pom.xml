@@ -4,6 +4,7 @@
   <version>0.0.1-SNAPSHOT</version>
   <artifactId>maritaca</artifactId>
   <packaging>pom</packaging>
+  <name>maritaca</name>
   <modules>
     <module>core</module>
     <module>webservices</module>

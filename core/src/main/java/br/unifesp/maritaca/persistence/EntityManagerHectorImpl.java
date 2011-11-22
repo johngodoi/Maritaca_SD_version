@@ -1,10 +1,6 @@
 package br.unifesp.maritaca.persistence;
 
-import static me.prettyprint.hector.api.factory.HFactory.createColumn;
-import static me.prettyprint.hector.api.factory.HFactory.createColumnFamilyDefinition;
-import static me.prettyprint.hector.api.factory.HFactory.createColumnQuery;
-import static me.prettyprint.hector.api.factory.HFactory.createIndexedSlicesQuery;
-import static me.prettyprint.hector.api.factory.HFactory.createMutator;
+import static me.prettyprint.hector.api.factory.HFactory.*;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -26,13 +22,14 @@ import me.prettyprint.hector.api.Keyspace;
 import me.prettyprint.hector.api.beans.HColumn;
 import me.prettyprint.hector.api.beans.OrderedRows;
 import me.prettyprint.hector.api.beans.Row;
+import me.prettyprint.hector.api.beans.Rows;
 import me.prettyprint.hector.api.ddl.ColumnFamilyDefinition;
-import me.prettyprint.hector.api.ddl.ComparatorType;
 import me.prettyprint.hector.api.ddl.KeyspaceDefinition;
-import me.prettyprint.hector.api.mutation.MutationResult;
 import me.prettyprint.hector.api.mutation.Mutator;
 import me.prettyprint.hector.api.query.ColumnQuery;
+import me.prettyprint.hector.api.query.MultigetSliceQuery;
 import me.prettyprint.hector.api.query.QueryResult;
+import me.prettyprint.hector.api.query.RangeSlicesQuery;
 
 import org.apache.cassandra.db.marshal.TimeUUIDType;
 
@@ -191,13 +188,14 @@ public class EntityManagerHectorImpl implements EntityManager {
 			NoSuchFieldException {
 
 		List<T> result = new ArrayList<T>();
+		
+		Collection<String> fields = getNameFields(cl);
+		RangeSlicesQuery<UUID, String,String> q = createRangeSlicesQuery(keyspace, uuidSerializer, stringSerializer, stringSerializer);
+	    q.setColumnFamily(cl.getSimpleName());
+	    q.setColumnNames(fields.toArray(new String[fields.size()]));
 
-		IndexedSlicesQuery<UUID, String, String> indexedSlicesQuery = createIndexedSlicesQuery(
-				keyspace, uuidSerializer, stringSerializer, stringSerializer);
-		indexedSlicesQuery.setColumnNames(getNameFields(cl));
-		indexedSlicesQuery.setColumnFamily(cl.getSimpleName());
-
-		QueryResult<OrderedRows<UUID, String, String>> resultq = indexedSlicesQuery
+		
+		QueryResult<OrderedRows<UUID, String, String>> resultq = q
 				.execute();
 
 		for (Row<UUID, String, String> line : resultq.get().getList()) {
@@ -209,6 +207,31 @@ public class EntityManagerHectorImpl implements EntityManager {
 						column.getValue());
 			}
 
+			result.add(obj);
+		}
+
+		return result;
+	}
+	
+	@Override
+	public <T> List<T> listAllMinimal(Class<T> cl) throws IllegalArgumentException,
+			SecurityException, InstantiationException, IllegalAccessException,
+			InvocationTargetException, NoSuchMethodException,
+			NoSuchFieldException {
+
+		List<T> result = new ArrayList<T>();
+		
+		Collection<String> fields = getNameFields(cl);
+		RangeSlicesQuery<UUID, String,String> q = createRangeSlicesQuery(keyspace, uuidSerializer, stringSerializer, stringSerializer);
+	    q.setColumnFamily(cl.getSimpleName()).setReturnKeysOnly();
+
+		
+		QueryResult<OrderedRows<UUID, String, String>> resultq = q
+				.execute();
+
+		for (Row<UUID, String, String> line : resultq.get().getList()) {
+			T obj = (T) cl.newInstance();
+			getMethod(obj, "setKey", UUID.class).invoke(obj, line.getKey());
 			result.add(obj);
 		}
 

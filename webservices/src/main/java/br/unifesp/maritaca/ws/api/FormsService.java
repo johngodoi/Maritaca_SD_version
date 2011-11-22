@@ -28,4 +28,9 @@ public interface FormsService {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	MaritacaResponse saveForm(@FormParam("xml")String xmlForm);
+	
+	@GET
+	@Path("/list")
+	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+	MaritacaResponse listFormsMinimal();
 }

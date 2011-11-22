@@ -2,14 +2,17 @@ package br.unifesp.maritaca.core;
 
 import java.util.UUID;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
-@XmlRootElement
+@XmlRootElement(name="form")
 public class Form {
 	private UUID key;
 	private String xml;
 	private User user;
 
+	@XmlElement(name="id")
 	public UUID getKey() {
 		return key;
 	}
@@ -30,6 +33,7 @@ public class Form {
 		this.xml = xml;
 	}
 
+	@XmlTransient
 	public User getUser() {
 		return user;
 	}
