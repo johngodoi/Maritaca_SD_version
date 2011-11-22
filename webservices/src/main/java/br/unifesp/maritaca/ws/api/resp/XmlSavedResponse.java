@@ -1,5 +1,6 @@
 package br.unifesp.maritaca.ws.api.resp;
 
+import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
@@ -11,8 +12,7 @@ public class XmlSavedResponse extends MaritacaResponse{
 	private String type;
 	
 	public XmlSavedResponse() {
-		setStatus(MaritacaResponse.OK);
-		setCode(MaritacaResponse.OK_CODE);
+		setStatus(Response.Status.OK);
 	}
 
 	

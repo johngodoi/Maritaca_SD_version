@@ -3,6 +3,7 @@ package br.unifesp.maritaca.ws.api.resp;
 import java.util.Collection;
 import java.util.List;
 
+import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -13,8 +14,7 @@ public class ResultSetResponse<E> extends MaritacaResponse {
 	private  Collection<E> list;
 	
 	public ResultSetResponse() {
-		setStatus(OK);
-		setCode(OK_CODE);
+		setStatus(Response.Status.OK);
 	}
 	
 	@XmlAttribute
