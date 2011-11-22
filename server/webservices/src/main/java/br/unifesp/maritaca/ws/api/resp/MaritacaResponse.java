@@ -1,5 +1,7 @@
 package br.unifesp.maritaca.ws.api.resp;
 
+import javax.xml.bind.annotation.XmlAttribute;
+
 
 public abstract class MaritacaResponse {
 	public static final String FORM_TYPE = "form";
@@ -15,12 +17,15 @@ public abstract class MaritacaResponse {
 	private String status;
 	private int code;
 	
+	@XmlAttribute
 	public String getStatus() {
 		return status;
 	}
 	public void setStatus(String status) {
 		this.status = status;
 	}
+	
+	@XmlAttribute
 	public int getCode() {
 		return code;
 	}

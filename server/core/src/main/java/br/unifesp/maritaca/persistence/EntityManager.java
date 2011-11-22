@@ -32,6 +32,12 @@ public interface EntityManager {
 			InvocationTargetException, NoSuchMethodException,
 			NoSuchFieldException;
 	
+	<T> List<T> listAllMinimal(Class<T> cl)
+			throws IllegalArgumentException, SecurityException,
+			InstantiationException, IllegalAccessException,
+			InvocationTargetException, NoSuchMethodException,
+			NoSuchFieldException;
+	
 	<T> boolean createTable(Class<T> cl)throws Exception;
 	<T> boolean tableExists(Class<T> cl)throws Exception;
 	<T> boolean dropTable(Class<T> cl)throws Exception;
