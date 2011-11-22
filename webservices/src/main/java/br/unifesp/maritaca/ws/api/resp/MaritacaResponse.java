@@ -1,17 +1,14 @@
 package br.unifesp.maritaca.ws.api.resp;
 
+import javax.ws.rs.core.Response.Status;
 import javax.xml.bind.annotation.XmlAttribute;
 
 
 public abstract class MaritacaResponse {
 	public static final String FORM_TYPE = "form";
 	public static final String RESPONSE_TYPE = "response";
-	public static final String OK="ok";
-	public static final String FAIL="fail";
+	public static final String FAIL="FAIL";
 	
-	public static final int OK_CODE=200;
-	public static final int ERROR_CODE = 500;
-	public static final int SYSTEM_ERROR = 1000;
 	
 	
 	private String status;
@@ -23,6 +20,11 @@ public abstract class MaritacaResponse {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	
+	public void setStatus(Status status) {
+		setStatus(status.getReasonPhrase());
+		setCode(status.getStatusCode());
 	}
 	
 	@XmlAttribute
