@@ -8,6 +8,7 @@ public class ErrorResponse extends MaritacaResponse{
 	
 	public ErrorResponse() {
 		setStatus(MaritacaResponse.FAIL);
+		setCode(MaritacaResponse.SYSTEM_ERROR);
 	}
 	
 	public ErrorResponse(Throwable e) {
