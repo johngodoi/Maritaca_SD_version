@@ -8,8 +8,8 @@
 	</parent>
 	<artifactId>maritaca-web</artifactId>
 	<packaging>war</packaging>
-	<name>web Maven Webapp</name>
-	<url>http://maven.apache.org</url>
+	<name>maritaca-web</name>
+	<url>https://sourceforge.net/p/maritaca</url>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

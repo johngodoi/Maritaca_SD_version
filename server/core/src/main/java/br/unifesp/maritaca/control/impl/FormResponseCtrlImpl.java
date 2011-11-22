@@ -1,6 +1,7 @@
 package br.unifesp.maritaca.control.impl;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.UUID;
 
 import br.unifesp.maritaca.control.FormResponseController;
@@ -37,5 +38,28 @@ public class FormResponseCtrlImpl implements FormResponseController {
 
 		return entityManager.find(Form.class, uid);
 	}
+
+	@Override
+	public Collection<Form> listAllForms() throws IllegalArgumentException,
+			SecurityException, InstantiationException, IllegalAccessException,
+			InvocationTargetException, NoSuchMethodException,
+			NoSuchFieldException {
+		if (entityManager == null)
+			return null;
+
+		return entityManager.listAll(Form.class);
+	}
+	
+	@Override
+	public Collection<Form> listAllFormsMinimal() throws IllegalArgumentException,
+			SecurityException, InstantiationException, IllegalAccessException,
+			InvocationTargetException, NoSuchMethodException,
+			NoSuchFieldException {
+		if (entityManager == null)
+			return null;
+
+		return entityManager.listAllMinimal(Form.class);
+	}
+
 
 }

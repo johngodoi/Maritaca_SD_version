@@ -9,8 +9,8 @@
 	<artifactId>maritaca-webservices</artifactId>
 	<packaging>jar</packaging>
 
-	<name>webservices</name>
-	<url>http://maven.apache.org</url>
+	<name>maritaca-webservices</name>
+	<url>https://sourceforge.net/p/maritaca</url>
 
 	<repositories>
 		<repository>

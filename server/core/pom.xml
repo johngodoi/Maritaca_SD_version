@@ -9,7 +9,7 @@
 	<artifactId>maritaca-core</artifactId>
 	<packaging>jar</packaging>
 	<name>maritaca-core</name>
-	<url>http://maven.apache.org</url>
+	<url>https://sourceforge.net/p/maritaca</url>
 	<dependencies>
 		<dependency>
 			<groupId>me.prettyprint</groupId>
