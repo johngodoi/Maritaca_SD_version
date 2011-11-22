@@ -1,8 +1,13 @@
 package br.unifesp.maritaca.persistence;
 
-import static me.prettyprint.hector.api.factory.HFactory.*;
+import static me.prettyprint.hector.api.factory.HFactory.createColumn;
+import static me.prettyprint.hector.api.factory.HFactory.createColumnFamilyDefinition;
+import static me.prettyprint.hector.api.factory.HFactory.createColumnQuery;
+import static me.prettyprint.hector.api.factory.HFactory.createIndexedSlicesQuery;
+import static me.prettyprint.hector.api.factory.HFactory.createMutator;
+import static me.prettyprint.hector.api.factory.HFactory.createRangeSlicesQuery;
+import static me.prettyprint.hector.api.factory.HFactory.createSliceQuery;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -19,17 +24,17 @@ import me.prettyprint.cassandra.service.CassandraHost;
 import me.prettyprint.cassandra.utils.TimeUUIDUtils;
 import me.prettyprint.hector.api.Cluster;
 import me.prettyprint.hector.api.Keyspace;
+import me.prettyprint.hector.api.beans.ColumnSlice;
 import me.prettyprint.hector.api.beans.HColumn;
 import me.prettyprint.hector.api.beans.OrderedRows;
 import me.prettyprint.hector.api.beans.Row;
-import me.prettyprint.hector.api.beans.Rows;
 import me.prettyprint.hector.api.ddl.ColumnFamilyDefinition;
 import me.prettyprint.hector.api.ddl.KeyspaceDefinition;
 import me.prettyprint.hector.api.mutation.Mutator;
 import me.prettyprint.hector.api.query.ColumnQuery;
-import me.prettyprint.hector.api.query.MultigetSliceQuery;
 import me.prettyprint.hector.api.query.QueryResult;
 import me.prettyprint.hector.api.query.RangeSlicesQuery;
+import me.prettyprint.hector.api.query.SliceQuery;
 
 import org.apache.cassandra.db.marshal.TimeUUIDType;
 
@@ -96,43 +101,30 @@ public class EntityManagerHectorImpl implements EntityManager {
 	@Override
 	public <T> T find(Class<T> cl, UUID uuid) throws InstantiationException,
 			IllegalAccessException, IllegalArgumentException,
-			SecurityException, InvocationTargetException, NoSuchMethodException {
-
-		T result = cl.newInstance();
-
-		for (Annotation a : cl.getDeclaredAnnotations()) {
-			System.out.println(a.toString());
-
+			SecurityException, InvocationTargetException, NoSuchMethodException, NoSuchFieldException {
+		
+		Collection<String> fields = getNameFields(cl);
+		SliceQuery<UUID, String, String> query = createSliceQuery(keyspace, uuidSerializer, stringSerializer, stringSerializer);
+		query.setColumnFamily(cl.getSimpleName());
+		query.setKey(uuid);
+		query.setColumnNames(fields.toArray(new String[fields.size()]));
+		
+		QueryResult<ColumnSlice<String, String>> qresult = query.execute();
+		
+		boolean ghost = true;
+		
+			T obj = (T) cl.newInstance();
+			for (HColumn<String, String> column : qresult.get().getColumns()) {
+				setValue(obj, cl.getDeclaredField(column.getName()),
+						column.getValue());
+				ghost =false;
+			}
+			if(ghost)return null;
+			else{
+				getMethod(obj, "setKey", UUID.class).invoke(obj, uuid);
+				return obj;
 		}
 
-		for (Field f : cl.getDeclaredFields()) {
-			ColumnQuery<UUID, String, String> columnQuery = createColumnQuery(
-					keyspace, uuidSerializer, stringSerializer,
-					stringSerializer);
-
-			columnQuery.setColumnFamily(cl.getSimpleName());
-			columnQuery.setKey(uuid);
-			columnQuery.setName(f.getName());
-			QueryResult<HColumn<String, String>> queryResult = columnQuery
-					.execute();
-
-			String value = null;
-
-			if (!f.getName().equals("key")) {
-				if (queryResult != null && queryResult.get() != null) {
-					value = queryResult.get().getValue();
-				}
-			} else {
-				value = uuid.toString();
-			}
-
-			if (value != null) {
-				setValue(result, f, value);
-			}
-
-		}
-
-		return result;
 	}
 
 	@Override
