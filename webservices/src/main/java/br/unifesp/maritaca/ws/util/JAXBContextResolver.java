@@ -6,7 +6,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 import br.unifesp.maritaca.core.Form;
-import br.unifesp.maritaca.core.Response;
+import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.ws.api.resp.ErrorResponse;
 import br.unifesp.maritaca.ws.api.resp.MaritacaResponse;
@@ -19,7 +19,7 @@ public class JAXBContextResolver implements ContextResolver<JAXBContext> {
 	private JAXBContext context;
 	private Class[] types = {Form.class, 
 			User.class, 
-			Response.class, 
+			Answer.class, 
 			MaritacaResponse.class, 
 			XmlSavedResponse.class,
 			ErrorResponse.class,
