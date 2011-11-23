@@ -7,8 +7,16 @@
 <title>test save Form</title>
 </head>
 <body>
+<h1>save form</h1>
 <form action="../../ws/forms" method="post">
 Id: <input type="text" name="id"/><br/>
+XML: <br/><textarea rows="10" name="xml"></textarea><br/>
+<input type="submit"/>
+</form>
+
+<h1>save response</h1>
+<form action="../../ws/answer" method="post">
+Form Id: <input type="text" name="formId"/><br/>
 XML: <br/><textarea rows="10" name="xml"></textarea>
 <input type="submit"/>
 </form>

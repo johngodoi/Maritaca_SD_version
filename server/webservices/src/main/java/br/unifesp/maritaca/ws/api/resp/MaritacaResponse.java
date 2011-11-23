@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 
 public abstract class MaritacaResponse {
 	public static final String FORM_TYPE = "form";
-	public static final String RESPONSE_TYPE = "response";
+	public static final String RESPONSE_TYPE = "answer";
 	public static final String FAIL="FAIL";
 	
 	

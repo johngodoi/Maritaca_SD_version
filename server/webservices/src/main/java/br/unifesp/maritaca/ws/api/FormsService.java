@@ -8,29 +8,44 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import br.unifesp.maritaca.core.Form;
-import br.unifesp.maritaca.ws.api.resp.XmlSavedResponse;
 import br.unifesp.maritaca.ws.api.resp.MaritacaResponse;
+import br.unifesp.maritaca.ws.exceptions.MaritacaWSException;
 
 public interface FormsService {
+	/**
+	 * 
+	 * @param formId: Id of the form in UUID format
+	 * @return Form with Id and XML representation of the form
+	 * @throws MaritacaWSException 
+	 * @throws Exception
+	 */
 	@GET
 	@Path("/{id}")
-	Form getForm(@PathParam("id") String formId) throws Exception;
+	Form getForm(@PathParam("id") String formId) throws MaritacaWSException;
 	
 	/**
 	 * 
-	 * @param xmlForm
-	 * @return maritacaResponse
+	 * @param xml: a string of the XML representation of the new form
+	 * @return XmlSavedResponse with the Form ID and identifier type<br>
+	 * @throws MaritacaWSException 
+	 * @see XmlSavedResponse
+	 * @throws Exception
 	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	MaritacaResponse saveForm(@FormParam("xml")String xmlForm) throws Exception ;
+	MaritacaResponse saveForm(@FormParam("xml")String xmlForm) throws MaritacaWSException ;
 	
+	/**
+	 * 
+	 * @return ResultSetResponse with a  collection of the formId of all 
+	 * available forms
+	 * @throws Exception
+	 */
 	@GET
 	@Path("/list")
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	MaritacaResponse listFormsMinimal() throws Exception ;
+	MaritacaResponse listFormsMinimal() ;
 }
