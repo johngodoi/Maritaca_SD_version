@@ -43,7 +43,7 @@ public class EntityManagerFactory {
 		return em;
 	}
 	
-	public void setHectorParams(Map<String, String> params)throws IllegalArgumentException{
+	public void setHectorParams(Map<String, String> params){
 		cluster = HFactory.getOrCreateCluster("cassandra", params.get("cluster"));
 		keyspace = HFactory.createKeyspace(params.get("keyspace"), cluster);
 	}

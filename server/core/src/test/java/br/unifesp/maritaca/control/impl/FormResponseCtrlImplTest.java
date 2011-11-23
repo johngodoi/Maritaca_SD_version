@@ -1,28 +1,29 @@
 package br.unifesp.maritaca.control.impl;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
-
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.persistence.EntityManager;
 
 public class FormResponseCtrlImplTest {
 	private EntityManager em;
-	private FormResponseCtrlImpl frControl;
+	private FormAnswerCtrlImpl frControl;
 
 	@Before
 	public void setUp() throws Exception {
 		em = mock(EntityManager.class);
-		frControl = new FormResponseCtrlImpl();
+		frControl = new FormAnswerCtrlImpl();
 		frControl.setEntityManager(em);
 	}
 
@@ -39,6 +40,7 @@ public class FormResponseCtrlImplTest {
 			assertTrue(frControl.saveForm(form));
 		} catch (Exception e) {
 			e.printStackTrace();
+			fail();
 		} 
 	}
 
@@ -52,6 +54,7 @@ public class FormResponseCtrlImplTest {
 			assertNotNull(frControl.getForm(uid));
 		} catch (Exception e) {
 			e.printStackTrace();
+			fail();
 		}
 	}
 

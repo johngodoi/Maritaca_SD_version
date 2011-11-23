@@ -4,10 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -28,36 +24,28 @@ public class EntityManagerHectorImplTest extends BaseEmbededServerSetupTest {
 	private EntityManagerHectorImpl emHectorImpl;
 
 	@Test
-	public void testCreateExistsDeleteColumnFamily(){
-		try {
-			assertFalse(emHectorImpl.tableExists(CFTest.class));
-			assertTrue(emHectorImpl.createTable(CFTest.class));
-			assertTrue(emHectorImpl.tableExists(CFTest.class));
-			assertTrue(emHectorImpl.dropTable(CFTest.class));
-			assertFalse(emHectorImpl.tableExists(CFTest.class));
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-		
+	public void testCreateExistsDeleteColumnFamily() {
+		assertFalse(emHectorImpl.tableExists(CFTest.class));
+		assertTrue(emHectorImpl.createTable(CFTest.class));
+		assertTrue(emHectorImpl.tableExists(CFTest.class));
+		assertTrue(emHectorImpl.dropTable(CFTest.class));
+		assertFalse(emHectorImpl.tableExists(CFTest.class));
+
 	}
 
 	@Test
 	public void testInsertGetDelete() {
 		CFTest cfTest = new CFTest();
 		cfTest.setName("myname");
-		try {
-			emHectorImpl.persist(cfTest);//create a CF if doesn't exists
-			CFTest cfTest2 = emHectorImpl.find(cfTest.getClass(), cfTest.getKey());
-			assertEquals(cfTest.getKey(), cfTest2.getKey());
-			assertEquals(cfTest.getName(), cfTest2.getName());
-			emHectorImpl.delete(cfTest);
-			cfTest = emHectorImpl.find(cfTest.getClass(), cfTest.getKey());
-			assertNull(cfTest);
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		} 
+
+		emHectorImpl.persist(cfTest);// create a CF if doesn't exists
+		CFTest cfTest2 = emHectorImpl.find(cfTest.getClass(), cfTest.getKey());
+		assertEquals(cfTest.getKey(), cfTest2.getKey());
+		assertEquals(cfTest.getName(), cfTest2.getName());
+		emHectorImpl.delete(cfTest);
+		cfTest = emHectorImpl.find(cfTest.getClass(), cfTest.getKey());
+		assertNull(cfTest);
+
 	}
 
 }
