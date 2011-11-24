@@ -8,8 +8,8 @@
 </head>
 <body>
 <h1>save form</h1>
-<form action="../../ws/forms" method="post">
-Id: <input type="text" name="id"/><br/>
+<form action="../../ws/form" method="post">
+User Id: <input type="text" name="userId"/><br/>
 XML: <br/><textarea rows="10" name="xml"></textarea><br/>
 <input type="submit"/>
 </form>

@@ -2,15 +2,28 @@ package br.unifesp.maritaca.core;
 
 import java.util.UUID;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import br.unifesp.maritaca.persistence.annotations.Column;
+import br.unifesp.maritaca.persistence.annotations.Minimal;
+
 @XmlRootElement(name="form")
+@Entity
 public class Form {
+	@Id
 	private UUID key;
+	
+	@Column
 	private String xml;
+	
+	@Column(indexed = true)
+	@Minimal
 	private User user;
+	
 
 	@XmlElement(name="id")
 	public UUID getKey() {

@@ -48,9 +48,10 @@ public class FormsServiceImpl implements FormsService {
 	}
 
 	@Override
-	public MaritacaResponse saveForm(String xmlForm) throws MaritacaWSException {
+	public MaritacaResponse saveForm(String xmlForm, String userId) throws MaritacaWSException {
 		Form form = new Form();
 		form.setXml(xmlForm);
+		form.setUser(userId);
 		if (formRespCtlr.saveForm(form)) {
 			XmlSavedResponse okresp = new XmlSavedResponse();
 			okresp.setId(form.getKey());

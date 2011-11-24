@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import br.unifesp.maritaca.util.CFTest;
+import br.unifesp.maritaca.util.CFforTesting;
 
 public class EntityManagerHectorImpl2Test {
 	EntityManagerHectorImpl em;
@@ -38,11 +38,11 @@ public class EntityManagerHectorImpl2Test {
 	@Test
 	@Ignore
 	public void test() {
-		CFTest cfTest = new CFTest();
+		CFforTesting cfTest = new CFforTesting();
 		cfTest.setName("myname");
 
 		em.persist(cfTest);// create table if doesn't exists
-		CFTest cFTest2 = em.find(cfTest.getClass(), cfTest.getKey());
+		CFforTesting cFTest2 = em.find(cfTest.getClass(), cfTest.getKey());
 		assertEquals(cfTest.getKey(), cFTest2.getKey());
 		assertEquals(cfTest.getName(), cFTest2.getName());
 		cfTest = em.find(cfTest.getClass(), cfTest.getKey());

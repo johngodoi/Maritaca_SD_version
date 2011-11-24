@@ -23,9 +23,9 @@ import br.unifesp.maritaca.ws.api.resp.ResultSetResponse;
 import br.unifesp.maritaca.ws.api.resp.XmlSavedResponse;
 import br.unifesp.maritaca.ws.exceptions.MaritacaWSException;
 
-public class ResponsesServiceImplTest {
+public class AnswersServiceImplTest {
 	FormAnswerControl frControl;
-	AnswersServiceImpl respService;
+	AnswersServiceImpl answService;
 	private static final String uuid = "637dea60-146e-11e1-a7c0-d2b70b6d4d67";
 	private static final String uuid2 = "737dea60-146e-11e1-a7c0-d2b70b6d4d67";
 	private static final String uuid3 = "747dea60-146e-11e1-a7c0-d2b70b6d4d67";
@@ -33,8 +33,8 @@ public class ResponsesServiceImplTest {
 	@Before
 	public void setUp() throws Exception {
 		frControl = mock(FormAnswerControl.class);
-		respService = new AnswersServiceImpl();
-		respService.setFormAnswerControl(frControl);
+		answService = new AnswersServiceImpl();
+		answService.setFormAnswerControl(frControl);
 	}
 
 	@After
@@ -51,13 +51,13 @@ public class ResponsesServiceImplTest {
 		try {
 			when(frControl.getAnswer(any(UUID.class))).thenReturn(response);
 
-			Answer resp1 = respService.getAnswer(uuid);
+			Answer resp1 = answService.getAnswer(uuid);
 			assertEquals(response.getKey(), resp1.getKey());
 
 			when(frControl.getAnswer(any(UUID.class))).thenReturn(null);
 
 			try {
-				respService.getAnswer(uuid);
+				answService.getAnswer(uuid);
 			} catch (Exception e) {
 				assertTrue(e instanceof MaritacaWSException);
 			}
@@ -65,7 +65,7 @@ public class ResponsesServiceImplTest {
 			when(frControl.getAnswer(any(UUID.class))).thenThrow(
 					new IllegalArgumentException("default exception"));
 			try {
-				respService.getAnswer(uuid2);
+				answService.getAnswer(uuid2);
 			} catch (Exception e) {
 				assertEquals("default exception", e.getMessage());
 			}
@@ -95,7 +95,7 @@ public class ResponsesServiceImplTest {
 
 					});
 
-			MaritacaResponse resp = respService.saveAnswer(xmlResp, uuid2);
+			MaritacaResponse resp = answService.saveAnswer(xmlResp, uuid2);
 			assertEquals(javax.ws.rs.core.Response.Status.OK.getStatusCode(),
 					resp.getCode());
 			assertEquals(javax.ws.rs.core.Response.Status.OK.getReasonPhrase(),
@@ -119,7 +119,7 @@ public class ResponsesServiceImplTest {
 			when(frControl.saveForm(any(Form.class))).thenReturn(false);
 
 			try {
-				MaritacaResponse resp = respService.saveAnswer(xmlResp, uuid);
+				MaritacaResponse resp = answService.saveAnswer(xmlResp, uuid);
 			} catch (Exception e) {
 				assertTrue(e instanceof MaritacaWSException);
 				MaritacaWSException me = (MaritacaWSException) e;
@@ -151,7 +151,7 @@ public class ResponsesServiceImplTest {
 
 		try {
 			when(frControl.listAllAnswersMinimal(any(UUID.class))).thenReturn(list);
-			MaritacaResponse resp = respService.listAnswersMinimal(uuid3);
+			MaritacaResponse resp = answService.listAnswersMinimal(uuid3);
 			assertTrue(resp instanceof ResultSetResponse);
 			ResultSetResponse<Answer> okresp = (ResultSetResponse<Answer>) resp;
 			assertEquals(list.size(), okresp.getSize());

@@ -48,7 +48,7 @@ public class FormAnswerCtrlImpl implements FormAnswerControl {
 		if (entityManager == null)
 			return null;
 
-		return entityManager.listAllMinimal(Form.class);
+		return entityManager.listAll(Form.class, true);
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public class FormAnswerCtrlImpl implements FormAnswerControl {
 		if (entityManager == null)
 			return null;
 		if (formId == null)
-			return entityManager.listAllMinimal(Answer.class);
+			return entityManager.listAll(Answer.class, true);
 		else
 			return entityManager.cQuery(Answer.class, "form",
 					formId.toString());
