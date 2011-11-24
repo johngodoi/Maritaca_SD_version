@@ -16,6 +16,19 @@
 			<artifactId>hector-core</artifactId>
 			<version>0.8.0-2</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.openjpa</groupId>
+			<artifactId>openjpa-persistence</artifactId>
+			<version>2.1.0</version>
+			<type>jar</type>
+			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>openjpa-kernel</artifactId>
+					<groupId>org.apache.openjpa</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 		<!-- TESTING -->
 		<dependency>
 			<groupId>junit</groupId>

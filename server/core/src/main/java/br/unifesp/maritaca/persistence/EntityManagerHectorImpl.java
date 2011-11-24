@@ -1,11 +1,6 @@
 package br.unifesp.maritaca.persistence;
 
-import static me.prettyprint.hector.api.factory.HFactory.createColumn;
-import static me.prettyprint.hector.api.factory.HFactory.createColumnFamilyDefinition;
-import static me.prettyprint.hector.api.factory.HFactory.createIndexedSlicesQuery;
-import static me.prettyprint.hector.api.factory.HFactory.createMutator;
-import static me.prettyprint.hector.api.factory.HFactory.createRangeSlicesQuery;
-import static me.prettyprint.hector.api.factory.HFactory.createSliceQuery;
+import static me.prettyprint.hector.api.factory.HFactory.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -16,10 +11,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import me.prettyprint.cassandra.model.IndexedSlicesQuery;
 import me.prettyprint.cassandra.serializers.StringSerializer;
 import me.prettyprint.cassandra.serializers.UUIDSerializer;
 import me.prettyprint.cassandra.service.CassandraHost;
+import me.prettyprint.cassandra.service.ThriftColumnDef;
 import me.prettyprint.cassandra.utils.TimeUUIDUtils;
 import me.prettyprint.hector.api.Cluster;
 import me.prettyprint.hector.api.Keyspace;
@@ -27,7 +26,9 @@ import me.prettyprint.hector.api.beans.ColumnSlice;
 import me.prettyprint.hector.api.beans.HColumn;
 import me.prettyprint.hector.api.beans.OrderedRows;
 import me.prettyprint.hector.api.beans.Row;
+import me.prettyprint.hector.api.ddl.ColumnDefinition;
 import me.prettyprint.hector.api.ddl.ColumnFamilyDefinition;
+import me.prettyprint.hector.api.ddl.ComparatorType;
 import me.prettyprint.hector.api.ddl.KeyspaceDefinition;
 import me.prettyprint.hector.api.mutation.Mutator;
 import me.prettyprint.hector.api.query.QueryResult;
@@ -35,6 +36,11 @@ import me.prettyprint.hector.api.query.RangeSlicesQuery;
 import me.prettyprint.hector.api.query.SliceQuery;
 
 import org.apache.cassandra.db.marshal.TimeUUIDType;
+import org.apache.cassandra.thrift.ColumnDef;
+import org.apache.cassandra.thrift.IndexType;
+
+import br.unifesp.maritaca.persistence.annotations.Column;
+import br.unifesp.maritaca.persistence.annotations.Minimal;
 
 public class EntityManagerHectorImpl implements EntityManager {
 
@@ -49,11 +55,17 @@ public class EntityManagerHectorImpl implements EntityManager {
 	}
 
 	@Override
-	public <T> boolean persist(T obj, boolean createTable)
-			throws IllegalArgumentException {
-		if (obj == null) {
-			throw new IllegalArgumentException("parameter cannot be null");
+	public <T> boolean persist(T obj) {
+		return persist(obj, true);
+	}
+
+	@Override
+	public <T> boolean persist(T obj, boolean createTable) {
+		
+		if (obj == null || !isEntity(obj.getClass())) {
+			throw new IllegalArgumentException("object null or not an entity");
 		}
+		
 		if (!tableExists(obj.getClass()) && createTable) {
 			try {
 				createTable(obj.getClass());
@@ -62,56 +74,33 @@ public class EntityManagerHectorImpl implements EntityManager {
 				return false;
 			}
 		}
-		// TODO check annotation Entity
 		Mutator<UUID> mutator = createMutator(keyspace, uuidSerializer);
 
-		UUID key;
-		Method method = getMethod(obj, "getKey");
-		try {
-			key = (UUID) method.invoke(obj);
-		} catch (IllegalAccessException e1) {
-			throw new RuntimeException("Exception while getting uuid", e1);
-		} catch (InvocationTargetException e1) {
-			throw new RuntimeException("Exception while getting uuid", e1);
-		}
+		UUID key = getObjectKey(obj);
 
 		if (key == null) {
 			key = getUUID(obj);
-			method = getMethod(obj, "setKey", UUID.class);
-			try {
-				method.invoke(obj, key);
-			} catch (IllegalAccessException e) {
-				throw new RuntimeException(e);
-			} catch (InvocationTargetException e) {
-				throw new RuntimeException(e);
-			}
-
+			setObjectKey(obj, key);
 		}
 
-		for (Field f : obj.getClass().getDeclaredFields()) {
-			// TODO check annotation Column
-			if (!f.getName().equals("key")) {
-				method = getMethod(obj, "get" + toUpperFirst(f.getName()));
-				Object result;
-				try {
-					result = method.invoke(obj);
-				} catch (IllegalAccessException e1) {
-					throw new RuntimeException(
-							"Exception while executing method "
-									+ method.getName(), e1);
-				} catch (InvocationTargetException e1) {
-					throw new RuntimeException(
-							"Exception while executing method "
-									+ method.getName(), e1);
-				}
+		for (Field f : getColumnFields(obj.getClass(), false)) {
+			Method method = getMethod(obj, "get" + toUpperFirst(f.getName()));
+			Object result;
+			try {
+				result = method.invoke(obj);
+			} catch (IllegalAccessException e1) {
+				throw new RuntimeException("Exception while executing method "
+						+ method.getName(), e1);
+			} catch (InvocationTargetException e1) {
+				throw new RuntimeException("Exception while executing method "
+						+ method.getName(), e1);
+			}
 
-				if (result != null) {
-					HColumn<String, String> column = createColumn(f.getName(),
-							result.toString(), stringSerializer,
-							stringSerializer);
-					mutator.addInsertion(key, obj.getClass().getSimpleName(),
-							column);
-				}
+			if (result != null) {
+				HColumn<String, String> column = createColumn(f.getName(),
+						result.toString(), stringSerializer, stringSerializer);
+				mutator.addInsertion(key, obj.getClass().getSimpleName(),
+						column);
 			}
 		}
 
@@ -125,9 +114,13 @@ public class EntityManagerHectorImpl implements EntityManager {
 	}
 
 	@Override
-	public <T> T find(Class<T> cl, UUID uuid) {
+	public <T> T find(Class<T> cl, UUID uuid, boolean justMinimal) {
+		
+		if (cl == null || !isEntity(cl)) {
+			throw new IllegalArgumentException("object null or not an entity");
+		}
 
-		Collection<String> fields = getNameFields(cl);
+		Collection<String> fields = getNameFields(cl,justMinimal);
 		SliceQuery<UUID, String, String> query = createSliceQuery(keyspace,
 				uuidSerializer, stringSerializer, stringSerializer);
 		query.setColumnFamily(cl.getSimpleName());
@@ -138,15 +131,7 @@ public class EntityManagerHectorImpl implements EntityManager {
 
 		boolean ghost = true;
 
-		T obj;
-		try {
-			obj = (T) cl.newInstance();
-		} catch (InstantiationException e) {
-			throw new RuntimeException(e);
-		} catch (IllegalAccessException e) {
-			throw new RuntimeException("Exception while instantiating "
-					+ cl.getSimpleName(), e);
-		}
+		T obj = instantiateObject(cl);
 
 		for (HColumn<String, String> column : qresult.get().getColumns())
 
@@ -166,71 +151,47 @@ public class EntityManagerHectorImpl implements EntityManager {
 		if (ghost)
 			return null;
 		else {
-			try {
-				getMethod(obj, "setKey", UUID.class).invoke(obj, uuid);
-				return obj;
-			} catch (IllegalArgumentException e) {
-				throw new RuntimeException(e);
-			} catch (IllegalAccessException e) {
-				throw new RuntimeException(e);
-			} catch (InvocationTargetException e) {
-				throw new RuntimeException(e);
-			}
+			setObjectKey(obj, uuid);
+			return obj;
 		}
 
 	}
 
 	@Override
 	public <T> boolean delete(T obj) throws IllegalArgumentException {
+		if (obj == null || !isEntity(obj.getClass())) {
+			throw new IllegalArgumentException("object null or not an entity");
+		}
+		
 		Mutator<UUID> mutator = createMutator(keyspace, uuidSerializer);
 
-		UUID uid;
-		try {
-			uid = (UUID) getMethod(obj, "getKey").invoke(obj);
-			mutator.addDeletion(uid, obj.getClass().getSimpleName());
-			mutator.execute();
-		} catch (IllegalAccessException e1) {
-			throw new RuntimeException("Exception while setting uuid", e1);
-		} catch (InvocationTargetException e1) {
-			throw new RuntimeException("Exception while setting uuid", e1);
-		}
+		UUID uuid = getObjectKey(obj);
+		mutator.addDeletion(uuid, obj.getClass().getSimpleName());
+		mutator.execute();
 
 		return true;
 	}
 
 	@Override
-	public <T> List<T> cQuery(Class<T> cl, String field, String value)
-			throws IllegalArgumentException {
+	public <T> List<T> cQuery(Class<T> cl, String field, String value, boolean justMinimal) {
+		if (cl == null || isEntity(cl.getClass())) {
+			throw new IllegalArgumentException("object null or not an entity");
+		}
 
 		List<T> result = new ArrayList<T>();
 
 		IndexedSlicesQuery<UUID, String, String> indexedSlicesQuery = createIndexedSlicesQuery(
 				keyspace, uuidSerializer, stringSerializer, stringSerializer);
 		indexedSlicesQuery.addEqualsExpression(field, value);
-		indexedSlicesQuery.setColumnNames(getNameFields(cl));
+		indexedSlicesQuery.setColumnNames(getNameFields(cl, justMinimal));
 		indexedSlicesQuery.setColumnFamily(cl.getSimpleName());
 
 		QueryResult<OrderedRows<UUID, String, String>> resultq = indexedSlicesQuery
 				.execute();
 
 		for (Row<UUID, String, String> line : resultq.get().getList()) {
-			T obj;
-			try {
-				obj = (T) cl.newInstance();
-			} catch (InstantiationException e) {
-				throw new RuntimeException(e);
-			} catch (IllegalAccessException e) {
-				throw new RuntimeException("Exception while instantiating "
-						+ cl.getSimpleName(), e);
-			}
-			Method method = getMethod(obj, "setKey", UUID.class);
-			try {
-				method.invoke(obj, line.getKey());
-			} catch (IllegalAccessException e1) {
-				throw new RuntimeException("Exception while setting uuid", e1);
-			} catch (InvocationTargetException e1) {
-				throw new RuntimeException("Exception while setting uuid", e1);
-			}
+			T obj = instantiateObject(cl);
+			setObjectKey(obj, line.getKey());
 
 			for (HColumn<String, String> column : line.getColumnSlice()
 					.getColumns()) {
@@ -246,106 +207,184 @@ public class EntityManagerHectorImpl implements EntityManager {
 
 			result.add(obj);
 		}
-
 		return result;
 	}
 
 	@Override
-	public <T> List<T> listAll(Class<T> cl) throws IllegalArgumentException {
+	public <T> List<T> listAll(Class<T> cl, boolean justMinimal) {
+		if (cl == null || isEntity(cl.getClass())) {
+			throw new IllegalArgumentException("object null or not an entity");
+		}
+		
+		boolean keysOnly=false;
 
 		List<T> result = new ArrayList<T>();
 
-		Collection<String> fields = getNameFields(cl);
+		Collection<String> fields = getNameFields(cl, justMinimal);
 		RangeSlicesQuery<UUID, String, String> q = createRangeSlicesQuery(
 				keyspace, uuidSerializer, stringSerializer, stringSerializer);
 		q.setColumnFamily(cl.getSimpleName());
+		if(fields.size()>0){
 		q.setColumnNames(fields.toArray(new String[fields.size()]));
+		}else{
+			q.setReturnKeysOnly();
+			keysOnly = true;
+		}
 
 		QueryResult<OrderedRows<UUID, String, String>> resultq = q.execute();
 
 		for (Row<UUID, String, String> line : resultq.get().getList()) {
-			T obj;
-			try {
-				obj = (T) cl.newInstance();
-			} catch (InstantiationException e) {
-				throw new RuntimeException(e);
-			} catch (IllegalAccessException e) {
-				throw new RuntimeException("Exception while instantiating "
-						+ cl.getSimpleName(), e);
-			}
-			Method method = getMethod(obj, "setKey", UUID.class);
-			try {
-				method.invoke(obj, line.getKey());
-			} catch (IllegalAccessException e1) {
-				throw new RuntimeException("Exception while setting uuid", e1);
-			} catch (InvocationTargetException e1) {
-				throw new RuntimeException("Exception while setting uuid", e1);
-			}
+			T obj = instantiateObject(cl);
+			setObjectKey(obj, line.getKey());
+			boolean ghost = true;
 			for (HColumn<String, String> column : line.getColumnSlice()
 					.getColumns()) {
 				try {
 					setValue(obj, cl.getDeclaredField(column.getName()),
 							column.getValue());
+					ghost = false;
 				} catch (SecurityException e) {
 					throw new RuntimeException(e);
 				} catch (NoSuchFieldException e) {
 					throw new IllegalArgumentException(e);
 				}
 			}
-
-			result.add(obj);
+			if (!ghost || keysOnly) {
+				result.add(obj);
+			}
 		}
-
 		return result;
+	}
+
+	public void addHost(String host, int port) {
+		CassandraHost cassandraHost = new CassandraHost(host, port);
+		cluster.addHost(cassandraHost, true);
 	}
 
 	@Override
-	public <T> List<T> listAllMinimal(Class<T> cl)
-			throws IllegalArgumentException {
-
-		List<T> result = new ArrayList<T>();
-
-		Collection<String> fields = getNameFields(cl);
-		RangeSlicesQuery<UUID, String, String> q = createRangeSlicesQuery(
-				keyspace, uuidSerializer, stringSerializer, stringSerializer);
-		q.setColumnFamily(cl.getSimpleName()).setReturnKeysOnly();
-
-		QueryResult<OrderedRows<UUID, String, String>> resultq = q.execute();
-
-		for (Row<UUID, String, String> line : resultq.get().getList()) {
-			T obj;
-			try {
-				obj = (T) cl.newInstance();
-			} catch (InstantiationException e) {
-				throw new RuntimeException(e);
-			} catch (IllegalAccessException e) {
-				throw new RuntimeException("Exception while instantiating "
-						+ cl.getSimpleName(), e);
-			}
-			Method method = getMethod(obj, "setKey", UUID.class);
-			try {
-				method.invoke(obj, line.getKey());
-			} catch (IllegalAccessException e1) {
-				throw new RuntimeException("Exception while setting uuid", e1);
-			} catch (InvocationTargetException e1) {
-				throw new RuntimeException("Exception while setting uuid", e1);
-			}
-			result.add(obj);
+	public <T> boolean createTable(Class<T> cl) {
+		if (cl == null || isEntity(cl.getClass())) {
+			throw new IllegalArgumentException("object null or not an entity");
 		}
+		if (!tableExists(cl)) {
+			
+			List<ColumnDef> columns = new ArrayList<ColumnDef>();
+		    for (Field f : getColumnFields(cl, false)) {
+		      String cName = f.getName();
+		      //log.info("Creating column " + cName);
+		      if(f.getAnnotation(Column.class).indexed())
+		    	  columns.add(newIndexedColumnDef(cName, ComparatorType.UTF8TYPE.getTypeName()));
+		    }
 
-		return result;
+		    List<ColumnDefinition> columnMetadata = ThriftColumnDef
+		        .fromThriftList(columns);
+		    
+			ColumnFamilyDefinition cfdef = createColumnFamilyDefinition(
+					keyspace.getKeyspaceName(), 
+					cl.getSimpleName(), 
+					ComparatorType.UTF8TYPE,
+					columnMetadata);
+			cfdef.setKeyValidationClass(TimeUUIDType.class.getSimpleName());
+
+			
+			cluster.addColumnFamily(cfdef);
+			return true;
+		}
+		return false;
+	}
+	
+	ColumnDef newIndexedColumnDef(String column_name, String comparer) {
+	    ColumnDef cd = new ColumnDef(stringSerializer.toByteBuffer(column_name), comparer);
+	    cd.setIndex_name(column_name);
+	    cd.setIndex_type(IndexType.KEYS);
+	    return cd;
+	  }
+
+	@Override
+	public <T> boolean tableExists(Class<T> cl) {
+		if (cl == null || isEntity(cl.getClass())) {
+			throw new IllegalArgumentException("object null or not an entity");
+		}
+		KeyspaceDefinition ksdef = cluster.describeKeyspace(keyspace
+				.getKeyspaceName());
+		if (ksdef == null) {
+			return false;
+		}
+		for (ColumnFamilyDefinition cfd : ksdef.getCfDefs()) {
+			if (cfd.getName().equals(cl.getSimpleName())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
-	private Collection<String> getNameFields(Class classe) {
-		List<String> result = new ArrayList<String>();
+	@Override
+	public <T> boolean dropTable(Class<T> cl) {
+		if (cl == null || isEntity(cl.getClass())) {
+			throw new IllegalArgumentException("object null or not an entity");
+		}
+		
+		if (tableExists(cl)) {
+			cluster.dropColumnFamily(keyspace.getKeyspaceName(),
+					cl.getSimpleName());
+			return true;
+		}
+		return false;
+	}
 
-		for (Field field : classe.getDeclaredFields()) {
-			if (!field.getName().equals("key")) {
-				result.add(field.getName());
-			}
+	@Override
+	public <T> T find(Class<T> cl, UUID uuid) {
+		return find(cl, uuid, false);
+	}
+
+	@Override
+	public <T> List<T> cQuery(Class<T> cl, String field, String value) {
+		return cQuery(cl, field, value, false);
+	}
+
+	@Override
+	public <T> List<T> listAll(Class<T> cl) {
+		return listAll(cl, false);
+	}
+	
+	private <T> T instantiateObject(Class<T> cl) {
+		T obj = null;
+		try {
+			obj = (T) cl.newInstance();
+		} catch (InstantiationException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException("Exception while instantiating "
+					+ cl.getSimpleName(), e);
+		}
+		return obj;
+	}
+
+	private <T> void setObjectKey(T obj, UUID uuid) {
+		Method method = getMethod(obj, "setKey", UUID.class);
+		try {
+			method.invoke(obj, uuid);
+		} catch (IllegalArgumentException e) {
+			throw new RuntimeException("Exception while setting key", e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException("Exception while setting key", e);
+		} catch (InvocationTargetException e) {
+			throw new RuntimeException("Exception while setting key", e);
 		}
 
-		return result;
+	}
+
+	private Collection<String> getNameFields(Class cl, boolean justMinimal) {
+		ArrayList<String> colFields = new ArrayList<String>();
+		for (Field f : cl.getDeclaredFields()) {
+			if (!f.isAnnotationPresent(Id.class)
+					&& f.isAnnotationPresent(Column.class)) {
+				if (!justMinimal || f.isAnnotationPresent(Minimal.class)) {
+					colFields.add(f.getName());
+				}
+			}
+		}
+		return colFields;
 	}
 
 	private <T> Method getMethod(T obj, String methodName, Class... parameter) {
@@ -354,7 +393,8 @@ public class EntityManagerHectorImpl implements EntityManager {
 		} catch (SecurityException e) {
 			throw new RuntimeException(e);
 		} catch (NoSuchMethodException e) {
-			throw new IllegalArgumentException("no method : " + methodName, e);
+			throw new IllegalArgumentException("no method : " + methodName
+					+ " in Class: " + obj.getClass().getSimpleName(), e);
 		}
 	}
 
@@ -392,8 +432,8 @@ public class EntityManagerHectorImpl implements EntityManager {
 							+ toUpperFirst(f.getName()), String.class);
 					method.invoke(result, value);
 				} catch (Exception e) {
-					throw new RuntimeException(
-							"data cannot be mapped from database to class", e);
+					//TODO log de dados perdidos, campo nao encontrado
+					e.printStackTrace();
 				}
 			}
 
@@ -419,51 +459,47 @@ public class EntityManagerHectorImpl implements EntityManager {
 		return TimeUUIDUtils.getUniqueTimeUUIDinMillis();
 	}
 
-	public void addHost(String host, int port) {
-		CassandraHost cassandraHost = new CassandraHost(host, port);
-		cluster.addHost(cassandraHost, true);
-	}
-
-	@Override
-	public <T> boolean createTable(Class<T> cl) {
-		if (!tableExists(cl)) {
-			ColumnFamilyDefinition cfdef = createColumnFamilyDefinition(
-					keyspace.getKeyspaceName(), cl.getSimpleName());
-			cfdef.setKeyValidationClass(TimeUUIDType.class.getSimpleName());
-			cluster.addColumnFamily(cfdef);
-			return true;
+	private <T> UUID getObjectKey(T obj) {
+		UUID key = null;
+		Method method = getMethod(obj, "getKey");
+		try {
+			key = (UUID) method.invoke(obj);
+		} catch (IllegalArgumentException e) {
+			throw new RuntimeException("Exception while getting key", e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException("Exception while getting key", e);
+		} catch (InvocationTargetException e) {
+			throw new RuntimeException("Exception while getting key", e);
 		}
-		return false;
+		return key;
 	}
-
-	@Override
-	public <T> boolean tableExists(Class<T> cl) {
-		KeyspaceDefinition ksdef = cluster.describeKeyspace(keyspace
-				.getKeyspaceName());
-		if (ksdef == null) {
-			return false;
-		}
-		for (ColumnFamilyDefinition cfd : ksdef.getCfDefs()) {
-			if (cfd.getName().equals(cl.getSimpleName())) {
-				return true;
+	
+	private <T> ArrayList<Field> getColumnFields(Class<T> cl,
+			boolean justMinimal) {
+		ArrayList<Field> colFields = new ArrayList<Field>();
+		for (Field f : cl.getDeclaredFields()) {
+			if (!f.isAnnotationPresent(Id.class)
+					&& f.isAnnotationPresent(Column.class)) {
+				if (!justMinimal || f.isAnnotationPresent(Minimal.class)) {
+					colFields.add(f);
+				}
 			}
 		}
-		return false;
+		return colFields;
 	}
-
-	@Override
-	public <T> boolean dropTable(Class<T> cl) {
-		if (tableExists(cl)) {
-			cluster.dropColumnFamily(keyspace.getKeyspaceName(),
-					cl.getSimpleName());
-			return true;
-		}
-		return false;
+	
+	private <T> boolean isEntity(Class<T> cl){
+		return cl.isAnnotationPresent(Entity.class);
 	}
-
-	@Override
-	public <T> boolean persist(T obj) throws IllegalArgumentException {
-		return persist(obj, true);
-	}
-
+	
+//	To support IDs with different names than "key"
+//	private <T> String getKeyName(Class<T> cl){
+//		for(Field f : cl.getDeclaredFields()){
+//			if(f.isAnnotationPresent(Id.class)){
+//				return f.getName();
+//			}
+//		}
+//		throw new IllegalArgumentException("Class " + cl.getName() + " does not have ID");
+//	}
+	
 }
