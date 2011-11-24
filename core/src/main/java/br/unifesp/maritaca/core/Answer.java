@@ -2,17 +2,32 @@ package br.unifesp.maritaca.core;
 
 import java.util.UUID;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="answer")
+import br.unifesp.maritaca.persistence.annotations.Column;
+import br.unifesp.maritaca.persistence.annotations.Minimal;
+
+@XmlRootElement(name = "answer")
+@Entity
 public class Answer {
+	@Id
 	private UUID key;
+
+	@Column(indexed = true)
+	@Minimal
 	private Form form;
+
+	@Column(indexed = true)
+	@Minimal
 	private User user;
+
+	@Column
 	private String xml;
 
-	@XmlElement(name="id")
+	@XmlElement(name = "id")
 	public UUID getKey() {
 		return key;
 	}
@@ -20,8 +35,8 @@ public class Answer {
 	public void setKey(UUID key) {
 		this.key = key;
 	}
-	
-	public void setKey(String ks){
+
+	public void setKey(String ks) {
 		this.key = UUID.fromString(ks);
 	}
 
@@ -40,11 +55,11 @@ public class Answer {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
+
 	public void setXml(String xml) {
 		this.xml = xml;
 	}
-	
+
 	public String getXml() {
 		return xml;
 	}
@@ -54,10 +69,18 @@ public class Answer {
 		f.setKey(formId);
 		setForm(f);
 	}
-	
+
 	public void setUser(String userId) {
 		User f = new User();
 		f.setKey(userId);
 		setUser(f);
+	}
+
+	@Override
+	public String toString() {
+		if (getKey() != null) {
+			return getKey().toString();
+		}
+		return super.toString();
 	}
 }

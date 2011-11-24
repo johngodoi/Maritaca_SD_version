@@ -16,11 +16,16 @@ public interface EntityManager {
 
 	<T> List<T> listAll(Class<T> cl);
 
-	<T> List<T> listAllMinimal(Class<T> cl);
-
 	<T> boolean createTable(Class<T> cl);
 
 	<T> boolean tableExists(Class<T> cl);
 
 	<T> boolean dropTable(Class<T> cl);
+
+	<T> T find(Class<T> cl, UUID uuid, boolean justMinimal);
+
+	<T> List<T> cQuery(Class<T> cl, String field, String value, boolean justMinimal)
+			throws IllegalArgumentException;
+
+	<T> List<T> listAll(Class<T> cl, boolean justMinimal);
 }

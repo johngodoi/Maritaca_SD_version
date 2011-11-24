@@ -87,7 +87,7 @@ public class FormsServiceImplTest {
 
 					});
 
-			MaritacaResponse resp = formService.saveForm(xmlForm);
+			MaritacaResponse resp = formService.saveForm(xmlForm, uuid2);
 			assertEquals(Response.Status.OK.getStatusCode(), resp.getCode());
 			assertEquals(Response.Status.OK.getReasonPhrase(), resp.getStatus());
 			assertTrue(resp instanceof XmlSavedResponse);
@@ -109,7 +109,7 @@ public class FormsServiceImplTest {
 			when(frControl.saveForm(any(Form.class))).thenReturn(false);
 
 			try {
-				MaritacaResponse resp = formService.saveForm(xmlForm);
+				MaritacaResponse resp = formService.saveForm(xmlForm, uuid2);
 			} catch (Exception e) {
 				assertTrue(e instanceof MaritacaWSException);
 				MaritacaWSException me = (MaritacaWSException) e;
