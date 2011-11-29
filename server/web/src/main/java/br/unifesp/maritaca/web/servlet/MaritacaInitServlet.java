@@ -1,16 +1,12 @@
 package br.unifesp.maritaca.web.servlet;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.collections.map.HashedMap;
-
+import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.EntityManager;
 import br.unifesp.maritaca.persistence.EntityManagerFactory;
 
@@ -35,5 +31,13 @@ public class MaritacaInitServlet extends HttpServlet {
     	params.put("cluster", config.getInitParameter("cluster"));
     	params.put("keyspace", config.getInitParameter("keyspace"));
     	EntityManagerFactory.getInstance().setHectorParams(params);
+    	
+    	EntityManager em = EntityManagerFactory.getInstance().createEntityManager(EntityManagerFactory.HECTOR_MARITACA_EM);
+    	if(!em.tableExists(User.class)){
+    		User user = new User();
+    		user.setFirstname("admin");
+    		user.setPassword("123");
+    		em.persist(user);
+    	}
     }
 }

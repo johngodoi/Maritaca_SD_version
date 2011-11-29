@@ -4,21 +4,19 @@ import java.util.Collection;
 
 import javax.faces.bean.ManagedBean;
 
-import br.unifesp.maritaca.control.ControllerFactory;
-import br.unifesp.maritaca.control.FormAnswerControl;
 import br.unifesp.maritaca.core.Form;
+import br.unifesp.maritaca.web.jsf.AbstractBean;
 
 @ManagedBean
-public class ListFormsBean {
-	private FormAnswerControl formAnswerCtrl;
+public class ListFormsBean extends AbstractBean {
 	private Collection<Form> forms;
 	
 	public ListFormsBean() {
-		formAnswerCtrl = ControllerFactory.getInstance().createFormResponseCtrl();
+		super(true, false);
 	}
 	
 	public Collection<Form> getForms() {
-		forms = formAnswerCtrl.listAllFormsMinimal();
+		forms = formAnswCtrl.listAllFormsMinimal();
 		return forms;
 	}
 	public void setForms(Collection<Form> forms) {
