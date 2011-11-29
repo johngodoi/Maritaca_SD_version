@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -18,12 +20,14 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import br.unifesp.maritaca.core.Form;
+import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.EntityManager;
 
 public class FormAnswerCtrlImplTest {
 	private static final String uuid = "637dea60-146e-11e1-a7c0-d2b70b6d4d67";
 	private static final String uuid2 = "537dea60-146e-11e1-a7c0-d2b70b6d4d67";
-//	private static final String uuid3 = "437dea60-146e-11e1-a7c0-d2b70b6d4d67";
+	// private static final String uuid3 =
+	// "437dea60-146e-11e1-a7c0-d2b70b6d4d67";
 
 	private EntityManager em;
 	private FormAnswerCtrlImpl frControl;
@@ -42,6 +46,7 @@ public class FormAnswerCtrlImplTest {
 	@Test
 	public void testSaveForm() {
 		Form form = new Form();
+		form.setUser(uuid2);
 
 		when(em.persist(form)).thenAnswer(new Answer<Boolean>() {
 
@@ -52,6 +57,10 @@ public class FormAnswerCtrlImplTest {
 				return true;
 			}
 		});
+
+		when(em.rowDataExists((Class<User>) notNull(), any(UUID.class))).thenReturn(
+				true);
+
 		assertNull(form.getKey());
 		assertTrue(frControl.saveForm(form));
 		assertEquals(uuid, form.getKey().toString());

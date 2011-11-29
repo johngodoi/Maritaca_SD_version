@@ -273,7 +273,7 @@ public class EntityManagerHectorImpl implements EntityManager {
 		      String cName = f.getName();
 		      //log.info("Creating column " + cName);
 		      if(f.getAnnotation(Column.class).indexed())
-		    	  columns.add(newIndexedColumnDef(cName, ComparatorType.UTF8TYPE.getTypeName()));
+		    	  columns.add(newIndexedColumnDef(cName, cl.getSimpleName() + cName, ComparatorType.UTF8TYPE.getTypeName()));
 		    }
 
 		    List<ColumnDefinition> columnMetadata = ThriftColumnDef
@@ -293,9 +293,9 @@ public class EntityManagerHectorImpl implements EntityManager {
 		return false;
 	}
 	
-	ColumnDef newIndexedColumnDef(String column_name, String comparer) {
+	ColumnDef newIndexedColumnDef(String column_name, String indexName, String comparer) {
 	    ColumnDef cd = new ColumnDef(stringSerializer.toByteBuffer(column_name), comparer);
-	    cd.setIndex_name(column_name);
+	    cd.setIndex_name(indexName);
 	    cd.setIndex_type(IndexType.KEYS);
 	    return cd;
 	  }
@@ -490,6 +490,12 @@ public class EntityManagerHectorImpl implements EntityManager {
 	
 	private <T> boolean isEntity(Class<T> cl){
 		return cl.isAnnotationPresent(Entity.class);
+	}
+
+	@Override
+	public <T> boolean rowDataExists(Class<T> cl, UUID uuid) {
+		T t = find(cl, uuid);
+		return t != null;
 	}
 	
 //	To support IDs with different names than "key"

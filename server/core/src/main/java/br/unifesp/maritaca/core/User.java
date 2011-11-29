@@ -30,6 +30,7 @@ public class User {
 	private String email;
 	
 	@XmlTransient
+	@Column
 	private String password; // password is not exported to xml
 
 	public String getFirstname() {
@@ -83,6 +84,24 @@ public class User {
 			return getKey().toString();
 		}
 		return super.toString();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof User){
+			User user = (User)obj;
+			return user.getKey().equals(getKey());
+		}
+		return(obj.equals(getKey()));
+	}
+	
+	@Override
+	public int hashCode() {
+		if(key==null){
+			return super.hashCode();
+		}else{
+			return key.hashCode();
+		}
 	}
 
 }

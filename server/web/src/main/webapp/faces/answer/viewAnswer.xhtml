@@ -10,22 +10,12 @@
 	 -->
 	<ui:composition template="/faces/commons/template.xhtml">
 			<ui:define name="pageTitle">Title</ui:define>
-			<ui:define name="pageHeader">#{msg.form}</ui:define>
+			<ui:define name="pageHeader">#{msg.answer}</ui:define>
 			<ui:define name="body">
 			<h2>#{msg.commons_id}</h2>
-			<h:outputText value="#{viewFormBean.form.key}" />
+			<h:outputText value="#{viewAnswerBean.answer.key}" />
 			<h2>#{msg.commons_xml}</h2>
-			<h:outputFormat value="#{viewFormBean.form.xml}" />
-			<h:form>
-			<h:commandLink action="#{viewFormBean.newAnswer}" value="#{msg.answer_new}">
-			<f:setPropertyActionListener target="#{editAnswerBean.form}" value="#{viewFormBean.form}"/>
-			</h:commandLink>
-			</h:form>
-			<h:form>
-			<h:commandLink action="#{viewFormBean.listAnswers}" value="#{msg.answer_list}">
-			<f:setPropertyActionListener target="#{listAnswersBean.form}" value="#{viewFormBean.form}"/>
-			</h:commandLink>
-			</h:form>
+			<h:outputFormat value="#{viewAnswerBean.answer.xml}" />
 			</ui:define>
 	</ui:composition>
 
