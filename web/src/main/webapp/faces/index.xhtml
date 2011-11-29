@@ -2,7 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:rich="http://richfaces.org/rich">
 
 	<!-- 
 		Replace path to template, title, header and body
@@ -10,9 +11,17 @@
 	 -->
 	<ui:composition template="/faces/commons/template.xhtml">
 			<ui:define name="pageTitle"></ui:define>
-			<ui:define name="pageHeader">#{msg.home_title}</ui:define>
+			<ui:define name="pageHeader">#{msg.commons_title}</ui:define>
 			<ui:define name="body">
-			<h:outputLink value="faces/form/listForms.xhtml">#{msg.form_list}</h:outputLink>
+			<h:form>
+			<h:selectOneMenu value="#{currentUserBean.user}" >
+			<f:selectItems value="#{loginBean.userList}"/>
+			<f:converter converterId="br.unifesp.maritaca.web.jsf.converters.UserConverter"/>
+			</h:selectOneMenu><br/>
+			<h:commandButton action="#{loginBean.submit}" value="Login">
+			<f:setPropertyActionListener target="#{homeBean.initialized}" value="true" />
+			</h:commandButton>
+			</h:form>
 			</ui:define>
 	</ui:composition>
 

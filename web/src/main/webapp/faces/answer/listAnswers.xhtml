@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:rich="http://richfaces.org/rich">
+
+<!-- 
+		Replace path to template, title, header and body
+		with actual data.
+	 -->
+<ui:composition template="/faces/commons/template.xhtml">
+	<ui:define name="pageTitle"></ui:define>
+	<ui:define name="pageHeader">#{msg.answer_list}</ui:define>
+	<ui:define name="body">
+	<h:form>
+		<rich:dataTable value="#{listAnswersBean.answers}" var="anAnswer">
+			<f:facet name="caption">
+				<h:outputText value="#{msg.answer_list}" />
+			</f:facet>
+			<rich:column>
+				<f:facet name="header">#{msg.commons_id}</f:facet>
+				<h:outputText value="#{anAnswer.key}" />
+			</rich:column>
+			<rich:column>
+			<f:facet name="header">#{msg.commons_view}</f:facet>
+			<h:commandLink value="#{msg.commons_goto}" action="#{listAnswersBean.viewAnswer}">
+			<f:setPropertyActionListener target="#{viewAnswerBean.answer}" value="#{anAnswer}" />
+			</h:commandLink>
+			</rich:column>
+		</rich:dataTable>
+		</h:form>
+	</ui:define>
+</ui:composition>
+
+</html>
