@@ -6,6 +6,7 @@ import java.util.UUID;
 import br.unifesp.maritaca.control.FormAnswerControl;
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Form;
+import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.EntityManager;
 
 public class FormAnswerCtrlImpl implements FormAnswerControl {
@@ -23,8 +24,15 @@ public class FormAnswerCtrlImpl implements FormAnswerControl {
 	public boolean saveForm(Form form){
 		if (entityManager == null)
 			return false;
-
+		
+		if(form.getUser()== null || form.getUser().getKey()==null)
+			throw new IllegalArgumentException("User cannot be null");
+		
+		if(entityManager.rowDataExists(User.class, form.getUser().getKey())){
 		return entityManager.persist(form);
+		}else{
+			throw new IllegalArgumentException("User does not exist in database");
+		}
 	}
 
 	@Override
@@ -55,8 +63,16 @@ public class FormAnswerCtrlImpl implements FormAnswerControl {
 	public boolean saveAnswer(Answer response){
 		if (entityManager == null)
 			return false;
+		
+		if(response.getUser()== null || response.getUser().getKey()==null)
+			throw new IllegalArgumentException("User cannot be null");
+		
+		if(!entityManager.rowDataExists(User.class, response.getUser().getKey())){
+			throw new IllegalArgumentException("User does not exist in database");
+		}
+		
 		if (response.getForm() != null
-				&& entityManager.find(Form.class, response.getForm().getKey()) != null) {
+				&& entityManager.rowDataExists(Form.class, response.getForm().getKey())) {
 			return entityManager.persist(response);
 		} else {
 			throw new IllegalArgumentException("Form id not valid nor present");
