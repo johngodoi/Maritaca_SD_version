@@ -1,32 +1,37 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
 
-	<!-- 
-		Replace path to template, title, header and body
-		with actual data.
-	 -->
-	<ui:composition template="/faces/commons/template.xhtml">
-			<ui:define name="pageTitle">Title</ui:define>
-			<ui:define name="pageHeader">#{msg.form}</ui:define>
-			<ui:define name="body">
+<f:metadata>
+<f:param name="aform" value="#{viewFormBean.form}"/>
+</f:metadata>
+
+<ui:composition template="/faces/commons/template.xhtml">
+	<ui:define name="pageTitle">Title</ui:define>
+	<ui:define name="pageHeader">#{msg.form}</ui:define>
+	<ui:define name="body">
+		<h:form>
 			<h2>#{msg.commons_id}</h2>
 			<h:outputText value="#{viewFormBean.form.key}" />
 			<h2>#{msg.commons_xml}</h2>
 			<h:outputFormat value="#{viewFormBean.form.xml}" />
-			<h:form>
+			<br />
+			<h:inputHidden value="#{viewFormBean.form}">
+			<f:converter converterId="br.unifesp.maritaca.web.jsf.converters.FormConverter"/>
+			</h:inputHidden>
 			<h:commandLink action="#{viewFormBean.newAnswer}" value="#{msg.answer_new}">
-			<f:setPropertyActionListener target="#{editAnswerBean.form}" value="#{viewFormBean.form}"/>
+				<f:setPropertyActionListener target="#{editAnswerBean.form}"
+					value="#{viewFormBean.form}" />
 			</h:commandLink>
-			</h:form>
-			<h:form>
-			<h:commandLink action="#{viewFormBean.listAnswers}" value="#{msg.answer_list}">
-			<f:setPropertyActionListener target="#{listAnswersBean.form}" value="#{viewFormBean.form}"/>
+			<br />
+			<h:commandLink action="#{viewFormBean.listAnswers}"
+				value="#{msg.answer_list}">
+				<f:setPropertyActionListener target="#{listAnswersBean.form}"
+					value="#{viewFormBean.form}" />
 			</h:commandLink>
-			</h:form>
-			</ui:define>
-	</ui:composition>
+		</h:form>
+	</ui:define>
+</ui:composition>
 
 </html>
