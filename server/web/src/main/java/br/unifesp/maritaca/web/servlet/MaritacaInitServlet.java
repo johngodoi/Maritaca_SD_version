@@ -40,4 +40,9 @@ public class MaritacaInitServlet extends HttpServlet {
     		em.persist(user);
     	}
     }
+    
+    @Override
+    public void destroy() {
+    	EntityManagerFactory.getInstance().closeEntityManager(EntityManagerFactory.HECTOR_MARITACA_EM);
+    }
 }

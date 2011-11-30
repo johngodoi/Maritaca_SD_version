@@ -8,7 +8,6 @@ import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
 
 @ManagedBean
-@RequestScoped
 public class EditFormBean extends AbstractBean {
 	private User user;
 	private String xml;

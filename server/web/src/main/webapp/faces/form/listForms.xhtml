@@ -1,7 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:rich="http://richfaces.org/rich">
 
@@ -13,22 +12,24 @@
 	<ui:define name="pageTitle"></ui:define>
 	<ui:define name="pageHeader">#{msg.form_list}</ui:define>
 	<ui:define name="body">
-	<h:form>
-		<rich:dataTable value="#{listFormsBean.forms}" var="aForm">
-			<f:facet name="caption">
-				<h:outputText value="#{msg.form_list}" />
-			</f:facet>
-			<rich:column>
-				<f:facet name="header">#{msg.commons_id}</f:facet>
-				<h:outputText value="#{aForm.key}" />
-			</rich:column>
-			<rich:column>
-			<f:facet name="header">#{msg.commons_view}</f:facet>
-			<h:commandLink value="#{msg.commons_goto}" action="#{listFormsBean.viewForm}">
-			<f:setPropertyActionListener target="#{viewFormBean.form}" value="#{aForm}" />
-			</h:commandLink>
-			</rich:column>
-		</rich:dataTable>
+		<h:form>
+			<rich:dataTable value="#{listFormsBean.forms}" var="aForm">
+				<f:facet name="caption">
+					<h:outputText value="#{msg.form_list}" />
+				</f:facet>
+				<rich:column>
+					<f:facet name="header">#{msg.commons_id}</f:facet>
+					<h:outputText value="#{aForm.key}" />
+				</rich:column>
+				<rich:column>
+					<f:facet name="header">#{msg.commons_view}</f:facet>
+					<h:commandLink value="#{msg.commons_goto}"
+						action="#{listFormsBean.viewForm}">
+						<f:setPropertyActionListener target="#{viewFormBean.form}"
+							value="#{aForm}" />
+					</h:commandLink>
+				</rich:column>
+			</rich:dataTable>
 		</h:form>
 	</ui:define>
 </ui:composition>
