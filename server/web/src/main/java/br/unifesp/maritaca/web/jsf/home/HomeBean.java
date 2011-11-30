@@ -23,7 +23,7 @@ public class HomeBean {
 		this.currentUser = currentUser;
 	}
 
-	public String listForms() {
+	public String getListForms() {
 		return "listForms";
 	}
 

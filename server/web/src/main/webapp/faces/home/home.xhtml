@@ -16,7 +16,7 @@
 	</ui:define>
 	<ui:define name="body">
 		<h:form>
-			<h:commandLink action="#{homeBean.listForms}"
+			<h:link outcome="#{homeBean.listForms}"
 				value="#{msg.form_list}" />
 			<br />
 			<h:commandLink action="#{homeBean.newForm}" value="#{msg.form_new}">

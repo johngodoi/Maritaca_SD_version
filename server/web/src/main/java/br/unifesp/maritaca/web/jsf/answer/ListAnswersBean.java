@@ -10,7 +10,6 @@ import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
 
 @ManagedBean
-@SessionScoped
 public class ListAnswersBean extends AbstractBean {
 	private Form form;
 	private Collection<Answer> answers;
@@ -27,7 +26,7 @@ public class ListAnswersBean extends AbstractBean {
 		this.answers = answers;
 	}
 	
-	public String viewAnswer(){
+	public String getViewAnswer(){
 		return "viewAnswer";
 	}
 	

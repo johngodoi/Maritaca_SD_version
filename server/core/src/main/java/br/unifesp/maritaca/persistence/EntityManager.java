@@ -30,4 +30,6 @@ public interface EntityManager {
 	<T> List<T> listAll(Class<T> cl, boolean justMinimal);
 	
 	<T> boolean rowDataExists(Class<T> cl, UUID uuid);
+	
+	void close();
 }
