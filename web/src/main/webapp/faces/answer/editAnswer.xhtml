@@ -1,30 +1,39 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
 
-	<!-- 
+<!-- 
 		Replace path to template, title, header and body
 		with actual data.
 	 -->
-	<ui:composition template="/faces/commons/template.xhtml">
-			<ui:define name="pageTitle">Title</ui:define>
-			<ui:define name="pageHeader">#{(editAnswerBean.newAnswer) ? msg.answer_new : msg.answer_edit}</ui:define>
-			<ui:define name="body">
-			<h2>#{msg.form_id}</h2>
-			<h:outputText value="#{editAnswerBean.form.key}" />
-			<h2>#{msg.commons_xml}</h2>
-			<h:outputFormat value="#{editAnswerBean.form.xml}" />
-			<h:form>
-			<h:outputLabel value="#{msg.commons_xml}" for="xml"/><br/>
-			<h:inputTextarea value="#{editAnswerBean.xml}" /><br/>
-			<h:commandButton action="#{editAnswerBean.saveAnswer}" value="#{msg.answer_save}">
-			<f:setPropertyActionListener target="#{editAnswerBean.user}" value="#{currentUserBean.user}"/>
-			<f:setPropertyActionListener target="#{viewAnswerBean.answer}" value="#{editAnswerBean.answer}"/>
+
+<ui:composition template="/faces/commons/template.xhtml">
+	<ui:define name="pageTitle">Title</ui:define>
+	<ui:define name="pageHeader">#{(param.new==true) ? msg.answer_new : msg.answer_edit}</ui:define>
+	<ui:define name="body">
+	<h:form>
+		<h2>#{msg.form_id}</h2>
+		<h:outputText value="#{editAnswerBean.form.key}" />
+		<h2>#{msg.commons_xml}</h2>
+		<h:outputFormat value="#{editAnswerBean.form.xml}" />
+			<h:outputLabel value="#{msg.commons_xml}" />
+			<br />
+			<h:inputTextarea value="#{editAnswerBean.xml}" />
+			<h:inputHidden value="#{editAnswerBean.form}">
+			<f:converter converterId="br.unifesp.maritaca.web.jsf.converters.FormConverter"/>
+			</h:inputHidden>
+			<br />
+			<h:inputHidden value="new" id="answerid" />
+			<h:commandButton action="#{editAnswerBean.saveAnswer}"
+				value="#{msg.answer_save}">
+				<f:setPropertyActionListener target="#{editAnswerBean.user}"
+					value="#{currentUserBean.user}" />
+				<f:setPropertyActionListener target="#{viewAnswerBean.answer}"
+					value="#{editAnswerBean.answer}" />
 			</h:commandButton>
-			</h:form>
-			</ui:define>
-	</ui:composition>
+		</h:form>
+	</ui:define>
+</ui:composition>
 
 </html>

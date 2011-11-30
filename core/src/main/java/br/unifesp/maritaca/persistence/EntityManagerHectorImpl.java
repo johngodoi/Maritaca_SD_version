@@ -497,6 +497,16 @@ public class EntityManagerHectorImpl implements EntityManager {
 		T t = find(cl, uuid);
 		return t != null;
 	}
+
+	@Override
+	public void close() {
+		try {
+			cluster.getConnectionManager().shutdown();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
 	
 //	To support IDs with different names than "key"
 //	private <T> String getKeyName(Class<T> cl){

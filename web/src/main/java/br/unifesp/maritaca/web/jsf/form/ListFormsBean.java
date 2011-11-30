@@ -4,6 +4,8 @@ import java.util.Collection;
 
 import javax.faces.bean.ManagedBean;
 
+import com.sun.faces.context.flash.ELFlash;
+
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
 
