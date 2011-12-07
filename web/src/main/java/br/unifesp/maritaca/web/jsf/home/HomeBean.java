@@ -27,7 +27,7 @@ public class HomeBean {
 		return "listForms";
 	}
 
-	public String newForm() {
+	public String getNewForm() {
 		return "newForm";
 	}
 	
