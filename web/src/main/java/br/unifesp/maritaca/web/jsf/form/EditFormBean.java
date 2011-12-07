@@ -1,6 +1,7 @@
 package br.unifesp.maritaca.web.jsf.form;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 
 import br.unifesp.maritaca.core.Form;
@@ -9,9 +10,12 @@ import br.unifesp.maritaca.web.jsf.AbstractBean;
 
 @ManagedBean
 public class EditFormBean extends AbstractBean {
+	@ManagedProperty("#{currentUserBean.user}")
 	private User user;
 	private String xml;
 	private Form form;
+
+	@ManagedProperty("#{new}")
 	private boolean newForm;
 
 	public EditFormBean() {

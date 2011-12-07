@@ -44,8 +44,8 @@ import br.unifesp.maritaca.persistence.annotations.Minimal;
 
 public class EntityManagerHectorImpl implements EntityManager {
 
-	Cluster cluster;
-	Keyspace keyspace;
+	private Cluster cluster;
+	private Keyspace keyspace;
 	private final StringSerializer stringSerializer = StringSerializer.get();
 	private final UUIDSerializer uuidSerializer = UUIDSerializer.get();
 

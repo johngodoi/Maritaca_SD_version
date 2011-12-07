@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:util="http://java.sun.com/jsf/composite/components/util">
+
+<h:form>
+	<rich:tabPanel switchType="ajax" activeItem="#{manager.activeModule.title}">
+		<c:forEach var="module" items="#{manager.enabledModules}">
+			<rich:tab header="#{module.title}" id="#{module.title}">
+				<rich:tabPanel switchType="ajax" activeItem="#{module.activeSubModule.component}">
+					<c:forEach var="subModule" items="#{module.subModules}">
+						<rich:tab header="#{subModule.title}" id="#{subModule.component}">
+						<util:selectComponent submodule="#{subModule}"/> 
+						</rich:tab>
+					</c:forEach>
+				</rich:tabPanel>
+				
+			</rich:tab>
+		</c:forEach>
+	</rich:tabPanel>
+</h:form>
+</html>
