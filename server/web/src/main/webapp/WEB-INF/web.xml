@@ -17,7 +17,7 @@
  </context-param>
  <context-param>
   <param-name>org.richfaces.SKIN</param-name>
-  <param-value>blueSky</param-value>
+  <param-value>wine</param-value>
  </context-param>
   <context-param>
   <param-name>javax.faces.SKIP_COMMENTS</param-name>
@@ -51,13 +51,13 @@
   <load-on-startup>1</load-on-startup>
  </servlet>
  <!-- MAPPING -->
-<!--  <servlet-mapping> -->
-<!--   <servlet-name>Faces Servlet</servlet-name> -->
-<!--   <url-pattern>/faces/*</url-pattern> -->
-<!--  </servlet-mapping> -->
  <servlet-mapping>
   <servlet-name>Faces Servlet</servlet-name>
-  <url-pattern>*.xhtml</url-pattern>
+  <url-pattern>/faces/*</url-pattern>
+ </servlet-mapping>
+ <servlet-mapping>
+  <servlet-name>Faces Servlet</servlet-name>
+  <url-pattern>*.jsf</url-pattern>
  </servlet-mapping>
  <servlet-mapping>
   <servlet-name>Jersey REST Service</servlet-name>
@@ -68,6 +68,6 @@
   <url-pattern>/admin/MaritacaInit</url-pattern>
  </servlet-mapping>
  <welcome-file-list>
-  <welcome-file>/faces/index.xhtml</welcome-file>
+  <welcome-file>faces/views/login.xhtml</welcome-file>
  </welcome-file-list>
 </web-app>
