@@ -14,4 +14,8 @@ public interface SubModule {
 	Module getParent();
 
 	void setParent(Module parent);
+
+	String getId();
+
+	void setId(String id);
 }

@@ -10,7 +10,7 @@
 	 -->
 	<ui:composition template="/templates/masterLayout.xhtml">
 			<ui:define name="windowTitle">#{msgs.commons_title}</ui:define>
-			<ui:define name="heading">#{currentUserBean.user}</ui:define>
+			<ui:define name="heading">User: #{currentUserBean.user.firstname}</ui:define>
 			<ui:define name="content">
 			<ui:include src="/sections/forms/content.xhtml"></ui:include>
 			</ui:define>
