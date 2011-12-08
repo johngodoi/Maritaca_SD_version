@@ -15,12 +15,7 @@
 	</composite:interface>
 	<composite:implementation>
 
-		<h:button id="updateFormBt" value="#{msgs.update_form_button}">
-			<f:ajax event="onclick" render="updateStatusMsg"/>
-		</h:button>
 		
-		<h:outputText value="#{editFormBean.saveFormStatusMsg}"
-			          id="updateStatusMsg" />
 	</composite:implementation>
 </body>
 </html>

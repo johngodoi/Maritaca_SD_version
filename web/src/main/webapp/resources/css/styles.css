@@ -114,3 +114,7 @@ div.planetImage {
 .formXmlValue{
 	height: 350px;
 }
+
+.cols{
+            vertical-align:top;
+}
