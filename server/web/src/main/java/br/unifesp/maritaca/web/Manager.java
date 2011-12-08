@@ -16,50 +16,50 @@ import br.unifesp.maritaca.web.submodule.SubModuleImpl;
 public class Manager {
 	private List<Module> enabledModules;
 	private Module activeModule;
-	
+
 	public Manager() {
-		setEnabledModules(new ArrayList<Module>());		
+		setEnabledModules(new ArrayList<Module>());
 
 		Module mod = new ModuleImpl();
 		mod.setTitle("Forms");
 		SubModule submod = new SubModuleImpl();
-		submod.setTitle("MyForms");
+		submod.setTitle("My Forms");
 		submod.setComponent("listForms");
 		mod.addModule(submod);
 		setActiveModule(mod);
 		mod.setActiveSubModule(submod);
-		
+
 		submod = new SubModuleImpl();
 		submod.setTitle("Editor");
 		submod.setComponent("formEditor");
 		mod.addModule(submod);
-		
+
 		submod = new SubModuleImpl();
-		submod.setTitle("NewForm");
+		submod.setTitle("New Form");
 		submod.setComponent("newForm");
 		mod.addModule(submod);
-		
+
 		submod = new SubModuleImpl();
 		submod.setTitle("ViewForm");
 		submod.setComponent("viewForm");
 		mod.addModule(submod);
-		
+
 		getEnabledModules().add(mod);
-		
+
 		mod = new ModuleImpl();
 		mod.setTitle("Answer");
 		submod = new SubModuleImpl();
-		submod.setTitle("MyAnswers");
+		submod.setTitle("My Answers");
 		submod.setComponent("listAnswers");
 		mod.addModule(submod);
-		
+
 		submod = new SubModuleImpl();
-		submod.setTitle("Newanswer");
+		submod.setTitle("New Answer");
 		submod.setComponent("newAnswer");
 		mod.addModule(submod);
-		
+
 		getEnabledModules().add(mod);
-				
+
 	}
 
 	public List<Module> getEnabledModules() {
@@ -75,8 +75,24 @@ public class Manager {
 	}
 
 	public void setActiveModule(Module activeModule) {
-		this.activeModule = activeModule;
+		if (activeModule != null) {
+			this.activeModule = activeModule;
+		}
 	}
-	
-	
+
+	public void setActiveModuleByString(String modId) {
+		setActiveModule(searchModuleByString(modId));
+	}
+
+	private Module searchModuleByString(String modId) {
+		if (modId != null) {
+			for (Module mod : getEnabledModules()) {
+				if (mod.getId().equals(modId)) {
+					return mod;
+				}
+			}
+		}
+		return null;
+	}
+
 }

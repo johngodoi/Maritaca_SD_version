@@ -2,9 +2,11 @@ package br.unifesp.maritaca.web.module;
 
 import java.util.Set;
 
+import javax.faces.event.ActionListener;
+
 import br.unifesp.maritaca.web.submodule.SubModule;
 
-public interface Module {
+public interface Module extends ActionListener{
 	String getTitle();
 
 	void setTitle(String title);
@@ -21,5 +23,9 @@ public interface Module {
 
 	SubModule searchSubModule(String compName);
 
-	void setActiveSubModule(String compName);
+	void setId(String id);
+
+	String getId();
+
+	void setActiveSubModuleByString(String compName);
 }
