@@ -23,18 +23,29 @@
 				<h:outputText value="#{aForm.key}" />
 			</rich:column>
 			<rich:column>
-				<f:facet name="header">#{msgs.commons_view}</f:facet>
-				<h:commandLink value="#{msgs.commons_goto}"
-					action="#">
+				<f:facet name="header">#{msgs.form_options}</f:facet>
+				<h:commandLink action="#">
+					<img src="#{resource['img:view_form.png']}"/>
 					<f:setPropertyActionListener target="#{manager.activeModule}"
 						value="#{cc.attrs.submodule.parent}" />
 					<f:setPropertyActionListener
 						target="#{cc.attrs.submodule.parent.activeSubModule}"
 						value="#{cc.attrs.submodule.parent.searchSubModule('viewForm')}" />
 					<f:setPropertyActionListener target="#{viewFormBean.form}"
-						value="#{aForm}" />
+						value="#{aForm}" />						
+				</h:commandLink>
+				<h:commandLink action="#">
+					<img src="#{resource['img:edit_form.png']}"/>
+					<f:setPropertyActionListener target="#{manager.activeModule}"
+						value="#{cc.attrs.submodule.parent}" />
+					<f:setPropertyActionListener
+						target="#{cc.attrs.submodule.parent.activeSubModule}"
+						value="#{cc.attrs.submodule.parent.searchSubModule('formEditor')}" />
+					<f:setPropertyActionListener target="#{editFormBean.form}"
+						value="#{aForm}" />						
 				</h:commandLink>
 			</rich:column>
+			
 		</rich:dataTable>
 	</composite:implementation>
 </body>

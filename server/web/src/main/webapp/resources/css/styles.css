@@ -100,4 +100,17 @@ div.planetImage {
 
 .placeMap {
 	border:thin solid lightGray;margin: 5px;padding: 5px;
-}	
+}
+
+/* Submodule: formRender */
+.formRenderTable{
+	border: 1px solid black;
+}
+
+.formIdValue, .formXmlValue {
+	width : 300px;
+}
+
+.formXmlValue{
+	height: 350px;
+}
