@@ -3,7 +3,11 @@ package br.unifesp.maritaca.web.module;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ActionEvent;
+
 import br.unifesp.maritaca.web.submodule.SubModule;
+import br.unifesp.maritaca.web.utils.StringProcessing;
 
 public class ModuleImpl implements Module {
 
@@ -11,7 +15,7 @@ public class ModuleImpl implements Module {
 	private SubModule activeSubModule;
 
 	private Set<SubModule> subModules;
-	
+
 	public ModuleImpl() {
 		subModules = new HashSet<SubModule>();
 	}
@@ -38,8 +42,11 @@ public class ModuleImpl implements Module {
 	}
 
 	@Override
-	public void setActiveSubModule(SubModule mod) {
-		activeSubModule = mod;
+	public void setActiveSubModule(SubModule submod) {
+		if (submod != null) {
+			activeSubModule = submod;
+			System.out.println("m:" + getId() + " sm:" + submod.getId());
+		}
 	}
 
 	@Override
@@ -47,20 +54,38 @@ public class ModuleImpl implements Module {
 		submod.setParent(this);
 		getSubModules().add(submod);
 	}
-	
+
 	@Override
-	public SubModule searchSubModule(String compName){
-		for(SubModule sm : getSubModules()){
-			if(sm.getComponent().equals(compName)){
-				return sm;
+	public SubModule searchSubModule(String submodId) {
+		if (submodId != null) {
+			for (SubModule sm : getSubModules()) {
+				if (sm.getId().equals(submodId)) {
+					return sm;
+				}
 			}
 		}
 		return null;
 	}
-	
+
 	@Override
-	public void setActiveSubModule(String compName){
-		setActiveSubModule(searchSubModule(compName));
+	public void setActiveSubModuleByString(String submodId) {
+		setActiveSubModule(searchSubModule(submodId));
+	}
+
+	@Override
+	public String getId() {
+		return StringProcessing.getCompactedVersion(getTitle());
+	}
+
+	@Override
+	public void setId(String id) {
+		// dumb function
+	}
+
+	@Override
+	public void processAction(ActionEvent event)
+			throws AbortProcessingException {
+		setActiveSubModuleByString(event.getComponent().getId());
 	}
 
 }

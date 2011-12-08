@@ -7,19 +7,31 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:util="http://java.sun.com/jsf/composite/components/util">
-
 <h:form>
-	<rich:tabPanel switchType="ajax" activeItem="#{manager.activeModule.title}">
+	<c:set target="#{manager}" property="activeModuleByString"
+		value="#{param.m}" />
+	<!-- TOP TABS -->
+	<rich:tabPanel switchType="ajax" activeItem="#{manager.activeModule.id}">
 		<c:forEach var="module" items="#{manager.enabledModules}">
-			<rich:tab header="#{module.title}" id="#{module.title}">
-				<rich:tabPanel switchType="ajax" activeItem="#{module.activeSubModule.component}">
-					<c:forEach var="subModule" items="#{module.subModules}">
-						<rich:tab header="#{subModule.title}" id="#{subModule.component}">
-						<util:selectComponent submodule="#{subModule}"/> 
-						</rich:tab>
-					</c:forEach>
-				</rich:tabPanel>
-				
+			<!-- CREATE A NEW TOP TAB (MODULE) -->
+			<rich:tab header="#{module.title}" id="#{module.id}">
+				<c:set target="#{manager.activeModule}"
+					property="activeSubModuleByString" value="#{param.sm}" />
+				<!-- FOR EACH MODULE, CREATE A GRID PANEL FOR LEFT NAVIGATION BAR & CONTENT -->
+				<h:panelGrid columns="2" columnClasses="cols,cols">
+					<rich:panelMenu id="#{module.id}_panelLeftMenu" mode="ajax" activeItem="#{module.activeSubModule.id}">
+						<!-- LEFT MENU -->
+						<c:forEach var="subModule" items="#{module.subModules}">
+							<rich:panelMenuItem label="#{subModule.title}"  id="#{subModule.id}" actionListener="#{module.processAction}"
+								render="#{module.id}_panelContent">
+							</rich:panelMenuItem>
+						</c:forEach>
+					</rich:panelMenu>
+					<rich:panel id="#{module.id}_panelContent">
+						<!--  MAIN CONTENT -->
+						<util:selectComponent submodule="#{module.activeSubModule}"/>
+					</rich:panel>
+				</h:panelGrid>
 			</rich:tab>
 		</c:forEach>
 	</rich:tabPanel>

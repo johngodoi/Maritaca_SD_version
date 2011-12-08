@@ -1,6 +1,7 @@
 package br.unifesp.maritaca.web.submodule;
 
 import br.unifesp.maritaca.web.module.Module;
+import br.unifesp.maritaca.web.utils.StringProcessing;
 
 public class SubModuleImpl implements SubModule {
 
@@ -35,6 +36,16 @@ public class SubModuleImpl implements SubModule {
 	@Override
 	public void setParent(Module parent) {
 		this.parent = parent;
+	}
+	
+	@Override
+	public String getId(){
+		return StringProcessing.getCompactedVersion(getComponent());
+	}
+	
+	@Override
+	public void setId(String id){
+		//dumb function
 	}
 
 }
