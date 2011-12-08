@@ -5,17 +5,22 @@
 	xmlns:composite="http://java.sun.com/jsf/composite"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:forms="http://java.sun.com/jsf/composite/components/forms">
+	xmlns:a4j="http://richfaces.org/a4j">
 <head>
 <title>Not present in rendered output</title>
 </head>
 <body>
 	<composite:interface>
-		<composite:attribute name="submodule" required="true" />
+		<composite:attribute name="form" required="false" />
 	</composite:interface>
 	<composite:implementation>
-		<forms:updateFormBt form="#{editFormBean.form}"/>
-		<forms:formRender   form="#{editFormBean.form}" readonly="false"/>	
+
+		<h:button id="updateFormBt" value="#{msgs.update_form_button}">
+			<f:ajax event="onclick" render="updateStatusMsg"/>
+		</h:button>
+		
+		<h:outputText value="#{editFormBean.saveFormStatusMsg}"
+			          id="updateStatusMsg" />
 	</composite:implementation>
 </body>
 </html>
