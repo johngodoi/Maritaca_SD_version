@@ -22,7 +22,11 @@
 
 			<c:when test="#{cc.attrs.submodule.component eq 'viewForm'}">
 				<forms:viewForm submodule="#{cc.attrs.submodule}"/>
-			</c:when> 
+			</c:when>
+			
+			<c:when test="#{cc.attrs.submodule.component eq 'formEditor'}">
+				<forms:formEditor submodule="#{cc.attrs.submodule}"/>
+			</c:when>  
 		</c:choose>
 	</composite:implementation>
 </body>

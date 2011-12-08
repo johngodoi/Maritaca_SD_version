@@ -6,6 +6,7 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
+import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.EntityManager;
 import br.unifesp.maritaca.persistence.EntityManagerFactory;
@@ -33,11 +34,20 @@ public class MaritacaInitServlet extends HttpServlet {
     	EntityManagerFactory.getInstance().setHectorParams(params);
     	
     	EntityManager em = EntityManagerFactory.getInstance().createEntityManager(EntityManagerFactory.HECTOR_MARITACA_EM);
+    	
+		User user = new User();
+		user.setFirstname("admin");
+		user.setPassword("123");
+		
     	if(!em.tableExists(User.class)){
-    		User user = new User();
-    		user.setFirstname("admin");
-    		user.setPassword("123");
     		em.persist(user);
+    	}
+    	
+    	if(!em.tableExists(Form.class)){
+    		Form form = new Form();
+    		form.setXml("form xml");
+    		form.setUser(user);
+    		em.persist(form);
     	}
     }
     
