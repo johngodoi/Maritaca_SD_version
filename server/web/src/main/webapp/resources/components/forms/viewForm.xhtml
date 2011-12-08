@@ -3,8 +3,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:composite="http://java.sun.com/jsf/composite"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:f="http://java.sun.com/jsf/core"	
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:forms="http://java.sun.com/jsf/composite/components/forms">
 <head>
 <title>Not present in rendered output</title>
 </head>
@@ -12,14 +13,8 @@
 	<composite:interface>
 		<composite:attribute name="submodule" required="true" />
 	</composite:interface>
-	<composite:implementation>
-		<h:form>
-			<h:outputText value="#{viewFormBean.form.key}" />
-			<br />
-			<h:outputLabel value="#{msg.commons_xml}" />
-			<br />
-			<h:inputTextarea value="#{viewFormBean.form.xml}" />
-		</h:form>
+	<composite:implementation>	
+		<forms:formRender form="#{viewFormBean.form}" readonly="true"/>		
 	</composite:implementation>
 </body>
 </html>

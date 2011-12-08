@@ -2,7 +2,8 @@ package br.unifesp.maritaca.web.jsf.form;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
+
+import org.apache.cassandra.cli.CliParser.setStatement_return;
 
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.User;
@@ -14,8 +15,9 @@ public class EditFormBean extends AbstractBean {
 	private User user;
 	private String xml;
 	private Form form;
+	private String saveStatus;
 
-	@ManagedProperty("#{new}")
+//	@ManagedProperty("#{new}")
 	private boolean newForm;
 
 	public EditFormBean() {
@@ -60,10 +62,20 @@ public class EditFormBean extends AbstractBean {
 			form.setUser(user);
 			form.setXml(xml);
 			if (formAnswCtrl.saveForm(form))
+				setSaveStatus("success");
 				return "success";
 		}
 
+		setSaveStatus("error");
 		return "error";
+	}
+
+	public String getSaveStatus() {
+		return saveStatus;
+	}
+
+	public void setSaveStatus(String saveStatus) {
+		this.saveStatus = saveStatus;
 	}
 
 }
