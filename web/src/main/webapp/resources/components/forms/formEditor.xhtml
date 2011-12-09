@@ -14,7 +14,11 @@
 		<composite:attribute name="submodule" required="true" />
 	</composite:interface>
 	<composite:implementation>
-		<forms:updateFormBt form="#{editFormBean.form}"/>
+		<!-- TODO Temporary. This buttons will be created as separated components. -->
+		<h:commandButton value="#{msgs.update_form_button}" action="#{editFormBean.saveForm}" />
+		<h:commandButton value="#{msgs.delete_form_button}" action="#{editFormBean.saveForm}" />
+		<h:commandButton value="#{msgs.cancel_form_button}" action="#{editFormBean.saveForm}" />
+		
 		<forms:formRender   form="#{editFormBean.form}" readonly="false"/>	
 	</composite:implementation>
 </body>
