@@ -15,43 +15,55 @@
 		<composite:attribute name="submodule" required="true" />
 	</composite:interface>
 	<composite:implementation>
-		<h:form>
-			<rich:dataTable value="#{listFormsBean.forms}" var="aForm">
-				<f:facet name="caption">
-					<h:outputText value="#{msgs.form_list}" />
-				</f:facet>
-				<rich:column>
-					<f:facet name="header">#{msgs.commons_id}</f:facet>
+		<rich:dataTable value="#{listFormsBean.forms}" var="aForm">
+			<f:facet name="caption">
+				<h:outputText value="#{msgs.form_list}" />
+			</f:facet>
+			<rich:column>
+			<h:selectBooleanCheckbox value="" />
+			</rich:column>
+			<rich:column>
+				<f:facet name="header">#{msgs.commons_id}</f:facet>
+				<a4j:commandLink render="#{manager.activeModule.id}" execute="@form"
+					immediate="true">
 					<h:outputText value="#{aForm.key}" />
-				</rich:column>
-				<rich:column>
+					<f:setPropertyActionListener target="#{manager.activeModule}"
+						value="#{cc.attrs.submodule.parent}" />
+					<f:setPropertyActionListener
+						target="#{cc.attrs.submodule.parent.activeSubModule}"
+						value="#{cc.attrs.submodule.parent.searchSubModule('viewForm')}" />
+					<f:setPropertyActionListener target="#{viewFormBean.form}"
+						value="#{aForm}" />
+				</a4j:commandLink>
+
+			</rich:column>
+			<rich:column>
 				<!-- TODO: correct button click. Current is double click -->
-					<f:facet name="header">#{msgs.form_options}</f:facet>
-					<a4j:commandLink render="#{manager.activeModule.id}"
-						execute="@this" immediate="true">
-						<img src="#{resource['img:view_form.png']}" />
-						<f:setPropertyActionListener target="#{manager.activeModule}"
-							value="#{cc.attrs.submodule.parent}" />
-						<f:setPropertyActionListener
-							target="#{cc.attrs.submodule.parent.activeSubModule}"
-							value="#{cc.attrs.submodule.parent.searchSubModule('viewForm')}" />
-						<f:setPropertyActionListener target="#{viewFormBean.form}"
-							value="#{aForm}" />
-					</a4j:commandLink>
-					<a4j:commandLink render="#{manager.activeModule.id}"
-						execute="@this" immediate="true">
-						<img src="#{resource['img:edit_form.png']}" />
-						<f:setPropertyActionListener target="#{manager.activeModule}"
-							value="#{cc.attrs.submodule.parent}" />
-						<f:setPropertyActionListener
-							target="#{cc.attrs.submodule.parent.activeSubModule}"
-							value="#{cc.attrs.submodule.parent.searchSubModule('formEditor')}" />
-						<f:setPropertyActionListener target="#{editFormBean.form}"
-							value="#{aForm}" />
-					</a4j:commandLink>
-				</rich:column>
-			</rich:dataTable>
-		</h:form>
+				<f:facet name="header">#{msgs.form_options}</f:facet>
+				<a4j:commandLink render="#{manager.activeModule.id}" execute="@form"
+					immediate="true">
+					<img src="#{resource['img:view_form.png']}" width="32" />
+					<f:setPropertyActionListener target="#{manager.activeModule}"
+						value="#{cc.attrs.submodule.parent}" />
+					<f:setPropertyActionListener
+						target="#{cc.attrs.submodule.parent.activeSubModule}"
+						value="#{cc.attrs.submodule.parent.searchSubModule('viewForm')}" />
+					<f:setPropertyActionListener target="#{viewFormBean.form}"
+						value="#{aForm}" />
+				</a4j:commandLink>
+				<a4j:commandLink render="#{manager.activeModule.id}" execute="@form"
+					immediate="true">
+					<img src="#{resource['img:edit_form.png']}" width="32" />
+					<f:setPropertyActionListener target="#{manager.activeModule}"
+						value="#{cc.attrs.submodule.parent}" />
+					<f:setPropertyActionListener
+						target="#{cc.attrs.submodule.parent.activeSubModule}"
+						value="#{cc.attrs.submodule.parent.searchSubModule('formEditor')}" />
+					<f:setPropertyActionListener target="#{editFormBean.form}"
+						value="#{aForm}" />
+				</a4j:commandLink>
+			</rich:column>
+		</rich:dataTable>
 	</composite:implementation>
 </body>
 </html>
