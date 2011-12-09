@@ -1,6 +1,6 @@
 package br.unifesp.maritaca.web.module;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.faces.event.ActionListener;
 
@@ -11,9 +11,9 @@ public interface Module extends ActionListener{
 
 	void setTitle(String title);
 
-	Set<SubModule> getSubModules();
+	List<SubModule> getSubModules();
 	
-	void setSubModules(Set<SubModule> subModules);
+	void setSubModules(List<SubModule> subModules);
 	
 	SubModule getActiveSubModule();
 
