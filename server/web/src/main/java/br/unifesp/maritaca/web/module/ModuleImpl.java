@@ -1,7 +1,7 @@
 package br.unifesp.maritaca.web.module;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
@@ -14,10 +14,10 @@ public class ModuleImpl implements Module {
 	private String title;
 	private SubModule activeSubModule;
 
-	private Set<SubModule> subModules;
+	private List<SubModule> subModules;
 
 	public ModuleImpl() {
-		subModules = new HashSet<SubModule>();
+		subModules = new ArrayList<SubModule>();
 	}
 
 	public String getTitle() {
@@ -28,11 +28,11 @@ public class ModuleImpl implements Module {
 		this.title = title;
 	}
 
-	public Set<SubModule> getSubModules() {
+	public List<SubModule> getSubModules() {
 		return subModules;
 	}
 
-	public void setSubModules(Set<SubModule> subModules) {
+	public void setSubModules(List<SubModule> subModules) {
 		this.subModules = subModules;
 	}
 
@@ -45,7 +45,6 @@ public class ModuleImpl implements Module {
 	public void setActiveSubModule(SubModule submod) {
 		if (submod != null) {
 			activeSubModule = submod;
-			System.out.println("m:" + getId() + " sm:" + submod.getId());
 		}
 	}
 

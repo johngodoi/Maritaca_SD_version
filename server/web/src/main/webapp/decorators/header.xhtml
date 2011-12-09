@@ -2,19 +2,23 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
-   xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:h="http://java.sun.com/jsf/html">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html">
 
-  <h:head>
-    <title>IGNORED</title>
-  </h:head>
-  
-  <h:body>
-    <!--Notice the absence of the template attribute for ui:composition-->
-    <ui:composition>
-      <div id="heading">
-        <ui:insert/>
-      </div>
-    </ui:composition>    
-  </h:body>
+<h:head>
+	<title>IGNORED</title>
+</h:head>
+
+<h:body>
+	<!--Notice the absence of the template attribute for ui:composition-->
+	<ui:composition>
+		<div id="heading">
+			<h:panelGrid id="headerPanel" columns="8" styleClass="headerPanel">
+				<h:graphicImage value="#{resource['img:project_logo.png']}" />
+				<h:graphicImage value="#{resource['img:banner.png']}" />
+				<ui:insert name="heading" />
+			</h:panelGrid>
+		</div>
+	</ui:composition>
+</h:body>
 </html>
