@@ -11,21 +11,8 @@
 	 -->
 <ui:composition template="/templates/masterLayout.xhtml">
 	<ui:define name="windowTitle"></ui:define>
-	<ui:define name="heading">#{msgs.commons_title}</ui:define>
 	<ui:define name="content">
-		<center>
-			<h:form>
-				<h:selectOneMenu value="#{currentUserBean.user}">
-					<f:selectItems value="#{loginBean.userList}" />
-					<f:converter
-						converterId="br.unifesp.maritaca.web.jsf.converters.UserConverter" />
-				</h:selectOneMenu>
-				<br />
-				<h:commandButton action="#{loginBean.submit}" value="Login">
-					<f:param name="m" value="formularios" />
-				</h:commandButton>
-			</h:form>
-		</center>
+		<ui:include src="/sections/login/content.xhtml"/>
 	</ui:define>
 </ui:composition>
 
