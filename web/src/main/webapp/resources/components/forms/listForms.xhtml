@@ -23,10 +23,10 @@
 			<h:selectBooleanCheckbox value="" />
 			</rich:column>
 			<rich:column>
-				<f:facet name="header">#{msgs.commons_id}</f:facet>
+				<f:facet name="header">#{msgs.form_title}</f:facet>
 				<a4j:commandLink render="#{manager.activeModule.id}" execute="@form"
 					immediate="true">
-					<h:outputText value="#{aForm.key}" />
+					<h:outputText value="#{aForm.title}" />
 					<f:setPropertyActionListener target="#{manager.activeModule}"
 						value="#{cc.attrs.submodule.parent}" />
 					<f:setPropertyActionListener

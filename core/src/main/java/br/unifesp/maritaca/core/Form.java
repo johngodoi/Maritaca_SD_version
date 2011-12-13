@@ -24,6 +24,9 @@ public class Form {
 	@Minimal
 	private User user;
 	
+	@Column
+	@Minimal
+	private String title;	
 
 	@XmlElement(name="id")
 	public UUID getKey() {
@@ -67,5 +70,13 @@ public class Form {
 			return getKey().toString();
 		}
 		return super.toString();
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 }
