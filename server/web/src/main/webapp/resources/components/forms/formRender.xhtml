@@ -16,8 +16,8 @@
 	<composite:implementation>
 		<h:panelGrid id="formRenderTable" columns="2"
 			styleClass="formRenderTable">
-			<h:outputText styleClass="formLabel"   value="#{msgs.form_renderer_id}" />
-			<h:inputText  styleClass="formIdValue" value="#{cc.attrs.form.key}"
+			<h:outputText styleClass="formLabel"   value="#{msgs.form_title}" />
+			<h:inputText  styleClass="formIdValue" value="#{cc.attrs.form.title}"
 				          readonly="#{cc.attrs.readonly}" />
 
 			<h:outputText styleClass="formLabel"    value="#{msgs.form_renderer_xml}" />
