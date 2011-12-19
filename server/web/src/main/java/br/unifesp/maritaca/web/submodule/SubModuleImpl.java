@@ -10,7 +10,7 @@ public class SubModuleImpl implements SubModule {
 	private Module parent;
 
 	public SubModuleImpl() {
-		setComponent("listForms");
+		setComponent("");
 	}
 	public String getTitle() {
 		return title;

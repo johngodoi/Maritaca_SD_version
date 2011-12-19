@@ -15,16 +15,10 @@
 		<composite:attribute name="submodule" required="true" />
 	</composite:interface>
 	<composite:implementation>
-		<rich:dataTable value="#{listFormsBean.forms}" var="aForm">
-			<f:facet name="caption">
-				<h:outputText value="#{msgs.form_list}" />
-			</f:facet>
-			<rich:column>
-			<h:selectBooleanCheckbox value="" />
-			</rich:column>
+		<rich:dataTable var="aForm" value="#{listFormsBean.forms}">
 			<rich:column>
 				<f:facet name="header">#{msgs.form_title}</f:facet>
-				<a4j:commandLink render="#{manager.activeModule.id}" execute="@form"
+				<a4j:commandLink render="#{manager.activeModule.id}"
 					immediate="true">
 					<h:outputText value="#{aForm.title}" />
 					<f:setPropertyActionListener target="#{manager.activeModule}"
@@ -35,12 +29,11 @@
 					<f:setPropertyActionListener target="#{viewFormBean.form}"
 						value="#{aForm}" />
 				</a4j:commandLink>
-
 			</rich:column>
 			<rich:column>
 				<!-- TODO: correct button click. Current is double click -->
 				<f:facet name="header">#{msgs.form_options}</f:facet>
-				<a4j:commandLink render="#{manager.activeModule.id}" execute="@form"
+				<a4j:commandLink render="#{manager.activeModule.id}"
 					immediate="true">
 					<img src="#{resource['img:view_form.png']}" width="32" />
 					<f:setPropertyActionListener target="#{manager.activeModule}"
@@ -51,7 +44,7 @@
 					<f:setPropertyActionListener target="#{viewFormBean.form}"
 						value="#{aForm}" />
 				</a4j:commandLink>
-				<a4j:commandLink render="#{manager.activeModule.id}" execute="@form"
+				<a4j:commandLink render="#{manager.activeModule.id}"
 					immediate="true">
 					<img src="#{resource['img:edit_form.png']}" width="32" />
 					<f:setPropertyActionListener target="#{manager.activeModule}"
