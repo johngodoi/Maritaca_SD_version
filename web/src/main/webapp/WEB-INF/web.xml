@@ -20,12 +20,16 @@
 		<param-value>enable</param-value>
 	</context-param>
 	<context-param>
-		<param-name>org.richfaces.SKIN</param-name>
-		<param-value>wine</param-value>
+		<param-name>org.richfaces.skin</param-name>
+		<param-value>blueSky</param-value>
 	</context-param>
 	<context-param>
 		<param-name>javax.faces.SKIP_COMMENTS</param-name>
 		<param-value>true</param-value>
+	</context-param>
+	<context-param>
+		<param-name>javax.faces.PARTIAL_STATE_SAVING</param-name>
+		<param-value>false</param-value>
 	</context-param>
 	<servlet>
 		<servlet-name>Jersey REST Service</servlet-name>
@@ -58,10 +62,6 @@
 	<servlet-mapping>
 		<servlet-name>Faces Servlet</servlet-name>
 		<url-pattern>/faces/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>Faces Servlet</servlet-name>
-		<url-pattern>*.jsf</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>Jersey REST Service</servlet-name>

@@ -46,6 +46,7 @@ public class MaritacaInitServlet extends HttpServlet {
     	if(!em.tableExists(Form.class)){
     		Form form = new Form();
     		form.setXml("form xml");
+    		form.setTitle("test form");
     		form.setUser(user);
     		em.persist(form);
     	}
