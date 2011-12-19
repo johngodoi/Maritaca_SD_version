@@ -6,21 +6,21 @@
 	xmlns:util="http://java.sun.com/jsf/composite/components/util">
 <h:form>
 	<!-- TOP TABS -->
-	<rich:tabPanel switchType="ajax"
-		activeItem="#{manager.activeModule.id}"
+	<rich:tabPanel
+		activeItem="#{manager.activeModule.id}" switchType="ajax" 
 		itemChangeListener="#{manager.processItemChange}">
 		<c:forEach var="module" items="#{manager.enabledModules}">
 			<!-- CREATE A NEW TOP TAB (MODULE) -->
 			<rich:tab header="#{module.title}" id="#{module.id}">
 				<!-- FOR EACH MODULE, CREATE A GRID PANEL FOR LEFT NAVIGATION BAR & CONTENT -->
-				<h:panelGrid columns="2" columnClasses="cols,cols">
-					<rich:panelMenu id="#{module.id}_panelLeftMenu" itemMode="ajax"
+				<h:panelGrid columns="2" columnClasses="cols,cols" id="#{module.id}_menuAndContent">
+					<rich:panelMenu id="#{module.id}_panelLeftMenu"
 						activeItem="#{module.activeSubModule.id}">
-						<!-- LEFT MENU -->
+						<!-- LEFT MENU -->						
 						<c:forEach var="subModule" items="#{module.subModules}">
 							<rich:panelMenuItem label="#{subModule.title}"
 								id="#{subModule.id}" actionListener="#{module.processAction}"
-								render="#{module.id}_panelContent">
+								render="#{module.id}_panelContent" mode="ajax">
 							</rich:panelMenuItem>
 						</c:forEach>
 					</rich:panelMenu>
