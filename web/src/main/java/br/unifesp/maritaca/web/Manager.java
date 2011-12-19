@@ -40,16 +40,6 @@ public class Manager implements ItemChangeListener {
         submod.setComponent("formEditor");
         mod.addModule(submod);
 
-        submod = new SubModuleImpl();
-        submod.setTitle("New Form");
-        submod.setComponent("newForm");
-        mod.addModule(submod);
-
-        submod = new SubModuleImpl();
-        submod.setTitle("ViewForm");
-        submod.setComponent("viewForm");
-        mod.addModule(submod);
-
         getEnabledModules().add(mod);
 
         mod = new ModuleImpl();
@@ -105,6 +95,5 @@ public class Manager implements ItemChangeListener {
     public void processItemChange(ItemChangeEvent event)
             throws AbortProcessingException {
         setActiveModuleByString(event.getNewItem().getId());
-        System.out.println("new active module " + getActiveModule().getId());
     }
 }

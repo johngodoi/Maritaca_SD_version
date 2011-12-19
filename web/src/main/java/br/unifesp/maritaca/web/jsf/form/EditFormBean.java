@@ -17,12 +17,14 @@ public class EditFormBean extends AbstractBean {
 	private Form form;
 	private String saveStatus;
 
-//	@ManagedProperty("#{new}")
 	private boolean newForm;
+	private boolean editForm;
 
 	public EditFormBean() {
 		super(true, false);
 		form = new Form();
+		newForm = true;
+		editForm = true;
 	}
 
 	public User getUser() {
@@ -47,6 +49,7 @@ public class EditFormBean extends AbstractBean {
 
 	public void setNewForm(boolean newForm) {
 		this.newForm = newForm;
+		setEditForm(newForm);
 	}
 
 	public Form getForm() {
@@ -54,7 +57,12 @@ public class EditFormBean extends AbstractBean {
 	}
 
 	public void setForm(Form form) {
+		if(form == null)return;
 		this.form = form;
+		//if form has key, it is not a new form
+		if(form.getKey() == null){
+		setNewForm(true);
+		}
 	}
 
 	public String saveForm() {
@@ -76,6 +84,14 @@ public class EditFormBean extends AbstractBean {
 
 	public void setSaveStatus(String saveStatus) {
 		this.saveStatus = saveStatus;
+	}
+
+	public boolean isEditForm() {
+		return editForm;
+	}
+
+	public void setEditForm(boolean editForm) {
+		this.editForm = editForm;
 	}
 
 }

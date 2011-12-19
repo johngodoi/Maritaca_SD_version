@@ -3,6 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:rich="http://richfaces.org/rich">
 <head>
 <title>Not present in rendered output</title>
@@ -10,19 +11,29 @@
 <body>
 
 	<composite:interface>
-		<composite:attribute name="form" required="false" />
-		<composite:attribute name="readonly" required="true" />
 	</composite:interface>
 	<composite:implementation>
+		<c:choose>
+			<c:when test="#{editFormBean.newForm}">
+				<p>#{msgs.form_new}</p>
+			</c:when>
+		</c:choose>
+		<c:choose>
+			<c:when test="#{editFormBean.editForm}">
+				<p>#{msgs.form_edit}</p>
+			</c:when>
+		</c:choose>
 		<h:panelGrid id="formRenderTable" columns="2"
 			styleClass="formRenderTable">
-			<h:outputText styleClass="formLabel"   value="#{msgs.form_title}" />
-			<h:inputText  styleClass="formIdValue" value="#{cc.attrs.form.title}"
-				          readonly="#{cc.attrs.readonly}" />
+			<h:outputText styleClass="formLabel" value="#{msgs.form_title}" />
+			<h:inputText styleClass="formIdValue"
+				value="#{editFormBean.form.title}"
+				readonly="#{editFormBean.newForm}" />
 
-			<h:outputText styleClass="formLabel"    value="#{msgs.form_renderer_xml}" />
-			<h:inputText  styleClass="formXmlValue" value="#{cc.attrs.form.xml}"
-				          readonly="#{cc.attrs.readonly}" />
+			<h:outputText styleClass="formLabel"
+				value="#{msgs.form_renderer_xml}" />
+			<h:inputText styleClass="formXmlValue"
+				value="#{editFormBean.form.xml}" readonly="#{editFormBean.newForm}" />
 		</h:panelGrid>
 	</composite:implementation>
 </body>
