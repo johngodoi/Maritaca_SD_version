@@ -11,24 +11,24 @@ import javax.xml.bind.annotation.XmlTransient;
 import br.unifesp.maritaca.persistence.annotations.Column;
 import br.unifesp.maritaca.persistence.annotations.Minimal;
 
-@XmlRootElement(name="form")
+@XmlRootElement(name = "form")
 @Entity
 public class Form {
 	@Id
 	private UUID key;
-	
+
 	@Column
 	private String xml;
-	
+
 	@Column(indexed = true)
 	@Minimal
 	private User user;
-	
+
 	@Column
 	@Minimal
-	private String title;	
+	private String title;
 
-	@XmlElement(name="id")
+	@XmlElement(name = "id")
 	public UUID getKey() {
 		return key;
 	}
@@ -36,8 +36,8 @@ public class Form {
 	public void setKey(UUID key) {
 		this.key = key;
 	}
-	
-	public void setKey(String ks){
+
+	public void setKey(String ks) {
 		this.key = UUID.fromString(ks);
 	}
 
@@ -57,22 +57,25 @@ public class Form {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
+
 	public void setUser(String userId) {
 		User f = new User();
 		f.setKey(userId);
 		setUser(f);
 	}
-	
+
 	@Override
 	public String toString() {
-		if(getKey()!=null){
+		if (getKey() != null) {
 			return getKey().toString();
 		}
 		return super.toString();
 	}
 
 	public String getTitle() {
+		if (title == null && getKey() != null) {
+			return getKey().toString();
+		}
 		return title;
 	}
 
