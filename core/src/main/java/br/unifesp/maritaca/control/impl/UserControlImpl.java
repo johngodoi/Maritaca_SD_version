@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.UUID;
 
 import br.unifesp.maritaca.control.UserControl;
-import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.EntityManager;
 
@@ -48,6 +47,19 @@ public class UserControlImpl implements UserControl {
 			return null;
 
 		return entityManager.listAll(User.class, true);
+	}
+
+	/**
+	 * Returns the first user with the given email address.
+	 * Email addresses should be unique in the database.
+	 * @param email Address of the searched user. 
+	 * @return The user found.
+	 */
+	@Override
+	public User getUser(String email) {
+		if (entityManager == null)
+			return null;
+		return entityManager.cQuery(User.class, "email", email).get(0);
 	}
 
 }
