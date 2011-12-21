@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<head>
+<title>Not present in rendered output</title>
+</head>
+<body>
+	<composite:interface>
+
+	</composite:interface>
+	<composite:implementation>
+		<h:outputText value="#{msgs.login_open_id}" id="open_id_login" />
+		<h:panelGrid id="formRenderTable" columns="2">
+			<h:form>
+				<h:commandButton value="" action="${loginBean.openId}"
+					image="#{resource['img:google_openid_icon.png']}" >
+					<f:param name="op" value="Google"/>
+				</h:commandButton>
+
+				<h:commandButton value="" action="${loginBean.openId}"
+					image="#{resource['img:yahoo_openid_icon.png']}">
+					<f:param name="op" value="Yahoo"/>
+				</h:commandButton>
+			</h:form>
+		</h:panelGrid>
+	</composite:implementation>
+</body>
+</html>
