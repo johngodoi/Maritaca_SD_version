@@ -84,7 +84,6 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.richfaces.ui</groupId>
 			<artifactId>richfaces-components-ui</artifactId>
@@ -98,6 +97,18 @@
 			<artifactId>annotations</artifactId>
 			<version>4.0.0.Final</version>
 			<scope>provided</scope>
+		</dependency>
+		<!-- Allows to use the bean validation framework -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator-annotation-processor</artifactId>
+			<version>4.2.0.Final</version>
+		</dependency>
+		<!-- OpenID -->
+		<dependency>
+			<groupId>org.expressme</groupId>
+			<artifactId>JOpenId</artifactId>
+			<version>1.08</version>
 		</dependency>
 		<!-- TESTING -->
 		<dependency>
