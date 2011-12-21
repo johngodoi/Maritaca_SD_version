@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:rich="http://richfaces.org/rich">
+<head>
+<title>Not present in rendered output</title>
+</head>
+<body>
+	<composite:interface>
+		<composite:attribute name="title" required="true" />
+		<composite:attribute name="styleClass" required="false" />
+		<composite:attribute name="show" required="false"/>
+	</composite:interface>
+	<composite:implementation>
+		<rich:popupPanel id="popup" modal="true" 
+			styleClass="#{cc.attrs.styleClass}"
+			onmaskclick="#{rich:component('popup')}.hide()"
+			keepVisualState="true"
+			height="300" width="500"
+			show="#{cc.attrs.show}">
+			<f:facet name="header">
+				<h:outputText value="#{cc.attrs.title}" />
+			</f:facet>
+			<f:facet name="controls">
+				<h:outputLink value="#"
+					onclick="#{rich:component('popup')}.hide(); return false;">
+                    X
+                </h:outputLink>
+			</f:facet>
+
+			<composite:insertChildren />
+		</rich:popupPanel>
+	</composite:implementation>
+</body>
+</html>

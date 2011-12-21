@@ -1,0 +1,92 @@
+.ftContainer {
+	width: 90%;
+	margin: 0 auto;
+	border: 1px solid #99CCFF;
+	font-family: "Trebuchet MS";
+}
+
+.ftContainer h1 {
+	text-align: center;
+	font-size: 22px;
+	margin: 0px;
+	color: white;
+	background-image: url(traceResource.jsf?name=main_header&type=gif);
+}
+
+.ftSection {
+	clear: both;
+}
+
+.ftSection h3 {
+	text-align: left;
+	text-indent: 8px;
+	font-size: 20px;
+	margin: 0px;
+	color: #000033;
+	background-color: #99CCFF;
+	text-align: left;
+	background-image: url(traceResource.jsf?name=sectionheader&type=gif);
+	cursor: pointer;
+}
+
+.ftSectionContent table {
+	width: 100%;
+}
+
+.ftSectionContent table th {
+	background-image: url(traceResource.jsf?name=tableheader&type=gif);
+	color: black;
+}
+
+.ftSectionContent table tr.odd {
+	background-color: white;
+}
+
+.ftSectionContent table tr.even {
+	background-color: #EDF5FF;
+}
+
+.ftSectionContent table tr.odd td{
+	border: 1px solid #EDF5FF;
+	background-color: white;
+}
+
+.ftSectionContent table tr.even td{
+	border: 1px solid white;
+	background-color: #EDF5FF;
+}
+
+.ftLifecyclePhase,.ftSuccessfullPhase,.ftFailedPhase,.ftSkippedPhase {
+	width: 100px;
+	height: 100px;
+	background-color: gray;
+	border: 1px solid black;
+	margin: 20px 0px 20px 40px;
+	float: left;
+	text-align: center;
+}
+
+.ftSuccessfullPhase {
+	background-color: #33CC00;
+}
+
+.ftFailedPhase {
+	background-color: #990000;
+}
+
+.ftSkippedPhase {
+	background-color: #CCCCCC;
+}
+
+#foldheader {
+	cursor: pointer;
+}
+
+.ftOverflowScopeToggle {
+	color:blue;
+	cursor: pointer;
+}
+
+.ftOverflowScopeVariable {
+	display: none;
+}
