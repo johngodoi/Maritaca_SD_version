@@ -10,6 +10,8 @@ public interface UserControl {
 	boolean saveUser(User user);
 
 	User getUser(UUID uuid);
+	
+	User getUser(String email);
 
 	void setEntityManager(EntityManager em);
 

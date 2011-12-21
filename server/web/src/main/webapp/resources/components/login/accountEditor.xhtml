@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:rich="http://richfaces.org/rich">
+<head>
+<title>Not present in rendered output</title>
+</head>
+<body>
+	<composite:interface>
+	</composite:interface>
+	<composite:implementation>
+		<h:form>
+			<h:panelGrid columns="3">
+				<!-- Row 1 -->
+				<h:outputText value="#{msgs.account_first_name}:" />
+				<h:inputText value="#{createAccountBean.user.firstname}"
+					label="#{msgs.account_first_name}" id="firstName" required="true">
+					<f:validateLength minimum="4" maximum="12" />
+				</h:inputText>
+				<h:message for="firstName" styleClass="errorMsg" />
+
+				<!-- Row 2 -->
+				<h:outputText value="#{msgs.account_last_name}:" />
+				<h:inputText value="#{createAccountBean.user.lastname}"
+					label="#{msgs.account_last_name}" id="lastName">
+					<f:validateLength minimum="4" maximum="12" />
+				</h:inputText>
+				<h:message for="lastName" styleClass="errorMsg" />
+
+				<!-- Row 3 -->
+				<h:outputText value="#{msgs.account_email}:" />
+				<h:inputText value="#{createAccountBean.user.email}" id="email"
+					label="#{msgs.account_email}" required="true">
+					<f:ajax event="blur" render="emailError" />
+				</h:inputText>
+				<h:panelGroup>
+					<h:message for="email" styleClass="errorMsg" />
+					<h:outputText
+						value="#{createAccountBean.registeredEmail() ? msgs.account_create_used_email: ''}"
+						id="emailError" styleClass="errorMsg">
+					</h:outputText>
+				</h:panelGroup>
+
+				<!-- Row 4 -->
+				<h:outputText value="#{msgs.account_password}:" />
+				<h:inputSecret value="#{createAccountBean.user.password}"
+					label="#{msgs.account_password}" id="password" required="true">
+					<f:validateLength minimum="6" maximum="20" />
+				</h:inputSecret>
+				<h:message for="password" styleClass="errorMsg" />
+
+				<!-- Row 5 -->
+				<h:outputText value="#{msgs.account_create_retype_passwd}:" />
+				<h:inputSecret value="#{createAccountBean.confirmPassword}"
+					label="#{msgs.account_create_retype_passwd}" required="true"
+					id="passwordConfirm">
+					<f:ajax event="blur" execute="@this password"
+						render="confirmPasswdError" />
+					<f:validateLength minimum="6" maximum="20" />
+				</h:inputSecret>
+				<h:panelGroup>
+					<h:message for="passwordConfirm" styleClass="errorMsg" />
+					<h:outputText
+						value="#{createAccountBean.passwordsMatch() ? '' : msgs.account_passwd_dont_match }"
+						id="confirmPasswdError" styleClass="errorMsg">
+					</h:outputText>
+				</h:panelGroup>
+			</h:panelGrid>
+
+			<h:commandButton value="#{msgs.account_create_button}"
+				action="#{createAccountBean.create}">
+				<f:setPropertyActionListener target="#{currentUserBean.user}"
+					value="#{createAccountBean.user}" />
+			</h:commandButton>
+
+		</h:form>
+	</composite:implementation>
+</body>
+</html>
