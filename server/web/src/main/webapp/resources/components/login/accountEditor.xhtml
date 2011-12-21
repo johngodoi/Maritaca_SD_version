@@ -22,7 +22,7 @@
 					label="#{msgs.account_first_name}" id="firstName" required="true">
 					<f:validateLength minimum="4" maximum="12" />
 				</h:inputText>
-				<h:message for="firstName" styleClass="errorMsg" />
+				<h:message for="firstName" styleClass="error" />
 
 				<!-- Row 2 -->
 				<h:outputText value="#{msgs.account_last_name}:" />
@@ -30,7 +30,7 @@
 					label="#{msgs.account_last_name}" id="lastName">
 					<f:validateLength minimum="4" maximum="12" />
 				</h:inputText>
-				<h:message for="lastName" styleClass="errorMsg" />
+				<h:message for="lastName" styleClass="error" />
 
 				<!-- Row 3 -->
 				<h:outputText value="#{msgs.account_email}:" />
@@ -39,10 +39,10 @@
 					<f:ajax event="blur" render="emailError" />
 				</h:inputText>
 				<h:panelGroup>
-					<h:message for="email" styleClass="errorMsg" />
+					<h:message for="email" styleClass="error" />
 					<h:outputText
 						value="#{createAccountBean.registeredEmail() ? msgs.account_create_used_email: ''}"
-						id="emailError" styleClass="errorMsg">
+						id="emailError" styleClass="error">
 					</h:outputText>
 				</h:panelGroup>
 
@@ -52,7 +52,7 @@
 					label="#{msgs.account_password}" id="password" required="true">
 					<f:validateLength minimum="6" maximum="20" />
 				</h:inputSecret>
-				<h:message for="password" styleClass="errorMsg" />
+				<h:message for="password" styleClass="error" />
 
 				<!-- Row 5 -->
 				<h:outputText value="#{msgs.account_create_retype_passwd}:" />
@@ -64,10 +64,10 @@
 					<f:validateLength minimum="6" maximum="20" />
 				</h:inputSecret>
 				<h:panelGroup>
-					<h:message for="passwordConfirm" styleClass="errorMsg" />
+					<h:message for="passwordConfirm" styleClass="error" />
 					<h:outputText
 						value="#{createAccountBean.passwordsMatch() ? '' : msgs.account_passwd_dont_match }"
-						id="confirmPasswdError" styleClass="errorMsg">
+						id="confirmPasswdError" styleClass="error">
 					</h:outputText>
 				</h:panelGroup>
 			</h:panelGrid>
