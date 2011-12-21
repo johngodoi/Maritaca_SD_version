@@ -3,8 +3,6 @@ package br.unifesp.maritaca.web.jsf.form;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 
-import org.apache.cassandra.cli.CliParser.setStatement_return;
-
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
@@ -13,7 +11,6 @@ import br.unifesp.maritaca.web.jsf.AbstractBean;
 public class EditFormBean extends AbstractBean {
 	@ManagedProperty("#{currentUserBean.user}")
 	private User user;
-	private String xml;
 	private Form form;
 	private String saveStatus;
 
@@ -35,14 +32,6 @@ public class EditFormBean extends AbstractBean {
 		this.user = user;
 	}
 
-	public String getXml() {
-		return xml;
-	}
-
-	public void setXml(String xml) {
-		this.xml = xml;
-	}
-
 	public boolean isNewForm() {
 		return newForm;
 	}
@@ -57,21 +46,25 @@ public class EditFormBean extends AbstractBean {
 	}
 
 	public void setForm(Form form) {
-		if(form == null)return;
+		if (form == null)
+			return;
 		this.form = form;
-		//if form has key, it is not a new form
-		if(form.getKey() == null){
-		setNewForm(true);
+		// if form has key, it is not a new form
+		if (form.getKey() == null) {
+			setNewForm(true);
+		}else{
+			if(form.getXml()== null){
+				this.form = formAnswCtrl.getForm(form.getKey());
+			}
 		}
 	}
 
 	public String saveForm() {
-		if (xml != null && xml.length() > 0) {
+		if (form.getXml() != null && form.getXml().length() > 0) {
 			form.setUser(user);
-			form.setXml(xml);
 			if (formAnswCtrl.saveForm(form))
 				setSaveStatus("success");
-				return "success";
+			return "success";
 		}
 
 		setSaveStatus("error");
