@@ -28,12 +28,12 @@
 			<h:outputText styleClass="formLabel" value="#{msgs.form_title}" />
 			<h:inputText styleClass="formIdValue"
 				value="#{editFormBean.form.title}"
-				readonly="#{editFormBean.newForm}" />
+				readonly="#{!editFormBean.editForm}" />
 
 			<h:outputText styleClass="formLabel"
 				value="#{msgs.form_renderer_xml}" />
 			<h:inputText styleClass="formXmlValue"
-				value="#{editFormBean.form.xml}" readonly="#{editFormBean.newForm}" />
+				value="#{editFormBean.form.xml}" readonly="#{!editFormBean.editForm}" />
 		</h:panelGrid>
 	</composite:implementation>
 </body>

@@ -17,9 +17,9 @@
 	<composite:implementation>
 		<rich:dataTable var="aForm" value="#{listFormsBean.forms}">
 			<rich:column>
-				<f:facet name="header">#{msgs.form_title}</f:facet>
 				<a4j:commandLink render="#{manager.activeModule.id}_menuAndContent">
-					<h:outputText value="#{aForm.title} - #{manager.activeModule.id}_menuAndContent" />
+					<h:outputText
+						value="#{aForm.title}" />
 					<f:setPropertyActionListener target="#{manager.activeModule}"
 						value="#{cc.attrs.submodule.parent}" />
 					<f:setPropertyActionListener
@@ -34,35 +34,38 @@
 				</a4j:commandLink>
 			</rich:column>
 			<rich:column>
-				<f:facet name="header">#{msgs.form_options}</f:facet>
-				<a4j:commandLink render="#{manager.activeModule.id}">
-					<img src="#{resource['img:view_form.png']}" width="32" />
-					<f:setPropertyActionListener target="#{manager.activeModule}"
-						value="#{cc.attrs.submodule.parent}" />
-					<f:setPropertyActionListener
-						target="#{cc.attrs.submodule.parent.activeSubModule}"
-						value="#{cc.attrs.submodule.parent.searchSubModule('formEditor')}" />
-					<f:setPropertyActionListener target="#{editFormBean.form}"
-						value="#{aForm}" />
-					<f:setPropertyActionListener target="#{editFormBean.newForm}"
-						value="false" />
-					<f:setPropertyActionListener target="#{editFormBean.editForm}"
-						value="false" />
-				</a4j:commandLink>
-				<a4j:commandLink render="#{manager.activeModule.id}">
-					<img src="#{resource['img:edit_form.png']}" width="32" />
-					<f:setPropertyActionListener target="#{manager.activeModule}"
-						value="#{cc.attrs.submodule.parent}" />
-					<f:setPropertyActionListener
-						target="#{cc.attrs.submodule.parent.activeSubModule}"
-						value="#{cc.attrs.submodule.parent.searchSubModule('formEditor')}" />
-					<f:setPropertyActionListener target="#{editFormBean.form}"
-						value="#{aForm}" />
-					<f:setPropertyActionListener target="#{editFormBean.newForm}"
-						value="false" />
-					<f:setPropertyActionListener target="#{editFormBean.editForm}"
-						value="true" />
-				</a4j:commandLink>
+				<rich:dropDownMenu label="#{msgs.form_options}" mode="ajax">
+					<rich:menuItem render="#{manager.activeModule.id}"
+						icon="#{resource['img:view_form.png']}"
+						label="#{msgs.commons_view}">
+						<f:setPropertyActionListener target="#{manager.activeModule}"
+							value="#{cc.attrs.submodule.parent}" />
+						<f:setPropertyActionListener
+							target="#{cc.attrs.submodule.parent.activeSubModule}"
+							value="#{cc.attrs.submodule.parent.searchSubModule('formEditor')}" />
+						<f:setPropertyActionListener target="#{editFormBean.form}"
+							value="#{aForm}" />
+						<f:setPropertyActionListener target="#{editFormBean.newForm}"
+							value="false" />
+						<f:setPropertyActionListener target="#{editFormBean.editForm}"
+							value="false" />
+					</rich:menuItem>
+					<rich:menuItem render="#{manager.activeModule.id}"
+						icon="#{resource['img:edit_form.png']}"
+						label="#{msgs.commons_edit}">
+						<f:setPropertyActionListener target="#{manager.activeModule}"
+							value="#{cc.attrs.submodule.parent}" />
+						<f:setPropertyActionListener
+							target="#{cc.attrs.submodule.parent.activeSubModule}"
+							value="#{cc.attrs.submodule.parent.searchSubModule('formEditor')}" />
+						<f:setPropertyActionListener target="#{editFormBean.form}"
+							value="#{aForm}" />
+						<f:setPropertyActionListener target="#{editFormBean.newForm}"
+							value="false" />
+						<f:setPropertyActionListener target="#{editFormBean.editForm}"
+							value="true" />
+					</rich:menuItem>
+				</rich:dropDownMenu>
 			</rich:column>
 		</rich:dataTable>
 	</composite:implementation>
