@@ -1,5 +1,6 @@
 package br.unifesp.maritaca.web;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,9 +18,11 @@ import br.unifesp.maritaca.web.submodule.SubModuleImpl;
 
 @ManagedBean
 @SessionScoped
-public class Manager implements ItemChangeListener {
+public class Manager implements ItemChangeListener, Serializable {
 
-    private List<Module> enabledModules;
+	private static final long serialVersionUID = 1L;
+	
+	private List<Module> enabledModules;
     private Module activeModule;
 
     public Manager() {
