@@ -2,6 +2,7 @@ package br.unifesp.maritaca.web;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -99,4 +100,10 @@ public class Manager implements ItemChangeListener, Serializable {
             throws AbortProcessingException {
         setActiveModuleByString(event.getNewItem().getId());
     }
+    
+    public String getTime(){
+    	return Calendar.getInstance().getTimeInMillis() + "";
+    }
+    
+    public void setTime(String x){}
 }

@@ -108,4 +108,10 @@ public class FormAnswerCtrlImpl implements FormAnswerControl {
 					formId.toString());
 	}
 
+	@Override
+	public void deleteForm(Form form) {
+		if(entityManager == null)return;
+		entityManager.delete(form);
+	}
+
 }

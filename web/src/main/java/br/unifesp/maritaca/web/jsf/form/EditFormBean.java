@@ -2,6 +2,7 @@ package br.unifesp.maritaca.web.jsf.form;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.event.ActionEvent;
 
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.User;
@@ -52,8 +53,8 @@ public class EditFormBean extends AbstractBean {
 		// if form has key, it is not a new form
 		if (form.getKey() == null) {
 			setNewForm(true);
-		}else{
-			if(form.getXml()== null){
+		} else {
+			if (form.getXml() == null) {
 				this.form = formAnswCtrl.getForm(form.getKey());
 			}
 		}
@@ -85,6 +86,13 @@ public class EditFormBean extends AbstractBean {
 
 	public void setEditForm(boolean editForm) {
 		this.editForm = editForm;
+	}
+
+	public String deleteForm() {
+		if (getForm().getKey() != null) {
+			formAnswCtrl.deleteForm(getForm());
+		}
+		return null;
 	}
 
 }
