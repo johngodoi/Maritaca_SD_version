@@ -2,8 +2,6 @@ package br.unifesp.maritaca.web.jsf.form;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.event.ActionEvent;
-
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.web.jsf.AbstractBean;

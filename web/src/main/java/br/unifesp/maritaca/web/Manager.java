@@ -19,10 +19,9 @@ import br.unifesp.maritaca.web.submodule.SubModuleImpl;
 
 @ManagedBean
 @SessionScoped
-public class Manager implements ItemChangeListener, Serializable {
 
-	private static final long serialVersionUID = 1L;
-	
+public class Manager implements ItemChangeListener, Serializable {	
+	private static final long serialVersionUID = 1L;	
 	private List<Module> enabledModules;
     private Module activeModule;
 
