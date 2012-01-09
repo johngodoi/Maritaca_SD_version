@@ -17,9 +17,8 @@
 	<composite:implementation>
 		<rich:dataTable var="aForm" value="#{listFormsBean.forms}">
 			<rich:column>
-				<a4j:commandLink render="#{manager.activeModule.id}_menuAndContent">
-					<h:outputText
-						value="#{aForm.title}" />
+				<a4j:commandLink>
+					<h:outputText value="#{aForm.title}" />
 					<f:setPropertyActionListener target="#{manager.activeModule}"
 						value="#{cc.attrs.submodule.parent}" />
 					<f:setPropertyActionListener
@@ -64,6 +63,12 @@
 							value="false" />
 						<f:setPropertyActionListener target="#{editFormBean.editForm}"
 							value="true" />
+					</rich:menuItem>
+
+					<rich:menuItem icon="#{resource['img:remove.png']}" render="#{manager.activeModule}"
+						label="#{msgs.commons_delete}"  action="#{editFormBean.deleteForm}" mode="ajax">
+						<f:setPropertyActionListener target="#{editFormBean.form}"
+							value="#{aForm}" />
 					</rich:menuItem>
 				</rich:dropDownMenu>
 			</rich:column>

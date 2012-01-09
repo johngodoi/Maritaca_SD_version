@@ -18,6 +18,8 @@ public interface FormAnswerControl {
 
 	Collection<Form> listAllFormsMinimal();
 
+	void deleteForm(Form form);
+	
 	/************* ANSWER ***********/
 	boolean saveAnswer(Answer answer);
 
