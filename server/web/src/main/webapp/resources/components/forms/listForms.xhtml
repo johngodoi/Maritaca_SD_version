@@ -6,7 +6,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:rich="http://richfaces.org/rich"
-	xmlns:a4j="http://richfaces.org/a4j">
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:forms="http://java.sun.com/jsf/composite/components/forms">
 <head>
 <title>Not present in rendered output</title>
 </head>
@@ -15,10 +16,28 @@
 		<composite:attribute name="submodule" required="true" />
 	</composite:interface>
 	<composite:implementation>
-			<h:dataTable value="#{listFormsBean.forms}" var="aForm" >
-				<h:column>
-					<a4j:commandLink>
-						<h:outputText value="#{aForm.title}" />
+		<h:dataTable value="#{listFormsBean.forms}" var="aForm">
+			<h:column>
+				<a4j:commandLink>
+					<h:outputText value="#{aForm.title}" />
+					<f:setPropertyActionListener target="#{manager.activeModule}"
+						value="#{cc.attrs.submodule.parent}" />
+					<f:setPropertyActionListener
+						target="#{cc.attrs.submodule.parent.activeSubModule}"
+						value="#{cc.attrs.submodule.parent.searchSubModule('formEditor')}" />
+					<f:setPropertyActionListener target="#{editFormBean.form}"
+						value="#{aForm}" />
+					<f:setPropertyActionListener target="#{editFormBean.newForm}"
+						value="false" />
+					<f:setPropertyActionListener target="#{editFormBean.editForm}"
+						value="false" />
+				</a4j:commandLink>
+			</h:column>
+			<h:column>
+				<rich:dropDownMenu label="#{msgs.form_options}" mode="ajax">
+					<rich:menuItem render="#{manager.activeModule.id}"
+						icon="#{resource['img:view_form.png']}"
+						label="#{msgs.commons_view}">
 						<f:setPropertyActionListener target="#{manager.activeModule}"
 							value="#{cc.attrs.submodule.parent}" />
 						<f:setPropertyActionListener
@@ -30,50 +49,40 @@
 							value="false" />
 						<f:setPropertyActionListener target="#{editFormBean.editForm}"
 							value="false" />
-					</a4j:commandLink>
-				</h:column>
-				<h:column>
-					<rich:dropDownMenu label="#{msgs.form_options}" mode="ajax">
-						<rich:menuItem render="#{manager.activeModule.id}"
-							icon="#{resource['img:view_form.png']}"
-							label="#{msgs.commons_view}">
-							<f:setPropertyActionListener target="#{manager.activeModule}"
-								value="#{cc.attrs.submodule.parent}" />
-							<f:setPropertyActionListener
-								target="#{cc.attrs.submodule.parent.activeSubModule}"
-								value="#{cc.attrs.submodule.parent.searchSubModule('formEditor')}" />
-							<f:setPropertyActionListener target="#{editFormBean.form}"
-								value="#{aForm}" />
-							<f:setPropertyActionListener target="#{editFormBean.newForm}"
-								value="false" />
-							<f:setPropertyActionListener target="#{editFormBean.editForm}"
-								value="false" />
-						</rich:menuItem>
-						<rich:menuItem render="#{manager.activeModule.id}"
-							icon="#{resource['img:edit_form.png']}"
-							label="#{msgs.commons_edit}">
-							<f:setPropertyActionListener target="#{manager.activeModule}"
-								value="#{cc.attrs.submodule.parent}" />
-							<f:setPropertyActionListener
-								target="#{cc.attrs.submodule.parent.activeSubModule}"
-								value="#{cc.attrs.submodule.parent.searchSubModule('formEditor')}" />
-							<f:setPropertyActionListener target="#{editFormBean.form}"
-								value="#{aForm}" />
-							<f:setPropertyActionListener target="#{editFormBean.newForm}"
-								value="false" />
-							<f:setPropertyActionListener target="#{editFormBean.editForm}"
-								value="true" />
-						</rich:menuItem>
+					</rich:menuItem>
+					<rich:menuItem render="#{manager.activeModule.id}"
+						icon="#{resource['img:edit_form.png']}"
+						label="#{msgs.commons_edit}">
+						<f:setPropertyActionListener target="#{manager.activeModule}"
+							value="#{cc.attrs.submodule.parent}" />
+						<f:setPropertyActionListener
+							target="#{cc.attrs.submodule.parent.activeSubModule}"
+							value="#{cc.attrs.submodule.parent.searchSubModule('formEditor')}" />
+						<f:setPropertyActionListener target="#{editFormBean.form}"
+							value="#{aForm}" />
+						<f:setPropertyActionListener target="#{editFormBean.newForm}"
+							value="false" />
+						<f:setPropertyActionListener target="#{editFormBean.editForm}"
+							value="true" />
+					</rich:menuItem>
 
-						<rich:menuItem icon="#{resource['img:remove.png']}"
-							render="panelContent" label="#{msgs.commons_delete}"
-							action="#{editFormBean.deleteForm}">
-							<f:setPropertyActionListener target="#{editFormBean.form}"
-								value="#{aForm}" />
-						</rich:menuItem>
-					</rich:dropDownMenu>
-				</h:column>
-			</h:dataTable>
+					<rich:menuItem icon="#{resource['img:share.png']}"
+						render="shareFormId" label="#{msgs.form_share}"
+						action="#{shareFormBean.setForm(aForm)}">
+
+					</rich:menuItem>
+
+					<rich:menuItem icon="#{resource['img:remove.png']}"
+						render="panelContent" label="#{msgs.commons_delete}"
+						action="#{editFormBean.deleteForm}">
+						<f:setPropertyActionListener target="#{editFormBean.form}"
+							value="#{aForm}" />
+					</rich:menuItem>
+
+				</rich:dropDownMenu>
+			</h:column>
+		</h:dataTable>
+		<forms:shareForm id="shareFormId" />
 	</composite:implementation>
 </body>
 </html>

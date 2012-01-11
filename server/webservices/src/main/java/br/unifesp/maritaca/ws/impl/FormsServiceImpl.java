@@ -33,22 +33,23 @@ public class FormsServiceImpl implements FormsService {
 	}
 
 	@Override
-	public Form getForm(String formId)throws MaritacaWSException{
+	public Form getForm(String formId) throws MaritacaWSException {
 		UUID uuid = UUID.fromString(formId);
 		Form form = null;
 		form = formRespCtlr.getForm(uuid);
-		if(form != null)
-		return form;
-		else{
+		if (form != null)
+			return form;
+		else {
 			ErrorResponse error = new ErrorResponse();
 			error.setCode(Response.Status.NO_CONTENT.getStatusCode());
-			error.setMessage("Form with Id: " +formId + " not found");
+			error.setMessage("Form with Id: " + formId + " not found");
 			throw new MaritacaWSException(error);
 		}
 	}
 
 	@Override
-	public MaritacaResponse saveForm(String xmlForm, String userId) throws MaritacaWSException {
+	public MaritacaResponse saveForm(String xmlForm, String userId)
+			throws MaritacaWSException {
 		Form form = new Form();
 		form.setXml(xmlForm);
 		form.setUser(userId);
@@ -59,7 +60,8 @@ public class FormsServiceImpl implements FormsService {
 			return okresp;
 		} else {
 			ErrorResponse error = new ErrorResponse();
-			error.setCode(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+			error.setCode(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR
+					.getStatusCode());
 			error.setMessage("unknown error, not possible to save the form");
 			throw new MaritacaWSException(error);
 		}
@@ -71,6 +73,19 @@ public class FormsServiceImpl implements FormsService {
 		ResultSetResponse<Form> resp = new ResultSetResponse<Form>();
 		resp.setList(formRespCtlr.listAllFormsMinimal());
 		return resp;
+	}
+
+	@Override
+	public Form getFormSharing(String url) throws MaritacaWSException {
+		String id = formRespCtlr.getFormIdFromUrl(url);
+		if (id != null) {
+			return getForm(id);
+		} else {
+			ErrorResponse error = new ErrorResponse();
+			error.setCode(Response.Status.NO_CONTENT.getStatusCode());
+			error.setMessage("Form with URL: " + url + " not found");
+			throw new MaritacaWSException(error);
+		}
 	}
 
 }

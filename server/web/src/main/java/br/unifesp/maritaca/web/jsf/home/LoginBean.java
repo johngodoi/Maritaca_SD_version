@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
@@ -22,6 +23,8 @@ import br.unifesp.maritaca.web.jsf.AbstractBean;
 @ManagedBean
 @SessionScoped
 public class LoginBean extends AbstractBean{
+	@ManagedProperty("#{currentUserBean}")
+	private CurrentUserBean currentUserBean;
 	private User   user;
 	private String status;
 
@@ -52,6 +55,7 @@ public class LoginBean extends AbstractBean{
 	public String submit() {
 		User dbUser = super.userCtrl.getUser(getUser().getEmail());
 		if(getUser().getPassword().equals(dbUser.getPassword())){
+			getCurrentUserBean().setUser(dbUser);
 			return "/faces/views/forms";	
 		} else {
 			setStatus("Login failed!");
@@ -145,5 +149,13 @@ public class LoginBean extends AbstractBean{
 		Map<String, String> params = context.getExternalContext().
 				getRequestParameterMap();
 				return params.get("op");
+	}
+
+	public CurrentUserBean getCurrentUserBean() {
+		return currentUserBean;
+	}
+
+	public void setCurrentUserBean(CurrentUserBean currentUserBean) {
+		this.currentUserBean = currentUserBean;
 	}
 }
