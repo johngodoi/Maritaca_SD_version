@@ -20,6 +20,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import br.unifesp.maritaca.core.Form;
+import br.unifesp.maritaca.core.FormShare;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.EntityManager;
 
@@ -48,18 +49,20 @@ public class FormAnswerCtrlImplTest {
 		Form form = new Form();
 		form.setUser(uuid2);
 
-		when(em.persist(form)).thenAnswer(new Answer<Boolean>() {
+		when(em.persist(any())).thenAnswer(new Answer<Boolean>() {
 
 			@Override
 			public Boolean answer(InvocationOnMock invocation) throws Throwable {
-				Form form = (Form) invocation.getArguments()[0];
-				form.setKey(uuid);
+				if (invocation.getArguments()[0] instanceof Form) {
+					Form form = (Form) invocation.getArguments()[0];
+					form.setKey(uuid);
+				}
 				return true;
 			}
 		});
 
-		when(em.rowDataExists((Class<User>) notNull(), any(UUID.class))).thenReturn(
-				true);
+		when(em.rowDataExists((Class<User>) notNull(), any(UUID.class)))
+				.thenReturn(true);
 
 		assertNull(form.getKey());
 		assertTrue(frControl.saveForm(form));

@@ -30,10 +30,7 @@
 				<h:inputSecret id="password" value="#{loginBean.user.password}" />
 			</h:panelGrid>
 
-			<h:commandButton value="#{msgs.login}" action="#{loginBean.submit}">
-				<f:setPropertyActionListener target="#{currentUserBean.user}"
-					value="#{loginBean.user}" />
-			</h:commandButton>
+			<h:commandButton value="#{msgs.login}" action="#{loginBean.submit}"/>
 
 			<h:commandButton value="#{msgs.login_create_account_link}"
 				action="#{createAccountBean.creatingUser}"

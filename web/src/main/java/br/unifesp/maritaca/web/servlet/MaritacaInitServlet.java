@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
 import br.unifesp.maritaca.core.Form;
+import br.unifesp.maritaca.core.FormShare;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.EntityManager;
 import br.unifesp.maritaca.persistence.EntityManagerFactory;
@@ -50,6 +51,8 @@ public class MaritacaInitServlet extends HttpServlet {
     		form.setUser(user);
     		em.persist(form);
     	}
+    	
+    	em.createTable(FormShare.class);
     }
     
     @Override
