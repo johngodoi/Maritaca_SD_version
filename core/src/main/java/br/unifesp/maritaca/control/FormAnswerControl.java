@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Form;
+import br.unifesp.maritaca.core.FormShare;
 import br.unifesp.maritaca.persistence.EntityManager;
 
 public interface FormAnswerControl {
@@ -20,6 +21,10 @@ public interface FormAnswerControl {
 
 	void deleteForm(Form form);
 	
+	FormShare getFormShare(Form form);
+	
+	String getFormIdFromUrl(String url);
+	
 	/************* ANSWER ***********/
 	boolean saveAnswer(Answer answer);
 
@@ -28,4 +33,8 @@ public interface FormAnswerControl {
 	Collection<Answer> listAllAnswers(UUID formId);
 
 	Collection<Answer> listAllAnswersMinimal(UUID formId);
+
+	boolean urlForSharingExists(String url);
+
+
 }

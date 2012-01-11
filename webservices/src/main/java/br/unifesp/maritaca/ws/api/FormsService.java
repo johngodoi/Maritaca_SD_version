@@ -48,4 +48,14 @@ public interface FormsService {
 	@Path("/list")
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	MaritacaResponse listFormsMinimal() ;
+	
+	/**
+	 * 
+	 * @param url for sharing
+	 * @return XML or JSON
+	 * @throws MaritacaWSException
+	 */
+	@GET
+	@Path("/share/{url}")
+	Form getFormSharing(@PathParam("url") String url) throws MaritacaWSException;
 }
