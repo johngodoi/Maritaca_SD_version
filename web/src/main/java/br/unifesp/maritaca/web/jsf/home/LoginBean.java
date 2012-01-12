@@ -1,5 +1,6 @@
 package br.unifesp.maritaca.web.jsf.home;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
