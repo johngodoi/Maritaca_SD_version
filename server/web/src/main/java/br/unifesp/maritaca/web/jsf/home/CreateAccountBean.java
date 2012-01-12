@@ -4,8 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
-import javax.validation.constraints.*;
+import javax.faces.bean.SessionScoped;
 
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.EntityManager;
@@ -18,18 +17,16 @@ import br.unifesp.maritaca.web.jsf.AbstractBean;
  */
 
 @ManagedBean
-@RequestScoped
+@SessionScoped
 public class CreateAccountBean extends AbstractBean implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	private User     user;
 	private String   confirmPassword;
-	private Boolean  creatingUser;
 	
 	public CreateAccountBean() {
 		super(false, true);
 		setUser(new User());
-		setCreatingUser(false);
 	}
 
 	public User getUser() {
@@ -48,11 +45,8 @@ public class CreateAccountBean extends AbstractBean implements Serializable{
 	}
 	
 	/**
-	 * Checks if the email contained in the value parameter is already registered
+	 * Checks if the email from the user is already registered
 	 * in the database.
-	 * @param fc
-	 * @param c
-	 * @param value
 	 * @return true if the email is already taken, false otherwise.
 	 */
 	public Boolean registeredEmail(){
@@ -75,7 +69,6 @@ public class CreateAccountBean extends AbstractBean implements Serializable{
 		return false;
 	}
 	
-	@AssertTrue(message="Pass dont match")
 	public Boolean passwordsMatch(){
 		if(getUser()==null || getConfirmPassword()==null || getUser().getPassword()==null){
 			return false;
@@ -86,18 +79,6 @@ public class CreateAccountBean extends AbstractBean implements Serializable{
 				return false;
 			}
 		}
-	}
-
-	public Boolean getCreatingUser() {
-		return creatingUser;
-	}
-
-	public void setCreatingUser(Boolean creatingUser) {
-		this.creatingUser = creatingUser;
-	}
-	
-	public void creatingUser(){
-		setCreatingUser(true);
 	}
 
 	public String getConfirmPassword() {
