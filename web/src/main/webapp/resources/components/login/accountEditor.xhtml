@@ -5,8 +5,7 @@
 	xmlns:composite="http://java.sun.com/jsf/composite"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:rich="http://richfaces.org/rich">
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 <head>
 <title>Not present in rendered output</title>
 </head>
@@ -14,6 +13,7 @@
 	<composite:interface>
 	</composite:interface>
 	<composite:implementation>
+		<h:outputScript library="javascript" name="checkPassword.js" />
 		<h:form>
 			<h:panelGrid columns="3">
 				<!-- Row 1 -->
@@ -49,7 +49,8 @@
 				<!-- Row 4 -->
 				<h:outputText value="#{msgs.account_password}:" />
 				<h:inputSecret value="#{createAccountBean.user.password}"
-					label="#{msgs.account_password}" id="password" required="true">
+					label="#{msgs.account_password}" id="password" required="true"
+					onblur="checkPassword(this.form)">
 					<f:validateLength minimum="6" maximum="20" />
 				</h:inputSecret>
 				<h:message for="password" styleClass="error" />
@@ -58,26 +59,26 @@
 				<h:outputText value="#{msgs.account_create_retype_passwd}:" />
 				<h:inputSecret value="#{createAccountBean.confirmPassword}"
 					label="#{msgs.account_create_retype_passwd}" required="true"
-					id="passwordConfirm">
-					<f:ajax event="blur" execute="@this password"
-						render="confirmPasswdError" />
+					id="passwordConfirm" onblur="checkPassword(this.form)">
 					<f:validateLength minimum="6" maximum="20" />
 				</h:inputSecret>
 				<h:panelGroup>
-					<h:message for="passwordConfirm" styleClass="error" />
-					<h:outputText
-						value="#{createAccountBean.passwordsMatch() ? '' : msgs.account_passwd_dont_match }"
+					<h:outputText value="#{msgs.account_passwd_dont_match }"
 						id="confirmPasswdError" styleClass="error">
 					</h:outputText>
+					<br />
+					<h:message for="passwordConfirm" styleClass="error" />
 				</h:panelGroup>
 			</h:panelGrid>
 
+			<!-- Lower section buttons: Create/Cancel -->
 			<h:commandButton value="#{msgs.account_create_button}"
-				action="#{createAccountBean.create}">
+				action="#{createAccountBean.create}" id="createAccountButton">
 				<f:setPropertyActionListener target="#{currentUserBean.user}"
 					value="#{createAccountBean.user}" />
 			</h:commandButton>
-
+			<h:commandButton value="#{msgs.account_create_cancel}"
+				action="/faces/views/login" immediate="true" />
 		</h:form>
 	</composite:implementation>
 </body>
