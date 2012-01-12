@@ -21,7 +21,6 @@
 			<h:outputText value="#{msgs.login_maritaca}" />
 			<h:outputText value="#{loginBean.status}" id="loginStatus"
 				class="error" />
-				
 			<h:panelGrid id="formRenderTable" columns="2">
 				<h:outputText value="#{msgs.account_email}:" />
 				<h:inputText id="name" value="#{loginBean.user.email}" />
@@ -29,9 +28,7 @@
 				<h:outputText value="#{msgs.account_password}:" />
 				<h:inputSecret id="password" value="#{loginBean.user.password}" />
 			</h:panelGrid>
-
 			<h:commandButton value="#{msgs.login}" action="#{loginBean.submit}"/>
-
 			<h:commandButton value="#{msgs.login_create_account_link}"
 				action="#{createAccountBean.creatingUser}"
 				onclick="#{rich:component('popup')}.show()">
