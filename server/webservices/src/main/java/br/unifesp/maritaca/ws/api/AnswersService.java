@@ -36,7 +36,7 @@ public interface AnswersService {
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	MaritacaResponse saveAnswer(@FormParam("xml")String xmlAnsw, @FormParam("formId")String formId) throws MaritacaWSException;
+	MaritacaResponse saveAnswer(@FormParam("xml")String xmlAnsw, @FormParam("formId")String formId,  @FormParam("userId")String userId) throws MaritacaWSException;
 	
 	/**
 	 * 

@@ -19,7 +19,7 @@
 		<h:dataTable value="#{listFormsBean.forms}" var="aForm" width="100%" columnClasses="columnClass1, columnClass1" cellspacing="0">
 			<h:column>
 				<a4j:commandLink>
-					<h:outputText value="#{aForm.title}" styleClass="listItem"/>
+					<h:outputText value="#{aForm.title} -  #{manager.time}" styleClass="listItem"/>
 					<f:setPropertyActionListener target="#{manager.activeModule}"
 						value="#{cc.attrs.submodule.parent}" />
 					<f:setPropertyActionListener
@@ -52,7 +52,7 @@
 						<f:setPropertyActionListener target="#{editFormBean.editForm}"
 							value="false" />
 					</rich:menuItem>
-					<rich:menuItem render="#{manager.activeModule.id}"
+					<rich:menuItem render="mainForm:#{manager.activeModule.id}"
 						icon="#{resource['img:edit_form.png']}"
 						label="#{msgs.commons_edit}">
 						<f:setPropertyActionListener target="#{manager.activeModule}"
@@ -80,11 +80,20 @@
 						<f:setPropertyActionListener target="#{editFormBean.form}"
 							value="#{aForm}" />
 					</rich:menuItem>
-
+					<rich:menuSeparator/>
+					<!-- todo: check mode="server" in list answers, it must be ajax, but
+					it is not working in ajax mode -->
+					<rich:menuItem render="mainForm" mode="server"
+						icon="#{resource['img:view_form.png']}"
+						label="#{msgs.form_view_answers}"
+						action="#{manager.activeModAndSub('Answer', 'listAnswers')}">
+						<f:setPropertyActionListener target="#{listAnswersBean.form}"
+							value="#{aForm}" />
+					</rich:menuItem>
 				</rich:dropDownMenu>
 			</h:column>
 		</h:dataTable>
-		<forms:shareForm id="shareFormId" />
+
 	</composite:implementation>
 </body>
 </html>
