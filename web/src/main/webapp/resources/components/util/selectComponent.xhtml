@@ -6,7 +6,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:forms="http://java.sun.com/jsf/composite/components/forms">
+	xmlns:forms="http://java.sun.com/jsf/composite/components/forms"
+	xmlns:answ="http://java.sun.com/jsf/composite/components/answers">
 <head>
 <title>Not present in rendered output</title>
 </head>
@@ -22,6 +23,10 @@
 
 			<c:when test="#{cc.attrs.submodule.component eq 'formEditor'}">
 				<forms:formEditor submodule="#{cc.attrs.submodule}" />
+			</c:when>
+			
+			<c:when test="#{cc.attrs.submodule.component eq 'listAnswers'}">
+				<answ:listAnswers submodule="#{cc.attrs.submodule}" />
 			</c:when>
 			<c:otherwise> ${msgs.commons_emptyComponent}</c:otherwise>
 		</c:choose>

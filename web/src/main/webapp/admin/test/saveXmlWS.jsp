@@ -17,6 +17,7 @@ XML: <br/><textarea rows="10" name="xml"></textarea><br/>
 <h1>save response</h1>
 <form action="../../ws/answer" method="post">
 Form Id: <input type="text" name="formId"/><br/>
+User Id: <input type="text" name="userId"/><br/>
 XML: <br/><textarea rows="10" name="xml"></textarea>
 <input type="submit"/>
 </form>
