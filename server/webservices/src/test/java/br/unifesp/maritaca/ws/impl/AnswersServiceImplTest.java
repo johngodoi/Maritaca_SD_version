@@ -95,7 +95,7 @@ public class AnswersServiceImplTest {
 
 					});
 
-			MaritacaResponse resp = answService.saveAnswer(xmlResp, uuid2);
+			MaritacaResponse resp = answService.saveAnswer(xmlResp, uuid2, uuid3);
 			assertEquals(javax.ws.rs.core.Response.Status.OK.getStatusCode(),
 					resp.getCode());
 			assertEquals(javax.ws.rs.core.Response.Status.OK.getReasonPhrase(),
@@ -119,7 +119,7 @@ public class AnswersServiceImplTest {
 			when(frControl.saveForm(any(Form.class))).thenReturn(false);
 
 			try {
-				MaritacaResponse resp = answService.saveAnswer(xmlResp, uuid);
+				MaritacaResponse resp = answService.saveAnswer(xmlResp, uuid, uuid3);
 			} catch (Exception e) {
 				assertTrue(e instanceof MaritacaWSException);
 				MaritacaWSException me = (MaritacaWSException) e;

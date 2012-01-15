@@ -47,10 +47,11 @@ public class AnswersServiceImpl implements AnswersService {
 	}
 
 	@Override
-	public MaritacaResponse saveAnswer(String xmlAnsw, String formId)throws MaritacaWSException{
+	public MaritacaResponse saveAnswer(String xmlAnsw, String formId, String userId)throws MaritacaWSException{
 		Answer answ = new Answer();
 		answ.setForm(formId);
 		answ.setXml(xmlAnsw);
+		answ.setUser(userId);
 		if (formAnswCtlr.saveAnswer(answ)) {
 			XmlSavedResponse okresp = new XmlSavedResponse();
 			okresp.setId(answ.getKey());
