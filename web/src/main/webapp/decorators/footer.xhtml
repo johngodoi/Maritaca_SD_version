@@ -1,14 +1,23 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:composite="http://java.sun.com/jsf/composite"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:forms="http://java.sun.com/jsf/composite/components/forms">
-<head>
-<title>Not present in rendered output</title>
-</head>
-<body>
-</body>
-</html>
+	xmlns:util="http://java.sun.com/jsf/composite/components/util">
+	#{msgs.developed_by}: <h:outputLink value="http://www.pinguim.pro.br/sidad">#{msgs.team}</h:outputLink><br/>
+	<h:outputText value="#{msgs.sponsors}" />:<br/>
+	<h:panelGrid columns="3" style="margin-left: auto; margin-right: auto;">
+		<util:logoItem image="#{resource['img:logo_unifesp.png']}"
+			name="Universidad Federal de São Paulo" url="http://www.unifesp.br" />
+		<util:logoItem image="#{resource['img:logo_finep.gif']}"
+			name="Financiadora de Estudos e Projetos"
+			url="http://www.finep.gov.br" />
+		<util:logoItem image="#{resource['img:logo_cnpq.gif']}" name="CNPq"
+			url="http://www.cnpq.br" />
+
+	</h:panelGrid>
+	<h:outputText value="Maritaca 2012" /><br/>
+	#{msgs.country}
+</ui:composition>
