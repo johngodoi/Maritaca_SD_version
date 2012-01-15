@@ -16,10 +16,10 @@
 		<composite:attribute name="submodule" required="true" />
 	</composite:interface>
 	<composite:implementation>
-		<h:dataTable value="#{listFormsBean.forms}" var="aForm">
+		<h:dataTable value="#{listFormsBean.forms}" var="aForm" width="100%" columnClasses="columnClass1, columnClass1" cellspacing="0">
 			<h:column>
 				<a4j:commandLink>
-					<h:outputText value="#{aForm.title}" />
+					<h:outputText value="#{aForm.title}" styleClass="listItem"/>
 					<f:setPropertyActionListener target="#{manager.activeModule}"
 						value="#{cc.attrs.submodule.parent}" />
 					<f:setPropertyActionListener
@@ -34,7 +34,9 @@
 				</a4j:commandLink>
 			</h:column>
 			<h:column>
-				<rich:dropDownMenu label="#{msgs.form_options}" mode="ajax">
+				<rich:dropDownMenu mode="ajax" styleClass="listItemOption" >
+				<f:facet name="label"><h:graphicImage value="#{resource['img:down.png']}"/>
+				</f:facet>
 					<rich:menuItem render="#{manager.activeModule.id}"
 						icon="#{resource['img:view_form.png']}"
 						label="#{msgs.commons_view}">
