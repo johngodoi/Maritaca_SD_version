@@ -2,42 +2,44 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-     xmlns:h="http://java.sun.com/jsf/html"
-     xmlns:ft="http://facestrace.sourceforge.net">
-  <!-- This is a reusable template that lays out content in four regions:
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ft="http://facestrace.sourceforge.net">
+<!-- This is a reusable template that lays out content in four regions:
        a header, menu, content area, and toolbar. 
         
        All of the DIVs in this file with ids have corresponding CSS styles 
        in resources/css/styles.css. We've decorated the header to illustrate
        the use of decorators.
   -->
-  
-  <h:head>
-    <!--Templates are typically not compositions; therefore, the title that
+
+<h:head>
+	<!--Templates are typically not compositions; therefore, the title that
         follows is not ignored. Fragments and decorators, on the other hand,
         are almost always compositions -->
-    <title><ui:insert name="windowTitle"/></title>
-  	<h:outputStylesheet library="css" name="facestrace.css"/>
-  	<h:outputScript name="facestrace.js" library="javascript" target="head" />  	  	
-  </h:head>
-  
-  <h:body>  
-    <h:outputStylesheet library="css" name="styles.css" target="body"/>	        
-    <ui:decorate template="/decorators/header.xhtml">
-      <ui:insert name="heading"/>       
-    </ui:decorate>
-      
-    <div id="menuAndContent"> 
-	   <!--  <div id="menuLeft"> 
-	      <ui:insert name="menuLeft"/>
-	    </div> -->    
-	    
-	    <div id="content" style="display:display;">
-	      <ui:insert name="content"/>
-	      <ft:trace />
-	    </div> 
-    </div> 
-  </h:body>
-</html> 
+	<title><ui:insert name="windowTitle" /></title>
+	<h:outputStylesheet library="css" name="facestrace.css" />
+	<h:outputScript name="facestrace.js" library="javascript" target="head" />
+</h:head>
+
+<h:body>
+	<div id="main">
+		<h:outputStylesheet library="css" name="styles.css" target="body" />
+		<ui:decorate template="/decorators/header.xhtml">
+			<ui:insert name="heading" />
+		</ui:decorate>
+		
+		<div id="content" style="display: display;">
+			<ui:insert name="content" />
+			<ft:trace />
+		</div>
+
+		<div id="footer">
+			<ui:decorate template="/decorators/footer.xhtml">
+				<ui:insert name="footer" />
+			</ui:decorate>
+		</div>
+	</div>
+</h:body>
+</html>
