@@ -1,5 +1,11 @@
+#main {
+	width: 1024px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
 #heading {
-	padding: 20px;
+	padding: 10px;
 	margin-bottom: 10px;
 	background: #dddddd;
 	border: 1px solid #cccccc;
@@ -10,100 +16,34 @@
 	text-align: center;
 }
 
-div.planetImage {
+#footer {
+	padding: 10px;
 	margin-top: 10px;
+	background: #dddddd;
+	border: 1px solid #cccccc;
+	font-size: 0.8em;
+	font-family: sans-serif;
+	right: 20px;
 	text-align: center;
-}
-
-#promptTop {
-	font-size: 1.15em;
-	margin-left: 5px;
-	margin-bottom: 20px;
-	font-family: Palatino;
-	font-style: italic;
-}
-
-.explanation {
-	padding: 20px;
-	font-family: Palatino;
-	font-style: italic;
-	color: blue;
-}
-
-#prompt {
-	font-size: 1.15em;
-	margin-left: 5px;
-	margin-top: 20px;
-	margin-bottom: 20px;
-	font-family: Palatino;
-}
-
-#welcomeGreeting {
-	font-size: 1.2em;
-	font-style: italic;
-}
-
-#welcomeImage {
-	margin-top: 10px;
-	text-align: center;
-}
-
-#menuLeft {
-	border: thin solid lightGray;
-	position: absolute;
-	left: 10;
-	height: 86%;
-	width: 200px;
-	background: #eeeeee;
-}
-
-#menuRight {
-	border: thin solid lightGray;
-	background: #efefef;
-	position: absolute;
-	top: 85px;
-	right: 10px;
-	padding-top: 10px;
-	padding-bottom: 10px;
 }
 
 #content {
-	margin-top: 15px; //
-	padding: 20px;
 	border: thin solid lightGray;
-	background: #fefeef;
-	position: absolute;
-	left: 10px;
-	right: 10px;
 	top: 160px;
 }
 
-#menuAndContent {
-	width: 100%;
-	height: 100%;
+.panelContent {
+	width: 850px;
+	padding: 0px;
+}
+
+.menuLeft {
+	width: 160px;
+	padding: 0px;
 }
 
 .error {
 	color: red;
-}
-
-.icon {
-	margin: 10px;
-	border: none;
-}
-
-.placeHeading {
-	margin-top: 10px;
-	margin-right: 10px;
-	padding: 10px;
-	float: left;
-	border: thin solid lightGray;
-}
-
-.placeMap {
-	border: thin solid lightGray;
-	margin: 5px;
-	padding: 5px;
 }
 
 /* Submodule: formRender */
@@ -121,8 +61,25 @@ div.planetImage {
 
 .cols {
 	vertical-align: top;
+	padding: 0px;
 }
 
 .rf-pm-top-itm-sel {
 	background: #dddddd;
+}
+
+.tabContent {
+	padding: 0px;
+}
+
+.listItem {
+	margin-left: 10px;
+}
+
+.listItemOption {
+	float: right;
+}
+
+.columnClass1 {
+	border-bottom: thin dotted gray;
 }
