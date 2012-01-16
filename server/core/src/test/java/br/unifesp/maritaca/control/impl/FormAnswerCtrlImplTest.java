@@ -22,6 +22,7 @@ import org.mockito.stubbing.Answer;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormShare;
 import br.unifesp.maritaca.core.User;
+import br.unifesp.maritaca.model.impl.FormAnswerModelImpl;
 import br.unifesp.maritaca.persistence.EntityManager;
 
 public class FormAnswerCtrlImplTest {
@@ -31,12 +32,12 @@ public class FormAnswerCtrlImplTest {
 	// "437dea60-146e-11e1-a7c0-d2b70b6d4d67";
 
 	private EntityManager em;
-	private FormAnswerCtrlImpl frControl;
+	private FormAnswerModelImpl frControl;
 
 	@Before
 	public void setUp() throws Exception {
 		em = mock(EntityManager.class);
-		frControl = new FormAnswerCtrlImpl();
+		frControl = new FormAnswerModelImpl();
 		frControl.setEntityManager(em);
 	}
 

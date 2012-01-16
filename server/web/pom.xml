@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>br.unifesp.maritaca</groupId>
 		<artifactId>maritaca</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>${maritaca.version}</version>
 	</parent>
 	<artifactId>maritaca-web</artifactId>
 	<packaging>war</packaging>
@@ -49,12 +49,12 @@
 		<dependency>
 			<groupId>br.unifesp.maritaca</groupId>
 			<artifactId>maritaca-core</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${maritaca.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>br.unifesp.maritaca</groupId>
 			<artifactId>maritaca-webservices</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${maritaca.version}</version>
 		</dependency>
 		<!-- JSF & SERVLET -->
 		<dependency>

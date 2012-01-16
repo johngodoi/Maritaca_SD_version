@@ -13,14 +13,15 @@ import br.unifesp.maritaca.core.FormShare;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
 
 /**
- * Managedbean for the Form sharing service
- * the bean loads the url for sharing.
+ * Managedbean for the Form sharing service the bean loads the url for sharing.
  * In the future, it must load and update access levels of the form
+ * 
  * @author emiguel
- *
+ * 
  */
 @ManagedBean
 public class ShareFormBean extends AbstractBean {
+	private static final long serialVersionUID = 1L;
 	private static final String ROOT_FOR_SHARING = "/ws/form/share/";
 	private Form form;
 	private FormShare formShare;
@@ -88,7 +89,7 @@ public class ShareFormBean extends AbstractBean {
 				.getExternalContext().getRequest();
 
 		return "http://" + request.getLocalName() + ":"
-				+ request.getLocalPort() + request.getContextPath() 
+				+ request.getLocalPort() + request.getContextPath()
 				+ ROOT_FOR_SHARING;
 	}
 

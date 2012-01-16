@@ -1,13 +1,13 @@
-package br.unifesp.maritaca.control.impl;
+package br.unifesp.maritaca.model.impl;
 
 import java.util.Collection;
 import java.util.UUID;
 
-import br.unifesp.maritaca.control.UserControl;
 import br.unifesp.maritaca.core.User;
+import br.unifesp.maritaca.model.UserModel;
 import br.unifesp.maritaca.persistence.EntityManager;
 
-public class UserControlImpl implements UserControl {
+public class UserModelImpl implements UserModel {
 	private EntityManager entityManager;
 	
 	public EntityManager getEntityManager() {

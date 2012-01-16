@@ -7,15 +7,15 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-import br.unifesp.maritaca.control.ControllerFactory;
-import br.unifesp.maritaca.control.UserControl;
 import br.unifesp.maritaca.core.User;
+import br.unifesp.maritaca.model.ModelFactory;
+import br.unifesp.maritaca.model.UserModel;
 
 @FacesConverter("br.unifesp.maritaca.web.jsf.converters.UserConverter")
 public class UserConverter implements Converter {
-	private UserControl userCtrl;
+	private UserModel userCtrl;
 	public UserConverter() {
-		userCtrl = ControllerFactory.getInstance().createUserCtrl();
+		userCtrl = ModelFactory.getInstance().createUserModel();
 	}
 	@Override
 	public Object getAsObject(FacesContext arg0, UIComponent arg1, String arg2) {

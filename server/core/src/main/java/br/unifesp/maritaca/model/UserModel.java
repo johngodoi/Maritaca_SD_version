@@ -1,4 +1,4 @@
-package br.unifesp.maritaca.control;
+package br.unifesp.maritaca.model;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -6,7 +6,7 @@ import java.util.UUID;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.EntityManager;
 
-public interface UserControl {
+public interface UserModel {
 	boolean saveUser(User user);
 
 	User getUser(UUID uuid);

@@ -16,7 +16,7 @@ import br.unifesp.maritaca.ws.exceptions.MaritacaWSException;
 public interface AnswersService {
 	
 	/**
-	 * 
+	 * Get an Answer for an UUID
 	 * @param respId: Answer Id in UUID (string) format
 	 * @return Answer with Form Id, Answer Id and XML
 	 * representation of the Answer
@@ -27,7 +27,7 @@ public interface AnswersService {
 	Answer getAnswer(@PathParam("id") String answId) throws MaritacaWSException;
 	
 	/**
-	 * 
+	 * Save an Answer for a form
 	 * @param xmlResp: XML representation of the new Answer
 	 * @param formId: Form Id which the response belongs
 	 * @return XmlSavedResponse with the Answer ID and Type.
@@ -39,7 +39,7 @@ public interface AnswersService {
 	MaritacaResponse saveAnswer(@FormParam("xml")String xmlAnsw, @FormParam("formId")String formId,  @FormParam("userId")String userId) throws MaritacaWSException;
 	
 	/**
-	 * 
+	 * Get all Answers of a Form
 	 * @param formId: Form ID in UUID format
 	 * @return ResultSetResponse with the list of
 	 * Answer IDs for the given formId, if no formId

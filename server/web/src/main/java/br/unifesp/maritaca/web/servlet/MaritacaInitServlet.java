@@ -39,6 +39,7 @@ public class MaritacaInitServlet extends HttpServlet {
 		User user = new User();
 		user.setFirstname("admin");
 		user.setPassword("123");
+		user.setEmail("admin@maritaca.com");
 		
     	if(!em.tableExists(User.class)){
     		em.persist(user);

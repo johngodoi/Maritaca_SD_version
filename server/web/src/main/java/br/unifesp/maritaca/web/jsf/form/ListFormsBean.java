@@ -9,6 +9,7 @@ import br.unifesp.maritaca.web.jsf.AbstractBean;
 
 @ManagedBean
 public class ListFormsBean extends AbstractBean {
+	private static final long serialVersionUID = 1L;
 	private Collection<Form> forms;
 	
 	public ListFormsBean() {

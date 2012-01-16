@@ -9,6 +9,11 @@ import br.unifesp.maritaca.ws.api.resp.ErrorResponse;
 import br.unifesp.maritaca.ws.api.resp.MaritacaResponse;
 import br.unifesp.maritaca.ws.exceptions.MaritacaWSException;
 
+/**
+ * Class to return a customized response for Restful
+ * @author emigueltriana
+ *
+ */
 @Provider
 public class MaritacaExceptionMapper implements ExceptionMapper<Throwable> {
 
@@ -47,9 +52,5 @@ public class MaritacaExceptionMapper implements ExceptionMapper<Throwable> {
 
 	private Response translateMaritacaResponse(MaritacaWSException ex) {
 		return Response.serverError().entity(ex.getResponse()).build();
-	}
-	
-	
-	
-	
+	}	
 }
