@@ -1,20 +1,22 @@
 package br.unifesp.maritaca.web.jsf;
 
-import br.unifesp.maritaca.control.ControllerFactory;
-import br.unifesp.maritaca.control.FormAnswerControl;
-import br.unifesp.maritaca.control.UserControl;
+import java.io.Serializable;
 
-public abstract class AbstractBean {
-	protected FormAnswerControl formAnswCtrl;
-	protected UserControl userCtrl;
+import br.unifesp.maritaca.model.FormAnswerModel;
+import br.unifesp.maritaca.model.ModelFactory;
+import br.unifesp.maritaca.model.UserModel;
+
+public abstract class AbstractBean implements Serializable {
+	protected FormAnswerModel formAnswCtrl;
+	protected UserModel userCtrl;
 	
 	public AbstractBean(boolean useFormAnsw, boolean useUser) {
 		if(useFormAnsw){
-			formAnswCtrl = ControllerFactory.getInstance().createFormResponseCtrl();
+			formAnswCtrl = ModelFactory.getInstance().createFormResponseModel();
 		}
 		
 		if(useUser){
-			userCtrl = ControllerFactory.getInstance().createUserCtrl();
+			userCtrl = ModelFactory.getInstance().createUserModel();
 		}
 	}
 

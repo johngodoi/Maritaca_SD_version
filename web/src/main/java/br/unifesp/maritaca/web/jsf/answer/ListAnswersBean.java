@@ -11,6 +11,7 @@ import br.unifesp.maritaca.web.jsf.AbstractBean;
 
 @ManagedBean
 public class ListAnswersBean extends AbstractBean {
+	private static final long serialVersionUID = 1L;
 	private Form form;
 	private Collection<Answer> answers;
 

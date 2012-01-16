@@ -1,19 +1,19 @@
-package br.unifesp.maritaca.control.impl;
+package br.unifesp.maritaca.model.impl;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-import br.unifesp.maritaca.control.FormAnswerControl;
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormShare;
 import br.unifesp.maritaca.core.User;
+import br.unifesp.maritaca.model.FormAnswerModel;
 import br.unifesp.maritaca.persistence.EntityManager;
 import br.unifesp.maritaca.util.PrivateAccess;
 import br.unifesp.maritaca.util.Utils;
 
-public class FormAnswerCtrlImpl implements FormAnswerControl {
+public class FormAnswerModelImpl implements FormAnswerModel {
 	private EntityManager entityManager;
 
 	public EntityManager getEntityManager() {
