@@ -4,9 +4,9 @@ import java.util.UUID;
 
 import javax.ws.rs.Path;
 
-import br.unifesp.maritaca.control.ControllerFactory;
-import br.unifesp.maritaca.control.FormAnswerControl;
 import br.unifesp.maritaca.core.Answer;
+import br.unifesp.maritaca.model.FormAnswerModel;
+import br.unifesp.maritaca.model.ModelFactory;
 import br.unifesp.maritaca.ws.api.AnswersService;
 import br.unifesp.maritaca.ws.api.resp.ErrorResponse;
 import br.unifesp.maritaca.ws.api.resp.MaritacaResponse;
@@ -17,25 +17,25 @@ import br.unifesp.maritaca.ws.exceptions.MaritacaWSException;
 @Path("/answer")
 public class AnswersServiceImpl implements AnswersService {
 
-	private FormAnswerControl formAnswCtlr;
+	private FormAnswerModel formAnswModel;
 
 	public AnswersServiceImpl() {
-		formAnswCtlr = ControllerFactory.getInstance().createFormResponseCtrl();
+		formAnswModel = ModelFactory.getInstance().createFormResponseModel();
 	}
 
-	public FormAnswerControl getFormAnswerControl() {
-		return formAnswCtlr;
+	public FormAnswerModel getFormAnswerModel() {
+		return formAnswModel;
 	}
 
-	public void setFormAnswerControl(FormAnswerControl formResponse) {
-		this.formAnswCtlr = formResponse;
+	public void setFormAnswerModel(FormAnswerModel formResponse) {
+		this.formAnswModel = formResponse;
 	}
 	
 	@Override
 	public Answer getAnswer(String respId)throws MaritacaWSException{
 		UUID uuid = UUID.fromString(respId);
 		Answer resp = null;
-		resp = formAnswCtlr.getAnswer(uuid);
+		resp = formAnswModel.getAnswer(uuid);
 		if(resp != null)
 		return resp;
 		else{
@@ -52,7 +52,7 @@ public class AnswersServiceImpl implements AnswersService {
 		answ.setForm(formId);
 		answ.setXml(xmlAnsw);
 		answ.setUser(userId);
-		if (formAnswCtlr.saveAnswer(answ)) {
+		if (formAnswModel.saveAnswer(answ)) {
 			XmlSavedResponse okresp = new XmlSavedResponse();
 			okresp.setId(answ.getKey());
 			okresp.setType(MaritacaResponse.RESPONSE_TYPE);
@@ -72,7 +72,7 @@ public class AnswersServiceImpl implements AnswersService {
 			uuid = UUID.fromString(formId);
 		}
 		ResultSetResponse<Answer> resp = new ResultSetResponse<Answer>();
-		resp.setList(formAnswCtlr.listAllAnswersMinimal(uuid));
+		resp.setList(formAnswModel.listAllAnswersMinimal(uuid));
 		return resp;
 	}
 

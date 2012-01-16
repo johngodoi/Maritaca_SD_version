@@ -1,8 +1,6 @@
 package br.unifesp.maritaca.web.jsf.answer;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.context.Flash;
 
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Form;
@@ -11,22 +9,12 @@ import br.unifesp.maritaca.web.jsf.AbstractBean;
 
 @ManagedBean
 public class EditAnswerBean extends AbstractBean {
+	private static final long serialVersionUID = 1L;
 	private User user;
 	private Form form;
 	private String xml;
 	private Answer answer;
 	private boolean newAnswer;
-
-//	@ManagedProperty("#{flash}")
-//	private Flash flash;
-	
-//	public Flash getFlash() {
-//		return flash;
-//	}
-//	
-//	public void setFlash(Flash flash) {
-//		this.flash = flash;
-//	}
 
 	public EditAnswerBean() {
 		super(true, false);
@@ -50,10 +38,6 @@ public class EditAnswerBean extends AbstractBean {
 	}
 
 	public Form getForm() {
-//		if(form == null){
-//			form = (Form)flash.get("form");
-//		}
-//		flash.keep("form");
 		if (form!= null) {
 			this.form = formAnswCtrl.getForm(form.getKey());
 		}
@@ -61,8 +45,6 @@ public class EditAnswerBean extends AbstractBean {
 	}
 
 	public void setForm(Form form) {
-//		if(form!=null)
-//			flash.put("form", form);
 		this.form = form;
 	}
 

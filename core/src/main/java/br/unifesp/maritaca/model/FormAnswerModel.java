@@ -1,4 +1,4 @@
-package br.unifesp.maritaca.control;
+package br.unifesp.maritaca.model;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -8,7 +8,7 @@ import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormShare;
 import br.unifesp.maritaca.persistence.EntityManager;
 
-public interface FormAnswerControl {
+public interface FormAnswerModel {
 	boolean saveForm(Form form);
 
 	Form getForm(UUID uid);

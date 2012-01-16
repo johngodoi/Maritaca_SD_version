@@ -5,9 +5,9 @@ import java.util.UUID;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
-import br.unifesp.maritaca.control.ControllerFactory;
-import br.unifesp.maritaca.control.FormAnswerControl;
 import br.unifesp.maritaca.core.Form;
+import br.unifesp.maritaca.model.FormAnswerModel;
+import br.unifesp.maritaca.model.ModelFactory;
 import br.unifesp.maritaca.ws.api.FormsService;
 import br.unifesp.maritaca.ws.api.resp.ErrorResponse;
 import br.unifesp.maritaca.ws.api.resp.MaritacaResponse;
@@ -18,25 +18,25 @@ import br.unifesp.maritaca.ws.exceptions.MaritacaWSException;
 @Path("/form")
 public class FormsServiceImpl implements FormsService {
 
-	private FormAnswerControl formRespCtlr;
+	private FormAnswerModel formRespModel;
 
 	public FormsServiceImpl() {
-		formRespCtlr = ControllerFactory.getInstance().createFormResponseCtrl();
+		formRespModel = ModelFactory.getInstance().createFormResponseModel();
 	}
 
-	public FormAnswerControl getFormResponse() {
-		return formRespCtlr;
+	public FormAnswerModel getFormAnswModel() {
+		return formRespModel;
 	}
 
-	public void setFormResponse(FormAnswerControl formResponse) {
-		this.formRespCtlr = formResponse;
+	public void setFormResponse(FormAnswerModel formResponse) {
+		this.formRespModel = formResponse;
 	}
 
 	@Override
 	public Form getForm(String formId) throws MaritacaWSException {
 		UUID uuid = UUID.fromString(formId);
 		Form form = null;
-		form = formRespCtlr.getForm(uuid);
+		form = formRespModel.getForm(uuid);
 		if (form != null)
 			return form;
 		else {
@@ -53,7 +53,7 @@ public class FormsServiceImpl implements FormsService {
 		Form form = new Form();
 		form.setXml(xmlForm);
 		form.setUser(userId);
-		if (formRespCtlr.saveForm(form)) {
+		if (formRespModel.saveForm(form)) {
 			XmlSavedResponse okresp = new XmlSavedResponse();
 			okresp.setId(form.getKey());
 			okresp.setType(MaritacaResponse.FORM_TYPE);
@@ -71,13 +71,13 @@ public class FormsServiceImpl implements FormsService {
 	@Override
 	public MaritacaResponse listFormsMinimal() {
 		ResultSetResponse<Form> resp = new ResultSetResponse<Form>();
-		resp.setList(formRespCtlr.listAllFormsMinimal());
+		resp.setList(formRespModel.listAllFormsMinimal());
 		return resp;
 	}
 
 	@Override
 	public Form getFormSharing(String url) throws MaritacaWSException {
-		String id = formRespCtlr.getFormIdFromUrl(url);
+		String id = formRespModel.getFormIdFromUrl(url);
 		if (id != null) {
 			return getForm(id);
 		} else {
