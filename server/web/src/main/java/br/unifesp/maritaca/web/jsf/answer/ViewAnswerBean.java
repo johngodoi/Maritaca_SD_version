@@ -2,14 +2,13 @@ package br.unifesp.maritaca.web.jsf.answer;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
-import javax.faces.bean.SessionScoped;
 
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
 
 @ManagedBean
 public class ViewAnswerBean extends AbstractBean{
+	private static final long serialVersionUID = 1L;
 	private Answer answer;
 	
 	@ManagedProperty("#{param.answerid}")

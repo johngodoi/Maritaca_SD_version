@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>br.unifesp.maritaca</groupId>
 		<artifactId>maritaca</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>${maritaca.version}</version>
 	</parent>
 	<artifactId>maritaca-core</artifactId>
 	<packaging>jar</packaging>

@@ -9,6 +9,7 @@ import br.unifesp.maritaca.web.jsf.AbstractBean;
 
 @ManagedBean
 public class EditFormBean extends AbstractBean {
+	private static final long serialVersionUID = 1L;
 	@ManagedProperty("#{currentUserBean.user}")
 	private User user;
 	private Form form;
