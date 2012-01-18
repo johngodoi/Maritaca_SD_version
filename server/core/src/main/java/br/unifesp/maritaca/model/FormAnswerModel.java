@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Form;
-import br.unifesp.maritaca.core.FormShare;
 import br.unifesp.maritaca.persistence.EntityManager;
 
 public interface FormAnswerModel {
@@ -21,8 +20,6 @@ public interface FormAnswerModel {
 
 	void deleteForm(Form form);
 	
-	FormShare getFormShare(Form form);
-	
 	String getFormIdFromUrl(String url);
 	
 	/************* ANSWER ***********/
@@ -35,6 +32,10 @@ public interface FormAnswerModel {
 	Collection<Answer> listAllAnswersMinimal(UUID formId);
 
 	boolean urlForSharingExists(String url);
+
+	void setUserModel(UserModel userModel);
+
+	UserModel getUserModel();
 
 
 }

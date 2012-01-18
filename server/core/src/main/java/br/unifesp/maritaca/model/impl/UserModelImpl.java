@@ -4,21 +4,34 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
+
+import br.unifesp.maritaca.core.Group;
+import br.unifesp.maritaca.core.GroupUser;
 import br.unifesp.maritaca.core.User;
+import br.unifesp.maritaca.model.ManagerModel;
+import br.unifesp.maritaca.model.ModelFactory;
 import br.unifesp.maritaca.model.UserModel;
 import br.unifesp.maritaca.persistence.EntityManager;
 
 public class UserModelImpl implements UserModel {
+
 	private EntityManager entityManager;
-	
+	private ManagerModel managerModel;
+
 	public EntityManager getEntityManager() {
 		return entityManager;
 	}
 
 	@Override
 	public boolean saveUser(User user) {
-		if(user == null)return false;
-		return entityManager.persist(user);
+		if (user == null)
+			return false;
+		if(entityManager.persist(user)){
+			return addUserToGroup(user, getAllUsersGroup());
+		}
+		return false;
+		
 	}
 
 	@Override
@@ -51,9 +64,11 @@ public class UserModelImpl implements UserModel {
 	}
 
 	/**
-	 * Returns the first user with the given email address.
-	 * Email addresses should be unique in the database.
-	 * @param email Address of the searched user. 
+	 * Returns the first user with the given email address. Email addresses
+	 * should be unique in the database.
+	 * 
+	 * @param email
+	 *            Address of the searched user.
 	 * @return The user found.
 	 */
 	@Override
@@ -66,6 +81,95 @@ public class UserModelImpl implements UserModel {
 		} else {
 			return users.get(0);
 		}
+	}
+
+	@Override
+	public Group getGroup(UUID uuid) {
+		if (entityManager == null)
+			return null;
+		return entityManager.find(Group.class, uuid);
+	}
+
+	@Override
+	public boolean saveGroup(Group group) {
+		if (entityManager == null)
+			return false;
+		if (group == null || group.getOwner() == null
+				|| group.getName() == null || group.getName().length() == 0) {
+			throw new IllegalArgumentException("Incomplete parameters");
+		}
+
+		if (group.getKey() == null) {
+			// new group
+			for (Group g : getGroupsByOwner(group.getOwner())) {
+				// verify in there is not another group with the same name for
+				// owner
+				if (group.getName().equals(g.getName())) {
+					// group exists
+					return true;
+				}
+			}
+			return entityManager.persist(group);
+		} else {
+			// look for group
+			Group g = getGroup(group.getKey());
+			if (g == null) {
+				// new group
+				group.setKey("");
+				return saveGroup(group);
+			} else
+				// update name
+				return entityManager.persist(group);
+		}
+	}
+
+	@Override
+	public Collection<Group> getGroupsByOwner(User owner) {
+		if (entityManager == null)
+			return null;
+		return entityManager.cQuery(Group.class, "owner", owner.toString());
+	}
+
+
+	/**
+	 * Adds an user to a particular group
+	 * @param user
+	 * @param group
+	 * @return true if was successful
+	 */
+	@Override
+	public boolean addUserToGroup(User user, Group group){
+		if(user == null || user.getKey() == null || group == null || group.getKey() == null){
+			throw new IllegalArgumentException("parameters incompleted");
+		}
+		GroupUser grUser = new GroupUser();
+		grUser.setGroup(group);
+		grUser.setUser(user);
+		return entityManager.persist(grUser);
+	}
+	
+	/**
+	 * Get default users group (ALL_USERS)
+	 */
+	@Override
+	public Group getAllUsersGroup(){
+		User root = managerModel.getRootUser();
+		for(Group g : getGroupsByOwner(root)){
+			if(g.getName().equals(ManagerModel.ALL_USERS)){
+				return g;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public ManagerModel getManagerModel() {
+		return managerModel;
+	}
+
+	@Override
+	public void setManagerModel(ManagerModel managerModel) {
+		this.managerModel = managerModel;
 	}
 
 }
