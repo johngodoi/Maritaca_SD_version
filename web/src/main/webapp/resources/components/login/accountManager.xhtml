@@ -11,14 +11,16 @@
 </head>
 <body>
 	<composite:interface>
+		<composite:attribute name="cancelNavigation"
+			method-signature="java.lang.String action()" />
 	</composite:interface>
 	<composite:implementation>
 		<h:outputScript library="javascript" name="checkPassword.js" />
-		<h:form>
+		<h:form id="accountEditorForm">
 			<h:panelGrid columns="3">
 				<!-- Row 1 -->
 				<h:outputText value="#{msgs.account_first_name}:" />
-				<h:inputText value="#{createAccountBean.user.firstname}"
+				<h:inputText value="#{accountManagerBean.user.firstname}"
 					label="#{msgs.account_first_name}" id="firstName" required="true">
 					<f:validateLength minimum="4" maximum="12" />
 				</h:inputText>
@@ -26,7 +28,7 @@
 
 				<!-- Row 2 -->
 				<h:outputText value="#{msgs.account_last_name}:" />
-				<h:inputText value="#{createAccountBean.user.lastname}"
+				<h:inputText value="#{accountManagerBean.user.lastname}"
 					label="#{msgs.account_last_name}" id="lastName">
 					<f:validateLength minimum="4" maximum="12" />
 				</h:inputText>
@@ -34,32 +36,32 @@
 
 				<!-- Row 3 -->
 				<h:outputText value="#{msgs.account_email}:" />
-				<h:inputText value="#{createAccountBean.user.email}" id="email"
+				<h:inputText value="#{accountManagerBean.user.email}" id="email"
 					label="#{msgs.account_email}" required="true">
 					<f:ajax event="blur" render="emailError" />
 				</h:inputText>
 				<h:panelGroup>
 					<h:message for="email" styleClass="error" />
 					<h:outputText
-						value="#{createAccountBean.registeredEmail() ? msgs.account_create_used_email: ''}"
+						value="#{accountManagerBean.registeredEmail() ? msgs.account_create_used_email: ''}"
 						id="emailError" styleClass="error">
 					</h:outputText>
 				</h:panelGroup>
 
 				<!-- Row 4 -->
 				<h:outputText value="#{msgs.account_password}:" />
-				<h:inputSecret value="#{createAccountBean.user.password}"
+				<h:inputSecret value="#{accountManagerBean.user.password}"
 					label="#{msgs.account_password}" id="password" required="true"
-					onblur="checkPassword(this.form)">
+					onkeyup="checkPassword(this.form)">
 					<f:validateLength minimum="6" maximum="20" />
 				</h:inputSecret>
 				<h:message for="password" styleClass="error" />
-				
+
 				<!-- Row 5 -->
 				<h:outputText value="#{msgs.account_create_retype_passwd}:" />
-				<h:inputSecret value="#{createAccountBean.confirmPassword}"
+				<h:inputSecret value="#{accountManagerBean.confirmPassword}"
 					label="#{msgs.account_create_retype_passwd}" required="true"
-					id="passwordConfirm" onblur="checkPassword(this.form)">
+					id="passwordConfirm" onkeyup="checkPassword(this.form)">
 					<f:validateLength minimum="6" maximum="20" />
 				</h:inputSecret>
 				<h:panelGroup>
@@ -73,12 +75,10 @@
 
 			<!-- Lower section buttons: Create/Cancel -->
 			<h:commandButton value="#{msgs.account_create_button}"
-				action="#{createAccountBean.create}" id="createAccountButton">
-				<f:setPropertyActionListener target="#{currentUserBean.user}"
-					value="#{createAccountBean.user}" />
+				action="#{accountManagerBean.saveAccount}" id="createAccountButton">
 			</h:commandButton>
 			<h:commandButton value="#{msgs.account_create_cancel}"
-				action="/faces/views/login" immediate="true" />
+				action="#{cc.attrs.cancelNavigation}" immediate="true" />
 		</h:form>
 	</composite:implementation>
 </body>

@@ -16,12 +16,12 @@
 		<h:outputText value="#{msgs.login_open_id}" id="open_id_login" />
 		<h:panelGrid id="formRenderTable" columns="2">
 			<h:form>
-				<h:commandButton value="" action="${loginBean.openId}"
+				<h:commandButton value="" action="${openIdLoginBean.openIdOpLogin}"
 					image="#{resource['img:google_openid_icon.png']}" >
 					<f:param name="op" value="Google"/>
 				</h:commandButton>
 
-				<h:commandButton value="" action="${loginBean.openId}"
+				<h:commandButton value="" action="${openIdLoginBean.openIdOpLogin}"
 					image="#{resource['img:yahoo_openid_icon.png']}">
 					<f:param name="op" value="Yahoo"/>
 				</h:commandButton>

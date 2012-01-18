@@ -5,12 +5,9 @@
 
 <h:body>
 	<center>
-		<!-- Fills user data if returning from openId authentication -->
-		<h:inputHidden value="#{openIdLoginBean.onLoad}" />
-		
 		<!-- Calls the accountEditor -->
 		<login:accountManager
-			cancelNavigation="#{accountManagerBean.cancelUserCreation}" />
+			cancelNavigation="#{accountManagerBean.cancelUserEdition}" />
 	</center>
 </h:body>
 </html>
