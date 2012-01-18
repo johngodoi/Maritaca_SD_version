@@ -6,47 +6,59 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import br.unifesp.maritaca.persistence.annotations.Column;
-import br.unifesp.maritaca.util.AccessLevel;
+import br.unifesp.maritaca.persistence.annotations.Minimal;
 
 @Entity
-public class FormAccess {
+public class GroupUser {
 	@Id
 	private UUID key;
-	@Column(indexed=true)
-	private FormShare formShare;
-	@Column(indexed=true)
+	@Column(indexed = true)
+	@Minimal
+	private Group group;
+	@Column(indexed = true)
+	@Minimal
 	private User user;
-	@Column
-	private AccessLevel accessLevel;
+
 	public UUID getKey() {
 		return key;
 	}
+
 	public void setKey(UUID key) {
 		this.key = key;
 	}
-	public FormShare getFormShare() {
-		return formShare;
-	}
-	public void setFormShare(FormShare formShare) {
-		this.formShare = formShare;
-	}
-	public User getUser() {
-		return user;
-	}
-	public void setUser(User user) {
-		this.user = user;
-	}
-	public AccessLevel getAccessLevel() {
-		return accessLevel;
-	}
-	public void setAccessLevel(AccessLevel accessLevel) {
-		this.accessLevel = accessLevel;
-	}
-	
+
 	public void setKey(String ks) {
 		this.key = UUID.fromString(ks);
 	}
-	
+
+	public Group getGroup() {
+		return group;
+	}
+
+	public void setGroup(Group group) {
+		this.group = group;
+	}
+
+	public void setGroup(String uid) {
+		Group group = new Group();
+		group.setKey(uid);
+		setGroup(group);
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public void setUser(String uid) {
+		User user = new User();
+		user.setKey(uid);
+		setUser(user);
+	}
+
 	@Override
 	public String toString() {
 		if (getKey() != null) {
@@ -54,5 +66,4 @@ public class FormAccess {
 		}
 		return super.toString();
 	}
-	
 }

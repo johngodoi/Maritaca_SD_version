@@ -12,7 +12,6 @@
 	<rich:tabPanel activeItem="#{manager.activeModule.id}"
 		tabContentClass="tabContent" switchType="ajax"
 		itemChangeListener="#{manager.processItemChange}" id="mainTab">
-		<f:ajax execute="mainTab" event="click" />
 		<c:forEach var="module" items="#{manager.enabledModules}">
 			<!-- CREATE A NEW TOP TAB (MODULE) -->
 			<rich:tab header="#{module.title}" id="#{module.id}">
@@ -25,11 +24,11 @@
 						<c:forEach var="subModule" items="#{module.subModules}">
 							<rich:panelMenuItem label="#{subModule.title}"
 								id="#{subModule.id}" actionListener="#{module.processAction}"
-								render="panelContent" mode="ajax">
+								render="#{module.id}_panelContent" mode="ajax">
 							</rich:panelMenuItem>
 						</c:forEach>
 					</rich:panelMenu>
-					<rich:panel id="panelContent" bodyClass="panelContent">
+					<rich:panel id="#{module.id}_panelContent" bodyClass="panelContent">
 						<!--  MAIN CONTENT -->
 						<util:selectComponent submodule="#{module.activeSubModule}" />
 					</rich:panel>

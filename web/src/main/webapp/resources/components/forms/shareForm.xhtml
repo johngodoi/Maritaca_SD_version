@@ -6,25 +6,15 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:rich="http://richfaces.org/rich"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:util="http://java.sun.com/jsf/composite/components/util">
 <body>
 	<composite:interface>
 	</composite:interface>
 	<composite:implementation>
 		<div id="#{cc.clientId}">
-			<rich:popupPanel id="popupShare" modal="true" resizeable="true"
-				show="#{shareFormBean.show}"
-				onmaskclick="#{rich:component('popupShare')}.hide()">
-				<f:facet name="header">
-					<h:outputText value="#{msgs.form_share_settings}" />
-				</f:facet>
-				<f:facet name="controls">
-					<h:outputLink value="#"
-						onclick="#{rich:component('popupShare')}.hide(); return false;">
-                    X
-                </h:outputLink>
-				</f:facet>
-
+			<util:popup popupId="popupShare" title="#{msgs.form_share_settings}"
+				show="#{shareFormBean.show}">
 				<h:panelGrid columns="2">
 					<h:outputText value="#{msgs.form_share_url}" />
 					<h:inputText
@@ -32,7 +22,7 @@
 						readonly="true" />
 				</h:panelGrid>
 
-			</rich:popupPanel>
+			</util:popup>
 		</div>
 	</composite:implementation>
 </body>

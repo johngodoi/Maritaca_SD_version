@@ -12,26 +12,22 @@
 <body>
 	<composite:interface>
 		<composite:attribute name="title" required="true" />
-		<composite:attribute name="styleClass" required="false" />
-		<composite:attribute name="show" required="false"/>
+		<composite:attribute name="show" required="true" />
+		<composite:attribute name="popupId" required="true" />
 	</composite:interface>
 	<composite:implementation>
-		<rich:popupPanel id="popup" modal="true" 
-			styleClass="#{cc.attrs.styleClass}"
-			onmaskclick="#{rich:component('popup')}.hide()"
-			keepVisualState="true"
-			height="300" width="500"
-			show="#{cc.attrs.show}">
+		<rich:popupPanel id="#{cc.attrs.popupId}" modal="true"
+			resizeable="true" show="#{cc.attrs.show}"
+			onmaskclick="#{rich:component(cc.attrs.popupId)}.hide()">
 			<f:facet name="header">
 				<h:outputText value="#{cc.attrs.title}" />
 			</f:facet>
 			<f:facet name="controls">
 				<h:outputLink value="#"
-					onclick="#{rich:component('popup')}.hide(); return false;">
+					onclick="#{rich:component(cc.attrs.popupId)}.hide(); return false;">
                     X
                 </h:outputLink>
 			</f:facet>
-
 			<composite:insertChildren />
 		</rich:popupPanel>
 	</composite:implementation>

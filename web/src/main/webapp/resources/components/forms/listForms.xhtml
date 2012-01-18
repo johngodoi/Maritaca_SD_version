@@ -19,8 +19,8 @@
 		<h:dataTable value="#{listFormsBean.forms}" var="aForm" width="100%"
 			columnClasses="columnClass1, columnClass1" cellspacing="0">
 			<h:column>
-				<a4j:commandLink>
-					<h:outputText value="#{aForm.title}" styleClass="listItem"/>
+			<a4j:commandLink render="#{manager.activeModule.id}">
+					<h:outputText value="#{aForm.title}" styleClass="listItem" />
 					<f:setPropertyActionListener target="#{manager.activeModule}"
 						value="#{cc.attrs.submodule.parent}" />
 					<f:setPropertyActionListener
@@ -77,8 +77,8 @@
 					</rich:menuItem>
 
 					<rich:menuItem icon="#{resource['img:remove.png']}"
-						render="panelContent" label="#{msgs.commons_delete}"
-						action="#{editFormBean.deleteForm}">
+						render="#{manager.activeModule.id}_panelContent"
+						label="#{msgs.commons_delete}" action="#{editFormBean.deleteForm}">
 						<f:setPropertyActionListener target="#{editFormBean.form}"
 							value="#{aForm}" />
 					</rich:menuItem>
@@ -95,7 +95,7 @@
 				</rich:dropDownMenu>
 			</h:column>
 		</h:dataTable>
-		<forms:shareForm id="shareFormId"/>
+		<forms:shareForm id="shareFormId" />
 	</composite:implementation>
 </body>
 </html>
