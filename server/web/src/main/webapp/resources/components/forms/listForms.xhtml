@@ -16,7 +16,8 @@
 		<composite:attribute name="submodule" required="true" />
 	</composite:interface>
 	<composite:implementation>
-		<h:dataTable value="#{listFormsBean.forms}" var="aForm" width="100%" columnClasses="columnClass1, columnClass1" cellspacing="0">
+		<h:dataTable value="#{listFormsBean.forms}" var="aForm" width="100%"
+			columnClasses="columnClass1, columnClass1" cellspacing="0">
 			<h:column>
 				<a4j:commandLink>
 					<h:outputText value="#{aForm.title}" styleClass="listItem"/>
@@ -34,9 +35,10 @@
 				</a4j:commandLink>
 			</h:column>
 			<h:column>
-				<rich:dropDownMenu mode="ajax" styleClass="listItemOption" >
-				<f:facet name="label"><h:graphicImage value="#{resource['img:down.png']}"/>
-				</f:facet>
+				<rich:dropDownMenu mode="ajax" styleClass="listItemOption">
+					<f:facet name="label">
+						<h:graphicImage value="#{resource['img:down.png']}" />
+					</f:facet>
 					<rich:menuItem render="#{manager.activeModule.id}"
 						icon="#{resource['img:view_form.png']}"
 						label="#{msgs.commons_view}">
