@@ -5,7 +5,8 @@
 	xmlns:composite="http://java.sun.com/jsf/composite"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:rich="http://richfaces.org/rich">
 <head>
 <title>Not present in rendered output</title>
 </head>
@@ -15,7 +16,10 @@
 			method-signature="java.lang.String action()" />
 	</composite:interface>
 	<composite:implementation>
-		<h:outputScript library="javascript" name="checkPassword.js" />
+		<h:outputScript library="javascript" name="passwordManager.js" />
+		<h:outputScript library="javascript" name="jquery-1.7.1.js" />
+		<h:outputScript library="javascript" name="jquery.sha1.js" />
+		
 		<h:form id="accountEditorForm">
 			<h:panelGrid columns="3">
 				<!-- Row 1 -->
@@ -53,21 +57,22 @@
 				<h:inputSecret value="#{accountManagerBean.user.password}"
 					label="#{msgs.account_password}" id="password" required="true"
 					onkeyup="checkPassword(this.form)">
-					<f:validateLength minimum="6" maximum="20" />
 				</h:inputSecret>
-				<h:message for="password" styleClass="error" />
+				<h:outputText	value="#{msgs.account_passwd_size_error }"
+								id="passwdLengthError" styleClass="error">
+					<f:param value="returnMinPasswordSize()"/>
+					<f:param value="returnMaxPasswordSize()"/>								
+				</h:outputText>
 
 				<!-- Row 5 -->
 				<h:outputText value="#{msgs.account_create_retype_passwd}:" />
 				<h:inputSecret value="#{accountManagerBean.confirmPassword}"
 					label="#{msgs.account_create_retype_passwd}" required="true"
 					id="passwordConfirm" onkeyup="checkPassword(this.form)">
-					<f:validateLength minimum="6" maximum="20" />
 				</h:inputSecret>
 				<h:panelGroup>
 					<h:outputText value="#{msgs.account_passwd_dont_match }"
-						id="confirmPasswdError" styleClass="error">
-					</h:outputText>
+						id="confirmPasswdError" styleClass="error"/>
 					<br />
 					<h:message for="passwordConfirm" styleClass="error" />
 				</h:panelGroup>
@@ -75,8 +80,10 @@
 
 			<!-- Lower section buttons: Create/Cancel -->
 			<h:commandButton value="#{msgs.account_create_button}"
-				action="#{accountManagerBean.saveAccount}" id="createAccountButton">
+				action="#{accountManagerBean.saveAccount}" id="createAccountButton"
+				onclick="encryptPassword(this.form,true)">				
 			</h:commandButton>
+			
 			<h:commandButton value="#{msgs.account_create_cancel}"
 				action="#{cc.attrs.cancelNavigation}" immediate="true" />
 		</h:form>
