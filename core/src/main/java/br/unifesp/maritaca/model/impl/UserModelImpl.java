@@ -1,6 +1,7 @@
 package br.unifesp.maritaca.model.impl;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 import br.unifesp.maritaca.core.User;
@@ -59,7 +60,12 @@ public class UserModelImpl implements UserModel {
 	public User getUser(String email) {
 		if (entityManager == null)
 			return null;
-		return entityManager.cQuery(User.class, "email", email).get(0);
+		List<User> users = entityManager.cQuery(User.class, "email", email);
+		if(users==null || users.size()==0){
+			return null;
+		} else {
+			return users.get(0);
+		}
 	}
 
 }

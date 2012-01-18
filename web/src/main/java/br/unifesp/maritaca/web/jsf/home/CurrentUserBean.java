@@ -26,4 +26,9 @@ public class CurrentUserBean implements Serializable{
 	public void setAuthenticated(boolean authenticated) {
 		this.authenticated = authenticated;
 	}
+	
+	public String logout(){
+		setUser(null);
+		return "/faces/views/login";
+	}
 }

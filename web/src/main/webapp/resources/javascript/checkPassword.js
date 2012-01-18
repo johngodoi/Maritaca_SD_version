@@ -6,9 +6,7 @@ function checkPassword(form) {
 
 	if (password == passwordConfirm && password != ""){
 		message.style.visibility  = 'hidden';
-		createAccount.disabled    = false;		
 	}else{
 		message.style.visibility  = 'visible';
-		createAccount.disabled    = true;
 	}
 }
