@@ -11,7 +11,11 @@
 	<composite:interface>
 
 	</composite:interface>
-	<composite:implementation>
+	<composite:implementation>		
+		<h:outputScript library="javascript" name="passwordManager.js" />
+		<h:outputScript library="javascript" name="jquery-1.7.1.js" />
+		<h:outputScript library="javascript" name="jquery.sha1.js" />
+		
 		<h:form>
 			<h:outputText value="#{msgs.login_maritaca}" />
 			<h:outputText value="#{maritacaLoginBean.status}" id="loginStatus"
@@ -23,7 +27,8 @@
 				<h:outputText value="#{msgs.account_password}:" />
 				<h:inputSecret id="password" value="#{maritacaLoginBean.user.password}" />
 			</h:panelGrid>
-			<h:commandButton value="#{msgs.login}" action="#{maritacaLoginBean.submit}"/>
+			<h:commandButton value="#{msgs.login}" action="#{maritacaLoginBean.submit}"
+			onclick="encryptPassword(this.form,false)"/>
 			<h:commandLink value="#{msgs.login_create_account_link}"
 				action="/faces/views/createAccount"/>
 		</h:form>
