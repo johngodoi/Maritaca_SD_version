@@ -15,7 +15,7 @@ import br.unifesp.maritaca.persistence.annotations.Minimal;
 @XmlRootElement(name = "user")
 @XmlType(propOrder = { "key", "firstname", "lastname", "email" })
 @Entity
-public class User implements Serializable{
+public class User implements Serializable, Cloneable{
 
 	private static final long serialVersionUID = 1L;
 
@@ -108,4 +108,13 @@ public class User implements Serializable{
 		}
 	}
 
+	@Override
+	public User clone(){
+		try {
+			return (User)super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }
