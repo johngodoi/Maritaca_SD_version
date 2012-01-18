@@ -44,7 +44,7 @@ public class MaritacaLoginBean extends AbstractBean {
 			return "/faces/views/login";			
 		} else {
 			getCurrentUserBean().setUser(dbUser);
-			return "/faces/views/forms";
+			return "/faces/views/home";
 		}
 	}
 

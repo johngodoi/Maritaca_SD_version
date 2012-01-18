@@ -54,7 +54,7 @@ public class AccountManagerBean extends AbstractBean implements Serializable{
 		}
 		getCurrentUserBean().setUser(getUser());
 		clearUser();
-		return "/faces/views/forms";
+		return "/faces/views/home";
 	}
 	
 	/**
@@ -105,7 +105,7 @@ public class AccountManagerBean extends AbstractBean implements Serializable{
 	 */
 	public String cancelUserEdition(){
 		clearUser();
-		return "/faces/views/forms";
+		return "/faces/views/home";
 	}
 	
 	/**

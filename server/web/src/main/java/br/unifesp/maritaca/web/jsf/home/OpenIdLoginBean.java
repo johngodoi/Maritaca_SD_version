@@ -60,7 +60,7 @@ public class OpenIdLoginBean{
         if(getAccountManagerBean().registeredEmail()){
         	User user = getAccountManagerBean().getUser().clone();
         	getAccountManagerBean().getCurrentUserBean().setUser(user);
-        	String returnUrl   = returnToUrl("/views/forms.xhtml");
+        	String returnUrl   = returnToUrl("/views/home.xhtml");
         	facesRedirect(returnUrl);
         }
     }
