@@ -33,7 +33,7 @@
 			<dependency>
 				<groupId>org.richfaces</groupId>
 				<artifactId>richfaces-bom</artifactId>
-				<version>4.0.0.Final</version>
+				<version>4.1.0.Final</version>
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
@@ -83,6 +83,7 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
+			<version>1.2</version>
 			</dependency>
 		<dependency>
 			<groupId>org.richfaces.ui</groupId>
@@ -95,7 +96,7 @@
 		<dependency>
 			<groupId>org.richfaces.cdk</groupId>
 			<artifactId>annotations</artifactId>
-			<version>4.0.0.Final</version>
+			<version>4.1.0.Final</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- Allows to use the bean validation framework -->

@@ -8,8 +8,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import br.unifesp.maritaca.core.Form;
-import br.unifesp.maritaca.core.FormAccess;
-import br.unifesp.maritaca.core.FormShare;
+import br.unifesp.maritaca.core.FormPermissions;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
 
 /**
@@ -24,8 +23,8 @@ public class ShareFormBean extends AbstractBean {
 	private static final long serialVersionUID = 1L;
 	private static final String ROOT_FOR_SHARING = "/ws/form/share/";
 	private Form form;
-	private FormShare formShare;
-	private List<FormAccess> userAccessList;
+	private FormPermissions formShare;
+//	private List<FormAccess> userAccessList;
 	private boolean show;
 
 	public ShareFormBean() {
@@ -37,8 +36,10 @@ public class ShareFormBean extends AbstractBean {
 	}
 
 	public void setForm(Form form) {
+		if(form.getUrl() == null){
+			form = formAnswCtrl.getForm(form.getKey());
+		}
 		this.form = form;
-		setFormShare(formAnswCtrl.getFormShare(form));
 		setShow(true);
 	}
 
@@ -49,30 +50,30 @@ public class ShareFormBean extends AbstractBean {
 		setForm(form);
 	}
 
-	public FormShare getFormShare() {
+	public FormPermissions getFormShare() {
 		return formShare;
 	}
 
-	public void setFormShare(FormShare formShare) {
+	public void setFormShare(FormPermissions formShare) {
 		this.formShare = formShare;
 	}
 
-	public List<FormAccess> getUserAccessList() {
-		return userAccessList;
-	}
-
-	public void setUserAccessList(List<FormAccess> userAccessList) {
-		this.userAccessList = userAccessList;
-	}
+//	public List<FormAccess> getUserAccessList() {
+//		return userAccessList;
+//	}
+//
+//	public void setUserAccessList(List<FormAccess> userAccessList) {
+//		this.userAccessList = userAccessList;
+//	}
 
 	public String getUrl() {
-		if (formShare == null)
+		if (form == null)
 			return "";
-		return formShare.getUrl();
+		return form.getUrl();
 	}
 
 	public void setUrl(String newUrl) {
-		formShare.setUrl(newUrl);
+		//formShare.setUrl(newUrl);
 	}
 
 	public boolean isShow() {

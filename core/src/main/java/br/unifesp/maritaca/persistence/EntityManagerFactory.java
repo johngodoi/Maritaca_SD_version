@@ -29,12 +29,8 @@ public class EntityManagerFactory {
 		EntityManager em = null;
 		switch (type) {
 		case HECTOR_MARITACA_EM:
-			if (hectorEM == null) {
-				hectorEM = new EntityManagerHectorImpl(
-						(Cluster) (params.get("cluster")),
-						(Keyspace) (params.get("keyspace")));
-			}
-			return hectorEM;
+			setHectorParams(params);
+			return createEntityManager(type);
 		}
 		return em;
 	}
@@ -43,8 +39,12 @@ public class EntityManagerFactory {
 		EntityManager em = null;
 		switch (type) {
 		case HECTOR_MARITACA_EM:
-			if (cluster != null && keyspace != null)
-				em = new EntityManagerHectorImpl(cluster, keyspace);
+			if (hectorEM == null) {
+				if (cluster != null && keyspace != null)
+					em = new EntityManagerHectorImpl(cluster, keyspace);
+			} else {
+				em = hectorEM;
+			}
 			break;
 		}
 		return em;

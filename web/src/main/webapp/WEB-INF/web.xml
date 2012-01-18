@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 	<display-name>Archetype Created Web Application</display-name>
 	<context-param>
-		<param-name>facelets.SKIP_COMMENTS</param-name>
+		<param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
 		<param-value>true</param-value>
 	</context-param>
 	<context-param>
@@ -30,6 +30,10 @@
 	<context-param>
 		<param-name>javax.faces.PARTIAL_STATE_SAVING</param-name>
 		<param-value>false</param-value>
+	</context-param>
+	<context-param>
+	<param-name>com.sun.faces.enableMissingResourceLibraryDetection</param-name>
+	<param-value>true</param-value>
 	</context-param>
 	<servlet>
 		<servlet-name>Jersey REST Service</servlet-name>

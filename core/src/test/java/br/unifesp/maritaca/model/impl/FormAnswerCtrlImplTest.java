@@ -1,4 +1,4 @@
-package br.unifesp.maritaca.control.impl;
+package br.unifesp.maritaca.model.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -20,9 +20,9 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import br.unifesp.maritaca.core.Form;
-import br.unifesp.maritaca.core.FormShare;
+import br.unifesp.maritaca.core.Group;
 import br.unifesp.maritaca.core.User;
-import br.unifesp.maritaca.model.impl.FormAnswerModelImpl;
+import br.unifesp.maritaca.model.UserModel;
 import br.unifesp.maritaca.persistence.EntityManager;
 
 public class FormAnswerCtrlImplTest {
@@ -33,12 +33,15 @@ public class FormAnswerCtrlImplTest {
 
 	private EntityManager em;
 	private FormAnswerModelImpl frControl;
+	private UserModel userModel;
 
 	@Before
 	public void setUp() throws Exception {
 		em = mock(EntityManager.class);
 		frControl = new FormAnswerModelImpl();
 		frControl.setEntityManager(em);
+		userModel = mock(UserModel.class);
+		frControl.setUserModel(userModel);
 	}
 
 	@After
@@ -64,6 +67,17 @@ public class FormAnswerCtrlImplTest {
 
 		when(em.rowDataExists((Class<User>) notNull(), any(UUID.class)))
 				.thenReturn(true);
+		
+		when(userModel.getAllUsersGroup()).thenAnswer(new Answer<Group>() {
+
+			@Override
+			public Group answer(InvocationOnMock invocation) throws Throwable {
+				Group g = new Group();
+				g.setKey(uuid2);
+				g.setName(ManagerModelImpl.ALL_USERS);
+				return g;
+			}
+		});
 
 		assertNull(form.getKey());
 		assertTrue(frControl.saveForm(form));
