@@ -12,7 +12,7 @@ import br.unifesp.maritaca.util.AccessLevel;
 import br.unifesp.maritaca.util.AccessLevelFactory;
 
 @Entity
-public class FormShare {
+public class FormPermissions {
 	@Id
 	private UUID key;
 	@Column(indexed = true)
@@ -20,11 +20,13 @@ public class FormShare {
 	private Form form;
 	@Column(indexed = true)
 	@Minimal
-	private String url;
+	private Group group;
 	@Column
 	private Calendar expDate;
 	@Column
-	private AccessLevel publicAccess;
+	private AccessLevel formAccess;
+	@Column
+	private AccessLevel answAccess;
 
 	public UUID getKey() {
 		return key;
@@ -60,32 +62,42 @@ public class FormShare {
 		this.setForm(f);
 	}
 
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	public Calendar getExpDate() {
-		return expDate;
-	}
-
 	public void setExpDate(Calendar expDate) {
 		this.expDate = expDate;
 	}
 
-	public AccessLevel getPublicAccess() {
-		return publicAccess;
+	public Group getGroup() {
+		return group;
 	}
 
-	public void setPublicAccess(AccessLevel publicAccess) {
-		this.publicAccess = publicAccess;
+	public void setGroup(Group group) {
+		this.group = group;
+	}
+	
+	public void setGroup(String uid){
+		Group g = new Group();
+		g.setKey(uid);
+		setGroup(g);
 	}
 
-	public void setPublicAccess(String access) {
-		setPublicAccess(AccessLevelFactory.getAccessLevelFromString(access));
+	public AccessLevel getFormAccess() {
+		return formAccess;
+	}
+
+	public void setFormAccess(AccessLevel formAccess) {
+		this.formAccess = formAccess;
+	}
+
+	public AccessLevel getAnswAccess() {
+		return answAccess;
+	}
+
+	public void setAnswAccess(AccessLevel answAccess) {
+		this.answAccess = answAccess;
+	}
+
+	public Calendar getExpDate() {
+		return expDate;
 	}
 
 }
