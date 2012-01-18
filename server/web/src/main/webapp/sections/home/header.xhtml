@@ -1,9 +1,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html">
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
 
-<h:outputText value="#{msgs.account_user}  #{currentUserBean.user.email}" />
-<h:graphicImage value="#{resource['img:settings_button.png']}" />
-<h:graphicImage value="#{resource['img:logout_button.png']}" />
-
+<h:outputText
+	value="#{msgs.account_user}  #{currentUserBean.user.email}" />
+<h:form>
+	<h:commandLink action="#{accountManagerBean.useCurrentUser}">
+		<h:graphicImage value="#{resource['img:settings_button.png']}" />
+	</h:commandLink>
+	<h:commandLink action="#{currentUserBean.logout}">
+		<h:graphicImage value="#{resource['img:logout_button.png']}" />
+	</h:commandLink>
+</h:form>
 </html>
