@@ -7,7 +7,7 @@ public class MessageManager {
 	private static MessageManager  instance;
 	private ResourceBundle         resourceBundle;
 	private Locale                 usedLocale;
-	private Locale[]               supportedLocales = { Locale.ENGLISH };
+	private Locale[]               supportedLocales = { Locale.ENGLISH, Locale.ROOT };
 	private static final String    MESSAGES_FILE    = "messages.properties";
 	
 	static {
@@ -17,6 +17,7 @@ public class MessageManager {
 	private MessageManager(){
 		String bundle = MESSAGES_FILE;		
 		setResourceBundle(ResourceBundle.getBundle(bundle, usedLocale));
+		System.out.println("agua pasò por aqui");
 	}
 	
 	public String getMessage(String msgKey){

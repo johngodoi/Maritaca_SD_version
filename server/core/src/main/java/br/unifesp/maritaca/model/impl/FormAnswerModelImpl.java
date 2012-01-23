@@ -7,6 +7,7 @@ import java.util.UUID;
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
+import br.unifesp.maritaca.core.Group;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.model.FormAnswerModel;
 import br.unifesp.maritaca.model.UserModel;
@@ -42,6 +43,7 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 				formPer.setForm(form);
 				formPer.setGroup(userModel.getAllUsersGroup());
 				formPer.setFormAccess(new PrivateAccess());
+				formPer.setAnswAccess(new PrivateAccess());
 				if (entityManager.persist(formPer)) {
 					// all saved correctly
 					return true;
@@ -160,19 +162,6 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		entityManager.delete(form);
 	}
 
-	// @Override
-	// public FormShare getFormShare(Form form) {
-	// if (entityManager == null)
-	// return null;
-	// List<FormShare> result = entityManager.cQuery(FormShare.class, "form",
-	// form.getKey().toString());
-	// // todo: need to support Form sharing for different users
-	// if (result.size() > 0) {
-	// return result.get(0);
-	// }
-	// return null;
-	// }
-
 	@Override
 	public boolean urlForSharingExists(String url) {
 		if (entityManager == null)
@@ -202,6 +191,53 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 	@Override
 	public void setUserModel(UserModel userModel) {
 		this.userModel = userModel;
+	}
+
+	@Override
+	public List<FormPermissions> getFormPermissions(Form form) {
+		if (entityManager == null)
+			return null;
+		if (form == null || form.getKey() == null) {
+			throw new IllegalArgumentException("Form null or without Id");
+		}
+		List<FormPermissions> result = entityManager.cQuery(
+				FormPermissions.class, "form", form.getKey().toString());
+		for (FormPermissions fp : result) {
+			fp.setGroup(userModel.getGroup(fp.getGroup().getKey()));
+		}
+		return result;
+	}
+
+	@Override
+	public FormPermissions getFormPermissionById(String formPermId) {
+		if (entityManager == null || formPermId == null)
+			return null;
+		return entityManager.find(FormPermissions.class,
+				UUID.fromString(formPermId));
+	}
+
+	@Override
+	public boolean saveFormPermission(FormPermissions fp) {
+		if (entityManager == null)
+			return false;
+		// verify parameters
+		if (fp == null || fp.getForm() == null || fp.getGroup() == null) {
+			throw new IllegalArgumentException(
+					"Incomplete parameters, form permission not saved");
+		}
+
+		// verify if form and group exists
+		if (entityManager.find(Form.class, fp.getForm().getKey(), true) == null) {
+			throw new IllegalArgumentException(
+					"Form not exists, form permission not saved");
+		}
+		if (entityManager.find(Group.class, fp.getGroup().getKey(), true) == null) {
+			throw new IllegalArgumentException(
+					"Form not exists, form permission not saved");
+		}
+
+		// persist fp
+		return entityManager.persist(fp);
 	}
 
 }

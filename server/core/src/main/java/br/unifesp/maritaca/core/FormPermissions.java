@@ -1,6 +1,9 @@
 package br.unifesp.maritaca.core;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.UUID;
 
 import javax.persistence.Entity;
@@ -20,7 +23,7 @@ public class FormPermissions {
 	private Form form;
 	@Column(indexed = true)
 	@Minimal
-	private Group group;
+	private Group group = new Group();
 	@Column
 	private Calendar expDate;
 	@Column
@@ -55,8 +58,8 @@ public class FormPermissions {
 	public void setForm(Form form) {
 		this.form = form;
 	}
-	
-	public void setForm(String fuid){
+
+	public void setForm(String fuid) {
 		Form f = new Form();
 		f.setKey(fuid);
 		this.setForm(f);
@@ -64,6 +67,20 @@ public class FormPermissions {
 
 	public void setExpDate(Calendar expDate) {
 		this.expDate = expDate;
+	}
+	
+	public void setExpDate(String sdate){
+		//TODO get the date correctly
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yy hh:mm a");
+		Date date;
+		try {
+			date = sdf.parse(sdate);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(date);
+			setExpDate(cal);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public Group getGroup() {
@@ -73,8 +90,8 @@ public class FormPermissions {
 	public void setGroup(Group group) {
 		this.group = group;
 	}
-	
-	public void setGroup(String uid){
+
+	public void setGroup(String uid) {
 		Group g = new Group();
 		g.setKey(uid);
 		setGroup(g);
@@ -88,8 +105,16 @@ public class FormPermissions {
 		this.formAccess = formAccess;
 	}
 
+	public void setFormAccess(String access) {
+		setFormAccess(AccessLevelFactory.getAccessLevelFromString(access));
+	}
+
 	public AccessLevel getAnswAccess() {
 		return answAccess;
+	}
+
+	public void setAnswAccess(String access) {
+		setAnswAccess(AccessLevelFactory.getAccessLevelFromString(access));
 	}
 
 	public void setAnswAccess(AccessLevel answAccess) {
