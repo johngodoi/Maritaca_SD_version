@@ -1,6 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:composite="http://java.sun.com/jsf/composite"
 	xmlns:f="http://java.sun.com/jsf/core"
@@ -8,10 +9,7 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:forms="http://java.sun.com/jsf/composite/components/forms">
-<head>
-<title>Not present in rendered output</title>
-</head>
-<body>
+
 	<composite:interface>
 		<composite:attribute name="submodule" required="true" />
 	</composite:interface>
@@ -19,7 +17,7 @@
 		<h:dataTable value="#{listFormsBean.forms}" var="aForm" width="100%"
 			columnClasses="columnClass1, columnClass1" cellspacing="0">
 			<h:column>
-			<a4j:commandLink render="#{manager.activeModule.id}">
+				<a4j:commandLink render="#{manager.activeModule.id}">
 					<h:outputText value="#{aForm.title}" styleClass="listItem" />
 					<f:setPropertyActionListener target="#{manager.activeModule}"
 						value="#{cc.attrs.submodule.parent}" />
@@ -71,8 +69,8 @@
 					</rich:menuItem>
 
 					<rich:menuItem icon="#{resource['img:share.png']}"
-						render="shareFormId" label="#{msgs.form_share}"
-						action="#{shareFormBean.setForm(aForm)}">
+						render="shareForm:shareFormId" label="#{msgs.form_share}"
+						action="#{shareFormBean.setForm(aForm)}" onclick="showShareForm('#{msgs.form_share_settings}');">
 
 					</rich:menuItem>
 
@@ -95,7 +93,5 @@
 				</rich:dropDownMenu>
 			</h:column>
 		</h:dataTable>
-		<forms:shareForm id="shareFormId" />
 	</composite:implementation>
-</body>
-</html>
+</ui:composition>
