@@ -1,6 +1,11 @@
 package br.unifesp.maritaca.persistence;
 
-import static me.prettyprint.hector.api.factory.HFactory.*;
+import static me.prettyprint.hector.api.factory.HFactory.createColumn;
+import static me.prettyprint.hector.api.factory.HFactory.createColumnFamilyDefinition;
+import static me.prettyprint.hector.api.factory.HFactory.createIndexedSlicesQuery;
+import static me.prettyprint.hector.api.factory.HFactory.createMutator;
+import static me.prettyprint.hector.api.factory.HFactory.createRangeSlicesQuery;
+import static me.prettyprint.hector.api.factory.HFactory.createSliceQuery;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -35,7 +40,7 @@ import me.prettyprint.hector.api.query.QueryResult;
 import me.prettyprint.hector.api.query.RangeSlicesQuery;
 import me.prettyprint.hector.api.query.SliceQuery;
 
-import org.apache.cassandra.db.marshal.TimeUUIDType;
+import org.apache.cassandra.db.marshal.UUIDType;
 import org.apache.cassandra.thrift.ColumnDef;
 import org.apache.cassandra.thrift.IndexType;
 
@@ -284,7 +289,7 @@ public class EntityManagerHectorImpl implements EntityManager {
 					cl.getSimpleName(), 
 					ComparatorType.UTF8TYPE,
 					columnMetadata);
-			cfdef.setKeyValidationClass(TimeUUIDType.class.getSimpleName());
+			cfdef.setKeyValidationClass(UUIDType.class.getSimpleName());
 
 			
 			cluster.addColumnFamily(cfdef);
