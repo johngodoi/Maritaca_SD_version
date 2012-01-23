@@ -14,7 +14,22 @@
 		<dependency>
 			<groupId>me.prettyprint</groupId>
 			<artifactId>hector-core</artifactId>
-			<version>0.8.0-2</version>
+			<version>1.0-2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.6.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.6.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.stephenc</groupId>
+			<artifactId>jamm</artifactId>
+			<version>0.2.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.openjpa</groupId>
@@ -34,6 +49,12 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>me.prettyprint</groupId>
+			<artifactId>hector-test</artifactId>
+			<version>1.0-2</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
