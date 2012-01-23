@@ -6,13 +6,8 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
-import br.unifesp.maritaca.core.Form;
-import br.unifesp.maritaca.core.FormPermissions;
-import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.model.ManagerModel;
 import br.unifesp.maritaca.model.ModelFactory;
-import br.unifesp.maritaca.model.UserModel;
-import br.unifesp.maritaca.persistence.EntityManager;
 import br.unifesp.maritaca.persistence.EntityManagerFactory;
 
 /**

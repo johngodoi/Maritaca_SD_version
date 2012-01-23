@@ -7,22 +7,101 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:util="http://java.sun.com/jsf/composite/components/util">
+	xmlns:util="http://java.sun.com/jsf/composite/components/util"
+	xmlns:a4j="http://richfaces.org/a4j">
 <body>
 	<composite:interface>
 	</composite:interface>
 	<composite:implementation>
 		<div id="#{cc.clientId}">
-			<util:popup popupId="popupShare" title="#{msgs.form_share_settings}"
-				show="#{shareFormBean.show}">
-				<h:panelGrid columns="2">
-					<h:outputText value="#{msgs.form_share_url}" />
-					<h:inputText
-						value="#{shareFormBean.rootForSharing}#{shareFormBean.url}"
-						readonly="true" />
-				</h:panelGrid>
+			<h:panelGrid columns="2" width="100%">
+				<h:outputText value="#{msgs.form_share_url}" />
+				<h:inputText
+					value="#{shareFormBean.rootForSharing}#{shareFormBean.url}"
+					readonly="true" style="width:100%;" />
+			</h:panelGrid>
+			<rich:panel>
+				<center>
+					<p>
+						<b>#{msgs.group_access} - #{manager.time}</b>
+					</p>
+				</center>
 
-			</util:popup>
+				<h:dataTable value="#{shareFormBean.formPermissions}" var="formPerm"
+					columnClasses="columnClass1, columnClass1" cellspacing="2"
+					id="accessLevelId">
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="#{msgs.group}" />
+						</f:facet>
+						<h:outputText value="#{formPerm.group.name}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="#{msgs.group_access_form}" />
+						</f:facet>
+						<rich:inplaceSelect defaultLabel="#{formPerm.formAccess}"
+							valueChangeListener="#{shareFormBean.formAccessChanged}"
+							value="#{formPerm.formAccess}">
+							<f:selectItems value="#{shareFormBean.accessLevels}" />
+							<a4j:ajax event="change" execute="@form"
+								status="#{formPerm.key}_status">
+							</a4j:ajax>
+							<f:param value="#{shareFormBean.getCurrentPermission(formPerm)}"
+								name="formPerm"></f:param>
+						</rich:inplaceSelect>
+					</h:column>
+
+					<h:column>
+						<rich:inplaceSelect defaultLabel="#{formPerm.answAccess}"
+							valueChangeListener="#{shareFormBean.answAccessChanged}"
+							value="#{formPerm.answAccess}">
+							<f:selectItems value="#{shareFormBean.accessLevels}" />
+							<a4j:ajax event="change" execute="@form"
+								status="#{formPerm.key}_status">
+							</a4j:ajax>
+							<f:param value="#{shareFormBean.getCurrentPermission(formPerm)}"
+								name="formPerm"></f:param>
+						</rich:inplaceSelect>
+
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="#{msgs.group_access_expdate}" />
+						</f:facet>
+						<rich:calendar value="#{formPerm.expDate}"
+							datePattern="dd/mm/yy hh:mm a" ellWidth="24px" cellHeight="22px"
+							style="width:200px" valueChangeListener="#{shareFormBean.expDataChanged}">
+							<a4j:ajax event="change" execute="@form"
+								status="#{formPerm.key}_status">
+							</a4j:ajax>
+							<f:param value="#{shareFormBean.getCurrentPermission(formPerm)}"
+								name="formPerm"></f:param>
+						</rich:calendar>
+					</h:column>
+					<h:column>
+						<h:commandButton action="#{shareFormBean.action}"
+							image="#{resource['img:remove.png']}">
+							<f:setPropertyActionListener
+								target="#{shareFormBean.currentPermission}" value="#{formPerm}" />
+							<f:ajax event="click" />
+						</h:commandButton>
+					</h:column>
+					<h:column>
+						<a4j:status name="#{formPerm.key}_status">
+							<f:facet name="start">
+										busy
+									</f:facet>
+							<f:facet name="stop">
+										idle
+									</f:facet>
+						</a4j:status>
+					</h:column>
+				</h:dataTable>
+			</rich:panel>
 		</div>
 	</composite:implementation>
 </body>

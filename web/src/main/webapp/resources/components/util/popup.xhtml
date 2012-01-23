@@ -5,7 +5,8 @@
 	xmlns:composite="http://java.sun.com/jsf/composite"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:rich="http://richfaces.org/rich">
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
 <head>
 <title>Not present in rendered output</title>
 </head>
@@ -14,11 +15,14 @@
 		<composite:attribute name="title" required="true" />
 		<composite:attribute name="show" required="true" />
 		<composite:attribute name="popupId" required="true" />
+		<composite:attribute name="width" required="false" default="500" />
+		<composite:attribute name="height" required="false" default="300" />
 	</composite:interface>
 	<composite:implementation>
 		<rich:popupPanel id="#{cc.attrs.popupId}" modal="true"
 			resizeable="true" show="#{cc.attrs.show}"
-			onmaskclick="#{rich:component(cc.attrs.popupId)}.hide()">
+			onmaskclick="#{rich:component(cc.attrs.popupId)}.hide()"
+			width="#{cc.attrs.width}" height="#{cc.attrs.height}">
 			<f:facet name="header">
 				<h:outputText value="#{cc.attrs.title}" />
 			</f:facet>

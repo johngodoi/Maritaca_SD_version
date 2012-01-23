@@ -1,10 +1,12 @@
 package br.unifesp.maritaca.model;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Form;
+import br.unifesp.maritaca.core.FormPermissions;
 import br.unifesp.maritaca.persistence.EntityManager;
 
 public interface FormAnswerModel {
@@ -36,6 +38,12 @@ public interface FormAnswerModel {
 	void setUserModel(UserModel userModel);
 
 	UserModel getUserModel();
+
+	List<FormPermissions> getFormPermissions(Form form);
+
+	FormPermissions getFormPermissionById(String formPermId);
+
+	boolean saveFormPermission(FormPermissions fp);
 
 
 }

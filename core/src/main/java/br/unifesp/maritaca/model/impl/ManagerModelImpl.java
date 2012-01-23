@@ -43,7 +43,12 @@ public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel 
 				Configuration cf = new Configuration();
 				cf.setName(CFG_ROOT);
 				cf.setValue(rootUser.getKey().toString());
-				entityManager.persist(cf);
+				if (!entityManager.persist(cf)) {
+					entityManager.delete(rootUser);
+					rootUser = null;
+				}
+			} else {
+				rootUser = null;
 			}
 		} else {
 			// get main user
@@ -78,12 +83,12 @@ public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel 
 			entityManager.close();
 		}
 	}
-	
+
 	@Override
-	public User getRootUser(){
+	public User getRootUser() {
 		User rootUser = null;
-		for (Configuration cfUser : entityManager.cQuery(
-				Configuration.class, "name", CFG_ROOT)) {
+		for (Configuration cfUser : entityManager.cQuery(Configuration.class,
+				"name", CFG_ROOT)) {
 			rootUser = entityManager.find(User.class,
 					UUID.fromString(cfUser.getValue()));
 			break;
