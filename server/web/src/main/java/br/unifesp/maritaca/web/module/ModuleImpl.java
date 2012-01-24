@@ -7,7 +7,7 @@ import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 
 import br.unifesp.maritaca.web.submodule.SubModule;
-import br.unifesp.maritaca.web.utils.StringProcessing;
+import br.unifesp.maritaca.web.utils.Utils;
 
 public class ModuleImpl implements Module {
 
@@ -77,7 +77,7 @@ public class ModuleImpl implements Module {
 
 	@Override
 	public String getId() {
-		return StringProcessing.getCompactedVersion(getTitle());
+		return Utils.getCompactedVersion(getTitle());
 	}
 
 	@Override

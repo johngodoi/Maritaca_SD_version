@@ -5,7 +5,9 @@
 	xmlns:composite="http://java.sun.com/jsf/composite"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:forms="http://java.sun.com/jsf/composite/components/forms">
+	xmlns:forms="http://java.sun.com/jsf/composite/components/forms"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
 <head>
 <title>Not present in rendered output</title>
 </head>
@@ -18,7 +20,10 @@
 		<h:commandButton value="#{msgs.form_update_button}" action="#{editFormBean.saveForm}" />
 		<h:commandButton value="#{msgs.form_delete_button}" action="#{editFormBean.saveForm}" />
 		<h:commandButton value="#{msgs.form_cancel_button}" action="#{editFormBean.saveForm}" />
-		
+		<h:commandButton value="#{msgs.form_import_button}" 
+				onclick="showImportForm('#{msgs.form_import_title}');">
+				<a4j:ajax execute="@form" render="importForm:importFormId"/>
+				</h:commandButton>
 		<forms:formRender/>	
 	</composite:implementation>
 </body>
