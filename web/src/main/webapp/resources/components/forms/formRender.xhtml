@@ -33,7 +33,14 @@
 			<h:outputText styleClass="formLabel"
 				value="#{msgs.form_renderer_xml}" />
 			<h:inputText styleClass="formXmlValue"
-				value="#{editFormBean.form.xml}" readonly="#{!editFormBean.editForm}" />
+				value="#{editFormBean.form.xml}"
+				readonly="#{!editFormBean.editForm}" />
+			<c:if test="#{importFormBean.successful}">
+				<h:outputScript>
+					closePopup('#dialogImportForm');
+				</h:outputScript>
+			</c:if>
+
 		</h:panelGrid>
 	</composite:implementation>
 </body>

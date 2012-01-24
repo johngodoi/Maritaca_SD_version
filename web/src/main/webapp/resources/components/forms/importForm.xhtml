@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+<body>
+	<composite:interface>
+	</composite:interface>
+	<composite:implementation>
+		<h:outputScript>
+			
+		</h:outputScript>
+		<div id="#{cc.clientId}">
+			<rich:tabPanel switchType="client">
+				<rich:tab header="#{msgs.form_import_fileUploadTab}">
+					<h:outputText value="#{msgs.form_import_fileUploadTitle}" />
+					<rich:fileUpload id="upload" 
+						fileUploadListener="#{importFormBean.listener}"
+						acceptedTypes="xml" listWidth="50px" listHeight="45px"
+						maxFilesQuantity="1" render="formRenderTable">
+					</rich:fileUpload>
+					<h:outputText value="#{msgs.form_import_fileUploadNote}" />
+				</rich:tab>
+
+				<rich:tab header="#{msgs.form_import_urlTab}">
+						<h:outputText value="#{msgs.form_import_urlTitle}" />
+						<br />
+						<h:inputText id="url" size="50" required="true"
+								value="#{importFormBean.url}"
+								validator="#{importFormBean.validateUrl}"/>
+						<h:outputText value="#{importFormBean.result}" id="messageResult" 
+								 style="color:red"/>
+						<br />
+						<a4j:commandButton value="#{msgs.form_import_urlSubmit}"
+							action="#{importFormBean.processUrl}"
+							render="formRenderTable, messageResult, successful" />
+						<br />
+						<h:inputHidden value="${importFormBean.successful}" id="successful"/>
+						<h:outputText value="#{msgs.form_import_urlNote}" />
+				</rich:tab>
+			</rich:tabPanel>
+		</div>
+	</composite:implementation>
+</body>
+</html>

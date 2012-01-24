@@ -84,7 +84,7 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
-			</dependency>
+		</dependency>
 		<dependency>
 			<groupId>org.richfaces.ui</groupId>
 			<artifactId>richfaces-components-ui</artifactId>
@@ -98,6 +98,18 @@
 			<artifactId>annotations</artifactId>
 			<version>4.1.0.Final</version>
 			<scope>provided</scope>
+		</dependency>
+		<!-- Allows to use the a httpclient -->
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>1.11</version>
+		</dependency>
+		<!-- Allows to use Commons Validators -->
+		<dependency>
+			<groupId>commons-validator</groupId>
+			<artifactId>commons-validator</artifactId>
+			<version>1.3.0</version>
 		</dependency>
 		<!-- Allows to use the bean validation framework -->
 		<dependency>
@@ -113,9 +125,9 @@
 		</dependency>
 		<!-- various -->
 		<dependency>
-		<groupId>commons-lang</groupId>
-		<artifactId>commons-lang</artifactId>
-		<version>2.6</version>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
 		</dependency>
 		<!-- TESTING -->
 		<dependency>
