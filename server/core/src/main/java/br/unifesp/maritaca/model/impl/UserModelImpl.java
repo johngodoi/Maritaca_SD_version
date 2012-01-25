@@ -4,20 +4,23 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
-
 import br.unifesp.maritaca.core.Group;
 import br.unifesp.maritaca.core.GroupUser;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.model.ManagerModel;
-import br.unifesp.maritaca.model.ModelFactory;
 import br.unifesp.maritaca.model.UserModel;
 import br.unifesp.maritaca.persistence.EntityManager;
+import br.unifesp.maritaca.util.UserLocator;
 
 public class UserModelImpl implements UserModel {
 
 	private EntityManager entityManager;
 	private ManagerModel managerModel;
+	private User currentUser;
+
+	public UserModelImpl() {
+		setCurrentUser(UserLocator.getCurrentUser());
+	}
 
 	public EntityManager getEntityManager() {
 		return entityManager;
@@ -27,11 +30,11 @@ public class UserModelImpl implements UserModel {
 	public boolean saveUser(User user) {
 		if (user == null)
 			return false;
-		if(entityManager.persist(user)){
+		if (entityManager.persist(user)) {
 			return addUserToGroup(user, getAllUsersGroup());
 		}
 		return false;
-		
+
 	}
 
 	@Override
@@ -76,7 +79,7 @@ public class UserModelImpl implements UserModel {
 		if (entityManager == null)
 			return null;
 		List<User> users = entityManager.cQuery(User.class, "email", email);
-		if(users==null || users.size()==0){
+		if (users == null || users.size() == 0) {
 			return null;
 		} else {
 			return users.get(0);
@@ -130,16 +133,17 @@ public class UserModelImpl implements UserModel {
 		return entityManager.cQuery(Group.class, "owner", owner.toString());
 	}
 
-
 	/**
 	 * Adds an user to a particular group
+	 * 
 	 * @param user
 	 * @param group
 	 * @return true if was successful
 	 */
 	@Override
-	public boolean addUserToGroup(User user, Group group){
-		if(user == null || user.getKey() == null || group == null || group.getKey() == null){
+	public boolean addUserToGroup(User user, Group group) {
+		if (user == null || user.getKey() == null || group == null
+				|| group.getKey() == null) {
 			throw new IllegalArgumentException("parameters incompleted");
 		}
 		GroupUser grUser = new GroupUser();
@@ -147,15 +151,49 @@ public class UserModelImpl implements UserModel {
 		grUser.setUser(user);
 		return entityManager.persist(grUser);
 	}
-	
+
+	/**
+	 * Checks if a given user belongs to a group
+	 * By default, a group-owner belongs to a group, but
+	 * owner is not save in columnfamily GroupUser
+	 * @param user
+	 * @param group
+	 * @return
+	 */
+	@Override
+	public boolean userIsMemberOfGroup(User user, Group group) {
+		if (entityManager == null)
+			return false;
+
+		if (user == null || user.getKey() == null || group == null
+				|| group.getKey() == null) {
+			throw new IllegalArgumentException("parameters incompleted");
+		}
+		
+		if(group.getOwner().equals(user)){
+			//owner is default member of group
+			return true;
+		}
+
+		//is not a owner, get members
+		List<GroupUser> list = entityManager.cQuery(GroupUser.class, "group",
+				group.getKey().toString(), true);
+		for (GroupUser gu : list) {
+			if (gu.getUser().equals(user))
+				return true;//user is member
+		}
+
+		return false;//not a member
+	}
+
 	/**
 	 * Get default users group (ALL_USERS)
 	 */
 	@Override
-	public Group getAllUsersGroup(){
+	public Group getAllUsersGroup() {
 		User root = managerModel.getRootUser();
-		for(Group g : getGroupsByOwner(root)){
-			if(g.getName().equals(ManagerModel.ALL_USERS)){
+		for (Group g : getGroupsByOwner(root)) {
+			if (g.getName().equals(ManagerModel.ALL_USERS)) {
 				return g;
 			}
 		}
@@ -170,6 +208,14 @@ public class UserModelImpl implements UserModel {
 	@Override
 	public void setManagerModel(ManagerModel managerModel) {
 		this.managerModel = managerModel;
+	}
+
+	public User getCurrentUser() {
+		return currentUser;
+	}
+
+	public void setCurrentUser(User currentUser) {
+		this.currentUser = currentUser;
 	}
 
 }
