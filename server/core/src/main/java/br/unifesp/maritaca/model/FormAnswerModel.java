@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
@@ -44,6 +45,8 @@ public interface FormAnswerModel {
 	FormPermissions getFormPermissionById(String formPermId);
 
 	boolean saveFormPermission(FormPermissions fp);
+
+	<T> boolean currentUserHasPermission(T entity, Operation op);
 
 
 }

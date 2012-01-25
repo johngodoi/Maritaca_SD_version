@@ -11,8 +11,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,6 +24,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import me.prettyprint.cassandra.model.IndexedSlicesQuery;
+import me.prettyprint.cassandra.serializers.ObjectSerializer;
+import me.prettyprint.cassandra.serializers.SerializerTypeInferer;
 import me.prettyprint.cassandra.serializers.StringSerializer;
 import me.prettyprint.cassandra.serializers.UUIDSerializer;
 import me.prettyprint.cassandra.service.CassandraHost;
@@ -27,6 +33,7 @@ import me.prettyprint.cassandra.service.ThriftColumnDef;
 import me.prettyprint.cassandra.utils.TimeUUIDUtils;
 import me.prettyprint.hector.api.Cluster;
 import me.prettyprint.hector.api.Keyspace;
+import me.prettyprint.hector.api.Serializer;
 import me.prettyprint.hector.api.beans.ColumnSlice;
 import me.prettyprint.hector.api.beans.HColumn;
 import me.prettyprint.hector.api.beans.OrderedRows;
@@ -48,15 +55,23 @@ import br.unifesp.maritaca.persistence.annotations.Column;
 import br.unifesp.maritaca.persistence.annotations.Minimal;
 
 public class EntityManagerHectorImpl implements EntityManager {
+	private static EntityManagerHectorImpl instance;
 
 	private Cluster cluster;
 	private Keyspace keyspace;
 	private final StringSerializer stringSerializer = StringSerializer.get();
 	private final UUIDSerializer uuidSerializer = UUIDSerializer.get();
 
-	public EntityManagerHectorImpl(Cluster c, Keyspace k) {
+	private EntityManagerHectorImpl(Cluster c, Keyspace k) {
 		cluster = c;
 		keyspace = k;
+	}
+	
+	public static EntityManagerHectorImpl getInstance(Cluster c, Keyspace k){
+		if(instance == null){
+			instance = new EntityManagerHectorImpl(c, k);
+		}
+		return instance;
 	}
 
 	@Override
@@ -64,6 +79,7 @@ public class EntityManagerHectorImpl implements EntityManager {
 		return persist(obj, true);
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public <T> boolean persist(T obj, boolean createTable) {
 		
@@ -102,8 +118,8 @@ public class EntityManagerHectorImpl implements EntityManager {
 			}
 
 			if (result != null) {
-				HColumn<String, String> column = createColumn(f.getName(),
-						result.toString(), stringSerializer, stringSerializer);
+				
+				HColumn column = getHColumn(f.getName(), result);
 				mutator.addInsertion(key, obj.getClass().getSimpleName(),
 						column);
 			}
@@ -117,7 +133,31 @@ public class EntityManagerHectorImpl implements EntityManager {
 
 		return true;
 	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private HColumn getHColumn(String columnname, Object obj){
+		//TODO select serializer by object type
+//		Serializer serializer = getObjectSerializer(obj);
+//		if(serializer == null || serializer instanceof ObjectSerializer){
+//			//serializer not found, setting default serializer to stringserializer
+//			obj = obj.toString();
+//			serializer = stringSerializer;
+//		}
+		
+		Serializer serializer = stringSerializer;
+		obj = obj.toString();
+		
+		HColumn column = createColumn(columnname,
+				obj, stringSerializer, serializer);
+		return column;
+	}
 
+	@SuppressWarnings({ "rawtypes" })
+	private <T> Serializer getObjectSerializer(T obj){
+		Serializer serializer = null;
+		serializer = SerializerTypeInferer.getSerializer(obj);
+		return serializer;
+	}
 	@Override
 	public <T> T find(Class<T> cl, UUID uuid, boolean justMinimal) {
 		
@@ -379,6 +419,7 @@ public class EntityManagerHectorImpl implements EntityManager {
 
 	}
 
+	@SuppressWarnings("rawtypes")
 	private Collection<String> getNameFields(Class cl, boolean justMinimal) {
 		ArrayList<String> colFields = new ArrayList<String>();
 		for (Field f : cl.getDeclaredFields()) {
@@ -430,6 +471,16 @@ public class EntityManagerHectorImpl implements EntityManager {
 				method.invoke(result, new Boolean(value));
 			else if (f.getType() == UUID.class)
 				method.invoke(result, UUID.fromString(value));
+			if (f.getType() == Date.class){
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yy hh:mm a");
+				Date date;
+				try {
+					date = sdf.parse(value);
+					method.invoke(result, date);
+				} catch (ParseException e) {
+					System.out.println("Date not set");
+				}
+			}
 			else {
 				try {
 					// alternative method with String

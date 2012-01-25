@@ -13,7 +13,7 @@ public class EntityManagerFactory {
 	private Cluster cluster;
 	private Keyspace keyspace;
 
-	private EntityManagerHectorImpl hectorEM;
+	private EntityManagerHectorImpl hectorEM;// singleton
 
 	private EntityManagerFactory() {
 	}
@@ -41,10 +41,10 @@ public class EntityManagerFactory {
 		case HECTOR_MARITACA_EM:
 			if (hectorEM == null) {
 				if (cluster != null && keyspace != null)
-					em = new EntityManagerHectorImpl(cluster, keyspace);
-			} else {
-				em = hectorEM;
+					hectorEM = EntityManagerHectorImpl.getInstance(cluster,
+							keyspace);
 			}
+			em = hectorEM;
 			break;
 		}
 		return em;

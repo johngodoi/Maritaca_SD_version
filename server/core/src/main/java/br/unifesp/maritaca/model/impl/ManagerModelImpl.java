@@ -3,6 +3,7 @@ package br.unifesp.maritaca.model.impl;
 import java.util.Map;
 import java.util.UUID;
 
+import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Configuration;
 import br.unifesp.maritaca.core.Form;
@@ -12,10 +13,16 @@ import br.unifesp.maritaca.core.GroupUser;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.EntityManager;
 import br.unifesp.maritaca.persistence.EntityManagerFactory;
+import br.unifesp.maritaca.util.UserLocator;
 
 public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel {
 
 	private EntityManager entityManager;
+	private User currentUser;
+	
+	public ManagerModelImpl() {
+		setCurrentUser(UserLocator.getCurrentUser());
+	}
 
 	@Override
 	public void setEntityManager(EntityManager em) {
@@ -94,5 +101,13 @@ public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel 
 			break;
 		}
 		return rootUser;
+	}
+
+	public User getCurrentUser() {
+		return currentUser;
+	}
+
+	public void setCurrentUser(User currentUser) {
+		this.currentUser = currentUser;
 	}
 }

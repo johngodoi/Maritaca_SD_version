@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 
 import br.unifesp.maritaca.core.User;
 
@@ -19,6 +21,9 @@ public class CurrentUserBean implements Serializable{
 	}
 	public void setUser(User user) {
 		this.user = user;
+		FacesContext fc = FacesContext.getCurrentInstance();
+		HttpSession hs = (HttpSession) fc.getExternalContext().getSession(false);
+		hs.setAttribute("currentuser", user);
 	}
 	public boolean isAuthenticated() {
 		return authenticated;

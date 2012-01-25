@@ -34,4 +34,6 @@ public interface UserModel {
 	void setManagerModel(ManagerModel managerModel);
 
 	ManagerModel getManagerModel();
+
+	boolean userIsMemberOfGroup(User user, Group group);
 }

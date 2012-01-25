@@ -4,6 +4,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import br.unifesp.maritaca.access.PrivateAccess;
+import br.unifesp.maritaca.access.operation.Edit;
+import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
@@ -12,12 +15,17 @@ import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.model.FormAnswerModel;
 import br.unifesp.maritaca.model.UserModel;
 import br.unifesp.maritaca.persistence.EntityManager;
-import br.unifesp.maritaca.util.PrivateAccess;
+import br.unifesp.maritaca.util.UserLocator;
 import br.unifesp.maritaca.util.Utils;
 
 public class FormAnswerModelImpl implements FormAnswerModel {
 	private EntityManager entityManager;
 	private UserModel userModel;
+	private User currentUser;
+
+	public FormAnswerModelImpl() {
+		currentUser = UserLocator.getCurrentUser();
+	}
 
 	public EntityManager getEntityManager() {
 		return entityManager;
@@ -27,6 +35,17 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		this.entityManager = entityManager;
 	}
 
+	public User getCurrentUser() {
+		return currentUser;
+	}
+
+	public void setCurrentUser(User currentUser) {
+		this.currentUser = currentUser;
+	}
+
+	/**
+	 * Save/Update a form if the User has permissions
+	 */
 	@Override
 	public boolean saveForm(Form form) {
 		if (entityManager == null)
@@ -36,24 +55,40 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 			throw new IllegalArgumentException("User cannot be null");
 
 		if (entityManager.rowDataExists(User.class, form.getUser().getKey())) {
-			form.setUrl(getUniqueUrl());
-			if (entityManager.persist(form)) {
-				// save permissions of a form
-				FormPermissions formPer = new FormPermissions();
-				formPer.setForm(form);
-				formPer.setGroup(userModel.getAllUsersGroup());
-				formPer.setFormAccess(new PrivateAccess());
-				formPer.setAnswAccess(new PrivateAccess());
-				if (entityManager.persist(formPer)) {
-					// all saved correctly
+			boolean newForm = form.getKey() == null;// true if form is new
+			boolean hasPermission = true;
+			if (!newForm
+					&& entityManager.find(Form.class, form.getKey()) == null) {
+				// form is new
+				newForm = true;
+			}
+			if (newForm) {
+				// set unique url for a new form
+				form.setUrl(getUniqueUrl());
+			}else{
+				//check permissions for updating
+				hasPermission = currentUserHasPermission(form, Edit.getInstance());
+			}
+			
+			boolean result=false;
+			if(hasPermission || newForm){
+				result = entityManager.persist(form);
+			}
+			if (result) {
+				if (newForm) {
+					// save permissions of a form
+					if (savePermissionNewForm(form)) {
+						// all saved correctly
+						return true;
+					} else {
+						// default permissions don't save
+						// delete form
+						deleteForm(form);
+						throw new RuntimeException(
+								"Not possible to establish default permissions, form not saved");
+					}
+				} else
 					return true;
-				} else {
-					// default permissions don't save
-					// delete form
-					deleteForm(form);
-					throw new RuntimeException(
-							"Not possible to establish default permissions, form not saved");
-				}
 			} else {
 				// form not saved
 				return false;
@@ -62,6 +97,20 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 			throw new IllegalArgumentException(
 					"User does not exist in database");
 		}
+	}
+
+	/**
+	 * save default permission of a new form
+	 * @param form
+	 * @return
+	 */
+	private boolean savePermissionNewForm(Form form) {
+		FormPermissions formPer = new FormPermissions();
+		formPer.setForm(form);
+		formPer.setGroup(userModel.getAllUsersGroup());
+		formPer.setFormAccess(PrivateAccess.getInstance());
+		formPer.setAnswAccess(PrivateAccess.getInstance());
+		return entityManager.persist(formPer);
 	}
 
 	/**
@@ -238,6 +287,37 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 
 		// persist fp
 		return entityManager.persist(fp);
+	}
+
+	/**
+	 * Checks if an user has permission of an operation over an entity
+	 */
+	@Override
+	public <T> boolean currentUserHasPermission(T entity, Operation op) {
+		if (entityManager == null || getCurrentUser() == null)
+			return false;
+		User user = getCurrentUser();
+		// check type
+		if (entity instanceof Form) {
+			Form form = (Form) entity;
+			// if form.user equals current user, user is owner and has all
+			// permissions
+			if (user.equals(form.getUser())) {
+				return true;
+			}
+			// not a owner, get permission of form
+			List<FormPermissions> listFP = getFormPermissions(form);
+			for (FormPermissions fp : listFP) {
+				if (fp.getFormAccess().isOperationEnabled(op)
+						&& userModel.userIsMemberOfGroup(user, fp.getGroup())) {
+					// if operation OP is enable in FormAccess and current user
+					// is member of group fp.getGroup, so it has permission
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 }
