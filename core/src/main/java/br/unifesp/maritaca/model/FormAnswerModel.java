@@ -8,6 +8,7 @@ import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
+import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.EntityManager;
 
 public interface FormAnswerModel {
@@ -24,6 +25,8 @@ public interface FormAnswerModel {
 	void deleteForm(Form form);
 	
 	String getFormIdFromUrl(String url);
+	
+	Collection<Form> listAllFormsMinimalByUser(User user);
 	
 	/************* ANSWER ***********/
 	boolean saveAnswer(Answer answer);
