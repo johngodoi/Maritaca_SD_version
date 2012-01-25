@@ -9,10 +9,10 @@ import java.util.UUID;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import br.unifesp.maritaca.access.AccessLevel;
+import br.unifesp.maritaca.access.AccessLevelFactory;
 import br.unifesp.maritaca.persistence.annotations.Column;
 import br.unifesp.maritaca.persistence.annotations.Minimal;
-import br.unifesp.maritaca.util.AccessLevel;
-import br.unifesp.maritaca.util.AccessLevelFactory;
 
 @Entity
 public class FormPermissions {
@@ -25,11 +25,14 @@ public class FormPermissions {
 	@Minimal
 	private Group group = new Group();
 	@Column
-	private Calendar expDate;
+	private Long expDate;
 	@Column
 	private AccessLevel formAccess;
 	@Column
 	private AccessLevel answAccess;
+	
+	public FormPermissions() {
+	}
 
 	public UUID getKey() {
 		return key;
@@ -65,22 +68,28 @@ public class FormPermissions {
 		this.setForm(f);
 	}
 
-	public void setExpDate(Calendar expDate) {
+	public void setExpDate(Long expDate) {
 		this.expDate = expDate;
 	}
-	
-	public void setExpDate(String sdate){
-		//TODO get the date correctly
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yy hh:mm a");
-		Date date;
-		try {
-			date = sdf.parse(sdate);
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(date);
-			setExpDate(cal);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+
+	public void setExpDate(String sdate) {
+		// TODO get the date correctly
+		setExpDate(Long.parseLong(sdate));
+	}
+
+	public Long getExpDate() {
+		return expDate;
+	}
+
+	public void setExpirationDate(Date expDate) {
+		setExpDate(expDate.getTime());
+	}
+
+	public Date getExpirationDate() {
+		if(getExpDate() == null)return null;
+		Date d = new Date();
+		d.setTime(getExpDate());
+		return d;
 	}
 
 	public Group getGroup() {
@@ -119,10 +128,6 @@ public class FormPermissions {
 
 	public void setAnswAccess(AccessLevel answAccess) {
 		this.answAccess = answAccess;
-	}
-
-	public Calendar getExpDate() {
-		return expDate;
 	}
 
 }

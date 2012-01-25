@@ -2,6 +2,7 @@ package br.unifesp.maritaca.model;
 
 import java.util.Map;
 
+import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.EntityManager;
 
