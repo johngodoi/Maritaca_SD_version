@@ -14,7 +14,6 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -24,7 +23,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import me.prettyprint.cassandra.model.IndexedSlicesQuery;
-import me.prettyprint.cassandra.serializers.ObjectSerializer;
 import me.prettyprint.cassandra.serializers.SerializerTypeInferer;
 import me.prettyprint.cassandra.serializers.StringSerializer;
 import me.prettyprint.cassandra.serializers.UUIDSerializer;
@@ -152,12 +150,14 @@ public class EntityManagerHectorImpl implements EntityManager {
 		return column;
 	}
 
-	@SuppressWarnings({ "rawtypes" })
-	private <T> Serializer getObjectSerializer(T obj){
-		Serializer serializer = null;
-		serializer = SerializerTypeInferer.getSerializer(obj);
-		return serializer;
-	}
+//	@SuppressWarnings({ "rawtypes" })
+//	private <T> Serializer getObjectSerializer(T obj){
+//		Serializer serializer = null;
+//		serializer = SerializerTypeInferer.getSerializer(obj);
+//		return serializer;
+//	}
+	
+	
 	@Override
 	public <T> T find(Class<T> cl, UUID uuid, boolean justMinimal) {
 		
@@ -433,6 +433,7 @@ public class EntityManagerHectorImpl implements EntityManager {
 		return colFields;
 	}
 
+	@SuppressWarnings("rawtypes")
 	private <T> Method getMethod(T obj, String methodName, Class... parameter) {
 		try {
 			return obj.getClass().getDeclaredMethod(methodName, parameter);
