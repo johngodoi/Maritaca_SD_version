@@ -144,6 +144,12 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		return entityManager.listAll(Form.class);
 	}
 
+	/**
+	 * List all forms in the database
+	 * temporary function. must be deleted
+	 * TODO: change funtion with one that accepts parameters
+	 * for pagination and range
+	 */
 	@Override
 	public Collection<Form> listAllFormsMinimal() {
 		if (entityManager == null)
@@ -318,6 +324,18 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		}
 
 		return false;
+	}
+
+	/**
+	 * get all forms of an user
+	 */
+	@Override
+	public Collection<Form> listAllFormsMinimalByUser(User user) {
+		if(entityManager == null) return null;
+		if(user == null || user.getKey() == null)
+			throw new IllegalArgumentException("User must have a key");
+		
+		return entityManager.cQuery(Form.class, "user", user.getKey().toString(), true);
 	}
 
 }
