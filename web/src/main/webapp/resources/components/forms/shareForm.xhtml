@@ -72,9 +72,10 @@
 						<f:facet name="header">
 							<h:outputText value="#{msgs.group_access_expdate}" />
 						</f:facet>
-						<rich:calendar value="#{formPerm.expDate}"
-							datePattern="dd/mm/yy hh:mm a" ellWidth="24px" cellHeight="22px"
-							style="width:200px" valueChangeListener="#{shareFormBean.expDataChanged}">
+						<rich:calendar value="#{formPerm.expirationDate}"
+							datePattern="dd/MM/yy hh:mm a" ellWidth="24px" cellHeight="22px"
+							style="width:200px"
+							valueChangeListener="#{shareFormBean.expDateChanged}">
 							<a4j:ajax event="change" execute="@form"
 								status="#{formPerm.key}_status">
 							</a4j:ajax>
@@ -93,11 +94,8 @@
 					<h:column>
 						<a4j:status name="#{formPerm.key}_status">
 							<f:facet name="start">
-										busy
-									</f:facet>
-							<f:facet name="stop">
-										idle
-									</f:facet>
+								<h:graphicImage value="#{resource['img:ajax-loader.gif']}" />
+							</f:facet>
 						</a4j:status>
 					</h:column>
 				</h:dataTable>

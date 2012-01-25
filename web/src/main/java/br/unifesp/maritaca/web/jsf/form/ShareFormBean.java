@@ -14,10 +14,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.richfaces.component.UIInplaceSelect;
 
+import br.unifesp.maritaca.access.AccessLevel;
+import br.unifesp.maritaca.access.AccessLevelFactory;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
-import br.unifesp.maritaca.util.AccessLevel;
-import br.unifesp.maritaca.util.AccessLevelFactory;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
 
 /**
@@ -109,7 +109,7 @@ public class ShareFormBean extends AbstractBean{
 	public void formAccessChanged(ValueChangeEvent event) {
 		String newValue = (String) event.getNewValue();
 		
-		if (newValue == null)
+		if (newValue.equals(event.getOldValue().toString()))
 			return;
 		
 		FormPermissions fp = formAnswCtrl.getFormPermissionById(getParamValue("formPerm"));
@@ -120,7 +120,7 @@ public class ShareFormBean extends AbstractBean{
 	public void answAccessChanged(ValueChangeEvent event) {
 		String newValue = (String) event.getNewValue();
 			
-		if (newValue == null)
+		if (newValue.equals(event.getOldValue().toString()))
 			return;
 		
 		FormPermissions fp = formAnswCtrl.getFormPermissionById(getParamValue("formPerm"));
@@ -136,16 +136,14 @@ public class ShareFormBean extends AbstractBean{
 		}
 	}
 
-	public void expDataChanged(ValueChangeEvent event){
+	public void expDateChanged(ValueChangeEvent event){
 		Date newValue = (Date) event.getNewValue();
 		
-		if (newValue == null)
+		if (newValue == null || newValue.before(new Date()))
 			return;
 		
 		FormPermissions fp = formAnswCtrl.getFormPermissionById(getParamValue("formPerm"));
-		Calendar c = Calendar.getInstance();
-		c.setTime(newValue);
-		fp.setExpDate(c);
+		fp.setExpDate(newValue.getTime());
 		formAnswCtrl.saveFormPermission(fp);
 	}
 	private String getParamValue(String paramname){

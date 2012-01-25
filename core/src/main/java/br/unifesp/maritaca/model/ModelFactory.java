@@ -9,9 +9,9 @@ import br.unifesp.maritaca.persistence.EntityManagerFactory;
 public class ModelFactory {
 	private static ModelFactory instance;
 
-	private ManagerModel managerModel;
-	private UserModel userModel;
-	private FormAnswerModel formAnsModel;
+	private ManagerModel managerModel;//not singleton
+	private UserModel userModel;//not singleton
+	private FormAnswerModel formAnsModel;//not singleton
 
 	public static ModelFactory getInstance() {
 		if (instance == null) {
