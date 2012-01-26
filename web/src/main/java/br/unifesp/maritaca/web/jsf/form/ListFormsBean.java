@@ -13,23 +13,24 @@ import br.unifesp.maritaca.web.jsf.home.CurrentUserBean;
 public class ListFormsBean extends AbstractBean {
 	private static final long serialVersionUID = 1L;
 	private Collection<Form> forms;
-	
+	private Collection<Form> sharedForms;
+
 	@ManagedProperty("#{currentUserBean}")
 	private CurrentUserBean currentUser;
-	
+
 	public ListFormsBean() {
 		super(true, false);
 	}
-	
+
 	public Collection<Form> getForms() {
-		forms = formAnswCtrl.listAllFormsMinimalByUser(currentUser.getUser());
 		return forms;
 	}
+
 	public void setForms(Collection<Form> forms) {
 		this.forms = forms;
 	}
-	
-	public String viewForm(){
+
+	public String viewForm() {
 		return "viewForm";
 	}
 
@@ -39,5 +40,19 @@ public class ListFormsBean extends AbstractBean {
 
 	public void setCurrentUser(CurrentUserBean currentUser) {
 		this.currentUser = currentUser;
+		forms = formAnswCtrl.listAllFormsMinimalByUser(currentUser.getUser());
+		sharedForms = formAnswCtrl.listAllSharedForms(currentUser.getUser(),
+				true);
+	}
+
+	/**
+	 * @return all forms that the user has access but is not the owner
+	 */
+	public Collection<Form> getSharedForms() {
+		return sharedForms;
+	}
+
+	public void setSharedForms(Collection<Form> sharedForms) {
+		this.sharedForms = sharedForms;
 	}
 }

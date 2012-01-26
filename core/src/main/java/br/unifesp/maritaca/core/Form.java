@@ -93,4 +93,23 @@ public class Form {
 	public void setUrl(String url) {
 		this.url = url;
 	}
+	
+	@Override
+	public int hashCode() {
+		if(getKey() == null){
+			return super.hashCode();
+		}
+		return getKey().hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof Form){
+			Form f = (Form)obj;
+			if(getKey()!=null && f.getKey()!=null){
+				return getKey().equals(f.getKey());
+			}
+		}
+		return false;
+	}
 }
