@@ -12,6 +12,7 @@ import br.unifesp.maritaca.web.utils.Utils;
 public class ModuleImpl implements Module {
 
 	private String title;
+	private String id;
 	private SubModule activeSubModule;
 	private List<SubModule> subModules;
 
@@ -77,12 +78,12 @@ public class ModuleImpl implements Module {
 
 	@Override
 	public String getId() {
-		return Utils.getCompactedVersion(getTitle());
+		return id;
 	}
 
 	@Override
 	public void setId(String id) {
-		// dumb function
+		this.id = id;
 	}
 
 	@Override
