@@ -24,6 +24,7 @@ public class JAXBContextResolver implements ContextResolver<JAXBContext> {
 	
 	private JAXBContext context;
 	// supported classes in this resolver
+	@SuppressWarnings("rawtypes")
 	private Class[] types = {Form.class, 
 			User.class, 
 			Answer.class, 

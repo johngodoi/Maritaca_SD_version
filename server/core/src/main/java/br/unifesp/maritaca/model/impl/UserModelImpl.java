@@ -1,9 +1,11 @@
 package br.unifesp.maritaca.model.impl;
 
+import static br.unifesp.maritaca.util.Utils.verifyEM;
+import static br.unifesp.maritaca.util.Utils.verifyEntity;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-
 import br.unifesp.maritaca.core.Group;
 import br.unifesp.maritaca.core.GroupUser;
 import br.unifesp.maritaca.core.User;
@@ -28,6 +30,7 @@ public class UserModelImpl implements UserModel {
 
 	@Override
 	public boolean saveUser(User user) {
+		verifyEM(entityManager);
 		if (user == null)
 			return false;
 		if (entityManager.persist(user)) {
@@ -39,8 +42,7 @@ public class UserModelImpl implements UserModel {
 
 	@Override
 	public User getUser(UUID uuid) {
-		if (entityManager == null)
-			return null;
+		verifyEM(entityManager);
 
 		return entityManager.find(User.class, uuid);
 	}
@@ -52,16 +54,14 @@ public class UserModelImpl implements UserModel {
 
 	@Override
 	public Collection<User> listAllUsers() {
-		if (entityManager == null)
-			return null;
+		verifyEM(entityManager);
 
 		return entityManager.listAll(User.class);
 	}
 
 	@Override
 	public Collection<User> listAllUsersMinimal() {
-		if (entityManager == null)
-			return null;
+		verifyEM(entityManager);
 
 		return entityManager.listAll(User.class, true);
 	}
@@ -76,8 +76,7 @@ public class UserModelImpl implements UserModel {
 	 */
 	@Override
 	public User getUser(String email) {
-		if (entityManager == null)
-			return null;
+		verifyEM(entityManager);
 		List<User> users = entityManager.cQuery(User.class, "email", email);
 		if (users == null || users.size() == 0) {
 			return null;
@@ -88,15 +87,13 @@ public class UserModelImpl implements UserModel {
 
 	@Override
 	public Group getGroup(UUID uuid) {
-		if (entityManager == null)
-			return null;
+		verifyEM(entityManager);
 		return entityManager.find(Group.class, uuid);
 	}
 
 	@Override
 	public boolean saveGroup(Group group) {
-		if (entityManager == null)
-			return false;
+		verifyEM(entityManager);
 		if (group == null || group.getOwner() == null
 				|| group.getName() == null || group.getName().length() == 0) {
 			throw new IllegalArgumentException("Incomplete parameters");
@@ -126,10 +123,14 @@ public class UserModelImpl implements UserModel {
 		}
 	}
 
+	/**
+	 * @return List of group which the user is owner
+	 */
 	@Override
 	public Collection<Group> getGroupsByOwner(User owner) {
-		if (entityManager == null)
-			return null;
+		verifyEM(entityManager);
+		verifyEntity(owner);
+		
 		return entityManager.cQuery(Group.class, "owner", owner.toString());
 	}
 
@@ -142,10 +143,10 @@ public class UserModelImpl implements UserModel {
 	 */
 	@Override
 	public boolean addUserToGroup(User user, Group group) {
-		if (user == null || user.getKey() == null || group == null
-				|| group.getKey() == null) {
-			throw new IllegalArgumentException("parameters incompleted");
-		}
+		verifyEM(entityManager);
+		verifyEntity(user);
+		verifyEntity(group);
+		
 		GroupUser grUser = new GroupUser();
 		grUser.setGroup(group);
 		grUser.setUser(user);
@@ -162,13 +163,9 @@ public class UserModelImpl implements UserModel {
 	 */
 	@Override
 	public boolean userIsMemberOfGroup(User user, Group group) {
-		if (entityManager == null)
-			return false;
-
-		if (user == null || user.getKey() == null || group == null
-				|| group.getKey() == null) {
-			throw new IllegalArgumentException("parameters incompleted");
-		}
+		verifyEM(entityManager);
+		verifyEntity(user);
+		verifyEntity(group);
 		
 		if(group.getOwner().equals(user)){
 			//owner is default member of group
@@ -216,6 +213,15 @@ public class UserModelImpl implements UserModel {
 
 	public void setCurrentUser(User currentUser) {
 		this.currentUser = currentUser;
+	}
+
+	@Override
+	public Collection<GroupUser> getGroupsByMember(User user) {
+		verifyEM(entityManager);
+		verifyEntity(user);
+		
+		return entityManager.cQuery(GroupUser.class, "user",
+				user.getKey().toString(), true);
 	}
 
 }

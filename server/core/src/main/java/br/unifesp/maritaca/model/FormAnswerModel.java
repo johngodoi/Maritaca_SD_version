@@ -8,6 +8,7 @@ import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
+import br.unifesp.maritaca.core.Group;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.EntityManager;
 
@@ -27,6 +28,10 @@ public interface FormAnswerModel {
 	String getFormIdFromUrl(String url);
 	
 	Collection<Form> listAllFormsMinimalByUser(User user);
+	
+	Collection<Form> listAllSharedForms(User user, boolean minimal);
+	
+	Collection<FormPermissions> getFormPermissionsByGroup(Group group);
 	
 	/************* ANSWER ***********/
 	boolean saveAnswer(Answer answer);
@@ -50,6 +55,5 @@ public interface FormAnswerModel {
 	boolean saveFormPermission(FormPermissions fp);
 
 	<T> boolean currentUserHasPermission(T entity, Operation op);
-
 
 }
