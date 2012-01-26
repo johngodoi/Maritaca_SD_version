@@ -1,9 +1,9 @@
 package br.unifesp.maritaca.model.impl;
 
+import static br.unifesp.maritaca.util.Utils.verifyEM;
+
 import java.util.Map;
 import java.util.UUID;
-
-import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Configuration;
 import br.unifesp.maritaca.core.Form;
@@ -19,7 +19,7 @@ public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel 
 
 	private EntityManager entityManager;
 	private User currentUser;
-	
+
 	public ManagerModelImpl() {
 		setCurrentUser(UserLocator.getCurrentUser());
 	}
@@ -93,6 +93,8 @@ public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel 
 
 	@Override
 	public User getRootUser() {
+		verifyEM(entityManager);
+
 		User rootUser = null;
 		for (Configuration cfUser : entityManager.cQuery(Configuration.class,
 				"name", CFG_ROOT)) {

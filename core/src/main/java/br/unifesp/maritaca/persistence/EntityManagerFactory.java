@@ -25,6 +25,7 @@ public class EntityManagerFactory {
 		return instance;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public EntityManager createEntityManager(int type, Map params) {
 		EntityManager em = null;
 		switch (type) {
