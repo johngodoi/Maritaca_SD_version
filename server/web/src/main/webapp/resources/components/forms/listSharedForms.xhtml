@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+
+	<composite:interface>
+		<composite:attribute name="submodule" required="true" />
+	</composite:interface>
+	<composite:implementation>
+	<!-- TODO: NEEDS TO PRESENT CORRECTLY THE OPTIONS FOR SHARED FORMS -->
+		<h:dataTable value="#{listFormsBean.sharedForms}" var="aForm"
+			width="100%" columnClasses="columnClass1, columnClass1"
+			cellspacing="0">
+			<f:facet name="header">#{msgs.form_shared_list}</f:facet>
+			<h:column>
+				<a4j:commandLink render="#{manager.activeModule.id}">
+					<h:outputText value="#{aForm.title}" styleClass="listItem" />
+					<f:setPropertyActionListener target="#{manager.activeModule}"
+						value="#{cc.attrs.submodule.parent}" />
+					<f:setPropertyActionListener
+						target="#{cc.attrs.submodule.parent.activeSubModule}"
+						value="#{cc.attrs.submodule.parent.searchSubModule('formEditor')}" />
+					<f:setPropertyActionListener target="#{editFormBean.form}"
+						value="#{aForm}" />
+					<f:setPropertyActionListener target="#{editFormBean.newForm}"
+						value="false" />
+					<f:setPropertyActionListener target="#{editFormBean.editForm}"
+						value="false" />
+				</a4j:commandLink>
+			</h:column>
+			<h:column>
+				<rich:dropDownMenu mode="ajax" styleClass="listItemOption">
+					<f:facet name="label">
+						<h:graphicImage value="#{resource['img:down.png']}" />
+					</f:facet>
+					<rich:menuItem render="#{manager.activeModule.id}"
+						icon="#{resource['img:view_form.png']}"
+						label="#{msgs.commons_view}">
+						<f:setPropertyActionListener target="#{manager.activeModule}"
+							value="#{cc.attrs.submodule.parent}" />
+						<f:setPropertyActionListener
+							target="#{cc.attrs.submodule.parent.activeSubModule}"
+							value="#{cc.attrs.submodule.parent.searchSubModule('formEditor')}" />
+						<f:setPropertyActionListener target="#{editFormBean.form}"
+							value="#{aForm}" />
+						<f:setPropertyActionListener target="#{editFormBean.newForm}"
+							value="false" />
+						<f:setPropertyActionListener target="#{editFormBean.editForm}"
+							value="false" />
+					</rich:menuItem>
+					<rich:menuItem render="mainForm:#{manager.activeModule.id}"
+						icon="#{resource['img:edit_form.png']}"
+						label="#{msgs.commons_edit}">
+						<f:setPropertyActionListener target="#{manager.activeModule}"
+							value="#{cc.attrs.submodule.parent}" />
+						<f:setPropertyActionListener
+							target="#{cc.attrs.submodule.parent.activeSubModule}"
+							value="#{cc.attrs.submodule.parent.searchSubModule('formEditor')}" />
+						<f:setPropertyActionListener target="#{editFormBean.form}"
+							value="#{aForm}" />
+						<f:setPropertyActionListener target="#{editFormBean.newForm}"
+							value="false" />
+						<f:setPropertyActionListener target="#{editFormBean.editForm}"
+							value="true" />
+					</rich:menuItem>
+
+					<rich:menuItem icon="#{resource['img:share.png']}"
+						render="shareForm:shareFormId" label="#{msgs.form_share}"
+						action="#{shareFormBean.setForm(aForm)}"
+						onclick="showShareForm('#{msgs.form_share_settings}');">
+
+					</rich:menuItem>
+
+					<rich:menuItem icon="#{resource['img:remove.png']}"
+						render="#{manager.activeModule.id}_panelContent"
+						label="#{msgs.commons_delete}" action="#{editFormBean.deleteForm}">
+						<f:setPropertyActionListener target="#{editFormBean.form}"
+							value="#{aForm}" />
+					</rich:menuItem>
+					<rich:menuSeparator />
+					<!-- todo: check mode="server" in list answers, it must be ajax, but
+					it is not working in ajax mode -->
+					<rich:menuItem render="mainForm" mode="server"
+						icon="#{resource['img:view_form.png']}"
+						label="#{msgs.form_view_answers}"
+						action="#{manager.activeModAndSub('Answer', 'listAnswers')}">
+						<f:setPropertyActionListener target="#{listAnswersBean.form}"
+							value="#{aForm}" />
+					</rich:menuItem>
+				</rich:dropDownMenu>
+			</h:column>
+		</h:dataTable>
+		<center>
+			<h:outputText value="#{msgs.form_list_empty}"
+				rendered="#{empty listFormsBean.sharedForms}"
+				styleClass="columnClass1" />
+		</center>
+	</composite:implementation>
+</ui:composition>

@@ -19,6 +19,7 @@ import br.unifesp.maritaca.util.CFforTesting;
 public class EntityManagerHectorImpl2Test {
 	EntityManagerHectorImpl em;
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Before
 	public void setUp() throws Exception {
 		Cluster cl = HFactory.getOrCreateCluster("test", "localhost:9160");

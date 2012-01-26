@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import br.unifesp.maritaca.core.Group;
+import br.unifesp.maritaca.core.GroupUser;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.EntityManager;
 
@@ -36,4 +37,6 @@ public interface UserModel {
 	ManagerModel getManagerModel();
 
 	boolean userIsMemberOfGroup(User user, Group group);
+
+	Collection<GroupUser> getGroupsByMember(User user);
 }
