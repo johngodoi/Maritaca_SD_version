@@ -19,13 +19,9 @@
 			cellspacing="0">
 			<f:facet name="header">#{msgs.form_shared_list}</f:facet>
 			<h:column>
-				<a4j:commandLink render="#{manager.activeModule.id}">
-					<h:outputText value="#{aForm.title}" styleClass="listItem" />
-					<f:setPropertyActionListener target="#{manager.activeModule}"
-						value="#{cc.attrs.submodule.parent}" />
-					<f:setPropertyActionListener
-						target="#{cc.attrs.submodule.parent.activeSubModule}"
-						value="#{cc.attrs.submodule.parent.searchSubModule('formEditor')}" />
+				<a4j:commandLink value="#{aForm.title}"
+					action="#{manager.activeModAndSub('forms', 'formEditor')}"
+					render="#{manager.activeModule.id}">
 					<f:setPropertyActionListener target="#{editFormBean.form}"
 						value="#{aForm}" />
 					<f:setPropertyActionListener target="#{editFormBean.newForm}"
@@ -41,12 +37,8 @@
 					</f:facet>
 					<rich:menuItem render="#{manager.activeModule.id}"
 						icon="#{resource['img:view_form.png']}"
-						label="#{msgs.commons_view}">
-						<f:setPropertyActionListener target="#{manager.activeModule}"
-							value="#{cc.attrs.submodule.parent}" />
-						<f:setPropertyActionListener
-							target="#{cc.attrs.submodule.parent.activeSubModule}"
-							value="#{cc.attrs.submodule.parent.searchSubModule('formEditor')}" />
+						label="#{msgs.commons_view}"
+						action="#{manager.activeModAndSub('forms', 'formEditor')}">
 						<f:setPropertyActionListener target="#{editFormBean.form}"
 							value="#{aForm}" />
 						<f:setPropertyActionListener target="#{editFormBean.newForm}"
@@ -56,12 +48,8 @@
 					</rich:menuItem>
 					<rich:menuItem render="mainForm:#{manager.activeModule.id}"
 						icon="#{resource['img:edit_form.png']}"
-						label="#{msgs.commons_edit}">
-						<f:setPropertyActionListener target="#{manager.activeModule}"
-							value="#{cc.attrs.submodule.parent}" />
-						<f:setPropertyActionListener
-							target="#{cc.attrs.submodule.parent.activeSubModule}"
-							value="#{cc.attrs.submodule.parent.searchSubModule('formEditor')}" />
+						label="#{msgs.commons_edit}"
+						action="#{manager.activeModAndSub('forms', 'formEditor')}">
 						<f:setPropertyActionListener target="#{editFormBean.form}"
 							value="#{aForm}" />
 						<f:setPropertyActionListener target="#{editFormBean.newForm}"
@@ -89,7 +77,7 @@
 					<rich:menuItem render="mainForm" mode="server"
 						icon="#{resource['img:view_form.png']}"
 						label="#{msgs.form_view_answers}"
-						action="#{manager.activeModAndSub('Answer', 'listAnswers')}">
+						action="#{manager.activeModAndSub('answer', 'listAnswers')}">
 						<f:setPropertyActionListener target="#{listAnswersBean.form}"
 							value="#{aForm}" />
 					</rich:menuItem>
