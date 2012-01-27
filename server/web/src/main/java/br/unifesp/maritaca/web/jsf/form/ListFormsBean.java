@@ -7,7 +7,7 @@ import javax.faces.bean.ManagedProperty;
 
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
-import br.unifesp.maritaca.web.jsf.home.CurrentUserBean;
+import br.unifesp.maritaca.web.jsf.account.CurrentUserBean;
 
 @ManagedBean
 public class ListFormsBean extends AbstractBean {

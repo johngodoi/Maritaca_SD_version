@@ -3,6 +3,7 @@ package br.unifesp.maritaca.model.impl;
 import static br.unifesp.maritaca.util.Utils.verifyEM;
 import static br.unifesp.maritaca.util.Utils.verifyEntity;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -16,8 +17,10 @@ import br.unifesp.maritaca.model.UserModel;
 import br.unifesp.maritaca.persistence.EntityManager;
 import br.unifesp.maritaca.util.UserLocator;
 
-public class UserModelImpl implements UserModel {
+public class UserModelImpl implements UserModel, Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private EntityManager entityManager;
 	private ManagerModel managerModel;
 	private User currentUser;
