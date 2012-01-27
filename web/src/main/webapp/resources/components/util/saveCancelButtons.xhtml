@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+<head>
+<title>Not present in rendered output</title>
+</head>
+<body>
+	<composite:interface>
+		<composite:attribute name="save"   required="true" method-signature="java.lang.String save()"/>
+		<composite:attribute name="cancel" required="true" method-signature="java.lang.String cancel()"/>
+	</composite:interface>
+	<composite:implementation>
+		<h:panelGrid columns="2">
+			<h:commandButton value="#{msgs.group_save_button}"
+				action="#{cc.attrs.save}">
+			</h:commandButton>
+			<h:commandButton value="#{msgs.group_save_cancel}"
+				action="#{cc.attrs.cancel}" immediate="true" />
+		</h:panelGrid>
+	</composite:implementation>
+</body>
+</html>

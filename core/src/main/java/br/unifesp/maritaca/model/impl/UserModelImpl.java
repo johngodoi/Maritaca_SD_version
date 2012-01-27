@@ -6,6 +6,8 @@ import static br.unifesp.maritaca.util.Utils.verifyEntity;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.ArrayList;
+
 import br.unifesp.maritaca.core.Group;
 import br.unifesp.maritaca.core.GroupUser;
 import br.unifesp.maritaca.core.User;
@@ -37,7 +39,6 @@ public class UserModelImpl implements UserModel {
 			return addUserToGroup(user, getAllUsersGroup());
 		}
 		return false;
-
 	}
 
 	@Override
@@ -101,13 +102,8 @@ public class UserModelImpl implements UserModel {
 
 		if (group.getKey() == null) {
 			// new group
-			for (Group g : getGroupsByOwner(group.getOwner())) {
-				// verify in there is not another group with the same name for
-				// owner
-				if (group.getName().equals(g.getName())) {
-					// group exists
-					return true;
-				}
+			if(searchGroupByName(group.getName())!=null){
+				return false;
 			}
 			return entityManager.persist(group);
 		} else {
@@ -121,7 +117,8 @@ public class UserModelImpl implements UserModel {
 				// update name
 				return entityManager.persist(group);
 		}
-	}
+	}	
+	
 
 	/**
 	 * @return List of group which the user is owner
@@ -130,7 +127,6 @@ public class UserModelImpl implements UserModel {
 	public Collection<Group> getGroupsByOwner(User owner) {
 		verifyEM(entityManager);
 		verifyEntity(owner);
-		
 		return entityManager.cQuery(Group.class, "owner", owner.toString());
 	}
 
@@ -224,4 +220,55 @@ public class UserModelImpl implements UserModel {
 				user.getKey().toString(), true);
 	}
 
+	public Group searchGroupByName(String groupName) {
+		if (entityManager == null || groupName == null)
+			return null;
+		
+		List<Group> foundGroups = entityManager.cQuery(Group.class, "name", groupName);
+		
+		if(foundGroups.size()==0){
+			return null;
+		} else if (foundGroups.size()==1){
+			return foundGroups.get(0);
+		} else {
+			throw new RuntimeException("Invalid number of groups with name:"+groupName);
+		}
+	}
+
+	@Override
+	public List<User> usersStartingWith(String startingString) {
+		Collection<User> listUser       = listAllUsers();		
+		List<User>       matchingEmails = new ArrayList<User>();
+		
+		for(User u : listUser){
+			if(u.getEmail().matches("^"+startingString+".*")){
+				matchingEmails.add(u);
+			}
+		}		
+		return matchingEmails;
+	}
+
+	@Override
+	public User findUserByEmail(String email) {		
+		if (entityManager == null || email == null)
+			return null;
+		
+		List<User> foundUsers = entityManager.cQuery(User.class, "email", email);
+		
+		if(foundUsers.size()==0){
+			return null;
+		} else if (foundUsers.size()==1){
+			return foundUsers.get(0);
+		} else {
+			throw new RuntimeException("Invalid number of users for the email:"+email);
+		}
+	}
+
+	@Override
+	public boolean saveGroupUser(GroupUser groupUser) {
+		if (entityManager == null || groupUser == null)
+			return false;
+		
+		return entityManager.persist(groupUser);
+	}
 }
