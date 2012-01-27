@@ -1,6 +1,7 @@
-package br.unifesp.maritaca.web.jsf.home;
+package br.unifesp.maritaca.web.jsf.login;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -15,10 +16,13 @@ import org.expressme.openid.Endpoint;
 import org.expressme.openid.OpenIdManager;
 
 import br.unifesp.maritaca.core.User;
+import br.unifesp.maritaca.web.jsf.account.AccountManagerBean;
 
 @ManagedBean
 @SessionScoped
-public class OpenIdLoginBean{
+public class OpenIdLoginBean implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 
 	@ManagedProperty("#{accountManagerBean}")
 	private AccountManagerBean accountManagerBean;
@@ -107,11 +111,11 @@ public class OpenIdLoginBean{
 	 */
 	public void openIdOpLogin() {
 		try {
-			FacesContext  context     = FacesContext.getCurrentInstance();
-			String        op          = parseOp(context);			
-			String        returnUrl   = returnToUrl("/views/createAccount.xhtml");
-			String        returnRealm = retrieveRealm();
-	        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+			FacesContext       context     = FacesContext.getCurrentInstance();
+			String             op          = parseOp(context);			
+			String             returnUrl   = returnToUrl("/views/createAccount.xhtml");
+			String             returnRealm = retrieveRealm();
+	        HttpServletRequest request     = (HttpServletRequest) context.getExternalContext().getRequest();
 									
 			setManager(new OpenIdManager());
 			getManager().setRealm(returnRealm);

@@ -1,7 +1,7 @@
 package br.unifesp.maritaca.model;
 
 import java.util.Collection;
-import java.util.Map;
+import java.util.List;
 import java.util.UUID;
 
 import br.unifesp.maritaca.core.Group;
@@ -25,6 +25,31 @@ public interface UserModel {
 	Group getGroup(UUID uuid);
 	
 	boolean saveGroup(Group group);
+	
+	/**
+	 * Search for the group with the given name. Returns null
+	 * if there is none that matches.
+	 * @param group
+	 * @return 
+	 */
+	Group searchGroupByName(String groupName);
+	
+	/**
+	 * Returns a list of users whose emails starts with
+	 * the given string.
+	 * @param startingString
+	 * @return
+	 */
+	List<User> usersStartingWith(String startingString);
+	
+	/**
+	 * Find user by its email. If no user is found with the given
+	 * email returns null. <br>
+	 * Note: For one given email there must be only one user.
+	 * @param email
+	 * @return The user or null if no user is found.
+	 */
+	User findUserByEmail(String email);	
 
 	Collection<Group> getGroupsByOwner(User owner);
 
@@ -39,4 +64,6 @@ public interface UserModel {
 	boolean userIsMemberOfGroup(User user, Group group);
 
 	Collection<GroupUser> getGroupsByMember(User user);
+
+	boolean saveGroupUser(GroupUser groupUser);
 }

@@ -45,6 +45,13 @@
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.glassfish</groupId>
+			<artifactId>javax.faces</artifactId>
+			<version>2.1.4</version>
+			<scope>compile</scope>
+		</dependency>
+
 		<!-- MARITACA -->
 		<dependency>
 			<groupId>br.unifesp.maritaca</groupId>
@@ -131,7 +138,7 @@
 		<!-- Allows to use the bean validation framework -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator-annotation-processor</artifactId>
+			<artifactId>hibernate-validator</artifactId>
 			<version>4.2.0.Final</version>
 		</dependency>
 		<!-- OpenID -->

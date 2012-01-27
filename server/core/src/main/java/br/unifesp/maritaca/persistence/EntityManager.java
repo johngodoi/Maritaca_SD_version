@@ -13,6 +13,8 @@ public interface EntityManager {
 	<T> boolean delete(T obj);
 
 	<T> List<T> cQuery(Class<T> cl, String field, String value);
+	
+	<T> List<T> cRangeQuery(Class<T> cl, String field, String value);
 
 	<T> List<T> listAll(Class<T> cl);
 
