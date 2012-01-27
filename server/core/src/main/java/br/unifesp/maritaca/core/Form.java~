@@ -111,6 +111,7 @@ public class Form implements Comparable<Form> {
 	public void setUrl(String url) {
 		this.url = url;
 	}
+<<<<<<< HEAD
 	
 	@Override
 	public int hashCode() {
@@ -129,7 +130,7 @@ public class Form implements Comparable<Form> {
 			}
 		}
 		return false;
-	}
+=======
 
 	@Override
 	public int compareTo(Form form) {
@@ -146,5 +147,6 @@ public class Form implements Comparable<Form> {
 
 	public void setFlagToOrder(int flagToOrder) {
 		this.flagToOrder = flagToOrder;
+>>>>>>> Ticket 38 Status: Closed
 	}
 }

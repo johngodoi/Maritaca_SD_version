@@ -1,13 +1,17 @@
 package br.unifesp.maritaca.model.impl;
 
-
+<<<<<<< HEAD
 import static br.unifesp.maritaca.util.Utils.verifyEM;
 import static br.unifesp.maritaca.util.Utils.verifyEntity;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
+=======
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+>>>>>>> Ticket 38 Status: Closed
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
