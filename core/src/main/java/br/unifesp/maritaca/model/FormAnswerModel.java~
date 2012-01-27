@@ -58,6 +58,9 @@ public interface FormAnswerModel {
 	
 	Collection<Form> listAllFormsSortedbyName(User user);
 
+<<<<<<< HEAD
+=======
 	Collection<Form> listAllFormsSortedbyDate(User user);
 
+>>>>>>> Ticket 38 Status: Closed
 }
