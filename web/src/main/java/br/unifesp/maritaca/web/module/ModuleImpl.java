@@ -81,12 +81,12 @@ public class ModuleImpl implements Module, Serializable {
 
 	@Override
 	public String getId() {
-		return id;
+		return Utils.getCompactedVersion(getTitle());
 	}
 
 	@Override
 	public void setId(String id) {
-		this.id = id;
+		//this.id = id;
 	}
 
 	@Override

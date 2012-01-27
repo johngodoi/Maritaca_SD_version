@@ -13,6 +13,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 
 import org.richfaces.component.UIPanelMenu;
+import org.richfaces.component.UITabPanel;
 import org.richfaces.event.ItemChangeEvent;
 import org.richfaces.event.ItemChangeListener;
 
@@ -112,6 +113,15 @@ public class Manager implements ItemChangeListener, Serializable {
 	public void processItemChange(ItemChangeEvent event)
 			throws AbortProcessingException {
 		setActiveModuleByString(event.getNewItem().getId());
+		FacesContext fc = FacesContext.getCurrentInstance();
+
+//		UIViewRoot uivr = fc.getViewRoot();
+//		printtree(uivr, "|");
+//		
+//		UITabPanel mainTab = (UITabPanel) uivr.findComponent("mainForm:mainTab");
+//		mainTab.getChildren().clear();
+//		
+//		printtree(uivr, "|");
 	}
 
 	public void activeModAndSub(String mod, String submod) {
@@ -156,5 +166,20 @@ public class Manager implements ItemChangeListener, Serializable {
 	}
 
 	public void setTime(String x) {
+	}
+	
+	/**
+	 * testing function for development
+	 * @param cpnt
+	 * @param level
+	 */
+	@SuppressWarnings("unused")
+	private void printtree(UIComponent cpnt, String level){
+		if(cpnt == null)return;
+		System.out.println(level + " " + cpnt.getId() + " - " + cpnt.getClass().getSimpleName());
+		for(UIComponent uichild: cpnt.getChildren()){
+			printtree(uichild, level + "-");
+		}
+		
 	}
 }

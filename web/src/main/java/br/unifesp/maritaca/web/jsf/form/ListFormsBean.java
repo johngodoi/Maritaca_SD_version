@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.event.ActionEvent;
 
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
@@ -14,16 +15,21 @@ public class ListFormsBean extends AbstractBean {
 	private static final long serialVersionUID = 1L;
 	private Collection<Form> forms;
 	private Collection<Form> sharedForms;
+	private boolean updateList1;
 
 	@ManagedProperty("#{currentUserBean}")
 	private CurrentUserBean currentUser;
 
 	public ListFormsBean() {
 		super(true, false);
-
+		setUpdateList1(false);
 	}
 
 	public Collection<Form> getForms() {
+		if(isUpdateList1()){
+			updateListOwnForms();
+			setUpdateList1(false);
+		}
 		return forms;
 	}
 
@@ -49,9 +55,8 @@ public class ListFormsBean extends AbstractBean {
 
 	public void setCurrentUser(CurrentUserBean currentUser) {
 		this.currentUser = currentUser;
-		forms = formAnswCtrl.listAllFormsMinimalByUser(currentUser.getUser());
-		sharedForms = formAnswCtrl.listAllSharedForms(currentUser.getUser(),
-				true);
+		updateListOwnForms();
+		updateListSharedForms();
 	}
 
 	/**
@@ -63,5 +68,26 @@ public class ListFormsBean extends AbstractBean {
 
 	public void setSharedForms(Collection<Form> sharedForms) {
 		this.sharedForms = sharedForms;
+	}
+
+	public void listOwnFormsChanged(ActionEvent evt) {
+		setUpdateList1(true);
+	}
+
+	private void updateListOwnForms() {
+		setForms(formAnswCtrl.listAllFormsMinimalByUser(currentUser.getUser()));
+	}
+
+	private void updateListSharedForms() {
+		setSharedForms(formAnswCtrl.listAllSharedForms(currentUser.getUser(),
+				true));
+	}
+
+	public boolean isUpdateList1() {
+		return updateList1;
+	}
+
+	public void setUpdateList1(boolean updateList1) {
+		this.updateList1 = updateList1;
 	}
 }
