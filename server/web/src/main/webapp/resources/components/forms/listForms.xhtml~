@@ -7,26 +7,40 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:rich="http://richfaces.org/rich"
-	xmlns:a4j="http://richfaces.org/a4j">
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:forms="http://java.sun.com/jsf/composite/components/forms">
 
 	<composite:interface>
 		<composite:attribute name="submodule" required="true" />
 	</composite:interface>
 	<composite:implementation>
+<<<<<<< HEAD
+		<forms:listOwnForms submodule="#{cc.attrs.submodule}" />
+		<br/>
+		<forms:listSharedForms submodule="#{cc.attrs.submodule}" />
+=======
 		<h:dataTable value="#{listFormsBean.forms}" var="aForm" width="100%"
-			columnClasses="columnClass1, columnClass1, columnClass1" cellspacing="0"
-			id="listforms">
-			<f:facet name="header">#{msgs.form_list}</f:facet>
+			id="listforms"
+			columnClasses="columnClass1, columnClass1, columnClass1"
+			cellspacing="0" headerClass="columnHeader">
+
 			<h:column>
+
 				<f:facet name="header">
 					<a4j:commandLink value="#{msgs.form_list_titleHeader}"
-						action="#{listFormsBean.sortByName}" render="listforms">
-
+							action="#{listFormsBean.sortByName}"
+							render="listforms">
+							
 					</a4j:commandLink>
 				</f:facet>
-				<a4j:commandLink value="#{aForm.title}"
-					action="#{manager.activeModAndSub('forms', 'formEditor')}"
-					render="#{manager.activeModule.id}">
+
+				<a4j:commandLink render="#{manager.activeModule.id}">
+					<h:outputText value="#{aForm.title}" styleClass="listItem" />
+					<f:setPropertyActionListener target="#{manager.activeModule}"
+						value="#{cc.attrs.submodule.parent}" />
+					<f:setPropertyActionListener
+						target="#{cc.attrs.submodule.parent.activeSubModule}"
+						value="#{cc.attrs.submodule.parent.searchSubModule('formEditor')}" />
 					<f:setPropertyActionListener target="#{editFormBean.form}"
 						value="#{aForm}" />
 					<f:setPropertyActionListener target="#{editFormBean.newForm}"
@@ -39,15 +53,17 @@
 			<h:column>
 				<f:facet name="header">
 					<a4j:commandLink value="#{msgs.form_list_creationDateHeader}"
-						render="listforms" action="#{listFormsBean.sortByDate}">
+							render="listforms"
+							action="#{listFormsBean.sortByDate}">
 					</a4j:commandLink>
 				</f:facet>
 				<h:outputText value="#{aForm.creationDate}" />
 			</h:column>
 
 			<h:column>
+
 				<f:facet name="header">
-					<a4j:commandLink value="#{msgs.form_list_optionsHeader}" action="#" />
+					<a4j:commandLink value="#{msgs.form_list_optionsHeader}" />
 				</f:facet>
 
 				<rich:dropDownMenu mode="ajax" styleClass="listItemOption">
@@ -56,8 +72,12 @@
 					</f:facet>
 					<rich:menuItem render="#{manager.activeModule.id}"
 						icon="#{resource['img:view_form.png']}"
-						label="#{msgs.commons_view}"
-						action="#{manager.activeModAndSub('forms', 'formEditor')}">
+						label="#{msgs.commons_view}">
+						<f:setPropertyActionListener target="#{manager.activeModule}"
+							value="#{cc.attrs.submodule.parent}" />
+						<f:setPropertyActionListener
+							target="#{cc.attrs.submodule.parent.activeSubModule}"
+							value="#{cc.attrs.submodule.parent.searchSubModule('formEditor')}" />
 						<f:setPropertyActionListener target="#{editFormBean.form}"
 							value="#{aForm}" />
 						<f:setPropertyActionListener target="#{editFormBean.newForm}"
@@ -67,8 +87,12 @@
 					</rich:menuItem>
 					<rich:menuItem render="mainForm:#{manager.activeModule.id}"
 						icon="#{resource['img:edit_form.png']}"
-						label="#{msgs.commons_edit}"
-						action="#{manager.activeModAndSub('forms', 'formEditor')}">
+						label="#{msgs.commons_edit}">
+						<f:setPropertyActionListener target="#{manager.activeModule}"
+							value="#{cc.attrs.submodule.parent}" />
+						<f:setPropertyActionListener
+							target="#{cc.attrs.submodule.parent.activeSubModule}"
+							value="#{cc.attrs.submodule.parent.searchSubModule('formEditor')}" />
 						<f:setPropertyActionListener target="#{editFormBean.form}"
 							value="#{aForm}" />
 						<f:setPropertyActionListener target="#{editFormBean.newForm}"
@@ -96,16 +120,13 @@
 					<rich:menuItem render="mainForm" mode="server"
 						icon="#{resource['img:view_form.png']}"
 						label="#{msgs.form_view_answers}"
-						action="#{manager.activeModAndSub('answer', 'listAnswers')}">
+						action="#{manager.activeModAndSub('Answer', 'listAnswers')}">
 						<f:setPropertyActionListener target="#{listAnswersBean.form}"
 							value="#{aForm}" />
 					</rich:menuItem>
 				</rich:dropDownMenu>
 			</h:column>
 		</h:dataTable>
-		<center>
-			<h:outputText value="#{msgs.form_list_empty}"
-				rendered="#{empty listFormsBean.forms}" styleClass="columnClass1" />
-		</center>
+>>>>>>> Ticket 38 Status: Closed
 	</composite:implementation>
 </ui:composition>

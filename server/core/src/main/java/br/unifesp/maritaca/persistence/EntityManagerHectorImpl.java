@@ -270,7 +270,7 @@ public class EntityManagerHectorImpl implements EntityManager {
 				keyspace, uuidSerializer, stringSerializer, stringSerializer);
 		q.setColumnFamily(cl.getSimpleName());
 		if(fields.size()>0){
-		q.setColumnNames(fields.toArray(new String[fields.size()]));
+			q.setColumnNames(fields.toArray(new String[fields.size()]));
 		}else{
 			q.setReturnKeysOnly();
 			keysOnly = true;

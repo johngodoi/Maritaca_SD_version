@@ -20,21 +20,25 @@ public class ListFormsBean extends AbstractBean {
 
 	public ListFormsBean() {
 		super(true, false);
-
+		
 	}
 
 	public Collection<Form> getForms() {
 		return forms;
 	}
+<<<<<<< HEAD
 
-	public void sortByName() {
+=======
+	
+	public void sortByName(){
 		forms = formAnswCtrl.listAllFormsSortedbyName(currentUser.getUser());
 	}
-
-	public void sortByDate() {
+	
+	public void sortByDate(){
 		forms = formAnswCtrl.listAllFormsSortedbyDate(currentUser.getUser());
 	}
-
+	
+>>>>>>> Ticket 38 Status: Closed
 	public void setForms(Collection<Form> forms) {
 		this.forms = forms;
 	}
@@ -50,6 +54,7 @@ public class ListFormsBean extends AbstractBean {
 	public void setCurrentUser(CurrentUserBean currentUser) {
 		this.currentUser = currentUser;
 		forms = formAnswCtrl.listAllFormsMinimalByUser(currentUser.getUser());
+<<<<<<< HEAD
 		sharedForms = formAnswCtrl.listAllSharedForms(currentUser.getUser(),
 				true);
 	}
@@ -63,5 +68,7 @@ public class ListFormsBean extends AbstractBean {
 
 	public void setSharedForms(Collection<Form> sharedForms) {
 		this.sharedForms = sharedForms;
+=======
+>>>>>>> Ticket 38 Status: Closed
 	}
 }
