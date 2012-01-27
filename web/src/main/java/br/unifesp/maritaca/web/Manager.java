@@ -64,6 +64,14 @@ public class Manager implements ItemChangeListener, Serializable {
 
 		getEnabledModules().add(mod);
 
+                mod = new ModuleImpl();
+                mod.setTitle("Groups");
+                submod = new SubModuleImpl();
+                submod.setTitle("Create Group");
+                submod.setComponent("createGroup");
+                mod.addModule(submod);
+               
+                getEnabledModules().add(mod);
 	}
 
 	public List<Module> getEnabledModules() {
