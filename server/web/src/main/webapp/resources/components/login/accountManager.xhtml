@@ -24,7 +24,7 @@
 			<h:panelGrid columns="3">
 				<!-- Row 1 -->
 				<h:outputText value="#{msgs.account_first_name}:" />
-				<h:inputText value="#{accountManagerBean.user.firstname}"
+				<h:inputText  value="#{accountManagerBean.user.firstname}"
 					label="#{msgs.account_first_name}" id="firstName" required="true">
 					<f:validateLength minimum="4" maximum="12" />
 				</h:inputText>

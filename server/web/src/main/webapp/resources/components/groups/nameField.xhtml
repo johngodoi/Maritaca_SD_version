@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich">
+<head>
+<title>Not present in rendered output</title>
+</head>
+<body>
+	<composite:interface>
+	</composite:interface>
+	<composite:implementation>
+		<h:panelGrid columns="3">
+			<h:outputText value="#{msgs.group_name}:" />
+			<h:inputText value="#{groupsManagerBean.groupName}" id="groupName">
+				<f:ajax event="blur" render="groupExistsError" />
+				<!-- TODO: Enable client-side validation with richfaces -->
+				<!-- <rich:validator />  -->
+			</h:inputText>
+			<!-- <rich:message for="groupName" /> -->
+			<h:outputText
+					value="#{groupsManagerBean.registeredGroupName() ? msgs.group_name_already_used : ''}"
+					id="groupExistsError"
+					styleClass="error" />
+		</h:panelGrid>
+	</composite:implementation>
+</body>
+</html>

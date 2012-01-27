@@ -1,5 +1,6 @@
 package br.unifesp.maritaca.web.module;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +10,10 @@ import javax.faces.event.ActionEvent;
 import br.unifesp.maritaca.web.submodule.SubModule;
 import br.unifesp.maritaca.web.utils.Utils;
 
-public class ModuleImpl implements Module {
+public class ModuleImpl implements Module, Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private String title;
 	private String id;
 	private SubModule activeSubModule;

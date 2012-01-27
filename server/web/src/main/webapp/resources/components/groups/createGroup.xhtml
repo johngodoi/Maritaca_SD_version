@@ -7,7 +7,9 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j"
-	xmlns:forms="http://java.sun.com/jsf/composite/components/forms">
+	xmlns:forms="http://java.sun.com/jsf/composite/components/forms"
+	xmlns:groups="http://java.sun.com/jsf/composite/components/groups"
+	xmlns:util="http://java.sun.com/jsf/composite/components/util">
 <head>
 <title>Not present in rendered output</title>
 </head>
@@ -16,7 +18,18 @@
 		<composite:attribute name="submodule" required="true" />
 	</composite:interface>
 	<composite:implementation>
+		<h:panelGrid>
+			<groups:nameField />
 
+			<groups:descriptionField />
+
+			<groups:allowUsersField />
+
+			<groups:usersField />
+
+			<util:saveCancelButtons save="#{groupsManagerBean.save()}"
+				cancel="#{groupsManagerBean.cancel()}" />				
+		</h:panelGrid>
 	</composite:implementation>
 </body>
 </html>

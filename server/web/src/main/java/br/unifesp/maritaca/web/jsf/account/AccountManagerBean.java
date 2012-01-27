@@ -1,4 +1,4 @@
-package br.unifesp.maritaca.web.jsf.home;
+package br.unifesp.maritaca.web.jsf.account;
 
 import java.io.Serializable;
 import java.util.List;
@@ -33,7 +33,7 @@ public class AccountManagerBean extends AbstractBean implements Serializable{
 		clearUser();
 	}
 			
-	public void clearUser(){
+	private void clearUser(){
 		setUser(new User());
 	}
 
