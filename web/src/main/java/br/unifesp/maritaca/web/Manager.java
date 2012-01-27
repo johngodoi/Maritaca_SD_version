@@ -64,14 +64,15 @@ public class Manager implements ItemChangeListener, Serializable {
 
 		getEnabledModules().add(mod);
 
-                mod = new ModuleImpl();
-                mod.setTitle("Groups");
-                submod = new SubModuleImpl();
-                submod.setTitle("Create Group");
-                submod.setComponent("createGroup");
-                mod.addModule(submod);
-               
-                getEnabledModules().add(mod);
+		mod = new ModuleImpl();
+		mod.setTitle("Groups");
+		mod.setId("groups");
+		submod = new SubModuleImpl();
+		submod.setTitle("Create Group");
+		submod.setComponent("createGroup");
+		mod.addModule(submod);
+
+		getEnabledModules().add(mod);
 	}
 
 	public List<Module> getEnabledModules() {
@@ -120,33 +121,35 @@ public class Manager implements ItemChangeListener, Serializable {
 		FacesContext fc = FacesContext.getCurrentInstance();
 
 		UIViewRoot uivr = fc.getViewRoot();
-		UIPanelMenu leftMenu = (UIPanelMenu) uivr.findComponent("mainForm:" + getActiveModule().getId() + "_panelLeftMenu");
-		if(leftMenu!=null){
-			leftMenu.setActiveItem(getActiveModule().getActiveSubModule().getComponent());
+		UIPanelMenu leftMenu = (UIPanelMenu) uivr.findComponent("mainForm:"
+				+ getActiveModule().getId() + "_panelLeftMenu");
+		if (leftMenu != null) {
+			leftMenu.setActiveItem(getActiveModule().getActiveSubModule()
+					.getComponent());
 		}
 	}
 
-//	/**
-//	 * find a UIComponent from a Parent
-//	 * @param id of component
-//	 * @param parent UIComponent
-//	 * @return UIComponent or null
-//	 * Temporary function, uiviewroot.findComponent not working...
-//	 */
-//	private UIComponent findComponent(String id, UIComponent parent) {
-//		if (parent == null)
-//			return null;
-//
-//		if (parent.getId().equals(id)) {
-//			return parent;
-//		} else {
-//			for (UIComponent child : parent.getChildren()) {
-//				UIComponent uic = findComponent(id, child);
-//				if(uic!=null)return uic;
-//			}
-//			return null;
-//		}
-//	}
+	// /**
+	// * find a UIComponent from a Parent
+	// * @param id of component
+	// * @param parent UIComponent
+	// * @return UIComponent or null
+	// * Temporary function, uiviewroot.findComponent not working...
+	// */
+	// private UIComponent findComponent(String id, UIComponent parent) {
+	// if (parent == null)
+	// return null;
+	//
+	// if (parent.getId().equals(id)) {
+	// return parent;
+	// } else {
+	// for (UIComponent child : parent.getChildren()) {
+	// UIComponent uic = findComponent(id, child);
+	// if(uic!=null)return uic;
+	// }
+	// return null;
+	// }
+	// }
 
 	public String getTime() {
 		return Calendar.getInstance().getTimeInMillis() + "";
