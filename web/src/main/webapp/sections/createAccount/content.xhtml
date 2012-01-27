@@ -6,7 +6,9 @@
 <h:body>
 	<center>
 		<!-- Fills user data if returning from openId authentication -->
-		<h:inputHidden value="#{openIdLoginBean.onLoad}" />
+		<h:form>
+			<h:inputHidden value="#{openIdLoginBean.onLoad}" />
+		</h:form>
 		
 		<!-- Calls the accountEditor -->
 		<login:accountManager

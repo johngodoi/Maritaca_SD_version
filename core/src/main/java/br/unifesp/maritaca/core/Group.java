@@ -14,9 +14,14 @@ public class Group {
 	private UUID key;
 	@Column(indexed = true)
 	private User owner;
-	@Column
+	
+	@Column(indexed=true)
 	@Minimal
 	private String name;
+	
+	@Column
+	@Minimal
+	private String description;	
 
 	public UUID getKey() {
 		return key;
@@ -62,4 +67,11 @@ public class Group {
 		return super.toString();
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 }

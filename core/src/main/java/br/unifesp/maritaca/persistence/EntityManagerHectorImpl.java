@@ -80,11 +80,11 @@ public class EntityManagerHectorImpl implements EntityManager {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public <T> boolean persist(T obj, boolean createTable) {
-		
+
 		if (obj == null || !isEntity(obj.getClass())) {
 			throw new IllegalArgumentException("object null or not an entity");
 		}
-		
+
 		if (!tableExists(obj.getClass()) && createTable) {
 			try {
 				createTable(obj.getClass());
@@ -160,12 +160,12 @@ public class EntityManagerHectorImpl implements EntityManager {
 	
 	@Override
 	public <T> T find(Class<T> cl, UUID uuid, boolean justMinimal) {
-		
+
 		if (cl == null || !isEntity(cl)) {
 			throw new IllegalArgumentException("object null or not an entity");
 		}
 
-		Collection<String> fields = getNameFields(cl,justMinimal);
+		Collection<String> fields = getNameFields(cl, justMinimal);
 		SliceQuery<UUID, String, String> query = createSliceQuery(keyspace,
 				uuidSerializer, stringSerializer, stringSerializer);
 		query.setColumnFamily(cl.getSimpleName());
@@ -207,7 +207,7 @@ public class EntityManagerHectorImpl implements EntityManager {
 		if (obj == null || !isEntity(obj.getClass())) {
 			throw new IllegalArgumentException("object null or not an entity");
 		}
-		
+
 		Mutator<UUID> mutator = createMutator(keyspace, uuidSerializer);
 
 		UUID uuid = getObjectKey(obj);
@@ -217,8 +217,39 @@ public class EntityManagerHectorImpl implements EntityManager {
 		return true;
 	}
 
+	public <T> List<T> cRangeQuery(Class<T> cl, String field, String value ) {
+		RangeSlicesQuery<String, String, String> rangeSlicesQuery;
+		rangeSlicesQuery = createRangeSlicesQuery(keyspace, stringSerializer,
+						stringSerializer, stringSerializer);
+		rangeSlicesQuery.setColumnFamily(cl.getSimpleName());
+		rangeSlicesQuery.setRange(value, "", false, 3);
+		
+		QueryResult<OrderedRows<String, String, String>> resultq;
+		resultq = rangeSlicesQuery.execute();
+		
+		List<T> result = new ArrayList<T>();
+
+		for (Row<String, String, String> line : resultq.get().getList()) {
+			T obj = instantiateObject(cl);
+			for (HColumn<String, String> column : line.getColumnSlice().getColumns()) {
+				try {
+					setValue(obj, cl.getDeclaredField(column.getName()),
+							column.getValue());
+				} catch (SecurityException e) {
+					throw new RuntimeException(e);
+				} catch (NoSuchFieldException e) {
+					throw new IllegalArgumentException(e);
+				}
+			}
+
+			System.out.println(line);
+		}
+		return result;
+	}
+
 	@Override
-	public <T> List<T> cQuery(Class<T> cl, String field, String value, boolean justMinimal) {
+	public <T> List<T> cQuery(Class<T> cl, String field, String value,
+			boolean justMinimal) {
 		if (cl == null || isEntity(cl.getClass())) {
 			throw new IllegalArgumentException("object null or not an entity");
 		}
@@ -254,14 +285,14 @@ public class EntityManagerHectorImpl implements EntityManager {
 		}
 		return result;
 	}
-
+	
 	@Override
 	public <T> List<T> listAll(Class<T> cl, boolean justMinimal) {
 		if (cl == null || isEntity(cl.getClass())) {
 			throw new IllegalArgumentException("object null or not an entity");
 		}
-		
-		boolean keysOnly=false;
+
+		boolean keysOnly = false;
 
 		List<T> result = new ArrayList<T>();
 
@@ -312,18 +343,19 @@ public class EntityManagerHectorImpl implements EntityManager {
 			throw new IllegalArgumentException("object null or not an entity");
 		}
 		if (!tableExists(cl)) {
-			
-			List<ColumnDef> columns = new ArrayList<ColumnDef>();
-		    for (Field f : getColumnFields(cl, false)) {
-		      String cName = f.getName();
-		      //log.info("Creating column " + cName);
-		      if(f.getAnnotation(Column.class).indexed())
-		    	  columns.add(newIndexedColumnDef(cName, cl.getSimpleName() + cName, ComparatorType.UTF8TYPE.getTypeName()));
-		    }
 
-		    List<ColumnDefinition> columnMetadata = ThriftColumnDef
-		        .fromThriftList(columns);
-		    
+			List<ColumnDef> columns = new ArrayList<ColumnDef>();
+			for (Field f : getColumnFields(cl, false)) {
+				String cName = f.getName();
+				// log.info("Creating column " + cName);
+				if (f.getAnnotation(Column.class).indexed())
+					columns.add(newIndexedColumnDef(cName, cl.getSimpleName()
+							+ cName, ComparatorType.UTF8TYPE.getTypeName()));
+			}
+
+			List<ColumnDefinition> columnMetadata = ThriftColumnDef
+					.fromThriftList(columns);
+
 			ColumnFamilyDefinition cfdef = createColumnFamilyDefinition(
 					keyspace.getKeyspaceName(), 
 					cl.getSimpleName(), 
@@ -331,19 +363,20 @@ public class EntityManagerHectorImpl implements EntityManager {
 					columnMetadata);
 			cfdef.setKeyValidationClass(UUIDType.class.getSimpleName());
 
-			
 			cluster.addColumnFamily(cfdef);
 			return true;
 		}
 		return false;
 	}
-	
-	ColumnDef newIndexedColumnDef(String column_name, String indexName, String comparer) {
-	    ColumnDef cd = new ColumnDef(stringSerializer.toByteBuffer(column_name), comparer);
-	    cd.setIndex_name(indexName);
-	    cd.setIndex_type(IndexType.KEYS);
-	    return cd;
-	  }
+
+	ColumnDef newIndexedColumnDef(String column_name, String indexName,
+			String comparer) {
+		ColumnDef cd = new ColumnDef(
+				stringSerializer.toByteBuffer(column_name), comparer);
+		cd.setIndex_name(indexName);
+		cd.setIndex_type(IndexType.KEYS);
+		return cd;
+	}
 
 	@Override
 	public <T> boolean tableExists(Class<T> cl) {
@@ -368,7 +401,7 @@ public class EntityManagerHectorImpl implements EntityManager {
 		if (cl == null || isEntity(cl.getClass())) {
 			throw new IllegalArgumentException("object null or not an entity");
 		}
-		
+
 		if (tableExists(cl)) {
 			cluster.dropColumnFamily(keyspace.getKeyspaceName(),
 					cl.getSimpleName());
@@ -391,7 +424,7 @@ public class EntityManagerHectorImpl implements EntityManager {
 	public <T> List<T> listAll(Class<T> cl) {
 		return listAll(cl, false);
 	}
-	
+
 	private <T> T instantiateObject(Class<T> cl) {
 		T obj = null;
 		try {
@@ -489,7 +522,7 @@ public class EntityManagerHectorImpl implements EntityManager {
 							+ toUpperFirst(f.getName()), String.class);
 					method.invoke(result, value);
 				} catch (Exception e) {
-					//TODO log de dados perdidos, campo nao encontrado
+					// TODO log de dados perdidos, campo nao encontrado
 					e.printStackTrace();
 				}
 			}
@@ -530,7 +563,7 @@ public class EntityManagerHectorImpl implements EntityManager {
 		}
 		return key;
 	}
-	
+
 	private <T> ArrayList<Field> getColumnFields(Class<T> cl,
 			boolean justMinimal) {
 		ArrayList<Field> colFields = new ArrayList<Field>();
@@ -544,8 +577,8 @@ public class EntityManagerHectorImpl implements EntityManager {
 		}
 		return colFields;
 	}
-	
-	private <T> boolean isEntity(Class<T> cl){
+
+	private <T> boolean isEntity(Class<T> cl) {
 		return cl.isAnnotationPresent(Entity.class);
 	}
 
@@ -562,17 +595,18 @@ public class EntityManagerHectorImpl implements EntityManager {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
-//	To support IDs with different names than "key"
-//	private <T> String getKeyName(Class<T> cl){
-//		for(Field f : cl.getDeclaredFields()){
-//			if(f.isAnnotationPresent(Id.class)){
-//				return f.getName();
-//			}
-//		}
-//		throw new IllegalArgumentException("Class " + cl.getName() + " does not have ID");
-//	}
-	
+
+	// To support IDs with different names than "key"
+	// private <T> String getKeyName(Class<T> cl){
+	// for(Field f : cl.getDeclaredFields()){
+	// if(f.isAnnotationPresent(Id.class)){
+	// return f.getName();
+	// }
+	// }
+	// throw new IllegalArgumentException("Class " + cl.getName() +
+	// " does not have ID");
+	// }
+
 }

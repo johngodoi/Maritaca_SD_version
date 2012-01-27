@@ -1,4 +1,4 @@
-package br.unifesp.maritaca.web.jsf.home;
+package br.unifesp.maritaca.web.jsf.account;
 
 import java.io.Serializable;
 

@@ -5,7 +5,8 @@ import java.util.ResourceBundle;
 import javax.faces.context.FacesContext;
 
 public class Utils {
-	public static final String SPACEWILDCARD="_";
+	public static final String SPACEWILDCARD="_";	
+	public static final String EMAIL_REG_EXP=".+@.+\\.[a-z]+";
 	
 	public static String getCompactedVersion(String str){
 		if(str == null) return null;

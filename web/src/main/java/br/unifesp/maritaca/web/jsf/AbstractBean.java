@@ -9,6 +9,9 @@ import br.unifesp.maritaca.model.ModelFactory;
 import br.unifesp.maritaca.model.UserModel;
 
 public abstract class AbstractBean implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	
 	@Transient
 	protected FormAnswerModel formAnswCtrl;
 	@Transient
