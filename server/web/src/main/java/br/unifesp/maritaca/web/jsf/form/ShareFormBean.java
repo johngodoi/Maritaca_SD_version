@@ -1,7 +1,6 @@
 package br.unifesp.maritaca.web.jsf.form;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;

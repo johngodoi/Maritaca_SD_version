@@ -13,7 +13,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 
 import org.richfaces.component.UIPanelMenu;
-import org.richfaces.component.UITabPanel;
 import org.richfaces.event.ItemChangeEvent;
 import org.richfaces.event.ItemChangeListener;
 
@@ -113,7 +112,7 @@ public class Manager implements ItemChangeListener, Serializable {
 	public void processItemChange(ItemChangeEvent event)
 			throws AbortProcessingException {
 		setActiveModuleByString(event.getNewItem().getId());
-		FacesContext fc = FacesContext.getCurrentInstance();
+//		FacesContext fc = FacesContext.getCurrentInstance();
 
 //		UIViewRoot uivr = fc.getViewRoot();
 //		printtree(uivr, "|");
