@@ -2,6 +2,7 @@ package br.unifesp.maritaca.web.jsf.home;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 
 import br.unifesp.maritaca.core.User;
 
@@ -41,5 +42,10 @@ public class HomeBean {
 	
 	public String goHome(){
 		return "goHome";
+	}
+	
+	public String getLogout(){
+		FacesContext fc = FacesContext.getCurrentInstance();
+		return fc.getExternalContext().getRequestContextPath() + "/logout";
 	}
 }
