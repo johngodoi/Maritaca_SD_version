@@ -125,7 +125,6 @@ public class GroupsManagerBean implements Serializable {
 
 	public void removeEmail(String email){
 		clearAddEmailError();
-		
 		if(emailAdded(email)){
 			for(User u : getAddedUsers()){
 				if(u.getEmail().equals(email)){

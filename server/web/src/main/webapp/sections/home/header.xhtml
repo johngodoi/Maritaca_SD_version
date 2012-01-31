@@ -9,8 +9,8 @@
 	<h:commandLink action="#{accountManagerBean.useCurrentUser}">
 		<h:graphicImage value="#{resource['img:settings_button.png']}" />
 	</h:commandLink>
-	<h:commandLink action="#{currentUserBean.logout}">
+	<h:outputLink value="#{homeBean.logout}">
 		<h:graphicImage value="#{resource['img:logout_button.png']}" />
-	</h:commandLink>
+	</h:outputLink>
 </h:form>
 </html>
