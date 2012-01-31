@@ -14,18 +14,18 @@
 	</composite:interface>
 	<composite:implementation>
 		<h:dataTable value="#{listFormsBean.forms}" var="aForm" width="100%"
-			columnClasses="columnClass1, columnClass1, columnClass1" cellspacing="0"
-			id="listforms">
+			columnClasses="columnClass1, columnClass1, columnClass1"
+			cellspacing="0" id="listforms">
 			<f:facet name="header">#{msgs.form_list}</f:facet>
 			<h:column>
 				<f:facet name="header">
 					<a4j:commandLink value="#{msgs.form_list_titleHeader}"
-						action="#{listFormsBean.sortByName}" render="listforms, sorted">
+						action="#{listFormsBean.sortByName}" render="listforms">
 					</a4j:commandLink>
 				</f:facet>
 				<a4j:commandLink value="#{aForm.title}"
 					action="#{manager.activeModAndSub('Forms', 'formEditor')}"
-					render="#{manager.activeModule.id}">
+					render="menuAndContent" execute="@form">
 					<f:setPropertyActionListener target="#{editFormBean.form}"
 						value="#{aForm}" />
 					<f:setPropertyActionListener target="#{editFormBean.newForm}"
@@ -53,7 +53,7 @@
 					<f:facet name="label">
 						<h:graphicImage value="#{resource['img:down.png']}" />
 					</f:facet>
-					<rich:menuItem render="#{manager.activeModule.id}"
+					<rich:menuItem render="menuAndContent"
 						icon="#{resource['img:view_form.png']}"
 						label="#{msgs.commons_view}"
 						action="#{manager.activeModAndSub('Forms', 'formEditor')}">
@@ -64,7 +64,7 @@
 						<f:setPropertyActionListener target="#{editFormBean.editForm}"
 							value="false" />
 					</rich:menuItem>
-					<rich:menuItem render="mainForm:#{manager.activeModule.id}"
+					<rich:menuItem render="menuAndContent"
 						icon="#{resource['img:edit_form.png']}"
 						label="#{msgs.commons_edit}"
 						action="#{manager.activeModAndSub('Forms', 'formEditor')}">
@@ -84,8 +84,8 @@
 					</rich:menuItem>
 
 					<rich:menuItem icon="#{resource['img:remove.png']}"
-						render="#{manager.activeModule.id}_panelContent" 
-						label="#{msgs.commons_delete}" action="#{editFormBean.deleteForm}"
+						render="panelContent" label="#{msgs.commons_delete}"
+						action="#{editFormBean.deleteForm}"
 						actionListener="#{listFormsBean.listOwnFormsChanged}">
 						<f:setPropertyActionListener target="#{editFormBean.form}"
 							value="#{aForm}" />
@@ -93,10 +93,10 @@
 					<rich:menuSeparator />
 					<!-- todo: check mode="server" in list answers, it must be ajax, but
 					it is not working in ajax mode -->
-					<rich:menuItem render="mainForm" mode="ajax"
-						icon="#{resource['img:view_form.png']}"
+					<rich:menuItem mode="ajax" icon="#{resource['img:view_form.png']}"
 						label="#{msgs.form_view_answers}"
-						action="#{manager.activeModAndSub('Answer', 'listAnswers')}">
+						action="#{manager.activeModAndSub('Answer', 'listAnswers')}"
+						onclick="#{rich:component('mainTab')}.switchToItem('Answer');	return false;">
 						<f:setPropertyActionListener target="#{listAnswersBean.form}"
 							value="#{aForm}" />
 					</rich:menuItem>
