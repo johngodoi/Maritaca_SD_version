@@ -8,7 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.validation.constraints.Pattern;
-//import javax.validation.constraints.Size;
+import javax.validation.constraints.Size;
 
 import br.unifesp.maritaca.core.Group;
 import br.unifesp.maritaca.core.GroupUser;
@@ -37,7 +37,7 @@ public class GroupsManagerBean implements Serializable {
 	@ManagedProperty("#{currentUserBean}")
 	private CurrentUserBean currentUserBean;
 	
-	//@Size(min=4) TODO: Enable validation
+	@Size(min=4,max=20)
 	private String groupName;
 	private String groupDescription;
 	
@@ -87,7 +87,9 @@ public class GroupsManagerBean implements Serializable {
 		
 		User selectedUser = findUserByEmail(getSelectedEmail());
 		if(selectedUser!=null){
-			getAddedUsers().add(selectedUser);
+		// Sucess!
+			clearAddEmailError();
+			getAddedUsers().add(selectedUser);			
 		} else{
 			setAddEmailError(Utils.getMessageFromResourceProperties(GROUP_ADD_ERROR_USER_NOT_FOUND));
 		}
@@ -122,6 +124,8 @@ public class GroupsManagerBean implements Serializable {
 	}
 
 	public void removeEmail(String email){
+		clearAddEmailError();
+		
 		if(emailAdded(email)){
 			for(User u : getAddedUsers()){
 				if(u.getEmail().equals(email)){
@@ -130,6 +134,10 @@ public class GroupsManagerBean implements Serializable {
 				}
 			}
 		}
+	}
+
+	private void clearAddEmailError() {
+		setAddEmailError("");		
 	}
 
 	public List<String> usersStartingWith(String startingString) {

@@ -13,21 +13,25 @@
 	<composite:interface>
 	</composite:interface>
 	<composite:implementation>
-			<h:outputText value="#{msgs.group_users}:" />
-			<rich:panel>
-				<h:panelGrid columns="3">
-					<rich:autocomplete
-						autocompleteMethod="#{groupsManagerBean.usersStartingWith}"
-						mode="cachedAjax" value="#{groupsManagerBean.selectedEmail}"
-						id="selectedEmail" />
-					<a4j:commandButton value="#{msgs.group_add_user_button}"
-						action="#{groupsManagerBean.addEmail}"
-						execute="selectedEmail"
-						render="emailList addEmailError"/>
-					<h:outputText styleClass="error" id="addEmailError"
-						value="#{groupsManagerBean.addEmailError}" />
-				</h:panelGrid>
-			</rich:panel>
+		<h:panelGrid columns="1">
+			<h:panelGrid columns="5">
+				<h:outputText value="#{msgs.group_users}:" />
+				<rich:autocomplete
+					autocompleteMethod="#{groupsManagerBean.usersStartingWith}"
+					mode="cachedAjax" value="#{groupsManagerBean.selectedEmail}"
+					minChars="4" id="selectedEmail">
+					<rich:validator />
+				</rich:autocomplete>
+
+				<a4j:commandButton value="#{msgs.group_add_user_button}"
+					action="#{groupsManagerBean.addEmail}" execute="selectedEmail"
+					render="emailList addEmailError" />
+
+				<h:outputText styleClass="error" id="addEmailError"
+					value="#{groupsManagerBean.addEmailError}" />
+
+				<rich:message for="selectedEmail" />
+			</h:panelGrid>
 
 			<!-- Added Group Users -->
 			<rich:panel>
@@ -36,10 +40,10 @@
 						#{email}
 						<a4j:commandButton value="-" type="button"
 						action="#{groupsManagerBean.removeEmail(email)}"
-						render="emailList" />
+						render="emailList addEmailError" immediate="true" />
 				</rich:list>
 			</rich:panel>
-			<h:outputText />
+		</h:panelGrid>
 	</composite:implementation>
 </body>
 </html>

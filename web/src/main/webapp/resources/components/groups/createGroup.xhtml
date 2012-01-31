@@ -1,13 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:composite="http://java.sun.com/jsf/composite"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:rich="http://richfaces.org/rich"
-	xmlns:a4j="http://richfaces.org/a4j"
-	xmlns:forms="http://java.sun.com/jsf/composite/components/forms"
+	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:groups="http://java.sun.com/jsf/composite/components/groups"
 	xmlns:util="http://java.sun.com/jsf/composite/components/util">
 <head>
@@ -18,18 +14,16 @@
 		<composite:attribute name="submodule" required="true" />
 	</composite:interface>
 	<composite:implementation>
-		<h:panelGrid>
-			<groups:nameField />
-
-			<groups:descriptionField />
-
-			<groups:allowUsersField />
-
-			<groups:usersField />
-
-			<util:saveCancelButtons save="#{groupsManagerBean.save()}"
-				cancel="#{groupsManagerBean.cancel()}" />				
-		</h:panelGrid>
+		<h:form>
+			<rich:panel>
+				<groups:nameField />
+				<groups:descriptionField />
+				<groups:allowUsersField />
+				<groups:usersField />
+				<util:saveCancelButtons save="#{groupsManagerBean.save()}"
+					                    cancel="#{groupsManagerBean.cancel()}" />
+			</rich:panel>
+		</h:form>
 	</composite:implementation>
 </body>
 </html>

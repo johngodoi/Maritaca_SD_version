@@ -16,14 +16,14 @@
 			<h:outputText value="#{msgs.group_name}:" />
 			<h:inputText value="#{groupsManagerBean.groupName}" id="groupName">
 				<f:ajax event="blur" render="groupExistsError" />
-				<!-- TODO: Enable client-side validation with richfaces -->
-				<!-- <rich:validator />  -->
+				<rich:validator />
 			</h:inputText>
-			<!-- <rich:message for="groupName" /> -->
-			<h:outputText
+			<h:panelGrid columns="2">
+				<rich:message for="groupName" />
+				<h:outputText
 					value="#{groupsManagerBean.registeredGroupName() ? msgs.group_name_already_used : ''}"
-					id="groupExistsError"
-					styleClass="error" />
+					id="groupExistsError" styleClass="error" />
+			</h:panelGrid>
 		</h:panelGrid>
 	</composite:implementation>
 </body>
