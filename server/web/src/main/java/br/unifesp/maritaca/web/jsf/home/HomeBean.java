@@ -43,7 +43,7 @@ public class HomeBean {
 	public String goHome(){
 		return "goHome";
 	}
-	
+
 	public String getLogout(){
 		FacesContext fc = FacesContext.getCurrentInstance();
 		return fc.getExternalContext().getRequestContextPath() + "/logout";
