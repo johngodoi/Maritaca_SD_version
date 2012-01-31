@@ -274,4 +274,12 @@ public class UserModelImpl implements UserModel, Serializable {
 		
 		return entityManager.persist(groupUser);
 	}
+
+	@Override
+	public boolean removeGroup(Group group) {
+		if(entityManager == null || group == null || group.getKey() == null){
+			return false;
+		}		
+		return entityManager.delete(group);
+	}
 }

@@ -14,16 +14,14 @@
 		<composite:attribute name="submodule" required="true" />
 	</composite:interface>
 	<composite:implementation>
-		<h:form>
-			<rich:panel>
-				<groups:nameField />
-				<groups:descriptionField />
-				<groups:allowUsersField />
-				<groups:usersField />
-				<util:saveCancelButtons save="#{groupsManagerBean.save()}"
-					                    cancel="#{groupsManagerBean.cancel()}" />
-			</rich:panel>
-		</h:form>
+		<rich:panel>
+			<groups:nameField />
+			<groups:descriptionField />
+			<groups:allowUsersField />
+			<groups:usersField />
+			<util:saveCancelButtons save="#{groupsManagerBean.save()}"
+				cancel="#{groupsManagerBean.cancel()}" />
+		</rich:panel>
 	</composite:implementation>
 </body>
 </html>

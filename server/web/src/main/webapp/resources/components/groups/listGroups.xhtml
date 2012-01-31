@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<composite:interface>
+		<composite:attribute name="submodule" required="true" />
+	</composite:interface>
+
+	<composite:implementation>
+			<rich:dataTable value="#{listGroupsBean.myGroups}" var="aGroup" id="myGroupTable">
+				<f:facet name="header">#{msgs.group_list_header}</f:facet>
+
+				<rich:column>
+					<f:facet name="header">#{msgs.group_list_name}</f:facet>				
+					#{aGroup.name}
+				</rich:column>
+				
+				<rich:column>
+					<f:facet name="header">#{msgs.group_list_description}</f:facet>				
+					#{aGroup.description}
+				</rich:column>
+				
+				<rich:column>
+					<f:facet name="header">#{msgs.group_list_owner}</f:facet>				
+					#{aGroup.owner.email}
+				</rich:column>
+
+				<rich:column>
+					<f:facet name="header">#{msgs.group_list_options}</f:facet>
+					<rich:dropDownMenu mode="ajax" styleClass="listItemOption">
+						<f:facet name="label">
+							<h:graphicImage value="#{resource['img:down.png']}" />
+						</f:facet>
+						<!-- Leave Group -->	
+						<rich:menuItem
+							icon="#{resource['img:down.png']}"
+							label="#{msgs.group_list_options_leave}" />
+						<!-- Edit Group -->
+						<rich:menuItem
+							icon="#{resource['img:edit_form.png']}"
+							label="#{msgs.group_list_options_edit}" />	
+						<!-- Remove Group -->
+						<rich:menuItem
+							icon="#{resource['img:remove.png']}"
+							label="#{msgs.group_list_options_remove}"
+							action="#{listGroupsBean.removeGroup(aGroup)}"
+							id="#{aGroup.key.toString()}_remove">
+							<f:ajax render="myGroupTable" event="click" execute="#{aGroup.key.toString()}_remove"/>
+						</rich:menuItem>							
+					</rich:dropDownMenu>
+				</rich:column>
+			</rich:dataTable>
+	</composite:implementation>
+</ui:composition>
