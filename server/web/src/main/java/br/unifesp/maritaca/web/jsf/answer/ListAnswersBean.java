@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
 
 @ManagedBean
+@ViewScoped
 public class ListAnswersBean extends AbstractBean {
 	private static final long serialVersionUID = 1L;
 	private Form form;

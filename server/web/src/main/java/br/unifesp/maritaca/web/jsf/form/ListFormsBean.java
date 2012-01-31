@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 
 import br.unifesp.maritaca.core.Form;
@@ -11,6 +12,7 @@ import br.unifesp.maritaca.web.jsf.AbstractBean;
 import br.unifesp.maritaca.web.jsf.account.CurrentUserBean;
 
 @ManagedBean
+@ViewScoped
 public class ListFormsBean extends AbstractBean {
 	private static final long serialVersionUID = 1L;
 	private Collection<Form> forms;
