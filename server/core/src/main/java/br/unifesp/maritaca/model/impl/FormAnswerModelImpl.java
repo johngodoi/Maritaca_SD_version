@@ -4,7 +4,6 @@ package br.unifesp.maritaca.model.impl;
 import static br.unifesp.maritaca.util.Utils.verifyEM;
 import static br.unifesp.maritaca.util.Utils.verifyEntity;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,10 +27,7 @@ import br.unifesp.maritaca.persistence.EntityManager;
 import br.unifesp.maritaca.util.UserLocator;
 import br.unifesp.maritaca.util.Utils;
 
-public class FormAnswerModelImpl implements FormAnswerModel, Serializable {
-
-	private static final long serialVersionUID = 1L;
-	
+public class FormAnswerModelImpl implements FormAnswerModel {
 	private EntityManager entityManager;
 	private UserModel userModel;
 	private User currentUser;
