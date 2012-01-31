@@ -9,6 +9,12 @@ import br.unifesp.maritaca.core.GroupUser;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.EntityManager;
 
+/**
+ * Interface responsible for specifying user administration operations used by the
+ * web module to interact with the persistence layer. <br>
+ * This interface contains methods related to both users and groups.
+ * @author tiagobarabasz
+ */
 public interface UserModel {
 	boolean saveUser(User user);
 
@@ -25,6 +31,13 @@ public interface UserModel {
 	Group getGroup(UUID uuid);
 	
 	boolean saveGroup(Group group);
+	
+	/**
+	 * Removes the group passed as parameter.
+	 * @param group
+	 * @return true if successful, false otherwise
+	 */
+	boolean removeGroup(Group group);
 	
 	/**
 	 * Search for the group with the given name. Returns null

@@ -13,8 +13,8 @@ import javax.validation.constraints.Size;
 import br.unifesp.maritaca.core.Group;
 import br.unifesp.maritaca.core.GroupUser;
 import br.unifesp.maritaca.core.User;
-import br.unifesp.maritaca.model.ModelFactory;
 import br.unifesp.maritaca.model.UserModel;
+import br.unifesp.maritaca.web.jsf.AbstractBean;
 import br.unifesp.maritaca.web.jsf.account.CurrentUserBean;
 import br.unifesp.maritaca.web.utils.Utils;
 
@@ -25,7 +25,7 @@ import br.unifesp.maritaca.web.utils.Utils;
  */
 @ManagedBean
 @ViewScoped
-public class GroupsManagerBean implements Serializable {
+public class GroupsManagerBean extends AbstractBean implements Serializable {
 
 	/* Error messages resources */
 	private static final String GROUP_ADD_ERROR_USER_NOT_FOUND = "group_add_error_user_not_found";
@@ -50,6 +50,7 @@ public class GroupsManagerBean implements Serializable {
 	private String addEmailError;
 
 	public GroupsManagerBean() {
+		super(false,true);
 		emptyGroup();
 	}
 
@@ -65,7 +66,7 @@ public class GroupsManagerBean implements Serializable {
 	 * @return true if there is, false otherwise
 	 */
 	public boolean registeredGroupName() {
-		UserModel userModel = ModelFactory.getInstance().createUserModel();
+		UserModel userModel = super.userCtrl;
 		if(userModel.searchGroupByName(getGroupName())==null){
 			return false;
 		} else {
@@ -117,10 +118,8 @@ public class GroupsManagerBean implements Serializable {
 		return addedEmails;
 	}
 
-	private User findUserByEmail(String selectedEmail) {
-		UserModel userModel = ModelFactory.getInstance().createUserModel();
-		
-		return userModel.findUserByEmail(selectedEmail);
+	private User findUserByEmail(String selectedEmail) {		
+		return super.userCtrl.findUserByEmail(selectedEmail);
 	}
 
 	public void removeEmail(String email){
@@ -140,7 +139,7 @@ public class GroupsManagerBean implements Serializable {
 	}
 
 	public List<String> usersStartingWith(String startingString) {
-		UserModel userModel = ModelFactory.getInstance().createUserModel();
+		UserModel userModel = super.userCtrl;
 		List<String> userEmails = new ArrayList<String>();
 
 		for (User u : userModel.usersStartingWith(startingString)) {
@@ -158,11 +157,9 @@ public class GroupsManagerBean implements Serializable {
 	 * @return Navigation string
 	 */
 	public String save() {
-		String  returnString = null;
-		Boolean error        = false;
-		
-		ModelFactory modelFactory = ModelFactory.getInstance();
-		UserModel userModel = modelFactory.createUserModel();
+		String    returnString = null;
+		Boolean   error        = false;		
+		UserModel userModel    = super.userCtrl;
 								
 		Group group = createGroupObj();
 		if (userModel.saveGroup(group)) {

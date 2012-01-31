@@ -34,6 +34,10 @@
 				<groups:createGroup submodule="#{cc.attrs.submodule}" />
 			</c:when>
 			
+			<c:when test="#{cc.attrs.submodule.component eq 'listGroups'}">
+				<groups:listGroups submodule="#{cc.attrs.submodule}" />
+			</c:when>
+						
 			<c:otherwise> ${msgs.commons_emptyComponent}</c:otherwise>
 		</c:choose>
 	</composite:implementation>
