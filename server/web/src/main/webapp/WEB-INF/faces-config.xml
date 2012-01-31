@@ -7,6 +7,9 @@
 			<base-name>br.unifesp.maritaca.web.commons.msg.messages</base-name>
 			<var>msgs</var>
 		</resource-bundle>
+		<resource-bundle>
+			<base-name>ValidationMessages</base-name>
+		</resource-bundle>
 		<!-- The following tag is used to override default messages: -->
 		<message-bundle>br.unifesp.maritaca.web.commons.msg.messages</message-bundle>
 	</application>

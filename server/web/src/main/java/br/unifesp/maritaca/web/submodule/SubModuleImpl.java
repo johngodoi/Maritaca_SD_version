@@ -1,10 +1,14 @@
 package br.unifesp.maritaca.web.submodule;
 
+import java.io.Serializable;
+
 import br.unifesp.maritaca.web.module.Module;
 import br.unifesp.maritaca.web.utils.Utils;
 
-public class SubModuleImpl implements SubModule {
+public class SubModuleImpl implements SubModule, Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private String title;
 	private String component;
 	private Module parent;
