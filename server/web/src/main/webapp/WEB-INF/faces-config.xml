@@ -10,4 +10,7 @@
 		<!-- The following tag is used to override default messages: -->
 		<message-bundle>br.unifesp.maritaca.web.commons.msg.messages</message-bundle>
 	</application>
+<!-- 	<lifecycle> -->
+<!-- 		<phase-listener>br.unifesp.maritaca.web.utils.LifeCycleListener</phase-listener> -->
+<!-- 	</lifecycle> -->
 </faces-config>
