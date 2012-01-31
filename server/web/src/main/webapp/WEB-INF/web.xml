@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0"?>
 <web-app id="WebApp_ID" version="2.5"
 	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -86,4 +87,93 @@
 	<welcome-file-list>
 		<welcome-file>faces/views/login.xhtml</welcome-file>
 	</welcome-file-list>
+=======
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <display-name>Archetype Created Web Application</display-name>
+  <context-param>
+    <param-name>com.prime.facestrace.DISABLE_TRACE</param-name>
+    <param-value>false</param-value>
+  </context-param>
+  <context-param>
+    <param-name>com.sun.faces.enableMissingResourceLibraryDetection</param-name>
+    <param-value>true</param-value>
+  </context-param>
+  <context-param>
+    <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+    <param-value>true</param-value>
+  </context-param>
+  <context-param>
+    <param-name>javax.faces.PARTIAL_STATE_SAVING</param-name>
+    <param-value>false</param-value>
+  </context-param>
+  <context-param>
+    <param-name>javax.faces.PROJECT_STAGE</param-name>
+    <param-value>Development</param-value>
+  </context-param>
+  <context-param>
+    <param-name>javax.faces.SKIP_COMMENTS</param-name>
+    <param-value>true</param-value>
+  </context-param>
+  <context-param>
+    <param-name>org.richfaces.CONTROL_SKINNING</param-name>
+    <param-value>enable</param-value>
+  </context-param>
+  <context-param>
+    <param-name>org.richfaces.skin</param-name>
+    <param-value>blueSky</param-value>
+  </context-param>
+  <servlet>
+    <servlet-name>Jersey REST Service</servlet-name>
+    <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+    <init-param>
+      <param-name>com.sun.jersey.config.property.packages</param-name>
+      <param-value>br.unifesp.maritaca.ws</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet>
+    <servlet-name>MaritacaInitServlet</servlet-name>
+    <servlet-class>br.unifesp.maritaca.web.servlet.MaritacaInitServlet</servlet-class>
+    <init-param>
+      <param-name>cluster</param-name>
+      <param-value>localhost:9160</param-value>
+    </init-param>
+    <init-param>
+      <param-name>keyspace</param-name>
+      <param-value>Maritaca</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet>
+    <servlet-name>Faces Servlet</servlet-name>
+    <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Faces Servlet</servlet-name>
+    <url-pattern>/faces/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Jersey REST Service</servlet-name>
+    <url-pattern>/ws/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>MaritacaInitServlet</servlet-name>
+    <url-pattern>/admin/MaritacaInit</url-pattern>
+  </servlet-mapping>
+  <welcome-file-list>
+    <welcome-file>faces/views/login.xhtml</welcome-file>
+  </welcome-file-list>
+  <servlet>
+    <description></description>
+    <display-name>LogoutServlet</display-name>
+    <servlet-name>LogoutServlet</servlet-name>
+    <servlet-class>br.unifesp.maritaca.web.servlet.LogoutServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>LogoutServlet</servlet-name>
+    <url-pattern>/logout</url-pattern>
+  </servlet-mapping>
+>>>>>>> branch 'master' of ssh://emigueltriana@git.code.sf.net/p/maritaca/gcode
 </web-app>

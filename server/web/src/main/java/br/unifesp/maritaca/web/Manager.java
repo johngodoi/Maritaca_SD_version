@@ -105,7 +105,16 @@ public class Manager implements Serializable {
 
 	public void tabChanged(ItemChangeEvent event) {
 		setActiveModuleByString(event.getNewItem().getId());
-	}
+
+//		FacesContext fc = FacesContext.getCurrentInstance();
+//		UIViewRoot uivr = fc.getViewRoot();
+//		printtree(uivr, "|");
+//		
+//		UITabPanel mainTab = (UITabPanel) uivr.findComponent("mainForm:mainTab");
+//		mainTab.getChildren().clear();
+//		
+//		printtree(uivr, "|");
+		}
 
 	public void activeModAndSub(String mod, String submod) {
 //		boolean modChanged = false;
