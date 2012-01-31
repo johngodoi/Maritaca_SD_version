@@ -19,6 +19,17 @@
 		<param-name>org.richfaces.CONTROL_SKINNING</param-name>
 		<param-value>enable</param-value>
 	</context-param>
+
+	<context-param>
+		<param-name>org.richfaces.LoadScriptStrategy</param-name>
+		<param-value>ALL</param-value>
+	</context-param>
+	<context-param>
+		<param-name>org.richfaces.LoadStyleStrategy</param-name>
+		<param-value>ALL</param-value>
+	</context-param>
+
+
 	<context-param>
 		<param-name>org.richfaces.skin</param-name>
 		<param-value>blueSky</param-value>
@@ -32,8 +43,8 @@
 		<param-value>false</param-value>
 	</context-param>
 	<context-param>
-	<param-name>com.sun.faces.enableMissingResourceLibraryDetection</param-name>
-	<param-value>true</param-value>
+		<param-name>com.sun.faces.enableMissingResourceLibraryDetection</param-name>
+		<param-value>true</param-value>
 	</context-param>
 	<servlet>
 		<servlet-name>Jersey REST Service</servlet-name>
