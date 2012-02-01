@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.richfaces.component.UIInplaceSelect;
 
 import br.unifesp.maritaca.access.AccessLevel;
-import br.unifesp.maritaca.access.AccessLevelFactory;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
@@ -101,12 +100,12 @@ public class ShareFormBean extends AbstractBean{
 		this.formPermissions = formPermissions;
 	}
 
-	public List<AccessLevel> getAccessLevels() {
-		return AccessLevelFactory.getAccessLevels();
+	public AccessLevel[] getAccessLevels() {
+		return AccessLevel.values();
 	}
 
 	public void formAccessChanged(ValueChangeEvent event) {
-		String newValue = (String) event.getNewValue();
+		AccessLevel newValue = (AccessLevel) event.getNewValue();
 		
 		if (newValue.equals(event.getOldValue().toString()))
 			return;
@@ -117,7 +116,7 @@ public class ShareFormBean extends AbstractBean{
 	}
 	
 	public void answAccessChanged(ValueChangeEvent event) {
-		String newValue = (String) event.getNewValue();
+		AccessLevel newValue = (AccessLevel) event.getNewValue();
 			
 		if (newValue.equals(event.getOldValue().toString()))
 			return;

@@ -1,6 +1,5 @@
 package br.unifesp.maritaca.model.impl;
 
-
 import static br.unifesp.maritaca.util.Utils.verifyEM;
 import static br.unifesp.maritaca.util.Utils.verifyEntity;
 
@@ -12,8 +11,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import br.unifesp.maritaca.access.PrivateAccess;
-import br.unifesp.maritaca.access.operation.Edit;
+import br.unifesp.maritaca.access.AccessLevel;
 import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Form;
@@ -75,8 +73,7 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 				form.setUrl(getUniqueUrl());
 			} else {
 				// check permissions for updating
-				hasPermission = currentUserHasPermission(form,
-						Edit.getInstance());
+				hasPermission = currentUserHasPermission(form, Operation.EDIT);
 			}
 
 			boolean result = false;
@@ -118,8 +115,8 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		FormPermissions formPer = new FormPermissions();
 		formPer.setForm(form);
 		formPer.setGroup(userModel.getAllUsersGroup());
-		formPer.setFormAccess(PrivateAccess.getInstance());
-		formPer.setAnswAccess(PrivateAccess.getInstance());
+		formPer.setFormAccess(AccessLevel.PRIVATE_ACCESS);
+		formPer.setAnswAccess(AccessLevel.PRIVATE_ACCESS);
 		return entityManager.persist(formPer);
 	}
 
@@ -164,7 +161,7 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 	}
 
 	// TODO In the future implement in the entitymanager
-	public Collection<Form> listAllFormsSortedbyName(User user){
+	public Collection<Form> listAllFormsSortedbyName(User user) {
 		Collection<Form> forms = listAllFormsMinimalByUser(user);
 		for (Form form : forms) {
 			form.setFlagToOrder(0);
@@ -172,9 +169,9 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		Collections.sort((List<Form>) forms);
 		return forms;
 	}
-	
+
 	// TODO In the future implement in the entitymanager
-	public Collection<Form> listAllFormsSortedbyDate(User user){
+	public Collection<Form> listAllFormsSortedbyDate(User user) {
 		Collection<Form> forms = listAllFormsMinimalByUser(user);
 		for (Form form : forms) {
 			form.setFlagToOrder(1);
@@ -182,7 +179,7 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		Collections.sort((List<Form>) forms);
 		return forms;
 	}
-	
+
 	@Override
 	public boolean saveAnswer(Answer response) {
 		verifyEM(entityManager);
@@ -190,7 +187,7 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		if (response == null)
 			throw new IllegalArgumentException("Response cannot be null");
 		verifyEntity(response.getUser());
-		
+
 		if (!entityManager.rowDataExists(User.class, response.getUser()
 				.getKey())) {
 			throw new IllegalArgumentException(
@@ -371,14 +368,14 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		verifyEntity(user);
 
 		Set<Form> forms = new HashSet<Form>();
-		//get groups where user is member
+		// get groups where user is member
 		Collection<GroupUser> groups = userModel.getGroupsByMember(user);
 		for (GroupUser gu : groups) {
-			//get all formpermissions in each group
+			// get all formpermissions in each group
 			Collection<FormPermissions> l1Forms = getFormPermissionsByGroup(gu
 					.getGroup());
 			for (FormPermissions fp : l1Forms) {
-				//get the form and add it if expdate > now
+				// get the form and add it if expdate > now
 				if (fp.getExpDate() > System.currentTimeMillis()) {
 					Form form = fp.getForm();
 					forms.add(form);
