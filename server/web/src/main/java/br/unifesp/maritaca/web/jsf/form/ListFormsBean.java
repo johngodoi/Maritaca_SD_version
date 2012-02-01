@@ -17,20 +17,20 @@ public class ListFormsBean extends AbstractBean {
 	private static final long serialVersionUID = 1L;
 	private Collection<Form> forms;
 	private Collection<Form> sharedForms;
-	private boolean updateList1;
+	private boolean updateList;
 
 	@ManagedProperty("#{currentUserBean}")
 	private CurrentUserBean currentUser;
 
 	public ListFormsBean() {
 		super(true, false);
-		setUpdateList1(false);
+		setUpdateList(false);
 	}
 
 	public Collection<Form> getForms() {
-		if(isUpdateList1()){
+		if(isUpdateList()){
 			updateListOwnForms();
-			setUpdateList1(false);
+			setUpdateList(false);
 		}
 		return forms;
 	}
@@ -73,7 +73,7 @@ public class ListFormsBean extends AbstractBean {
 	}
 
 	public void listOwnFormsChanged(ActionEvent evt) {
-		setUpdateList1(true);
+		setUpdateList(true);
 	}
 
 	private void updateListOwnForms() {
@@ -85,11 +85,12 @@ public class ListFormsBean extends AbstractBean {
 				true));
 	}
 
-	public boolean isUpdateList1() {
-		return updateList1;
+	public boolean isUpdateList() {
+		return updateList;
 	}
 
-	public void setUpdateList1(boolean updateList1) {
-		this.updateList1 = updateList1;
+	public void setUpdateList(boolean updateList) {
+		this.updateList = updateList;
 	}
+
 }

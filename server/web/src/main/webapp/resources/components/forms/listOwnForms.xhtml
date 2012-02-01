@@ -38,10 +38,10 @@
 			<h:column>
 				<f:facet name="header">
 					<a4j:commandLink value="#{msgs.form_list_creationDateHeader}"
-						render="listforms" action="#{listFormsBean.sortByDate}">
+						render="listforms, sorted" action="#{listFormsBean.sortByDate}">
 					</a4j:commandLink>
 				</f:facet>
-				<h:outputText value="#{aForm.creationDate}" />
+				<h:outputText value="#{aForm.creationDate}" styleClass="listItemOption"/>
 			</h:column>
 
 			<h:column>

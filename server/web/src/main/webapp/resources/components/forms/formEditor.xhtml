@@ -17,7 +17,9 @@
 	</composite:interface>
 	<composite:implementation>
 		<!-- TODO Temporary. This buttons will be created as separated components. -->
-		<h:commandButton value="#{msgs.form_update_button}" action="#{editFormBean.saveForm}" />
+		<h:commandButton value="#{msgs.form_update_button}" action="#{editFormBean.saveForm}" >
+			<f:setPropertyActionListener target="#{listFormsBean.updateList}" value="true" />
+		</h:commandButton>
 		<h:commandButton value="#{msgs.form_delete_button}" action="#{editFormBean.saveForm}" />
 		<h:commandButton value="#{msgs.form_cancel_button}" action="#{editFormBean.saveForm}" />
 		<h:commandButton value="#{msgs.form_import_button}" 

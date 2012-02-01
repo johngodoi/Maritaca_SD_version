@@ -160,8 +160,8 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		return entityManager.listAll(Form.class, true);
 	}
 
-	// TODO In the future implement in the entitymanager
-	public Collection<Form> listAllFormsSortedbyName(User user) {
+	// TODO In the future implement this on entitymanager
+	public Collection<Form> listAllFormsSortedbyName(User user){
 		Collection<Form> forms = listAllFormsMinimalByUser(user);
 		for (Form form : forms) {
 			form.setFlagToOrder(0);
@@ -169,9 +169,9 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		Collections.sort((List<Form>) forms);
 		return forms;
 	}
-
-	// TODO In the future implement in the entitymanager
-	public Collection<Form> listAllFormsSortedbyDate(User user) {
+	
+	// TODO In the future implement this on entitymanager
+	public Collection<Form> listAllFormsSortedbyDate(User user){
 		Collection<Form> forms = listAllFormsMinimalByUser(user);
 		for (Form form : forms) {
 			form.setFlagToOrder(1);
