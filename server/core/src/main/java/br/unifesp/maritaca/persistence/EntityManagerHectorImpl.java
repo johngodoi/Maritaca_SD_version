@@ -23,7 +23,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import me.prettyprint.cassandra.model.IndexedSlicesQuery;
-import me.prettyprint.cassandra.serializers.SerializerTypeInferer;
 import me.prettyprint.cassandra.serializers.StringSerializer;
 import me.prettyprint.cassandra.serializers.UUIDSerializer;
 import me.prettyprint.cassandra.service.CassandraHost;
@@ -64,9 +63,9 @@ public class EntityManagerHectorImpl implements EntityManager {
 		cluster = c;
 		keyspace = k;
 	}
-	
-	public static EntityManagerHectorImpl getInstance(Cluster c, Keyspace k){
-		if(instance == null){
+
+	public static EntityManagerHectorImpl getInstance(Cluster c, Keyspace k) {
+		if (instance == null) {
 			instance = new EntityManagerHectorImpl(c, k);
 		}
 		return instance;
@@ -116,7 +115,7 @@ public class EntityManagerHectorImpl implements EntityManager {
 			}
 
 			if (result != null) {
-				
+
 				HColumn column = getHColumn(f.getName(), result);
 				mutator.addInsertion(key, obj.getClass().getSimpleName(),
 						column);
@@ -131,33 +130,33 @@ public class EntityManagerHectorImpl implements EntityManager {
 
 		return true;
 	}
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private HColumn getHColumn(String columnname, Object obj){
-		//TODO select serializer by object type
-//		Serializer serializer = getObjectSerializer(obj);
-//		if(serializer == null || serializer instanceof ObjectSerializer){
-//			//serializer not found, setting default serializer to stringserializer
-//			obj = obj.toString();
-//			serializer = stringSerializer;
-//		}
-		
+	private HColumn getHColumn(String columnname, Object obj) {
+		// TODO select serializer by object type
+		// Serializer serializer = getObjectSerializer(obj);
+		// if(serializer == null || serializer instanceof ObjectSerializer){
+		// //serializer not found, setting default serializer to
+		// stringserializer
+		// obj = obj.toString();
+		// serializer = stringSerializer;
+		// }
+
 		Serializer serializer = stringSerializer;
 		obj = obj.toString();
-		
-		HColumn column = createColumn(columnname,
-				obj, stringSerializer, serializer);
+
+		HColumn column = createColumn(columnname, obj, stringSerializer,
+				serializer);
 		return column;
 	}
 
-//	@SuppressWarnings({ "rawtypes" })
-//	private <T> Serializer getObjectSerializer(T obj){
-//		Serializer serializer = null;
-//		serializer = SerializerTypeInferer.getSerializer(obj);
-//		return serializer;
-//	}
-	
-	
+	// @SuppressWarnings({ "rawtypes" })
+	// private <T> Serializer getObjectSerializer(T obj){
+	// Serializer serializer = null;
+	// serializer = SerializerTypeInferer.getSerializer(obj);
+	// return serializer;
+	// }
+
 	@Override
 	public <T> T find(Class<T> cl, UUID uuid, boolean justMinimal) {
 
@@ -217,21 +216,22 @@ public class EntityManagerHectorImpl implements EntityManager {
 		return true;
 	}
 
-	public <T> List<T> cRangeQuery(Class<T> cl, String field, String value ) {
+	public <T> List<T> cRangeQuery(Class<T> cl, String field, String value) {
 		RangeSlicesQuery<String, String, String> rangeSlicesQuery;
 		rangeSlicesQuery = createRangeSlicesQuery(keyspace, stringSerializer,
-						stringSerializer, stringSerializer);
+				stringSerializer, stringSerializer);
 		rangeSlicesQuery.setColumnFamily(cl.getSimpleName());
 		rangeSlicesQuery.setRange(value, "", false, 3);
-		
+
 		QueryResult<OrderedRows<String, String, String>> resultq;
 		resultq = rangeSlicesQuery.execute();
-		
+
 		List<T> result = new ArrayList<T>();
 
 		for (Row<String, String, String> line : resultq.get().getList()) {
 			T obj = instantiateObject(cl);
-			for (HColumn<String, String> column : line.getColumnSlice().getColumns()) {
+			for (HColumn<String, String> column : line.getColumnSlice()
+					.getColumns()) {
 				try {
 					setValue(obj, cl.getDeclaredField(column.getName()),
 							column.getValue());
@@ -266,26 +266,11 @@ public class EntityManagerHectorImpl implements EntityManager {
 				.execute();
 
 		for (Row<UUID, String, String> line : resultq.get().getList()) {
-			T obj = instantiateObject(cl);
-			setObjectKey(obj, line.getKey());
-
-			for (HColumn<String, String> column : line.getColumnSlice()
-					.getColumns()) {
-				try {
-					setValue(obj, cl.getDeclaredField(column.getName()),
-							column.getValue());
-				} catch (SecurityException e) {
-					throw new RuntimeException(e);
-				} catch (NoSuchFieldException e) {
-					throw new IllegalArgumentException(e);
-				}
-			}
-
-			result.add(obj);
+			addObjectFromRowLine(cl, false, line, result);
 		}
 		return result;
 	}
-	
+
 	@Override
 	public <T> List<T> listAll(Class<T> cl, boolean justMinimal) {
 		if (cl == null || isEntity(cl.getClass())) {
@@ -300,9 +285,9 @@ public class EntityManagerHectorImpl implements EntityManager {
 		RangeSlicesQuery<UUID, String, String> q = createRangeSlicesQuery(
 				keyspace, uuidSerializer, stringSerializer, stringSerializer);
 		q.setColumnFamily(cl.getSimpleName());
-		if(fields.size()>0){
+		if (fields.size() > 0) {
 			q.setColumnNames(fields.toArray(new String[fields.size()]));
-		}else{
+		} else {
 			q.setReturnKeysOnly();
 			keysOnly = true;
 		}
@@ -310,26 +295,31 @@ public class EntityManagerHectorImpl implements EntityManager {
 		QueryResult<OrderedRows<UUID, String, String>> resultq = q.execute();
 
 		for (Row<UUID, String, String> line : resultq.get().getList()) {
-			T obj = instantiateObject(cl);
-			setObjectKey(obj, line.getKey());
-			boolean ghost = true;
-			for (HColumn<String, String> column : line.getColumnSlice()
-					.getColumns()) {
-				try {
-					setValue(obj, cl.getDeclaredField(column.getName()),
-							column.getValue());
-					ghost = false;
-				} catch (SecurityException e) {
-					throw new RuntimeException(e);
-				} catch (NoSuchFieldException e) {
-					throw new IllegalArgumentException(e);
-				}
-			}
-			if (!ghost || keysOnly) {
-				result.add(obj);
-			}
+			addObjectFromRowLine(cl, keysOnly, line, result);
 		}
 		return result;
+	}
+
+	private <T> void addObjectFromRowLine(Class<T> cl, boolean keysOnly,
+			Row<UUID, String, String> line, List<T> result) {
+		T obj = instantiateObject(cl);
+		setObjectKey(obj, line.getKey());
+		boolean ghost = true;
+		for (HColumn<String, String> column : line.getColumnSlice()
+				.getColumns()) {
+			try {
+				setValue(obj, cl.getDeclaredField(column.getName()),
+						column.getValue());
+				ghost = false;
+			} catch (SecurityException e) {
+				throw new RuntimeException(e);
+			} catch (NoSuchFieldException e) {
+				throw new IllegalArgumentException(e);
+			}
+		}
+		if (!ghost || keysOnly) {
+			result.add(obj);
+		} 
 	}
 
 	public void addHost(String host, int port) {
@@ -357,10 +347,8 @@ public class EntityManagerHectorImpl implements EntityManager {
 					.fromThriftList(columns);
 
 			ColumnFamilyDefinition cfdef = createColumnFamilyDefinition(
-					keyspace.getKeyspaceName(), 
-					cl.getSimpleName(), 
-					ComparatorType.UTF8TYPE,
-					columnMetadata);
+					keyspace.getKeyspaceName(), cl.getSimpleName(),
+					ComparatorType.UTF8TYPE, columnMetadata);
 			cfdef.setKeyValidationClass(UUIDType.class.getSimpleName());
 
 			cluster.addColumnFamily(cfdef);
@@ -505,7 +493,7 @@ public class EntityManagerHectorImpl implements EntityManager {
 				method.invoke(result, new Boolean(value));
 			else if (f.getType() == UUID.class)
 				method.invoke(result, UUID.fromString(value));
-			if (f.getType() == Date.class){
+			if (f.getType() == Date.class) {
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yy hh:mm a");
 				Date date;
 				try {
@@ -514,8 +502,7 @@ public class EntityManagerHectorImpl implements EntityManager {
 				} catch (ParseException e) {
 					System.out.println("Date not set");
 				}
-			}
-			else {
+			} else {
 				try {
 					// alternative method with String
 					method = getMethod(result, "set"

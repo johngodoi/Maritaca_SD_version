@@ -13,15 +13,17 @@
 		<composite:attribute name="submodule" required="true" />
 	</composite:interface>
 	<composite:implementation>
-	<!-- TODO: NEEDS TO PRESENT CORRECTLY THE OPTIONS FOR SHARED FORMS -->
-		<h:dataTable value="#{listFormsBean.sharedForms}" var="aForm"
-			width="100%" columnClasses="columnClass1, columnClass1"
-			cellspacing="0">
-			<f:facet name="header">#{msgs.form_shared_list}</f:facet>
+		<h:dataTable value="#{listFormsBean.sharedForms}" var="aForm" width="100%"
+			columnClasses="columnClass1, columnClass1, columnClass1"
+			cellspacing="0" id="listforms">
+			<f:facet name="header">#{msgs.form_list}</f:facet>
 			<h:column>
+				<f:facet name="header">
+					<h:outputText value="#{msgs.form_list_titleHeader}"/>
+				</f:facet>
 				<a4j:commandLink value="#{aForm.title}"
-					action="#{manager.activeModAndSub('forms', 'formEditor')}"
-					render="#{manager.activeModule.id}">
+					action="#{manager.activeModAndSub('Forms', 'formEditor')}"
+					render="menuAndContent" execute="@form">
 					<f:setPropertyActionListener target="#{editFormBean.form}"
 						value="#{aForm}" />
 					<f:setPropertyActionListener target="#{editFormBean.newForm}"
@@ -30,15 +32,27 @@
 						value="false" />
 				</a4j:commandLink>
 			</h:column>
+
 			<h:column>
+				<f:facet name="header">
+					<h:outputText value="#{msgs.form_list_creationDateHeader}"/>
+				</f:facet>
+				<h:outputText value="#{aForm.creationDate}" styleClass="listItemOption"/>
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">
+					<h:outputText value="#{msgs.form_list_optionsHeader}"/>
+				</f:facet>
+
 				<rich:dropDownMenu mode="ajax" styleClass="listItemOption">
 					<f:facet name="label">
 						<h:graphicImage value="#{resource['img:down.png']}" />
 					</f:facet>
-					<rich:menuItem render="#{manager.activeModule.id}"
+					<rich:menuItem render="menuAndContent"
 						icon="#{resource['img:view_form.png']}"
 						label="#{msgs.commons_view}"
-						action="#{manager.activeModAndSub('forms', 'formEditor')}">
+						action="#{manager.activeModAndSub('Forms', 'formEditor')}">
 						<f:setPropertyActionListener target="#{editFormBean.form}"
 							value="#{aForm}" />
 						<f:setPropertyActionListener target="#{editFormBean.newForm}"
@@ -46,10 +60,10 @@
 						<f:setPropertyActionListener target="#{editFormBean.editForm}"
 							value="false" />
 					</rich:menuItem>
-					<rich:menuItem render="mainForm:#{manager.activeModule.id}"
+					<rich:menuItem render="menuAndContent"
 						icon="#{resource['img:edit_form.png']}"
 						label="#{msgs.commons_edit}"
-						action="#{manager.activeModAndSub('forms', 'formEditor')}">
+						action="#{manager.activeModAndSub('Forms', 'formEditor')}">
 						<f:setPropertyActionListener target="#{editFormBean.form}"
 							value="#{aForm}" />
 						<f:setPropertyActionListener target="#{editFormBean.newForm}"
@@ -66,18 +80,20 @@
 					</rich:menuItem>
 
 					<rich:menuItem icon="#{resource['img:remove.png']}"
-						render="#{manager.activeModule.id}_panelContent"
-						label="#{msgs.commons_delete}" action="#{editFormBean.deleteForm}">
+						render="panelContent" label="#{msgs.commons_delete}"
+						action="#{editFormBean.deleteForm}"
+						actionListener="#{listFormsBean.listOwnFormsChanged}"
+						rendered="#{listFormsBean.canDelete(aForm)}">
 						<f:setPropertyActionListener target="#{editFormBean.form}"
 							value="#{aForm}" />
 					</rich:menuItem>
 					<rich:menuSeparator />
 					<!-- todo: check mode="server" in list answers, it must be ajax, but
 					it is not working in ajax mode -->
-					<rich:menuItem render="mainForm" mode="server"
-						icon="#{resource['img:view_form.png']}"
+					<rich:menuItem mode="ajax" icon="#{resource['img:view_form.png']}"
 						label="#{msgs.form_view_answers}"
-						action="#{manager.activeModAndSub('answer', 'listAnswers')}">
+						action="#{manager.activeModAndSub('Answer', 'listAnswers')}"
+						onclick="#{rich:component('mainTab')}.switchToItem('Answer');	return false;">
 						<f:setPropertyActionListener target="#{listAnswersBean.form}"
 							value="#{aForm}" />
 					</rich:menuItem>

@@ -21,10 +21,13 @@ public class FormPermissions {
 	@Minimal
 	private Group group = new Group();
 	@Column
+	@Minimal
 	private Long expDate;
 	@Column
+	@Minimal
 	private AccessLevel formAccess;
 	@Column
+	@Minimal
 	private AccessLevel answAccess;
 	
 	public FormPermissions() {

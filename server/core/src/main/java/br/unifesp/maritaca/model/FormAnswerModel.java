@@ -15,7 +15,7 @@ import br.unifesp.maritaca.persistence.EntityManager;
 public interface FormAnswerModel {
 	boolean saveForm(Form form);
 
-	Form getForm(UUID uid);
+	Form getForm(UUID uid, boolean minimal);
 
 	void setEntityManager(EntityManager em);
 

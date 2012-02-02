@@ -13,6 +13,7 @@ public class Group {
 	@Id
 	private UUID key;
 	@Column(indexed = true)
+	@Minimal
 	private User owner;
 	
 	@Column(indexed=true)
