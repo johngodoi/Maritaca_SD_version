@@ -7,6 +7,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 
+import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
 import br.unifesp.maritaca.web.jsf.account.CurrentUserBean;
@@ -91,6 +92,15 @@ public class ListFormsBean extends AbstractBean {
 
 	public void setUpdateList(boolean updateList) {
 		this.updateList = updateList;
+	}
+	
+	/**
+	 * True if current user can delete the form
+	 * @param form
+	 * @return
+	 */
+	public boolean canDelete(Form form){
+		return formAnswCtrl.currentUserHasPermission(form, Operation.DELETE);
 	}
 
 }

@@ -32,6 +32,7 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 
 	public FormAnswerModelImpl() {
 		currentUser = UserLocator.getCurrentUser();
+		//verifyEntity(currentUser);
 	}
 
 	public EntityManager getEntityManager() {
@@ -136,10 +137,9 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 	}
 
 	@Override
-	public Form getForm(UUID uid) {
+	public Form getForm(UUID uid, boolean minimal) {
 		verifyEM(entityManager);
-
-		return entityManager.find(Form.class, uid);
+		return entityManager.find(Form.class, uid, minimal);
 	}
 
 	@Override
@@ -161,7 +161,7 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 	}
 
 	// TODO In the future implement this on entitymanager
-	public Collection<Form> listAllFormsSortedbyName(User user){
+	public Collection<Form> listAllFormsSortedbyName(User user) {
 		Collection<Form> forms = listAllFormsMinimalByUser(user);
 		for (Form form : forms) {
 			form.setFlagToOrder(0);
@@ -169,9 +169,9 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		Collections.sort((List<Form>) forms);
 		return forms;
 	}
-	
+
 	// TODO In the future implement this on entitymanager
-	public Collection<Form> listAllFormsSortedbyDate(User user){
+	public Collection<Form> listAllFormsSortedbyDate(User user) {
 		Collection<Form> forms = listAllFormsMinimalByUser(user);
 		for (Form form : forms) {
 			form.setFlagToOrder(1);
@@ -229,11 +229,25 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 					.cQuery(Answer.class, "form", formId.toString());
 	}
 
+	/**
+	 * Delete a Form if user has permission
+	 */
 	@Override
 	public void deleteForm(Form form) {
 		verifyEM(entityManager);
-		entityManager.delete(form);
-		// TODO delete answers? permissions?
+		// verify if current user has permissions
+		if (currentUserHasPermission(form, Operation.DELETE)) {
+
+			// first delete permissions
+			for (FormPermissions fp : getFormPermissions(form)) {
+				entityManager.delete(fp);
+			}
+			entityManager.delete(form);
+			// TODO delete answers?
+		} else {
+			// user does has permission
+			// TODO: generate exception?
+		}
 	}
 
 	@Override
@@ -317,9 +331,9 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 	@Override
 	public <T> boolean currentUserHasPermission(T entity, Operation op) {
 		verifyEM(entityManager);
-		if (getCurrentUser() == null && op == null)
-			return false;
 		User user = getCurrentUser();
+		if (user == null && op == null)
+			return false;
 		// check type
 		if (entity instanceof Form) {
 			Form form = (Form) entity;
@@ -366,6 +380,7 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 	public Collection<Form> listAllSharedForms(User user, boolean minimal) {
 		verifyEM(entityManager);
 		verifyEntity(user);
+		User currentUser = getCurrentUser();
 
 		Set<Form> forms = new HashSet<Form>();
 		// get groups where user is member
@@ -376,12 +391,10 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 					.getGroup());
 			for (FormPermissions fp : l1Forms) {
 				// get the form and add it if expdate > now
-				if (fp.getExpDate() > System.currentTimeMillis()) {
-					Form form = fp.getForm();
-					forms.add(form);
-				} else {
-					// TODO delete fp?, it has expired
-					entityManager.delete(fp);
+				Form form = getFormWithPermission(fp, true);
+				if (form != null) {
+					if (!form.getUser().equals(currentUser))
+						forms.add(form);
 				}
 			}
 		}
@@ -406,4 +419,24 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		return result;
 	}
 
+	/**
+	 * get a Form if has permission granted
+	 * 
+	 * @param fp
+	 * @param minimal
+	 * @return
+	 */
+	private Form getFormWithPermission(FormPermissions fp, boolean minimal) {
+		Form form = null;
+		// verify expiration date
+		if (fp.getExpDate() != null
+				&& fp.getExpDate() < System.currentTimeMillis()) {
+			// TODO delete fp?, it has expired
+		} else if (!fp.getFormAccess().equals(AccessLevel.PRIVATE_ACCESS)) {
+			// date ok, verify access
+			form = getForm(fp.getForm().getKey(), minimal);
+		}
+		return form;
+
+	}
 }

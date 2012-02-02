@@ -36,7 +36,7 @@ public class FormsServiceImpl implements FormsService {
 	public Form getForm(String formId) throws MaritacaWSException {
 		UUID uuid = UUID.fromString(formId);
 		Form form = null;
-		form = formRespModel.getForm(uuid);
+		form = formRespModel.getForm(uuid, false);
 		if (form != null)
 			return form;
 		else {

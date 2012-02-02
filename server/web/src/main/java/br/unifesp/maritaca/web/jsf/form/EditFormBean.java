@@ -55,7 +55,7 @@ public class EditFormBean extends AbstractBean {
 			setNewForm(true);
 		} else {
 			if (form.getXml() == null) {
-				this.form = formAnswCtrl.getForm(form.getKey());
+				this.form = formAnswCtrl.getForm(form.getKey(), false);
 			}
 		}
 	}

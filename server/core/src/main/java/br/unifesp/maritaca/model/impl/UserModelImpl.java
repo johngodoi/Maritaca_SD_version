@@ -108,7 +108,21 @@ public class UserModelImpl implements UserModel, Serializable {
 			if(searchGroupByName(group.getName())!=null){
 				return false;
 			}
-			return entityManager.persist(group);
+			if(entityManager.persist(group)){
+			//add current user to group
+				GroupUser grUser = new GroupUser();
+				grUser.setGroup(group);
+				grUser.setUser(group.getOwner());
+				if(saveGroupUser(grUser))
+					return true;
+				else{
+					//not able to add user to group
+					entityManager.delete(group);
+					return false;
+				}
+			}else
+				return false; //group not saved
+			
 		} else {
 			// look for group
 			Group g = getGroup(group.getKey());

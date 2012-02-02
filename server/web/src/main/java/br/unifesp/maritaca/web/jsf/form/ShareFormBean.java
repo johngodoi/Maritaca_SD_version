@@ -45,7 +45,7 @@ public class ShareFormBean extends AbstractBean{
 
 	public void setForm(Form form) {
 		if (form.getUrl() == null) {
-			form = formAnswCtrl.getForm(form.getKey());
+			form = formAnswCtrl.getForm(form.getKey(), true);
 		}
 		this.form = form;
 		setShow(true);
@@ -54,7 +54,8 @@ public class ShareFormBean extends AbstractBean{
 	public void setForm(String formKey) {
 		if (formKey == null)
 			return;
-		Form form = formAnswCtrl.getForm(UUID.fromString(formKey));
+		Form form = new Form();
+		form.setKey(formKey);
 		setForm(form);
 	}
 
