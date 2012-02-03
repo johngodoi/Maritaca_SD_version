@@ -23,14 +23,15 @@
 			<rich:panel>
 				<center>
 					<p>
-						<b>#{msgs.group_access} - #{manager.time}</b>
+						<b>#{msgs.group_access}</b>
 					</p>
 				</center>
 
 				<h:dataTable value="#{shareFormBean.formPermissions}" var="formPerm"
 					columnClasses="columnClass1, columnClass1" cellspacing="2"
 					id="accessLevelId">
-
+					<ui:param name="disableEdit" value="#{!manager.isOperationEnabled(formPerm.form, manager.editOperation)}" />
+					<ui:param name="canDelete" value="#{manager.isOperationEnabled(formPerm, manager.deleteOperation)}" />
 					<h:column>
 						<f:facet name="header">
 							<h:outputText value="#{msgs.group}" />
@@ -44,10 +45,11 @@
 						</f:facet>
 						<rich:inplaceSelect defaultLabel="#{formPerm.formAccess}"
 							valueChangeListener="#{shareFormBean.formAccessChanged}"
-							value="#{formPerm.formAccess}">
+							value="#{formPerm.formAccess}"
+							disabled="#{disableEdit}">
 							<f:selectItems value="#{shareFormBean.accessLevels}" />
 							<a4j:ajax event="change" execute="@form"
-								status="#{formPerm.key}_status">
+								status="#{formPerm.key}_status" render="@parent">
 							</a4j:ajax>
 							<f:param value="#{shareFormBean.getCurrentPermission(formPerm)}"
 								name="formPerm"></f:param>
@@ -55,9 +57,13 @@
 					</h:column>
 
 					<h:column>
+					<f:facet name="header">
+							<h:outputText value="#{msgs.group_access_answ}" />
+						</f:facet>
 						<rich:inplaceSelect defaultLabel="#{formPerm.answAccess}"
 							valueChangeListener="#{shareFormBean.answAccessChanged}"
-							value="#{formPerm.answAccess}">
+							value="#{formPerm.answAccess}"
+							disabled="#{disableEdit}">
 							<f:selectItems value="#{shareFormBean.accessLevels}" />
 							<a4j:ajax event="change" execute="@form"
 								status="#{formPerm.key}_status">
@@ -75,7 +81,8 @@
 						<rich:calendar value="#{formPerm.expirationDate}"
 							datePattern="dd/MM/yy hh:mm a" ellWidth="24px" cellHeight="22px"
 							style="width:200px"
-							valueChangeListener="#{shareFormBean.expDateChanged}">
+							valueChangeListener="#{shareFormBean.expDateChanged}"
+							disabled="#{disableEdit}">
 							<a4j:ajax event="change" execute="@form"
 								status="#{formPerm.key}_status">
 							</a4j:ajax>
@@ -85,7 +92,8 @@
 					</h:column>
 					<h:column>
 						<h:commandButton action="#{shareFormBean.action}"
-							image="#{resource['img:remove.png']}">
+							image="#{resource['img:remove.png']}"
+							rendered="#{canDelete}">
 							<f:setPropertyActionListener
 								target="#{shareFormBean.currentPermission}" value="#{formPerm}" />
 							<f:ajax event="click" />

@@ -66,4 +66,6 @@ public interface UserModel {
 	Collection<GroupUser> getGroupsByMember(User user);
 
 	boolean saveGroupUser(GroupUser groupUser);
+
+	void close();
 }

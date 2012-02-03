@@ -288,4 +288,11 @@ public class UserModelImpl implements UserModel, Serializable {
 		
 		return entityManager.persist(groupUser);
 	}
+	
+	@Override
+	public void close() {
+		entityManager = null;
+		currentUser = null;
+		managerModel = null;
+	}
 }
