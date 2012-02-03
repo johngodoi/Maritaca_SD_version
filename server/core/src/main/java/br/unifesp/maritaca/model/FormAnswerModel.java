@@ -56,8 +56,13 @@ public interface FormAnswerModel {
 
 	<T> boolean currentUserHasPermission(T entity, Operation op);
 	
+	<T> boolean userHasPermission(User user, T entity, Operation op);
+	
 	Collection<Form> listAllFormsSortedbyName(User user);
 
 	Collection<Form> listAllFormsSortedbyDate(User user);
+
+	void close();
+
 
 }
