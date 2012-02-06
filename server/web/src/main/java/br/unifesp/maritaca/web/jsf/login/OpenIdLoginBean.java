@@ -16,22 +16,27 @@ import org.expressme.openid.Endpoint;
 import org.expressme.openid.OpenIdManager;
 
 import br.unifesp.maritaca.core.User;
-import br.unifesp.maritaca.web.jsf.account.AccountManagerBean;
+import br.unifesp.maritaca.web.jsf.AbstractBean;
+import br.unifesp.maritaca.web.jsf.account.AccountEditorBean;
 
 @ManagedBean
 @SessionScoped
-public class OpenIdLoginBean implements Serializable{
+public class OpenIdLoginBean extends AbstractBean implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-	@ManagedProperty("#{accountManagerBean}")
-	private AccountManagerBean accountManagerBean;
+	@ManagedProperty("#{accountEditorBean}")
+	private AccountEditorBean accountEditorBean;
 	
     private static final String ATTR_MAC       = "openid_mac";
     private static final String ATTR_ALIAS     = "openid_alias";
 	private static final String ATTR_END_POINT = "openid.op_endpoint";
 	
 	private OpenIdManager manager;
+	
+	public OpenIdLoginBean() {
+		super(false, true);
+	}
 	
 	public String getOnLoad(){
 		verifyOpenIdResponse();
@@ -61,15 +66,24 @@ public class OpenIdLoginBean implements Serializable{
         
         fillCurrentUser(authentication);
         
-        if(getAccountManagerBean().registeredEmail()){
-        	User user = getAccountManagerBean().getUser().clone();
-        	getAccountManagerBean().getCurrentUserBean().setUser(user);
+        if(getAccountEditorBean().registeredEmail()){
+        	loadUserInfoFromDatabase();        	
         	String returnUrl   = returnToUrl("/views/home.xhtml");
         	facesRedirect(returnUrl);
         }
     }
     
-    private void facesRedirect(String url){
+    /**
+     * Loads user info from database.
+     */
+    private void loadUserInfoFromDatabase() {
+    	String email = getAccountEditorBean().getUser().getEmail();
+    	User   user  = super.userCtrl.findUserByEmail(email);
+    	
+    	getAccountEditorBean().getCurrentUserBean().setUser(user);		
+	}
+
+	private void facesRedirect(String url){
     	try {
 			FacesContext.getCurrentInstance().getExternalContext().redirect(url);
 		} catch (IOException e) {
@@ -86,6 +100,11 @@ public class OpenIdLoginBean implements Serializable{
     	}
 	}
 
+	/**
+	 * Fills the current user with information obtained
+	 * from OpenId authentication.
+	 * @param authentication
+	 */
 	private void fillCurrentUser(Authentication authentication) {
 		User currentUser = new User();
 		
@@ -93,7 +112,7 @@ public class OpenIdLoginBean implements Serializable{
 		currentUser.setFirstname(authentication.getFirstname());
 		currentUser.setLastname(authentication.getLastname());
 		
-		getAccountManagerBean().setUser(currentUser);
+		getAccountEditorBean().setUser(currentUser);
 	}
 
 	public OpenIdManager getManager() {
@@ -165,11 +184,11 @@ public class OpenIdLoginBean implements Serializable{
 		return params.get("op");
 	}
 
-	public AccountManagerBean getAccountManagerBean() {
-		return accountManagerBean;
+	public AccountEditorBean getAccountEditorBean() {
+		return accountEditorBean;
 	}
 
-	public void setAccountManagerBean(AccountManagerBean accountManagerBean) {
-		this.accountManagerBean = accountManagerBean;
+	public void setAccountEditorBean(AccountEditorBean accountEditorBean) {
+		this.accountEditorBean = accountEditorBean;
 	}
 }

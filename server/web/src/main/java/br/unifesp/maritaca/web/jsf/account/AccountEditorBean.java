@@ -1,15 +1,12 @@
 package br.unifesp.maritaca.web.jsf.account;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import br.unifesp.maritaca.core.User;
-import br.unifesp.maritaca.persistence.EntityManager;
-import br.unifesp.maritaca.persistence.EntityManagerFactory;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
 
 /**
@@ -19,7 +16,7 @@ import br.unifesp.maritaca.web.jsf.AbstractBean;
 
 @ManagedBean
 @SessionScoped
-public class AccountManagerBean extends AbstractBean implements Serializable{
+public class AccountEditorBean extends AbstractBean implements Serializable{
 	
 	@ManagedProperty("#{currentUserBean}")
 	private CurrentUserBean currentUserBean;
@@ -28,7 +25,7 @@ public class AccountManagerBean extends AbstractBean implements Serializable{
 	private User     user;
 	private String   confirmPassword;
 	
-	public AccountManagerBean() {
+	public AccountEditorBean() {
 		super(false, true);
 		clearUser();
 	}
@@ -74,18 +71,11 @@ public class AccountManagerBean extends AbstractBean implements Serializable{
 			return false;
 		}
 		
-		EntityManagerFactory emFactory;
-		EntityManager        em;
-		
-		emFactory  = EntityManagerFactory.getInstance();		
-		em         = emFactory.createEntityManager(EntityManagerFactory.HECTOR_MARITACA_EM);
-		
-		List<User> users = em.cQuery(User.class, "email", email);
-		
-		if(users.size()!=0){
+		if(super.userCtrl.findUserByEmail(email)==null){
+			return false;
+		} else {
 			return true;
 		}
-		return false;
 	}
 	
 	/**
@@ -113,7 +103,7 @@ public class AccountManagerBean extends AbstractBean implements Serializable{
 	 * and redirects to the account edition/creation page.
 	 */
 	public String useCurrentUser(){
-		setUser(getCurrentUserBean().getUser().clone());		
+		setUser(getCurrentUserBean().getUser());		
 		return "/faces/views/editAccount";
 	}
 	

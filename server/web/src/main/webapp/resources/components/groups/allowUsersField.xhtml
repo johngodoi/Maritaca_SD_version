@@ -14,9 +14,9 @@
 	<composite:implementation>
 		<h:panelGrid columns="2">
 			<h:outputText value="#{msgs.group_allow_user_join}:" />
-			<h:selectOneRadio value="#{groupsManagerBean.allowUserJoin}">
+			<h:selectOneRadio value="#{groupsManagerBean.allowUserJoin}" >
 				<f:selectItem itemLabel="#{msgs.group_allow_user_join_yes}"
-					itemValue="true" />
+					itemValue="true"/>
 				<f:selectItem itemLabel="#{msgs.group_allow_user_join_no}"
 					itemValue="false" />
 			</h:selectOneRadio>
