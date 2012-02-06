@@ -15,6 +15,7 @@ import org.richfaces.component.UIInplaceSelect;
 import br.unifesp.maritaca.access.AccessLevel;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
+import br.unifesp.maritaca.core.Group;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
 
 /**
@@ -32,6 +33,7 @@ public class ShareFormBean extends AbstractBean {
 	private Form form;
 	private List<FormPermissions> formPermissions;
 	private boolean show;
+	private Group newGroup;
 
 	public ShareFormBean() {
 		super(true, false);
@@ -163,6 +165,36 @@ public class ShareFormBean extends AbstractBean {
 
 	public void setCurrent(FormPermissions fp) {
 		// dumb
+	}
+
+	public String getNewGroup() {
+		if(newGroup != null){
+			return newGroup.getKey().toString();
+		}
+		return "";
+	}
+
+	public void setNewGroup(Group newGroup) {
+		this.newGroup = newGroup;
+	}
+	
+	public void setNewGroup(String groupId){
+		Group gr = new Group();
+		gr.setKey(groupId);
+		setNewGroup(gr);
+	}
+	
+	public void addGroup(){
+		if(getNewGroup()!=null){
+			//add group permission
+			formAnswCtrl.saveDefaultFormPermissions(getForm(), newGroup);
+		}else{
+			return; //group not added
+		}
+	}
+	
+	public void deletePermission(FormPermissions formPerm){
+		formAnswCtrl.deleteFormPermission(formPerm);
 	}
 
 }
