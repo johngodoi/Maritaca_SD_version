@@ -24,7 +24,7 @@
 			<h:panelGrid columns="3">
 				<!-- Row 1 -->
 				<h:outputText value="#{msgs.account_first_name}:" />
-				<h:inputText  value="#{accountManagerBean.user.firstname}"
+				<h:inputText  value="#{accountEditorBean.user.firstname}"
 					label="#{msgs.account_first_name}" id="firstName" required="true">
 					<f:validateLength minimum="4" maximum="12" />
 				</h:inputText>
@@ -32,7 +32,7 @@
 
 				<!-- Row 2 -->
 				<h:outputText value="#{msgs.account_last_name}:" />
-				<h:inputText value="#{accountManagerBean.user.lastname}"
+				<h:inputText value="#{accountEditorBean.user.lastname}"
 					label="#{msgs.account_last_name}" id="lastName">
 					<f:validateLength minimum="4" maximum="12" />
 				</h:inputText>
@@ -40,21 +40,21 @@
 
 				<!-- Row 3 -->
 				<h:outputText value="#{msgs.account_email}:" />
-				<h:inputText value="#{accountManagerBean.user.email}" id="email"
+				<h:inputText value="#{accountEditorBean.user.email}" id="email"
 					label="#{msgs.account_email}" required="true">
 					<f:ajax event="blur" render="emailError" />
 				</h:inputText>
 				<h:panelGroup>
 					<h:message for="email" styleClass="error" />
 					<h:outputText
-						value="#{accountManagerBean.registeredEmail() ? msgs.account_create_used_email: ''}"
+						value="#{accountEditorBean.registeredEmail() ? msgs.account_create_used_email: ''}"
 						id="emailError" styleClass="error">
 					</h:outputText>
 				</h:panelGroup>
 
 				<!-- Row 4 -->
 				<h:outputText value="#{msgs.account_password}:" />
-				<h:inputSecret value="#{accountManagerBean.user.password}"
+				<h:inputSecret value="#{accountEditorBean.user.password}"
 					label="#{msgs.account_password}" id="password" required="true"
 					onkeyup="checkPassword(this.form)">
 				</h:inputSecret>
@@ -66,7 +66,7 @@
 
 				<!-- Row 5 -->
 				<h:outputText value="#{msgs.account_create_retype_passwd}:" />
-				<h:inputSecret value="#{accountManagerBean.confirmPassword}"
+				<h:inputSecret value="#{accountEditorBean.confirmPassword}"
 					label="#{msgs.account_create_retype_passwd}" required="true"
 					id="passwordConfirm" onkeyup="checkPassword(this.form)">
 				</h:inputSecret>
@@ -80,7 +80,7 @@
 
 			<!-- Lower section buttons: Create/Cancel -->
 			<h:commandButton value="#{msgs.account_create_button}"
-				action="#{accountManagerBean.saveAccount}" id="createAccountButton"
+				action="#{accountEditorBean.saveAccount}" id="createAccountButton"
 				onclick="encryptPassword(this.form,true)">				
 			</h:commandButton>
 			

@@ -16,7 +16,7 @@ import br.unifesp.maritaca.web.jsf.AbstractBean;
 
 @ManagedBean
 @SessionScoped
-public class AccountManagerBean extends AbstractBean implements Serializable{
+public class AccountEditorBean extends AbstractBean implements Serializable{
 	
 	@ManagedProperty("#{currentUserBean}")
 	private CurrentUserBean currentUserBean;
@@ -25,7 +25,7 @@ public class AccountManagerBean extends AbstractBean implements Serializable{
 	private User     user;
 	private String   confirmPassword;
 	
-	public AccountManagerBean() {
+	public AccountEditorBean() {
 		super(false, true);
 		clearUser();
 	}
@@ -103,7 +103,7 @@ public class AccountManagerBean extends AbstractBean implements Serializable{
 	 * and redirects to the account edition/creation page.
 	 */
 	public String useCurrentUser(){
-		setUser(getCurrentUserBean().getUser().clone());		
+		setUser(getCurrentUserBean().getUser());		
 		return "/faces/views/editAccount";
 	}
 	
