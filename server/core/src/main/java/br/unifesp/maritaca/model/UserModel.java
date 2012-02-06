@@ -111,4 +111,6 @@ public interface UserModel {
 	 * @return true if successful, false otherwise
 	 */
 	boolean removeGroup(Group group);
+
+	void close();
 }

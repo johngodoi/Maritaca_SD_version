@@ -269,7 +269,6 @@ public class UserModelImpl implements UserModel, Serializable {
 		return entityManager.persist(groupUser);
 	}
 
-
 	@Override
 	public boolean removeCurrentUserFromGroup(Group group) {
 		return removeUserFromGroup(group, getCurrentUser());
@@ -341,5 +340,12 @@ public class UserModelImpl implements UserModel, Serializable {
 		}
 		//TODO Add log warning in this case...
 		return false; // User is not in the given group
+	}
+	
+	@Override
+	public void close() {
+		entityManager = null;
+		currentUser = null;
+		managerModel = null;
 	}
 }

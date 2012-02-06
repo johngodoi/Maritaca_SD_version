@@ -31,6 +31,7 @@ public class Form implements Comparable<Form> {
 	private String title;
 	
 	@Column(indexed=true)
+	@Minimal
 	private String url;
 
 	@XmlElement(name = "id")
@@ -140,6 +141,7 @@ public class Form implements Comparable<Form> {
 		}
 	}
 
+	@XmlTransient
 	public int getFlagToOrder() {
 		return flagToOrder;
 	}
