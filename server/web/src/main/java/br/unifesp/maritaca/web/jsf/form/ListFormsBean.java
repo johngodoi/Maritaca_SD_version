@@ -2,9 +2,10 @@ package br.unifesp.maritaca.web.jsf.form;
 
 import java.util.Collection;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.RequestScoped;
 import javax.faces.event.ActionEvent;
 
 import br.unifesp.maritaca.access.operation.Operation;
@@ -13,7 +14,7 @@ import br.unifesp.maritaca.web.jsf.AbstractBean;
 import br.unifesp.maritaca.web.jsf.account.CurrentUserBean;
 
 @ManagedBean
-@ViewScoped
+@RequestScoped
 public class ListFormsBean extends AbstractBean {
 	private static final long serialVersionUID = 1L;
 	private Collection<Form> forms;
@@ -29,7 +30,7 @@ public class ListFormsBean extends AbstractBean {
 	}
 
 	public Collection<Form> getForms() {
-		if(isUpdateList()){
+		if (isUpdateList()) {
 			updateListOwnForms();
 			setUpdateList(false);
 		}
@@ -58,8 +59,12 @@ public class ListFormsBean extends AbstractBean {
 
 	public void setCurrentUser(CurrentUserBean currentUser) {
 		this.currentUser = currentUser;
+	}
+	
+	@PostConstruct
+	public void updateFormsList(){
 		updateListOwnForms();
-		updateListSharedForms();
+		updateListSharedForms();		
 	}
 
 	/**
