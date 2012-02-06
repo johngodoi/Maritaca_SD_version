@@ -8,13 +8,8 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIViewRoot;
-import javax.faces.context.FacesContext;
-import javax.faces.event.AbortProcessingException;
 
-import org.richfaces.component.UIPanelMenu;
 import org.richfaces.event.ItemChangeEvent;
-import org.richfaces.event.ItemChangeListener;
 
 import br.unifesp.maritaca.web.module.Module;
 import br.unifesp.maritaca.web.module.ModuleImpl;
@@ -23,7 +18,7 @@ import br.unifesp.maritaca.web.submodule.SubModuleImpl;
 
 @ManagedBean
 @SessionScoped
-public class Manager implements ItemChangeListener, Serializable {
+public class Manager implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private List<Module> enabledModules;
 	private Module activeModule;
@@ -69,13 +64,13 @@ public class Manager implements ItemChangeListener, Serializable {
 		mod.setId("groups");
 		
 		submod = new SubModuleImpl();
-		submod.setTitle("Create Group");
-		submod.setComponent("createGroup");		
+		submod.setTitle("My Groups");
+		submod.setComponent("listGroups");
 		mod.addModule(submod);
 		
 		submod = new SubModuleImpl();
-		submod.setTitle("My Groups");
-		submod.setComponent("listGroups");
+		submod.setTitle("Group Editor");
+		submod.setComponent("groupEditor");		
 		mod.addModule(submod);
 
 		getEnabledModules().add(mod);
@@ -114,10 +109,9 @@ public class Manager implements ItemChangeListener, Serializable {
 		return null;
 	}
 
-	@Override
-	public void processItemChange(ItemChangeEvent event)
-			throws AbortProcessingException {
+	public void tabChanged(ItemChangeEvent event) {
 		setActiveModuleByString(event.getNewItem().getId());
+
 //		FacesContext fc = FacesContext.getCurrentInstance();
 //		UIViewRoot uivr = fc.getViewRoot();
 //		printtree(uivr, "|");
@@ -126,29 +120,56 @@ public class Manager implements ItemChangeListener, Serializable {
 //		mainTab.getChildren().clear();
 //		
 //		printtree(uivr, "|");
-	}
+		}
 
 	public void activeModAndSub(String mod, String submod) {
-		setActiveModuleByString(mod);
-		getActiveModule().setActiveSubModuleByString(submod);
-
-		FacesContext fc = FacesContext.getCurrentInstance();
-
-		UIViewRoot uivr = fc.getViewRoot();
-		UIPanelMenu leftMenu = (UIPanelMenu) uivr.findComponent("mainForm:"
-				+ getActiveModule().getId() + "_panelLeftMenu");
-		if (leftMenu != null) {
-			leftMenu.setActiveItem(getActiveModule().getActiveSubModule()
-					.getComponent());
+//		boolean modChanged = false;
+//		boolean submodChanged = false;
+		if (!getActiveModule().getId().equals(mod)) {
+			setActiveModuleByString(mod);
+			getActiveModule().setActiveSubModuleByString(submod);
+//			modChanged = submodChanged = true;
+		} else if (!getActiveModule().getActiveSubModule().getId()
+				.equals(submod)) {
+			getActiveModule().setActiveSubModuleByString(submod);
+//			submodChanged = true;
+		} else {
+			return;
 		}
+
+//		FacesContext fc = FacesContext.getCurrentInstance();
+//		UIViewRoot uivr = fc.getViewRoot();
+//
+//		if (modChanged) {
+//			UITabPanel tabPanel = (UITabPanel) uivr
+//					.findComponent("mainForm:mainTab");
+//			if (tabPanel != null) {
+//				tabPanel.setActiveItem(getActiveModule().getActiveSubModule()
+//						.getId());
+//				System.out.println("tab changed in modsub " + mod);
+//			}
+//		}
+//
+//		if (submodChanged) {
+//			UIPanelMenu leftMenu = (UIPanelMenu) findComponent("panelLeftMenu", uivr);
+//			if (leftMenu != null) {
+//				leftMenu.setActiveItem(getActiveModule().getActiveSubModule()
+//						.getComponent());
+//				System.out.println("menu changed in modsub " + submod);
+//			}
+//		}
 	}
 
 	// /**
 	// * find a UIComponent from a Parent
-	// * @param id of component
-	// * @param parent UIComponent
-	// * @return UIComponent or null
-	// * Temporary function, uiviewroot.findComponent not working...
+	// *
+	// * @param id
+	// * of component
+	// * @param parent
+	// * UIComponent
+	// * @return UIComponent or null Temporary function,
+	// uiviewroot.findComponent
+	// * not working...
 	// */
 	// private UIComponent findComponent(String id, UIComponent parent) {
 	// if (parent == null)
@@ -159,7 +180,8 @@ public class Manager implements ItemChangeListener, Serializable {
 	// } else {
 	// for (UIComponent child : parent.getChildren()) {
 	// UIComponent uic = findComponent(id, child);
-	// if(uic!=null)return uic;
+	// if (uic != null)
+	// return uic;
 	// }
 	// return null;
 	// }
@@ -171,19 +193,22 @@ public class Manager implements ItemChangeListener, Serializable {
 
 	public void setTime(String x) {
 	}
-	
+
 	/**
 	 * testing function for development
+	 * 
 	 * @param cpnt
 	 * @param level
 	 */
 	@SuppressWarnings("unused")
-	private void printtree(UIComponent cpnt, String level){
-		if(cpnt == null)return;
-		System.out.println(level + " " + cpnt.getId() + " - " + cpnt.getClass().getSimpleName());
-		for(UIComponent uichild: cpnt.getChildren()){
+	private void printtree(UIComponent cpnt, String level) {
+		if (cpnt == null)
+			return;
+		System.out.println(level + " " + cpnt.getId() + " - "
+				+ cpnt.getClass().getSimpleName());
+		for (UIComponent uichild : cpnt.getChildren()) {
 			printtree(uichild, level + "-");
 		}
-		
+
 	}
 }

@@ -3,9 +3,10 @@ package br.unifesp.maritaca.web.jsf.groups;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.RequestScoped;
 
 import br.unifesp.maritaca.core.Group;
 import br.unifesp.maritaca.core.GroupUser;
@@ -18,13 +19,13 @@ import br.unifesp.maritaca.web.jsf.account.CurrentUserBean;
  * @author tiagobarabasz
  */
 @ManagedBean
-@ViewScoped
+@RequestScoped
 public class ListGroupsBean extends AbstractBean{
 	
 	private static final long serialVersionUID = 1L;
 
 	@ManagedProperty("#{currentUserBean}")
-	private CurrentUserBean currentUser;	
+	private CurrentUserBean   currentUser;	
 	private Collection<Group> myGroups;
 	
 	public ListGroupsBean() {
@@ -45,33 +46,41 @@ public class ListGroupsBean extends AbstractBean{
 
 	public void setCurrentUser(CurrentUserBean currentUser) {				
 		this.currentUser = currentUser;
-		updateMyGroups();		
+	}
+	
+	public void leaveGroup(Group group){
+		if(super.userCtrl.removeCurrentUserFromGroup(group)){
+			getMyGroups().remove(group);
+		}				
 	}
 	
 	public void removeGroup(Group group){
 		if(super.userCtrl.removeGroup(group)){
 			getMyGroups().remove(group);
-		}
+		}		
 	}
 
-	private void updateMyGroups() {
-		Collection<GroupUser>	myGroupsUser;
-		Collection<Group>       myGroups = new ArrayList<Group>();
-		User              		newUser  = getCurrentUser().getUser();
-		
-		myGroupsUser = super.userCtrl.getGroupsByMember(newUser);
+	@PostConstruct
+	public void updateMyGroups() {
+		User              		newUser      = getCurrentUser().getUser();
+		Collection<GroupUser>	myGroupsUser = super.userCtrl.getGroupsByMember(newUser);
+		Collection<Group>       myGroups     = new ArrayList<Group>();
 		
 		Group myGroup;
 		User  owner;
 		for(GroupUser groupUser : myGroupsUser){
 			if(!myGroups.contains(groupUser)){
 				myGroup = super.userCtrl.getGroup(groupUser.getGroup().getKey());
-				owner   = super.userCtrl.getUser(myGroup.getOwner().getKey());
-				myGroup.setOwner(owner);
-				myGroups.add(myGroup);
+				if(myGroup!=null){
+					owner   = super.userCtrl.getUser(myGroup.getOwner().getKey());
+					myGroup.setOwner(owner);
+					myGroups.add(myGroup);	
+				}else{
+					/*TODO Add a log warning here saying that this group was deleted but
+					 *     there is still information about him in the GroupUser table. */
+				}
 			}
-		}
-		
+		}		
 		setMyGroups(myGroups);
 	}
 }

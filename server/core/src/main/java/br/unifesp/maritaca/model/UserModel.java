@@ -20,6 +20,14 @@ public interface UserModel {
 
 	User getUser(UUID uuid);
 	
+	/**
+	 * Returns the first user with the given email address. Email addresses
+	 * should be unique in the database.
+	 * 
+	 * @param email
+	 *            Address of the searched user.
+	 * @return The user found.
+	 */
 	User getUser(String email);
 
 	void setEntityManager(EntityManager em);
@@ -31,13 +39,6 @@ public interface UserModel {
 	Group getGroup(UUID uuid);
 	
 	boolean saveGroup(Group group);
-	
-	/**
-	 * Removes the group passed as parameter.
-	 * @param group
-	 * @return true if successful, false otherwise
-	 */
-	boolean removeGroup(Group group);
 	
 	/**
 	 * Search for the group with the given name. Returns null
@@ -78,5 +79,36 @@ public interface UserModel {
 
 	Collection<GroupUser> getGroupsByMember(User user);
 
+	/**
+	 * Returns all users that are in the given group.
+	 * @param group
+	 * @return A collection containing the users found.
+	 */
+	Collection<User> searchUsersByGroup(Group group);
+	
 	boolean saveGroupUser(GroupUser groupUser);
+
+	/**
+	 * Removes the current user from the given group.
+	 * @param group
+	 * @return true if successful, false otherwise 
+	 */
+	boolean removeCurrentUserFromGroup(Group group);
+	
+	/**
+	 * Removes the given user from the given group.
+	 * @param group
+	 * @param user
+	 * @return
+	 */
+	boolean removeUserFromGroup(Group group, User user);
+
+	/**
+	 * Removes the current user from the given group in the database. 
+	 * This method cascades the deletion to the GroupUser table, removing
+	 * any entries that belongs to the given group.
+	 * @param group
+	 * @return true if successful, false otherwise
+	 */
+	boolean removeGroup(Group group);
 }

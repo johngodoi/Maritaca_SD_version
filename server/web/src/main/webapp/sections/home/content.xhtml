@@ -1,5 +1,4 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:composite="http://java.sun.com/jsf/composite"
@@ -18,33 +17,31 @@
 	<h:form id="mainForm">
 		<!-- TOP TABS -->
 		<rich:tabPanel activeItem="#{manager.activeModule.id}"
-			tabContentClass="tabContent" switchType="server"
-			itemChangeListener="#{manager.processItemChange}" id="mainTab">
+			tabContentClass="tabContent" id="mainTab" switchType="server"
+			itemChangeListener="#{manager.tabChanged}">
 			<c:forEach var="module" items="#{manager.enabledModules}">
 				<!-- CREATE A NEW TOP TAB (MODULE) -->
-				<rich:tab header="#{module.title}" id="#{module.id}">
+				<rich:tab header="#{module.title}" id="#{module.id}"
+					render="menuAndContent">
 					<!-- FOR EACH MODULE, CREATE A GRID PANEL FOR LEFT NAVIGATION BAR & CONTENT -->
 				</rich:tab>
 			</c:forEach>
 		</rich:tabPanel>
 	</h:form>
-	<h:form>
-		<h:panelGrid columns="2" columnClasses="cols,cols"
-			id="#{manager.activeModule.id}_menuAndContent">
-			<rich:panelMenu id="#{manager.activeModule.id}_panelLeftMenu"
-				styleClass="menuLeft"
+	<h:form id="menuAndContentForm">
+		<h:panelGrid columns="2" columnClasses="cols,cols" id="menuAndContent">
+			<rich:panelMenu id="panelLeftMenu" styleClass="menuLeft"
 				activeItem="#{manager.activeModule.activeSubModule.id}">
 				<!-- LEFT MENU -->
 				<c:forEach var="subModule"
 					items="#{manager.activeModule.subModules}">
 					<rich:panelMenuItem label="#{subModule.title}" id="#{subModule.id}"
 						actionListener="#{manager.activeModule.processAction}"
-						render="#{manager.activeModule.id}_panelContent" mode="ajax">
+						render="panelContent" mode="ajax">
 					</rich:panelMenuItem>
 				</c:forEach>
 			</rich:panelMenu>
-			<rich:panel id="#{manager.activeModule.id}_panelContent"
-				bodyClass="panelContent">
+			<rich:panel id="panelContent" bodyClass="panelContent">
 				<!--  MAIN CONTENT -->
 				<util:selectComponent
 					submodule="#{manager.activeModule.activeSubModule}" />

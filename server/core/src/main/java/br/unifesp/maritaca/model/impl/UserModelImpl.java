@@ -70,15 +70,6 @@ public class UserModelImpl implements UserModel, Serializable {
 		return entityManager.listAll(User.class, true);
 	}
 
-	/**
-	 * Returns the first user with the given email address. Email addresses
-	 * should be unique in the database.
-	 * 
-	 * @param email
-	 *            Address of the searched user.
-	 * @return The user found.
-	 */
-	@Override
 	public User getUser(String email) {
 		verifyEM(entityManager);
 		List<User> users = entityManager.cQuery(User.class, "email", email);
@@ -98,16 +89,16 @@ public class UserModelImpl implements UserModel, Serializable {
 	@Override
 	public boolean saveGroup(Group group) {
 		verifyEM(entityManager);
-		if (group == null || group.getOwner() == null
-				|| group.getName() == null || group.getName().length() == 0) {
+		if(group==null){
+			throw new IllegalArgumentException("Invalid group");
+		}
+		verifyEntity(group.getOwner());
+		if (group.getName().length() == 0) {
 			throw new IllegalArgumentException("Incomplete parameters");
 		}
 
 		if (group.getKey() == null) {
 			// new group
-			if(searchGroupByName(group.getName())!=null){
-				return false;
-			}
 			return entityManager.persist(group);
 		} else {
 			// look for group
@@ -207,6 +198,9 @@ public class UserModelImpl implements UserModel, Serializable {
 	}
 
 	public User getCurrentUser() {
+		if(currentUser==null){
+			setCurrentUser(UserLocator.getCurrentUser());
+		}
 		return currentUser;
 	}
 
@@ -275,11 +269,77 @@ public class UserModelImpl implements UserModel, Serializable {
 		return entityManager.persist(groupUser);
 	}
 
+
+	@Override
+	public boolean removeCurrentUserFromGroup(Group group) {
+		return removeUserFromGroup(group, getCurrentUser());
+	}
+
 	@Override
 	public boolean removeGroup(Group group) {
-		if(entityManager == null || group == null || group.getKey() == null){
+		verifyEM(entityManager);
+		verifyEntity(group);
+		
+		if(!removeGroupUserFromGroup(group)){
 			return false;
-		}		
-		return entityManager.delete(group);
+		} else {
+			return entityManager.delete(group);
+		}				
+	}
+	
+	/**
+	 * Removes every entry in GroupsUser from the given group.
+	 * @param group
+	 * @return true if successful, false otherwise
+	 */
+	private boolean removeGroupUserFromGroup(Group group){
+		verifyEM(entityManager);
+		verifyEntity(group);
+		List<GroupUser> groupsUserFromUser;
+		groupsUserFromUser = entityManager.cQuery(GroupUser.class, "group", group.getKey().toString());
+		
+		for(GroupUser groupUser : groupsUserFromUser){
+			if(groupUser.getGroup().equals(group.getKey())){
+				if(!entityManager.delete(groupUser)){
+					return false;
+				}
+			}
+		}
+		
+		return true;
+	}
+
+	@Override
+	public Collection<User> searchUsersByGroup(Group group) {
+		String           groupKey            = group.getKey().toString();
+		List<GroupUser>  groupsUserFromUser  = entityManager.cQuery(GroupUser.class, "group", groupKey);
+		Collection<User> foundUsers          = new ArrayList<User>();
+				
+		for(GroupUser groupUser : groupsUserFromUser){
+			User user = entityManager.find(User.class, groupUser.getUser().getKey());
+			foundUsers.add(user);
+		}
+		return foundUsers;
+	}
+
+	@Override
+	public boolean removeUserFromGroup(Group group, User user) {
+		verifyEM(entityManager);
+		verifyEntity(group);
+
+		List<GroupUser> groupsUserFromUser = new ArrayList<GroupUser>();
+		groupsUserFromUser = entityManager.cQuery(GroupUser.class, "user", user.getKey().toString());
+		
+		for(GroupUser groupUser : groupsUserFromUser){
+			if(groupUser.getGroup().getKey().equals(group.getKey())){
+				if(!entityManager.delete(groupUser)){
+					return false;
+				} else {
+					return true;
+				}
+			}
+		}
+		//TODO Add log warning in this case...
+		return false; // User is not in the given group
 	}
 }

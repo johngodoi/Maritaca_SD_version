@@ -14,14 +14,18 @@ public class Group {
 	private UUID key;
 	@Column(indexed = true)
 	private User owner;
-	
-	@Column(indexed=true)
+
+	@Column(indexed = true)
 	@Minimal
 	private String name;
-	
+
 	@Column
 	@Minimal
-	private String description;	
+	private Boolean allowUsersToJoin;
+
+	@Column
+	@Minimal
+	private String description;
 
 	public UUID getKey() {
 		return key;
@@ -73,5 +77,13 @@ public class Group {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Boolean getAllowUsersToJoin() {
+		return allowUsersToJoin;
+	}
+
+	public void setAllowUsersToJoin(Boolean allowUsersToJoin) {
+		this.allowUsersToJoin = allowUsersToJoin;
 	}
 }
