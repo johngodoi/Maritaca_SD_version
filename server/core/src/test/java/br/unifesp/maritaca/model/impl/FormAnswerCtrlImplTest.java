@@ -48,6 +48,7 @@ public class FormAnswerCtrlImplTest {
 	public void tearDown() throws Exception {
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testSaveForm() {
 		Form form = new Form();
@@ -86,13 +87,13 @@ public class FormAnswerCtrlImplTest {
 
 	@Test
 	public void testGetForm() {
-		assertNull(frControl.getForm(null));
+		assertNull(frControl.getForm(null, false));
 
 		UUID uid = UUID.fromString(uuid);
 		Form form = new Form();
 		form.setKey(uid);
-		when(em.find(Form.class, uid)).thenReturn(form);
-		assertNotNull(frControl.getForm(uid));
+		when(em.find(Form.class, uid, false)).thenReturn(form);
+		assertNotNull(frControl.getForm(uid, false));
 	}
 
 	@Test

@@ -112,4 +112,10 @@ public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel 
 	public void setCurrentUser(User currentUser) {
 		this.currentUser = currentUser;
 	}
+	
+	@Override
+	public void close() {
+		entityManager = null;
+		currentUser = null;
+	}
 }

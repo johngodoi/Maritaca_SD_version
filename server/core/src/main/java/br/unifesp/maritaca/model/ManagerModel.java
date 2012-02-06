@@ -19,4 +19,6 @@ public interface ManagerModel {
 	void initMaritaca(Map<String, String> params);
 
 	User getRootUser();
+
+	void close();
 }

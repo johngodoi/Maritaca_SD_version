@@ -3,7 +3,6 @@ package br.unifesp.maritaca.web.jsf.form;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -14,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.richfaces.component.UIInplaceSelect;
 
 import br.unifesp.maritaca.access.AccessLevel;
-import br.unifesp.maritaca.access.AccessLevelFactory;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
@@ -28,7 +26,7 @@ import br.unifesp.maritaca.web.jsf.AbstractBean;
  */
 @ManagedBean
 @ViewScoped
-public class ShareFormBean extends AbstractBean{
+public class ShareFormBean extends AbstractBean {
 	private static final long serialVersionUID = 1L;
 	private static final String ROOT_FOR_SHARING = "/ws/form/share/";
 	private Form form;
@@ -46,7 +44,7 @@ public class ShareFormBean extends AbstractBean{
 
 	public void setForm(Form form) {
 		if (form.getUrl() == null) {
-			form = formAnswCtrl.getForm(form.getKey());
+			form = formAnswCtrl.getForm(form.getKey(), true);
 		}
 		this.form = form;
 		setShow(true);
@@ -55,7 +53,8 @@ public class ShareFormBean extends AbstractBean{
 	public void setForm(String formKey) {
 		if (formKey == null)
 			return;
-		Form form = formAnswCtrl.getForm(UUID.fromString(formKey));
+		Form form = new Form();
+		form.setKey(formKey);
 		setForm(form);
 	}
 
@@ -101,28 +100,30 @@ public class ShareFormBean extends AbstractBean{
 		this.formPermissions = formPermissions;
 	}
 
-	public List<AccessLevel> getAccessLevels() {
-		return AccessLevelFactory.getAccessLevels();
+	public AccessLevel[] getAccessLevels() {
+		return AccessLevel.values();
 	}
 
 	public void formAccessChanged(ValueChangeEvent event) {
-		String newValue = (String) event.getNewValue();
-		
+		AccessLevel newValue = (AccessLevel) event.getNewValue();
+
 		if (newValue.equals(event.getOldValue().toString()))
 			return;
-		
-		FormPermissions fp = formAnswCtrl.getFormPermissionById(getParamValue("formPerm"));
+
+		FormPermissions fp = formAnswCtrl
+				.getFormPermissionById(getParamValue("formPerm"));
 		fp.setFormAccess(newValue);
 		savePermission(event, fp);
 	}
-	
+
 	public void answAccessChanged(ValueChangeEvent event) {
-		String newValue = (String) event.getNewValue();
-			
+		AccessLevel newValue = (AccessLevel) event.getNewValue();
+
 		if (newValue.equals(event.getOldValue().toString()))
 			return;
-		
-		FormPermissions fp = formAnswCtrl.getFormPermissionById(getParamValue("formPerm"));
+
+		FormPermissions fp = formAnswCtrl
+				.getFormPermissionById(getParamValue("formPerm"));
 		fp.setAnswAccess(newValue);
 		savePermission(event, fp);
 	}
@@ -135,23 +136,25 @@ public class ShareFormBean extends AbstractBean{
 		}
 	}
 
-	public void expDateChanged(ValueChangeEvent event){
+	public void expDateChanged(ValueChangeEvent event) {
 		Date newValue = (Date) event.getNewValue();
-		
+
 		if (newValue == null || newValue.before(new Date()))
 			return;
-		
-		FormPermissions fp = formAnswCtrl.getFormPermissionById(getParamValue("formPerm"));
+
+		FormPermissions fp = formAnswCtrl
+				.getFormPermissionById(getParamValue("formPerm"));
 		fp.setExpDate(newValue.getTime());
 		formAnswCtrl.saveFormPermission(fp);
 	}
-	private String getParamValue(String paramname){
+
+	private String getParamValue(String paramname) {
 		FacesContext fc = FacesContext.getCurrentInstance();
-		return fc.getExternalContext().getRequestParameterMap()
-				.get(paramname);
+		return fc.getExternalContext().getRequestParameterMap().get(paramname);
 	}
+
 	public void setCurrentPermission(FormPermissions fp) {
-		//dumb
+		// dumb
 	}
 
 	public String getCurrentPermission(FormPermissions fp) {
@@ -159,7 +162,7 @@ public class ShareFormBean extends AbstractBean{
 	}
 
 	public void setCurrent(FormPermissions fp) {
-		//dumb
+		// dumb
 	}
 
 }
