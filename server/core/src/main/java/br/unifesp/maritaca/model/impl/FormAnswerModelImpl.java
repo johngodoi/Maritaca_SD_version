@@ -32,7 +32,7 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 
 	public FormAnswerModelImpl() {
 		currentUser = UserLocator.getCurrentUser();
-		//verifyEntity(currentUser);
+		// verifyEntity(currentUser);
 	}
 
 	public EntityManager getEntityManager() {
@@ -310,9 +310,10 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 			throw new IllegalArgumentException(
 					"Incomplete parameters, form permission not saved");
 		}
-		
-		if(fp.getKey()!=null && !currentUserHasPermission(fp.getForm(), Operation.EDIT)){
-			//user does not have permission to edit
+
+		if (fp.getKey() != null
+				&& !currentUserHasPermission(fp.getForm(), Operation.EDIT)) {
+			// user does not have permission to edit
 			return false;
 		}
 
@@ -324,6 +325,18 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		if (entityManager.find(Group.class, fp.getGroup().getKey(), true) == null) {
 			throw new IllegalArgumentException(
 					"Form not exists, form permission not saved");
+		}
+
+		// verify if group-form pair exists in form permissions for new
+		// permission
+		if (fp.getKey() == null) {
+			for (FormPermissions formperm : getFormPermissions(fp.getForm())) {
+				if (formperm.getGroup().getKey().equals(fp.getGroup().getKey())) {
+					// update the formpermissions, set old key to update the
+					// data
+					fp.setKey(formperm.getKey());
+				}
+			}
 		}
 
 		// persist fp
@@ -338,7 +351,7 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		User user = getCurrentUser();
 		return userHasPermission(user, entity, op);
 	}
-	
+
 	/**
 	 * Checks if an user has permission of an operation over an entity
 	 */
@@ -349,16 +362,17 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 			return false;
 		// check type
 		if (entity instanceof Form) {
-			return userHasPermissionInForm(user, (Form)entity, op);
-		}else if(entity instanceof FormPermissions){
-			return userHasPermissionInFormPermissions(user, (FormPermissions)entity, op);
+			return userHasPermissionInForm(user, (Form) entity, op);
+		} else if (entity instanceof FormPermissions) {
+			return userHasPermissionInFormPermissions(user,
+					(FormPermissions) entity, op);
 		}
 
 		return false;
 	}
 
 	private boolean userHasPermissionInForm(User user, Form form, Operation op) {
-		if(form.getUser() == null){
+		if (form.getUser() == null) {
 			form = getForm(form.getKey(), true);
 		}
 		// if form.user equals current user, user is owner and has all
@@ -369,7 +383,8 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		// not a owner, get permission of form
 		List<FormPermissions> listFP = getFormPermissions(form);
 		for (FormPermissions fp : listFP) {
-			if (fp.getFormAccess().isOperationEnabled(op) && userModel.userIsMemberOfGroup(user, fp.getGroup())) {
+			if (fp.getFormAccess().isOperationEnabled(op)
+					&& userModel.userIsMemberOfGroup(user, fp.getGroup())) {
 				// if operation OP is enable in FormAccess and current user
 				// is member of group fp.getGroup, so he/she has permission
 				return true;
@@ -377,17 +392,19 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		}
 		return false;
 	}
-	
-	private boolean userHasPermissionInFormPermissions(User user, FormPermissions formPerm, Operation op) {
+
+	private boolean userHasPermissionInFormPermissions(User user,
+			FormPermissions formPerm, Operation op) {
 		Group allUsers = userModel.getAllUsersGroup();
-		//verify if the permission is for the AllUsers group
-		if(allUsers.getKey().equals(formPerm.getGroup().getKey())){
-			if(Operation.DELETE.equals(op)){
-				//allusers group permissions CANNOT be deleted
+		// verify if the permission is for the AllUsers group
+		if (allUsers.getKey().equals(formPerm.getGroup().getKey())) {
+			if (Operation.DELETE.equals(op)) {
+				// allusers group permissions CANNOT be deleted
 				return false;
 			}
 		}
-		//since operation is no deleted or group is not AllUsers, verify form permissions
+		// since operation is no deleted or group is not AllUsers, verify form
+		// permissions
 		return userHasPermission(user, formPerm.getForm(), op);
 	}
 
@@ -462,10 +479,10 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 	 */
 	private Form getFormWithPermission(FormPermissions fp, boolean minimal) {
 		Form form = null;
+		long now = System.currentTimeMillis();
 		// verify expiration date
-		if (fp.getExpDate() != null
-				&& fp.getExpDate() < System.currentTimeMillis()) {
-			// TODO delete fp?, it has expired
+		if (fp.getExpDate() != null && fp.getExpDate() < now) {
+				// TODO delete fp?, it has expired
 		} else if (!fp.getFormAccess().equals(AccessLevel.PRIVATE_ACCESS)) {
 			// date ok, verify access
 			form = getForm(fp.getForm().getKey(), minimal);
@@ -478,5 +495,25 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		entityManager = null;
 		currentUser = null;
 		userModel = null;
+	}
+
+	/**
+	 * Save a form permission with default access level (private)
+	 */
+	@Override
+	public boolean saveDefaultFormPermissions(Form form, Group group) {
+		FormPermissions formPerm = new FormPermissions();
+		formPerm.setForm(form);
+		formPerm.setGroup(group);
+		formPerm.setFormAccess(AccessLevel.PRIVATE_ACCESS);
+		formPerm.setAnswAccess(AccessLevel.PRIVATE_ACCESS);
+		return saveFormPermission(formPerm);
+	}
+
+	@Override
+	public void deleteFormPermission(FormPermissions formPerm) {
+		verifyEntity(formPerm);
+		entityManager.delete(formPerm);
+
 	}
 }

@@ -53,6 +53,10 @@ public interface FormAnswerModel {
 	FormPermissions getFormPermissionById(String formPermId);
 
 	boolean saveFormPermission(FormPermissions fp);
+	
+	void deleteFormPermission(FormPermissions formPerm);
+	
+	boolean saveDefaultFormPermissions(Form form, Group group);
 
 	<T> boolean currentUserHasPermission(T entity, Operation op);
 	
@@ -63,6 +67,5 @@ public interface FormAnswerModel {
 	Collection<Form> listAllFormsSortedbyDate(User user);
 
 	void close();
-
 
 }

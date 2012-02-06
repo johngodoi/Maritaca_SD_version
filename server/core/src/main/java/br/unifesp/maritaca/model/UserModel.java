@@ -66,6 +66,22 @@ public interface UserModel {
 	Collection<GroupUser> getGroupsByMember(User user);
 
 	boolean saveGroupUser(GroupUser groupUser);
+	
+	/**
+	 * Returns a list<Group> with the group that match the string*
+	 * @param startingString
+	 * @return
+	 */
+	List<Group> groupsStartingWith(String startingString);
 
+	/**
+	 * Gets the owner's group
+	 * @param group
+	 * @return
+	 */
+	User getOwnerOfGroup(Group gr);
+	
 	void close();
+
+	
 }
