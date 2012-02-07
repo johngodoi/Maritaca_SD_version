@@ -53,7 +53,8 @@ public class GroupsManagerBean extends AbstractBean implements Serializable {
 	private List<String> autoCompleteEmails;
 	private List<User> addedUsers;
 
-	@Pattern(regexp = "("+Utils.EMAIL_REG_EXP+")|^$") //The email field can be empty
+	//The email field can be empty
+	@Pattern(regexp = "("+Utils.EMAIL_REG_EXP+")|^$", message="{email.invalid}")
 	private String selectedEmail;
 	private String addEmailError;
 
