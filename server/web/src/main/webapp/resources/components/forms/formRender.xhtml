@@ -13,7 +13,11 @@
 	<composite:interface>
 	</composite:interface>
 	<composite:implementation>
-		<c:choose>
+		<h:outputStylesheet name="h5style.css" library="css"></h:outputStylesheet>
+		<h:outputScript name="h5FormClass.js" library="javascript" />
+		<h:outputScript name="h5FieldClasses.js" library="javascript" />
+		<h:outputScript name="h5Script.js" library="javascript" />
+		<!-- c:choose>
 			<c:when test="#{editFormBean.newForm}">
 				<p>#{msgs.form_new}</p>
 			</c:when>
@@ -22,19 +26,80 @@
 			<c:when test="#{editFormBean.editForm}">
 				<p>#{msgs.form_edit}</p>
 			</c:when>
-		</c:choose>
-		<h:panelGrid id="formRenderTable" columns="2"
+		</c:choose-->
+		<h:panelGrid id="formRenderTable" columns="3"
 			styleClass="formRenderTable">
-			<h:outputText styleClass="formLabel" value="#{msgs.form_title}" />
-			<h:inputText styleClass="formIdValue"
+			<tr>
+				<td><label>#{msgs.form_title}</label></td>
+				<td><input type="text" id="titleForm"
+					value="#{editFormBean.form.title}" readonly="readonly" /></td>
+				<td></td>
+			</tr>
+			<!-- h:outputText styleClass="formLabel" value="#{msgs.form_title}" />
+			<h:inputText styleClass="formIdValue" id="titleForm"
 				value="#{editFormBean.form.title}"
-				readonly="#{!editFormBean.editForm}" />
+				readonly="#{!editFormBean.editForm}" /-->
+			<!--h:outputText styleClass="formLabel"
+				value="#{msgs.form_renderer_xml}" /-->
 
-			<h:outputText styleClass="formLabel"
-				value="#{msgs.form_renderer_xml}" />
-			<h:inputText styleClass="formXmlValue"
+			<tr valign="top">
+				<td>
+					<div id="divElements">
+						<fieldset id="components">
+							<legend>#{msgs.form_edit_availableComponents}</legend>
+							<ol>
+								<li><input type="text" value="#{msgs.form_edit_text}"
+									readonly="readonly" size="12" /></li>
+								<li><input type="radio" readonly="readonly" />Radiobox</li>
+								<li><input type="checkbox" readonly="readonly" />Checkbox</li>
+							</ol>
+						</fieldset>
+					</div>
+				</td>
+
+				<td>
+					<fieldset id="xmlForm">
+						<legend style="width: 300px;"></legend>
+					</fieldset>
+				</td>
+
+				<td>
+					<fieldset id="properties">
+						<legend>#{msgs.form_edit_fieldProperties}</legend>
+						<ul>
+							<li><label> #{msgs.form_edit_fieldLabel} <input
+									type="text" id="fieldLabel" />
+							</label></li>
+							<li><label> #{msgs.form_edit_fieldHelp} <input
+									type="text" id="fieldHelp" />
+							</label></li>
+							<li><label>#{msgs.form_edit_fieldRequired}</label> <label><input
+									type="radio" id="fieldRequiredTrue" name="fieldRequired" />#{msgs.commons_true}</label>
+								<label><input type="radio" id="fieldRequiredFalse"
+									name="fieldRequired" />#{msgs.commons_false}</label></li>
+						</ul>
+						<div id="propertiesSpecific">
+							<ul>
+								<li><label>#{msgs.form_edit_fieldMaxValue} <input
+										type="text" id="fieldMaxValue" class="numeric" /></label></li>
+								<li><label>#{msgs.form_edit_fieldSize} <input
+										type="text" id="fieldSize" class="numeric" /></label></li>
+								<li><label>#{msgs.form_edit_fieldDefault} <input
+										type="text" id="fieldDefault" /></label></li>
+							</ul>
+						</div>
+						<center>
+							<button  id="fieldSave" type="button">#{msgs.commons_save}</button>
+							<button id="fieldDelete" type="button">#{msgs.commons_delete}</button>
+						</center>
+					</fieldset>
+				</td>
+			</tr>
+
+			<h:inputHidden styleClass="formXmlValue"
 				value="#{editFormBean.form.xml}"
 				readonly="#{!editFormBean.editForm}" />
+
 			<c:if test="#{importFormBean.successful}">
 				<h:outputScript>
 					closePopup('#dialogImportForm');

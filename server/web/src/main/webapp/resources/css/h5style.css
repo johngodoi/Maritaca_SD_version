@@ -1,0 +1,198 @@
+div#div-wrap {
+	width: 1000px;
+	margin: auto;
+}
+
+div#divElements {
+	float: left;
+	width: 220px;
+}
+
+fieldset {
+	border-radius: 10px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+
+	-moz-box-shadow: 0 0 5px #888;
+	-webkit-box-shadow: 0 0 5px#888;
+	box-shadow: 0 0 5px #888;
+
+	border: none !important;
+}
+
+fieldset legend {
+	padding: 3px 10px;
+	vertical-align: bottom;
+	font-weight: bold;
+	font-size: 14px;
+	text-shadow: 0 0 2px #CCC;
+
+	background-color: #FFF;
+	border: solid 1px #999;
+
+	border-radius: 10px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+
+	-moz-box-shadow: 0 0 2px #888;
+	-webkit-box-shadow: 0 0 2px #888;
+	box-shadow: 0 0 2px #888;
+}
+
+input[type=text] {
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+
+	-moz-box-shadow: 0 0 2px #888;
+	-webkit-box-shadow: 0 0 2px #888;
+	box-shadow: 0 0 2px #888;
+
+	border: solid 1px #999;
+	padding: 2px;
+}
+
+#components{
+	float: left;
+	width: 180px;
+	background-color: #D5E1DD;
+	padding: 10px;
+	margin: 10px 0px;
+}
+
+#components ol {
+	list-style: none;
+}
+
+#components ol li{
+	margin: 10px 5px;
+	cursor: move;
+}
+
+#components ol li *{
+	cursor: move;
+}
+
+#xmlForm{
+	float: left;
+	width: 300px;
+	background-color: #EFEFEF;
+	padding: 10px;
+	margin: 10px 0px;
+}
+
+#xmlForm ol {
+	list-style: none;
+}
+
+#xmlForm ol li{
+	padding: 10px;
+	margin-bottom: 10px;
+}
+
+#xmlForm ol li div.order{
+	visibility: hidden;
+	float: right;
+	margin-top: -24px;
+}
+
+#xmlForm ol li.editing{
+	background-color: #FFF;
+
+	border-radius: 8px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+}
+
+#xmlForm ol li.editing div.order{
+	visibility: visible;
+}
+
+#xmlForm ol li label {
+	display: inline-block;
+}
+
+#xmlForm ol li label,
+#xmlForm ol li label input {
+	margin-right: 5px;
+}
+
+#xmlForm ol li label.fieldLabel{
+	display: block;
+	font-weight: bold;
+	margin-bottom: 5px;
+}
+
+#properties {
+	float: left;
+	display: none;
+	background-color: #CCE9CC;
+	padding: 10px;
+	margin: 10px;
+	width: 250px;
+}
+
+#properties div{
+	display: none;
+}
+
+#properties ul {
+	list-style: none;
+}
+
+#properties ul li{
+	padding: 4px;
+}
+
+#properties ul li label{
+	font-weight: bold;
+}
+
+#properties ul li input[type=text]{
+	margin-left: 10px;
+	margin-top: -2px;
+}
+
+#properties ul li ol{
+	list-style: none;
+	margin-left: 20px;
+}
+
+#properties ul li ol li {
+	border-top: solid 1px #999;
+}
+
+#properties ul li ol li:first-child {
+	border-top: none;
+}
+
+#properties ul li ol li label{
+	display: block;
+	padding: 4px;
+}
+
+button {
+	margin-top: 5px;
+
+	background-color: #F3F3F3;
+	border: solid 1px #999;
+	text-shadow: 0 0 2px #CCC;
+
+	border-radius: 8px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+
+	-moz-box-shadow: 0 0 2px #888;
+	-webkit-box-shadow: 0 0 2px #888;
+	box-shadow: 0 0 2px #888;
+
+	font-weight: bold;
+	color: #333;
+	padding: 3px 6px;
+	cursor: pointer;
+}
+
+.required {
+	color: red;
+	font-weight: bold;
+}
