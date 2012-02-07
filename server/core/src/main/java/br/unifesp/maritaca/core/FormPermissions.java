@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import br.unifesp.maritaca.access.AccessLevel;
-import br.unifesp.maritaca.access.AccessLevelFactory;
 import br.unifesp.maritaca.persistence.annotations.Column;
 import br.unifesp.maritaca.persistence.annotations.Minimal;
 
@@ -22,10 +21,13 @@ public class FormPermissions {
 	@Minimal
 	private Group group = new Group();
 	@Column
+	@Minimal
 	private Long expDate;
 	@Column
+	@Minimal
 	private AccessLevel formAccess;
 	@Column
+	@Minimal
 	private AccessLevel answAccess;
 	
 	public FormPermissions() {
@@ -112,7 +114,7 @@ public class FormPermissions {
 	}
 
 	public void setFormAccess(String access) {
-		setFormAccess(AccessLevelFactory.getAccessLevelFromString(access));
+		setFormAccess(AccessLevel.getAccessLevelFromString(access));
 	}
 
 	public AccessLevel getAnswAccess() {
@@ -120,7 +122,7 @@ public class FormPermissions {
 	}
 
 	public void setAnswAccess(String access) {
-		setAnswAccess(AccessLevelFactory.getAccessLevelFromString(access));
+		setAnswAccess(AccessLevel.getAccessLevelFromString(access));
 	}
 
 	public void setAnswAccess(AccessLevel answAccess) {

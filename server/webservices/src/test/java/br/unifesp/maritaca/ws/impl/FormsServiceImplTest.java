@@ -51,11 +51,11 @@ public class FormsServiceImplTest {
 		form.setKey(UUID.fromString(uuid));
 		form.setXml(xml);
 		try {
-			when(frControl.getForm(any(UUID.class))).thenReturn(form);
+			when(frControl.getForm(any(UUID.class), any(Boolean.class))).thenReturn(form);
 			Form fresp = formService.getForm(uuid);
 			assertEquals(form.getKey(), fresp.getKey());
 
-			when(frControl.getForm(form.getKey())).thenThrow(
+			when(frControl.getForm(form.getKey(), false)).thenThrow(
 					new IllegalArgumentException("default exception"));
 			try {
 				formService.getForm(uuid2);

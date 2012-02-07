@@ -15,7 +15,7 @@ import br.unifesp.maritaca.persistence.EntityManager;
 public interface FormAnswerModel {
 	boolean saveForm(Form form);
 
-	Form getForm(UUID uid);
+	Form getForm(UUID uid, boolean minimal);
 
 	void setEntityManager(EntityManager em);
 
@@ -53,11 +53,19 @@ public interface FormAnswerModel {
 	FormPermissions getFormPermissionById(String formPermId);
 
 	boolean saveFormPermission(FormPermissions fp);
+	
+	void deleteFormPermission(FormPermissions formPerm);
+	
+	boolean saveDefaultFormPermissions(Form form, Group group);
 
 	<T> boolean currentUserHasPermission(T entity, Operation op);
+	
+	<T> boolean userHasPermission(User user, T entity, Operation op);
 	
 	Collection<Form> listAllFormsSortedbyName(User user);
 
 	Collection<Form> listAllFormsSortedbyDate(User user);
+
+	void close();
 
 }

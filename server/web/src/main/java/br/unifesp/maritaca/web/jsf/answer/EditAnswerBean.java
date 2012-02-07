@@ -39,7 +39,7 @@ public class EditAnswerBean extends AbstractBean {
 
 	public Form getForm() {
 		if (form!= null) {
-			this.form = formAnswCtrl.getForm(form.getKey());
+			this.form = formAnswCtrl.getForm(form.getKey(), true);
 		}
 		return form;
 	}

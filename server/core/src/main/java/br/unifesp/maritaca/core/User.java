@@ -107,14 +107,4 @@ public class User implements Serializable, Cloneable{
 			return key.hashCode();
 		}
 	}
-
-	@Override
-	public User clone(){
-		try {
-			return (User)super.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
 }

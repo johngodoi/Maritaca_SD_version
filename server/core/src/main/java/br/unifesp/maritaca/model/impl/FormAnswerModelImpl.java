@@ -1,6 +1,5 @@
 package br.unifesp.maritaca.model.impl;
 
-
 import static br.unifesp.maritaca.util.Utils.verifyEM;
 import static br.unifesp.maritaca.util.Utils.verifyEntity;
 
@@ -12,8 +11,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import br.unifesp.maritaca.access.PrivateAccess;
-import br.unifesp.maritaca.access.operation.Edit;
+import br.unifesp.maritaca.access.AccessLevel;
 import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Form;
@@ -34,6 +32,7 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 
 	public FormAnswerModelImpl() {
 		currentUser = UserLocator.getCurrentUser();
+		// verifyEntity(currentUser);
 	}
 
 	public EntityManager getEntityManager() {
@@ -75,8 +74,7 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 				form.setUrl(getUniqueUrl());
 			} else {
 				// check permissions for updating
-				hasPermission = currentUserHasPermission(form,
-						Edit.getInstance());
+				hasPermission = currentUserHasPermission(form, Operation.EDIT);
 			}
 
 			boolean result = false;
@@ -118,8 +116,8 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		FormPermissions formPer = new FormPermissions();
 		formPer.setForm(form);
 		formPer.setGroup(userModel.getAllUsersGroup());
-		formPer.setFormAccess(PrivateAccess.getInstance());
-		formPer.setAnswAccess(PrivateAccess.getInstance());
+		formPer.setFormAccess(AccessLevel.PRIVATE_ACCESS);
+		formPer.setAnswAccess(AccessLevel.PRIVATE_ACCESS);
 		return entityManager.persist(formPer);
 	}
 
@@ -139,10 +137,9 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 	}
 
 	@Override
-	public Form getForm(UUID uid) {
+	public Form getForm(UUID uid, boolean minimal) {
 		verifyEM(entityManager);
-
-		return entityManager.find(Form.class, uid);
+		return entityManager.find(Form.class, uid, minimal);
 	}
 
 	@Override
@@ -164,7 +161,7 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 	}
 
 	// TODO In the future implement this on entitymanager
-	public Collection<Form> listAllFormsSortedbyName(User user){
+	public Collection<Form> listAllFormsSortedbyName(User user) {
 		Collection<Form> forms = listAllFormsMinimalByUser(user);
 		for (Form form : forms) {
 			form.setFlagToOrder(0);
@@ -172,9 +169,9 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		Collections.sort((List<Form>) forms);
 		return forms;
 	}
-	
+
 	// TODO In the future implement this on entitymanager
-	public Collection<Form> listAllFormsSortedbyDate(User user){
+	public Collection<Form> listAllFormsSortedbyDate(User user) {
 		Collection<Form> forms = listAllFormsMinimalByUser(user);
 		for (Form form : forms) {
 			form.setFlagToOrder(1);
@@ -182,7 +179,7 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		Collections.sort((List<Form>) forms);
 		return forms;
 	}
-	
+
 	@Override
 	public boolean saveAnswer(Answer response) {
 		verifyEM(entityManager);
@@ -190,7 +187,7 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		if (response == null)
 			throw new IllegalArgumentException("Response cannot be null");
 		verifyEntity(response.getUser());
-		
+
 		if (!entityManager.rowDataExists(User.class, response.getUser()
 				.getKey())) {
 			throw new IllegalArgumentException(
@@ -232,11 +229,25 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 					.cQuery(Answer.class, "form", formId.toString());
 	}
 
+	/**
+	 * Delete a Form if user has permission
+	 */
 	@Override
 	public void deleteForm(Form form) {
 		verifyEM(entityManager);
-		entityManager.delete(form);
-		// TODO delete answers? permissions?
+		// verify if current user has permissions
+		if (currentUserHasPermission(form, Operation.DELETE)) {
+
+			// first delete permissions
+			for (FormPermissions fp : getFormPermissions(form)) {
+				entityManager.delete(fp);
+			}
+			entityManager.delete(form);
+			// TODO delete answers?
+		} else {
+			// user does has permission
+			// TODO: generate exception?
+		}
 	}
 
 	@Override
@@ -300,6 +311,12 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 					"Incomplete parameters, form permission not saved");
 		}
 
+		if (fp.getKey() != null
+				&& !currentUserHasPermission(fp.getForm(), Operation.EDIT)) {
+			// user does not have permission to edit
+			return false;
+		}
+
 		// verify if form and group exists
 		if (entityManager.find(Form.class, fp.getForm().getKey(), true) == null) {
 			throw new IllegalArgumentException(
@@ -310,40 +327,85 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 					"Form not exists, form permission not saved");
 		}
 
+		// verify if group-form pair exists in form permissions for new
+		// permission
+		if (fp.getKey() == null) {
+			for (FormPermissions formperm : getFormPermissions(fp.getForm())) {
+				if (formperm.getGroup().getKey().equals(fp.getGroup().getKey())) {
+					// update the formpermissions, set old key to update the
+					// data
+					fp.setKey(formperm.getKey());
+				}
+			}
+		}
+
 		// persist fp
 		return entityManager.persist(fp);
+	}
+
+	/**
+	 * Checks if current user has permission of an operation over an entity
+	 */
+	@Override
+	public <T> boolean currentUserHasPermission(T entity, Operation op) {
+		User user = getCurrentUser();
+		return userHasPermission(user, entity, op);
 	}
 
 	/**
 	 * Checks if an user has permission of an operation over an entity
 	 */
 	@Override
-	public <T> boolean currentUserHasPermission(T entity, Operation op) {
+	public <T> boolean userHasPermission(User user, T entity, Operation op) {
 		verifyEM(entityManager);
-		if (getCurrentUser() == null && op == null)
+		if (user == null && op == null)
 			return false;
-		User user = getCurrentUser();
 		// check type
 		if (entity instanceof Form) {
-			Form form = (Form) entity;
-			// if form.user equals current user, user is owner and has all
-			// permissions
-			if (user.equals(form.getUser())) {
-				return true;
-			}
-			// not a owner, get permission of form
-			List<FormPermissions> listFP = getFormPermissions(form);
-			for (FormPermissions fp : listFP) {
-				if (fp.getFormAccess().isOperationEnabled(op)
-						&& userModel.userIsMemberOfGroup(user, fp.getGroup())) {
-					// if operation OP is enable in FormAccess and current user
-					// is member of group fp.getGroup, so it has permission
-					return true;
-				}
-			}
+			return userHasPermissionInForm(user, (Form) entity, op);
+		} else if (entity instanceof FormPermissions) {
+			return userHasPermissionInFormPermissions(user,
+					(FormPermissions) entity, op);
 		}
 
 		return false;
+	}
+
+	private boolean userHasPermissionInForm(User user, Form form, Operation op) {
+		if (form.getUser() == null) {
+			form = getForm(form.getKey(), true);
+		}
+		// if form.user equals current user, user is owner and has all
+		// permissions
+		if (user.equals(form.getUser())) {
+			return true;
+		}
+		// not a owner, get permission of form
+		List<FormPermissions> listFP = getFormPermissions(form);
+		for (FormPermissions fp : listFP) {
+			if (fp.getFormAccess().isOperationEnabled(op)
+					&& userModel.userIsMemberOfGroup(user, fp.getGroup())) {
+				// if operation OP is enable in FormAccess and current user
+				// is member of group fp.getGroup, so he/she has permission
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean userHasPermissionInFormPermissions(User user,
+			FormPermissions formPerm, Operation op) {
+		Group allUsers = userModel.getAllUsersGroup();
+		// verify if the permission is for the AllUsers group
+		if (allUsers.getKey().equals(formPerm.getGroup().getKey())) {
+			if (Operation.DELETE.equals(op)) {
+				// allusers group permissions CANNOT be deleted
+				return false;
+			}
+		}
+		// since operation is no deleted or group is not AllUsers, verify form
+		// permissions
+		return userHasPermission(user, formPerm.getForm(), op);
 	}
 
 	/**
@@ -369,22 +431,21 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 	public Collection<Form> listAllSharedForms(User user, boolean minimal) {
 		verifyEM(entityManager);
 		verifyEntity(user);
+		User currentUser = getCurrentUser();
 
 		Set<Form> forms = new HashSet<Form>();
-		//get groups where user is member
+		// get groups where user is member
 		Collection<GroupUser> groups = userModel.getGroupsByMember(user);
 		for (GroupUser gu : groups) {
-			//get all formpermissions in each group
+			// get all formpermissions in each group
 			Collection<FormPermissions> l1Forms = getFormPermissionsByGroup(gu
 					.getGroup());
 			for (FormPermissions fp : l1Forms) {
-				//get the form and add it if expdate > now
-				if (fp.getExpDate() > System.currentTimeMillis()) {
-					Form form = fp.getForm();
-					forms.add(form);
-				} else {
-					// TODO delete fp?, it has expired
-					entityManager.delete(fp);
+				// get the form and add it if expdate > now
+				Form form = getFormWithPermission(fp, true);
+				if (form != null) {
+					if (!form.getUser().equals(currentUser))
+						forms.add(form);
 				}
 			}
 		}
@@ -409,4 +470,50 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		return result;
 	}
 
+	/**
+	 * get a Form if has permission granted
+	 * 
+	 * @param fp
+	 * @param minimal
+	 * @return
+	 */
+	private Form getFormWithPermission(FormPermissions fp, boolean minimal) {
+		Form form = null;
+		long now = System.currentTimeMillis();
+		// verify expiration date
+		if (fp.getExpDate() != null && fp.getExpDate() < now) {
+				// TODO delete fp?, it has expired
+		} else if (!fp.getFormAccess().equals(AccessLevel.PRIVATE_ACCESS)) {
+			// date ok, verify access
+			form = getForm(fp.getForm().getKey(), minimal);
+		}
+		return form;
+	}
+
+	@Override
+	public void close() {
+		entityManager = null;
+		currentUser = null;
+		userModel = null;
+	}
+
+	/**
+	 * Save a form permission with default access level (private)
+	 */
+	@Override
+	public boolean saveDefaultFormPermissions(Form form, Group group) {
+		FormPermissions formPerm = new FormPermissions();
+		formPerm.setForm(form);
+		formPerm.setGroup(group);
+		formPerm.setFormAccess(AccessLevel.PRIVATE_ACCESS);
+		formPerm.setAnswAccess(AccessLevel.PRIVATE_ACCESS);
+		return saveFormPermission(formPerm);
+	}
+
+	@Override
+	public void deleteFormPermission(FormPermissions formPerm) {
+		verifyEntity(formPerm);
+		entityManager.delete(formPerm);
+
+	}
 }
