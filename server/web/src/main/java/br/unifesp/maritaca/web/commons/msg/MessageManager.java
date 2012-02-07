@@ -17,7 +17,6 @@ public class MessageManager {
 	private MessageManager(){
 		String bundle = MESSAGES_FILE;		
 		setResourceBundle(ResourceBundle.getBundle(bundle, usedLocale));
-		System.out.println("agua pasò por aqui");
 	}
 	
 	public String getMessage(String msgKey){
