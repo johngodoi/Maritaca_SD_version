@@ -1,16 +1,34 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-	<!--declaração de variáveis simples - -> <xs: element name="item" type="string"> 
-		<xs: element name="item2" type="int"> <xs: element name="textArea" type="string"> 
-		<xs: element name ="number" type="positiveInteger"> <xs: element name="label" 
-		type ="string"> <xs: element name="help" type ="string"> <xs: element name="date" 
-		type="date"> <xs: element name="time" type = "time"> <xs: element name="form"> 
-		<xs: complexType> <xs:sequence> <xs: element name="component"> <xs: complexType> 
-		<xs:sequence> <xs: element ref="item"> <xs: element ref="textArea"> <xs: 
-		element ref="number"> <xs: element ref="label"> <xs: element ref="help"> 
-		<xs: element ref="date"> <xs: element ref="time"> <xs: element ref="combo_box"> 
-		<xs: element ref="check_box"> <xs: element ref="radiobutton"> </xs:sequence> 
-		</xs:complexType> </xs:element><!--termina aqui o "component" -->
+<xsd:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<!--declaração de variáveis simples --> 
+		<xsd: element name="item" type="string"> 
+		<xsd:element name="item2" type="integer"> 
+		<xsd:element name="textArea" type="string"> 
+		<xsd:element name ="number" type="positiveInteger"> 
+		<xsd:element name="label" type ="string"> 
+		<xsd:element name="help" type ="string"> 
+		<xsd:element name="date" type="date">
+		<xsd:element name="time" type = "time"> 
+		<xsd:element name="form">
+		<xsd:complexType> 
+			<xsd:sequence> 
+				<xsd:element name="component"> 
+				<xsd:complexType> 
+					<xsd:sequence> 
+						<xsd:element ref="item">
+						<xsd:element ref="textArea"> 
+						<xsd:element ref="number"> 
+						<xsd:element ref="label"> 
+						<xsd:element ref="help">
+						<xsd:element ref="date"> 
+						<xsd:element ref="time"> 
+						<xsd:element ref="combo_box">
+						<xsd:element ref="check_box"> 
+						<xsd:element ref="radiobutton"> 
+					</xs:sequence> 
+				</xs:complexType> 
+			</xs:element>
+	<!--termina aqui o "component" -->
 
 	<xs:element name="radiobutton" id="0">
 		<xs:simpleType>
