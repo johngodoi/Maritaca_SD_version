@@ -36,8 +36,8 @@ public class UserTest {
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
 			m.marshal(user, os);
-			System.out.println(xmlout);
-			System.out.println(os.toString("UTF8"));
+//			System.out.println(xmlout);
+//			System.out.println(os.toString("UTF8"));
 			Assert.assertEquals(xmlout, os.toString("UTF8"));
 		} catch (JAXBException e) {
 			e.printStackTrace();

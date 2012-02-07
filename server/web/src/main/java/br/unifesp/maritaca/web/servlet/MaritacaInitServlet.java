@@ -21,7 +21,6 @@ public class MaritacaInitServlet extends HttpServlet {
      */
     public MaritacaInitServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
     
     @Override

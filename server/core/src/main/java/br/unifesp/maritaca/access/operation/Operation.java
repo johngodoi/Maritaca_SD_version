@@ -1,5 +1,5 @@
 package br.unifesp.maritaca.access.operation;
 
-public interface Operation {
-
+public enum Operation {
+	READ, EDIT, DELETE
 }

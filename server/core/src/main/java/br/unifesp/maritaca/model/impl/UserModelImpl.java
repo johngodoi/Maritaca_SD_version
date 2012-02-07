@@ -4,10 +4,11 @@ import static br.unifesp.maritaca.util.Utils.verifyEM;
 import static br.unifesp.maritaca.util.Utils.verifyEntity;
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-import java.util.ArrayList;
 
 import br.unifesp.maritaca.core.Group;
 import br.unifesp.maritaca.core.GroupUser;
@@ -20,7 +21,7 @@ import br.unifesp.maritaca.util.UserLocator;
 public class UserModelImpl implements UserModel, Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private EntityManager entityManager;
 	private ManagerModel managerModel;
 	private User currentUser;
@@ -70,15 +71,6 @@ public class UserModelImpl implements UserModel, Serializable {
 		return entityManager.listAll(User.class, true);
 	}
 
-	/**
-	 * Returns the first user with the given email address. Email addresses
-	 * should be unique in the database.
-	 * 
-	 * @param email
-	 *            Address of the searched user.
-	 * @return The user found.
-	 */
-	@Override
 	public User getUser(String email) {
 		verifyEM(entityManager);
 		List<User> users = entityManager.cQuery(User.class, "email", email);
@@ -98,17 +90,33 @@ public class UserModelImpl implements UserModel, Serializable {
 	@Override
 	public boolean saveGroup(Group group) {
 		verifyEM(entityManager);
-		if (group == null || group.getOwner() == null
-				|| group.getName() == null || group.getName().length() == 0) {
+		if(group==null){
+			throw new IllegalArgumentException("Invalid group");
+		}
+		verifyEntity(group.getOwner());
+		if (group.getName().length() == 0) {
 			throw new IllegalArgumentException("Incomplete parameters");
 		}
 
 		if (group.getKey() == null) {
 			// new group
-			if(searchGroupByName(group.getName())!=null){
+			if (searchGroupByName(group.getName()) != null) {
 				return false;
 			}
-			return entityManager.persist(group);
+			if (entityManager.persist(group)) {
+				// add current user to group
+				GroupUser grUser = new GroupUser();
+				grUser.setGroup(group);
+				grUser.setUser(group.getOwner());
+				if (saveGroupUser(grUser))
+					return true;
+				else {
+					// not able to add user to group
+					entityManager.delete(group);
+					return false;
+				}
+			} else
+				return false; // group not saved
 		} else {
 			// look for group
 			Group g = getGroup(group.getKey());
@@ -120,8 +128,7 @@ public class UserModelImpl implements UserModel, Serializable {
 				// update name
 				return entityManager.persist(group);
 		}
-	}	
-	
+	}
 
 	/**
 	 * @return List of group which the user is owner
@@ -145,7 +152,7 @@ public class UserModelImpl implements UserModel, Serializable {
 		verifyEM(entityManager);
 		verifyEntity(user);
 		verifyEntity(group);
-		
+
 		GroupUser grUser = new GroupUser();
 		grUser.setGroup(group);
 		grUser.setUser(user);
@@ -153,9 +160,9 @@ public class UserModelImpl implements UserModel, Serializable {
 	}
 
 	/**
-	 * Checks if a given user belongs to a group
-	 * By default, a group-owner belongs to a group, but
-	 * owner is not save in columnfamily GroupUser
+	 * Checks if a given user belongs to a group By default, a group-owner
+	 * belongs to a group, but owner is not save in columnfamily GroupUser
+	 * 
 	 * @param user
 	 * @param group
 	 * @return
@@ -165,21 +172,21 @@ public class UserModelImpl implements UserModel, Serializable {
 		verifyEM(entityManager);
 		verifyEntity(user);
 		verifyEntity(group);
-		
-		if(group.getOwner().equals(user)){
-			//owner is default member of group
+
+		if (group.getOwner().equals(user)) {
+			// owner is default member of group
 			return true;
 		}
 
-		//is not a owner, get members
+		// is not a owner, get members
 		List<GroupUser> list = entityManager.cQuery(GroupUser.class, "group",
 				group.getKey().toString(), true);
 		for (GroupUser gu : list) {
 			if (gu.getUser().equals(user))
-				return true;//user is member
+				return true;// user is member
 		}
 
-		return false;//not a member
+		return false;// not a member
 	}
 
 	/**
@@ -207,6 +214,9 @@ public class UserModelImpl implements UserModel, Serializable {
 	}
 
 	public User getCurrentUser() {
+		if(currentUser==null){
+			setCurrentUser(UserLocator.getCurrentUser());
+		}
 		return currentUser;
 	}
 
@@ -218,52 +228,99 @@ public class UserModelImpl implements UserModel, Serializable {
 	public Collection<GroupUser> getGroupsByMember(User user) {
 		verifyEM(entityManager);
 		verifyEntity(user);
-		
-		return entityManager.cQuery(GroupUser.class, "user",
-				user.getKey().toString(), true);
+
+		return entityManager.cQuery(GroupUser.class, "user", user.getKey()
+				.toString(), true);
 	}
 
 	public Group searchGroupByName(String groupName) {
 		if (entityManager == null || groupName == null)
 			return null;
-		
-		List<Group> foundGroups = entityManager.cQuery(Group.class, "name", groupName);
-		
-		if(foundGroups.size()==0){
+
+		List<Group> foundGroups = entityManager.cQuery(Group.class, "name",
+				groupName);
+
+		if (foundGroups.size() == 0) {
 			return null;
-		} else if (foundGroups.size()==1){
+		} else if (foundGroups.size() == 1) {
 			return foundGroups.get(0);
 		} else {
-			throw new RuntimeException("Invalid number of groups with name:"+groupName);
+			throw new RuntimeException("Invalid number of groups with name:"
+					+ groupName);
 		}
 	}
 
 	@Override
 	public List<User> usersStartingWith(String startingString) {
-		Collection<User> listUser       = listAllUsers();		
-		List<User>       matchingEmails = new ArrayList<User>();
-		
-		for(User u : listUser){
-			if(u.getEmail().matches("^"+startingString+".*")){
-				matchingEmails.add(u);
-			}
-		}		
-		return matchingEmails;
+		try {
+			return objectsStartingWith(User.class, startingString, "getEmail");
+		} catch (NoSuchMethodException e) {
+			// TODO: add log, getMail not found in USER
+			return new ArrayList<User>(0);
+		}
 	}
 
 	@Override
-	public User findUserByEmail(String email) {		
+	public List<Group> groupsStartingWith(String startingString) {
+		try {
+			return objectsStartingWith(Group.class, startingString, "getName");
+		} catch (NoSuchMethodException e) {
+			// TODO: add log, getMail not found in USER
+			return new ArrayList<Group>(0);
+		}
+	}
+
+	/**
+	 * Returns a list<T> with the objects that start with startingString Objects
+	 * are in MINIMAL representation
+	 * 
+	 * @param cl
+	 * @param startingStr
+	 * @param methodName
+	 * @return
+	 * @throws NoSuchMethodException
+	 */
+	private <T> List<T> objectsStartingWith(Class<T> cl, String startingStr,
+			String methodName) throws NoSuchMethodException {
+		Method method;
+		try {
+			method = cl.getMethod(methodName);
+		} catch (SecurityException e) {
+			throw new RuntimeException(e);
+		}
+		// TODO: improve this, since ti get all elements in a column family
+		// it could be not optimal with big collections
+		List<T> resultEM = entityManager.listAll(cl, true);
+		ArrayList<T> result = new ArrayList<T>(0);
+		for (T obj : resultEM) {
+			try {
+				String value = (String) method.invoke(obj);
+				if (value != null && value.matches("^" + startingStr + ".*")) {
+					result.add(obj);
+				}
+			} catch (Exception e) {
+				// TODO: add log
+				continue;
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public User findUserByEmail(String email) {
 		if (entityManager == null || email == null)
 			return null;
-		
-		List<User> foundUsers = entityManager.cQuery(User.class, "email", email);
-		
-		if(foundUsers.size()==0){
+
+		List<User> foundUsers = entityManager
+				.cQuery(User.class, "email", email);
+
+		if (foundUsers.size() == 0) {
 			return null;
-		} else if (foundUsers.size()==1){
+		} else if (foundUsers.size() == 1) {
 			return foundUsers.get(0);
 		} else {
-			throw new RuntimeException("Invalid number of users for the email:"+email);
+			throw new RuntimeException("Invalid number of users for the email:"
+					+ email);
 		}
 	}
 
@@ -271,7 +328,104 @@ public class UserModelImpl implements UserModel, Serializable {
 	public boolean saveGroupUser(GroupUser groupUser) {
 		if (entityManager == null || groupUser == null)
 			return false;
-		
+
 		return entityManager.persist(groupUser);
+	}
+
+	@Override
+	public boolean removeCurrentUserFromGroup(Group group) {
+		return removeUserFromGroup(group, getCurrentUser());
+	}
+
+	@Override
+	public boolean removeGroup(Group group) {
+		verifyEM(entityManager);
+		verifyEntity(group);
+		
+		if(!removeGroupUserFromGroup(group)){
+			return false;
+		} else {
+			return entityManager.delete(group);
+		}				
+	}
+	
+	/**
+	 * Removes every entry in GroupsUser from the given group.
+	 * @param group
+	 * @return true if successful, false otherwise
+	 */
+	private boolean removeGroupUserFromGroup(Group group){
+		verifyEM(entityManager);
+		verifyEntity(group);
+		List<GroupUser> groupsUserFromUser;
+		groupsUserFromUser = entityManager.cQuery(GroupUser.class, "group", group.getKey().toString());
+		
+		for(GroupUser groupUser : groupsUserFromUser){
+			if(groupUser.getGroup().equals(group.getKey())){
+				if(!entityManager.delete(groupUser)){
+					return false;
+				}
+			}
+		}
+		
+		return true;
+	}
+
+	@Override
+	public Collection<User> searchUsersByGroup(Group group) {
+		String           groupKey            = group.getKey().toString();
+		List<GroupUser>  groupsUserFromUser  = entityManager.cQuery(GroupUser.class, "group", groupKey);
+		Collection<User> foundUsers          = new ArrayList<User>();
+				
+		for(GroupUser groupUser : groupsUserFromUser){
+			User user = entityManager.find(User.class, groupUser.getUser().getKey());
+			foundUsers.add(user);
+		}
+		return foundUsers;
+	}
+
+	@Override
+	public boolean removeUserFromGroup(Group group, User user) {
+		verifyEM(entityManager);
+		verifyEntity(group);
+
+		List<GroupUser> groupsUserFromUser = new ArrayList<GroupUser>();
+		groupsUserFromUser = entityManager.cQuery(GroupUser.class, "user", user.getKey().toString());
+		
+		for(GroupUser groupUser : groupsUserFromUser){
+			if(groupUser.getGroup().getKey().equals(group.getKey())){
+				if(!entityManager.delete(groupUser)){
+					return false;
+				} else {
+					return true;
+				}
+			}
+		}
+		//TODO Add log warning in this case...
+		return false; // User is not in the given group
+	}
+	
+	@Override
+	public void close() {
+		entityManager = null;
+		currentUser = null;
+		managerModel = null;
+	}
+
+	/**
+	 * Returns the full data of a group's owner
+	 */
+	@Override
+	public User getOwnerOfGroup(Group gr) {
+		if(gr.getOwner()!=null){
+			return getUser(gr.getOwner().getKey());
+		}else{
+			Group group = entityManager.find(Group.class, gr.getKey(), true);
+			if(group!=null){
+				return getOwnerOfGroup(group);
+			}else{
+				return null;
+			}
+		}
 	}
 }

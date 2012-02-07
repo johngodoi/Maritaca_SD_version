@@ -18,7 +18,6 @@ public class FormConverter implements Converter {
 			return form;
 			
 		} catch (Exception e) {
-			System.out.println("Not possivel to get UUID from " + arg2);
 			e.printStackTrace();
 			return null;
 		}
