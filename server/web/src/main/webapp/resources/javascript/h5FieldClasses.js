@@ -192,5 +192,5 @@ var  attribCreator = function (field, value){
 };
 
 var  tagCreator = function (tag, value){
-	return '\n<' + tag + '>' + value + '</' + tag + '>';
+	return '<' + tag + '>' + value + '</' + tag + '>';
 };

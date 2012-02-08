@@ -13,34 +13,14 @@
 	<composite:interface>
 	</composite:interface>
 	<composite:implementation>
-		<h:outputScript name="jquery.i18n.properties.js" library="javascript" />
-		<h:outputScript name="h5FormClass.js" library="javascript" />
-		<h:outputScript name="h5FieldClasses.js" library="javascript" />
-		<h:outputScript name="h5Script.js" library="javascript" />
-		<!-- c:choose>
-			<c:when test="#{editFormBean.newForm}">
-				<p>#{msgs.form_new}</p>
-			</c:when>
-		</c:choose>
-		<c:choose>
-			<c:when test="#{editFormBean.editForm}">
-				<p>#{msgs.form_edit}</p>
-			</c:when>
-		</c:choose-->
 		<h:panelGrid id="formRenderTable" columns="3"
 			styleClass="formRenderTable">
 			<tr>
 				<td><label>#{msgs.form_title}</label></td>
-				<td><input type="text" id="titleForm"
-					value="#{editFormBean.form.title}" readonly="readonly" /></td>
+				<h:inputText value="#{editFormBean.form.title}" id="titleForm"
+					readonly="#{!editFormBean.editForm}" onkeyup="updateTitle(value);" />
 				<td></td>
 			</tr>
-			<!-- h:outputText styleClass="formLabel" value="#{msgs.form_title}" />
-			<h:inputText styleClass="formIdValue" id="titleForm"
-				value="#{editFormBean.form.title}"
-				readonly="#{!editFormBean.editForm}" /-->
-			<!--h:outputText styleClass="formLabel"
-				value="#{msgs.form_renderer_xml}" /-->
 
 			<tr valign="top">
 				<td>
@@ -52,7 +32,8 @@
 									readonly="readonly" size="12" /></li>
 								<li><input type="radio" readonly="readonly" />Radiobox</li>
 								<li><input type="checkbox" readonly="readonly" />Checkbox</li>
-								<li><input type="number" readonly="readonly" value="0" size="12"/></li>
+								<li><input type="number" readonly="readonly" value="0"
+									size="12" /></li>
 							</ol>
 						</fieldset>
 					</div>
@@ -83,7 +64,7 @@
 							<ul>
 								<li><label>#{msgs.form_edit_fieldMaxValue} <input
 										type="text" id="fieldMaxValue" class="numeric" /></label></li>
-										<li><label>#{msgs.form_edit_fieldMinValue} <input
+								<li><label>#{msgs.form_edit_fieldMinValue} <input
 										type="text" id="fieldMinValue" class="numeric" /></label></li>
 								<li><label>#{msgs.form_edit_fieldSize} <input
 										type="text" id="fieldSize" class="numeric" /></label></li>
@@ -92,7 +73,7 @@
 							</ul>
 						</div>
 						<center>
-							<button  id="fieldSave" type="button">#{msgs.commons_save}</button>
+							<button id="fieldSave" type="button">#{msgs.commons_save}</button>
 							<button id="fieldDelete" type="button">#{msgs.commons_delete}</button>
 						</center>
 					</fieldset>
@@ -110,6 +91,7 @@
 			</c:if>
 
 		</h:panelGrid>
+		<h:outputScript>initFormEditor('#{(editFormBean.form.title!=null)?editFormBean.form.title:msgs.form_new}');</h:outputScript>
 	</composite:implementation>
 </body>
 </html>

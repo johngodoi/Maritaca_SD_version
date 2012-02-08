@@ -24,14 +24,15 @@ var FormClass = function() {
 	
 	this.toXML = function() {
 		var xml = '<?xml version="1.0" encoding="UTF-8"?>';
-			xml += '\n<form>';
-			xml += '\n<title>' + this.title + '<\title>';
-			xml += '\n<questions>';
+			xml += '<form>';
+			xml += '<title>' + this.title + '</title>';
+			xml += '<questions>';
 		for(var i in this.elements) {
+			this.elements[i].id=i;
 			xml += this.elements[i].toXML(i);
 		}
-		xml += '\n</questions>';
-		xml += '\n</form>';
+		xml += '</questions>';
+		xml += '</form>';
 		return xml;
 	};
 	
@@ -51,5 +52,10 @@ var FormClass = function() {
 			
 			this.elements.push(element);
 		}
+	};
+	
+	this.updateTitle = function(newtitle){
+		this.title = newtitle;
+		$('#' + this.container + ' legend').html(newtitle);
 	};
 };
