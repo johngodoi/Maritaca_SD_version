@@ -13,7 +13,6 @@
 	<composite:interface>
 	</composite:interface>
 	<composite:implementation>
-		<h:outputStylesheet name="h5style.css" library="css"></h:outputStylesheet>
 		<h:outputScript name="h5FormClass.js" library="javascript" />
 		<h:outputScript name="h5FieldClasses.js" library="javascript" />
 		<h:outputScript name="h5Script.js" library="javascript" />
@@ -52,6 +51,7 @@
 									readonly="readonly" size="12" /></li>
 								<li><input type="radio" readonly="readonly" />Radiobox</li>
 								<li><input type="checkbox" readonly="readonly" />Checkbox</li>
+								<li><input type="number" readonly="readonly" value="0" size="12"/></li>
 							</ol>
 						</fieldset>
 					</div>
@@ -82,6 +82,8 @@
 							<ul>
 								<li><label>#{msgs.form_edit_fieldMaxValue} <input
 										type="text" id="fieldMaxValue" class="numeric" /></label></li>
+										<li><label>#{msgs.form_edit_fieldMinValue} <input
+										type="text" id="fieldMinValue" class="numeric" /></label></li>
 								<li><label>#{msgs.form_edit_fieldSize} <input
 										type="text" id="fieldSize" class="numeric" /></label></li>
 								<li><label>#{msgs.form_edit_fieldDefault} <input
