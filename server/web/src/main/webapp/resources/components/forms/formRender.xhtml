@@ -53,6 +53,7 @@
 								<li><input type="radio" readonly="readonly" />Radiobox</li>
 								<li><input type="checkbox" readonly="readonly" />Checkbox</li>
 								<li><input type="number" readonly="readonly" value="0" size="12"/></li>
+								<li><input type="date" readonly="readonly" value="2012-01-01"/></li>
 							</ol>
 						</fieldset>
 					</div>
@@ -75,20 +76,52 @@
 									type="text" id="fieldHelp" />
 							</label></li>
 							<li><label>#{msgs.form_edit_fieldRequired}</label> <label><input
-									type="radio" id="fieldRequiredTrue" name="fieldRequired" />#{msgs.commons_true}</label>
+									type="radio" id="fieldRequiredTrue" name="fieldRequired" value="true" />#{msgs.commons_true}</label>
 								<label><input type="radio" id="fieldRequiredFalse"
-									name="fieldRequired" />#{msgs.commons_false}</label></li>
+									name="fieldRequired" value="false" />#{msgs.commons_false}</label></li>
 						</ul>
 						<div id="propertiesSpecific">
 							<ul>
-								<li><label>#{msgs.form_edit_fieldMaxValue} <input
-										type="text" id="fieldMaxValue" class="numeric" /></label></li>
-										<li><label>#{msgs.form_edit_fieldMinValue} <input
-										type="text" id="fieldMinValue" class="numeric" /></label></li>
-								<li><label>#{msgs.form_edit_fieldSize} <input
-										type="text" id="fieldSize" class="numeric" /></label></li>
-								<li><label>#{msgs.form_edit_fieldDefault} <input
-										type="text" id="fieldDefault" /></label></li>
+								<li>
+									<label>#{msgs.form_edit_fieldMaxValue} 
+										<input type="number" id="fieldMaxValue" size="4" class="numeric" />
+									</label>
+								</li>
+								<li> <!-- maxValue Date -->
+									<label>#{msgs.form_edit_fieldMaxValue} 
+										<input type="date" id="fieldMaxValueDate"/>
+									</label>
+								</li>
+								<li>
+									<label>#{msgs.form_edit_fieldMinValue} 
+										<input type="number" id="fieldMinValue" size="4" class="numeric" />
+									</label>
+								</li>
+								<li> <!-- minValue Date -->
+									<label>#{msgs.form_edit_fieldMinValue} 
+										<input type="date" id="fieldMinValueDate"/>
+									</label>
+								</li>
+								<li>
+									<label>#{msgs.form_edit_fieldSize} 
+										<input type="number" id="fieldSize" size="4" class="numeric" />
+									</label>
+								</li>
+								<li> <!-- default text types -->
+									<label>#{msgs.form_edit_fieldDefault} 
+										<input type="text" id="fieldDefault" />
+									</label>
+								</li>
+								<li> <!-- default numeric types -->
+									<label>#{msgs.form_edit_fieldDefault} 
+										<input type="number" id="fieldNumericDefault" size="4" />
+									</label>
+								</li>
+								<li> <!-- default date -->
+									<label>#{msgs.form_edit_fieldDefault} 
+										<input type="date" id="fieldDateDefault" />
+									</label>
+								</li>
 							</ul>
 						</div>
 						<center>
