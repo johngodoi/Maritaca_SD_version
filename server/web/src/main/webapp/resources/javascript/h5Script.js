@@ -3,27 +3,28 @@ var form = null;
 var warning = false;
 var actualForm = localStorage['actualForm'];
 
-// This will initialize the plugin jQuery.i18n
-// The file properties is reference by path
-jQuery.i18n.properties({
-    name:'Messages', 
-    path:'../../resources/bundle/', 
-    mode:'both',
-});
-
-$(document).ready(function() {
+function initFormEditor(formtitle) {
+	// This will initialize the plugin jQuery.i18n
+	// The file properties is reference by path
+	jQuery.i18n.properties({
+	    name:'Messages', 
+	    path:'../../resources/bundle/', 
+	    mode:'both'
+	});
+	
+	if(formtitle == undefined){
+		formtitle = jQuery.i18n.prop('msg_form_title'); //'My New Form';
+	}
 
 	form = new FormClass();
 
 	if (actualForm) {
 		form.fromJSON(actualForm);
 	} else {
-		// internationalize
-		form.title = jQuery.i18n.prop('msg_form_title'); //'My New Form';
+		form.title = formtitle;
 		form.container = 'xmlForm';
 	}
-
-	$('#titleForm').val(form.title);
+	
 	form.renderForm(true);
 
 	window.onbeforeunload = function() {
@@ -93,7 +94,7 @@ $(document).ready(function() {
 	});
 
 	initForm();
-});
+};
 
 function initForm() {
 	$('#xmlForm ol li').click(function() {
@@ -135,8 +136,17 @@ function move(value) {
 
 	form.elements[editElement] = form.elements[newElement];
 	form.elements[newElement] = currentField;
-
 	editElement = newElement;
+	
 	form.renderForm();
 	$('li#field_' + editElement).click();
+}
+
+function sendFormToServer(){
+	var xml = form.toXML();
+	sendFormAjax(xml); //a4j:jsFunction
+}
+
+function updateTitle(value){
+	form.updateTitle(value);
 }
