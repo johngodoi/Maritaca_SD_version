@@ -3,6 +3,14 @@ var form = null;
 var warning = false;
 var actualForm = localStorage['actualForm'];
 
+// This will initialize the plugin jQuery.i18n
+// The file properties is reference by path
+jQuery.i18n.properties({
+    name:'Messages', 
+    path:'../../resources/bundle/', 
+    mode:'both',
+});
+
 $(document).ready(function() {
 
 	form = new FormClass();
@@ -10,8 +18,8 @@ $(document).ready(function() {
 	if (actualForm) {
 		form.fromJSON(actualForm);
 	} else {
-		// TODO internationalize
-		form.title = 'My New Form';
+		// internationalize
+		form.title = jQuery.i18n.prop('msg_form_title'); //'My New Form';
 		form.container = 'xmlForm';
 	}
 
@@ -20,10 +28,8 @@ $(document).ready(function() {
 
 	window.onbeforeunload = function() {
 		if (warning) {
-			// TODO internationalize
-			return "Changes will be lost if you quit \n\n"
-					+ "To save the work before to quit, click in Save, "
-					+ "in section Form Options";
+			// internationalize
+			return jQuery.i18n.prop('msg_warning_onbeforeunload');
 		}
 	};
 
@@ -61,8 +67,8 @@ $(document).ready(function() {
 		if (elem == null) {
 			return true;
 		}
-		// TODO internationalize
-		elem.title = 'Field title';
+		// internationalize
+		elem.title = jQuery.i18n.prop('msg_form_fieldTitle');
 
 		form.elements.push(elem);
 		form.renderForm();
