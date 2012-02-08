@@ -69,7 +69,7 @@ function initFormEditor(formtitle) {
 			return true;
 		}
 		// internationalize
-		elem.title = jQuery.i18n.prop('msg_form_fieldTitle');
+//		elem.title = jQuery.i18n.prop('msg_form_fieldTitle');
 
 		form.elements.push(elem);
 		form.renderForm();
