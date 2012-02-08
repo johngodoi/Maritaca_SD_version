@@ -105,7 +105,7 @@ function editField(id) {
 
 	// showing the properties
 	$('#properties').show();
-	$('#propertiesSpecific').children('ul li').hide();
+	$('#propertiesSpecific ul li').children().hide();
 	element.showProperties();
 }
 

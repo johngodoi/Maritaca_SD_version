@@ -39,7 +39,7 @@ fieldset legend {
 	box-shadow: 0 0 2px #888;
 }
 
-input[type=text] {
+input[type=text], input[type=number] {
 	border-radius: 5px;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;

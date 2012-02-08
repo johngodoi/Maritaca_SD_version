@@ -39,8 +39,8 @@ var Field = function() {
 		xml += '<' + this.type + ' id="' + this.id + '" required="' + this.required  + '" ';
 		xml += this.addXMLSpecificAttributes();
 		xml += '>';
-		xml += '\n<label>' + this.title + '</label>';
-		xml += '\n<help>' + this.help + '</help>';
+		xml += tagCreator('label', this.title);
+		xml += tagCreator('help', this.help);
 		xml += this.addXMLElements();
 		xml += '\n</' + this.type + '>';
 		return xml;
@@ -71,34 +71,34 @@ var TextBox = function() {
 	
 	this.toHTMLSpecific = function() {
 		var html = '';
-		
-		html += '<input type="text" ';
-		html += 'id="field_' + this.id + '" ';
-		html += 'maxlength="' + this.size + '" ';
+		html +='<input ';
+		html += attribCreator('type', this.type);
+		html += attribCreator('id', 'field_' + this.id);
+		html += attribCreator('maxlength', this.size);
 		if(this.bydefault)
-			html += 'value="' + this.bydefault + '" ';
-		html += '//>';
+			html += attribCreator('value', this.bydefault);
+		html += '/>';
 		
 		return html;
 	};
 	
 	
 	this.addXMLSpecificAttributes = function() {
-		var xml = 'max="' + this.maxValue + '"';
+		var xml = attribCreator('max', this.maxValue);
 		return xml;
 	};
 	
 	this.addXMLElements = function(){
-		var xml = '\n<size>' + this.size + '</size>';
-		xml += '\n<defaultvalue>' + this.bydefault + '</defaultvalue>';
+		var xml = tagCreator('size', this.size);
+		xml += tagCreator('defaultvalue', this.bydefault);
 		return xml;
 
 	};
 	
 	this.showSpecificProperties = function(){
-		$('#fieldDefault').show().val(this.bydefault);
-		$('#fieldMaxValue').show().val(this.maxValue);
-		$('#fieldSize').show().val(this.size);
+		$('#fieldDefault').val(this.bydefault).parent().show();
+		$('#fieldMaxValue').val(this.maxValue).parent().show();
+		$('#fieldSize').val(this.size).parent().show();
 		$('#propertiesSpecific').show();
 	};
 	
@@ -116,11 +116,67 @@ var CheckBox = function() {
 	this.options = new Array();
 };
 
+
+//// Number Field ////
+var NumberField = function(){
+	this.bydefault = '';
+	this.maxValue = '';
+	this.minValue = '';
+	
+	this.toHTMLSpecific = function() {
+		var html = '';
+		
+		html += '<input ';
+		html += attribCreator( 'type' , this.type);
+		html += attribCreator('id', 'field_' + this.id);
+		html += this.specificAttributes();
+		html += '/>';
+		
+		return html;
+	};
+	
+	
+	this.addXMLSpecificAttributes = function() {
+		return this.specificAttributes();
+	};
+	
+	this.addXMLElements = function(){
+		//TODO: return IF comparisions
+		return "";
+
+	};
+	
+	this.showSpecificProperties = function(){
+		$('#fieldDefault').val(this.bydefault).parent().show();
+		$('#fieldMaxValue').val(this.maxValue).parent().show();
+		$('#fieldMinValue').val(this.size).parent().show();
+		$('#propertiesSpecific').show();
+	};
+	
+	this.saveSpecificProperties = function(){
+		this.bydefault = $('#fieldDefault').val();
+		this.minValue = $('#fieldMinValue').val();
+		this.maxValue = $('#fieldMaxValue').val();
+	};
+	
+	this.specificAttributes = function(){
+		var att = attribCreator('min', this.minValue);
+		att += attribCreator('max', this.maxValue);
+		if(this.bydefault)
+			att += attribCreator('value', this.bydefault);
+		return att;
+	};
+};
+NumberField.prototype = new Field();
+
 var fieldFactory = function(type){
 	var field;
 	switch (type) {
 	case 'text':
 		field = new TextBox();
+		break;
+	case 'number':
+		field = new NumberField();
 		break;
 
 	default:
@@ -128,5 +184,13 @@ var fieldFactory = function(type){
 	}
 	
 	field.type = type;
-	return field
-}
+	return field;
+};
+
+var  attribCreator = function (field, value){
+	return field + '="' + value + '" ';
+};
+
+var  tagCreator = function (tag, value){
+	return '\n<' + tag + '>' + value + '</' + tag + '>';
+};
