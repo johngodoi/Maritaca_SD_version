@@ -2,27 +2,28 @@ package br.unifesp.maritaca.web.jsf.form;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
 
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
 
 @ManagedBean
+@ViewScoped
 public class EditFormBean extends AbstractBean {
 	private static final long serialVersionUID = 1L;
 	@ManagedProperty("#{currentUserBean.user}")
 	private User user;
 	private Form form;
 	private String saveStatus;
+	private String xml;
 
 	private boolean newForm;
 	private boolean editForm;
 
 	public EditFormBean() {
 		super(true, false);
-		form = new Form();
-		newForm = true;
-		editForm = true;
+		clean();
 	}
 
 	public User getUser() {
@@ -39,7 +40,9 @@ public class EditFormBean extends AbstractBean {
 
 	public void setNewForm(boolean newForm) {
 		this.newForm = newForm;
-		setEditForm(newForm);
+		if (newForm) {
+			setEditForm(newForm);
+		}
 	}
 
 	public Form getForm() {
@@ -93,6 +96,25 @@ public class EditFormBean extends AbstractBean {
 			formAnswCtrl.deleteForm(getForm());
 		}
 		return null;
+	}
+
+	public String getXml() {
+		return xml;
+	}
+
+	public void setXml(String xml) {
+		if (getForm() != null) {
+			getForm().setXml(xml);
+		}
+		this.xml = xml;
+	}
+	
+	public void clean(){
+		setForm(new Form());
+		setSaveStatus("");
+		setXml("");
+		setNewForm(true);
+		setEditForm(true);
 	}
 
 }

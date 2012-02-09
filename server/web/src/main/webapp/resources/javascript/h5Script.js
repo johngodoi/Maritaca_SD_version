@@ -3,27 +3,34 @@ var form = null;
 var warning = false;
 var actualForm = localStorage['actualForm'];
 
-$(document).ready(function() {
+function initFormEditor(formtitle) {
+	// This will initialize the plugin jQuery.i18n
+	// The file properties is reference by path
+	jQuery.i18n.properties({
+	    name:'Messages', 
+	    path:'../../resources/bundle/', 
+	    mode:'both'
+	});
+	
+	if(formtitle == undefined){
+		formtitle = jQuery.i18n.prop('msg_form_title'); //'My New Form';
+	}
 
 	form = new FormClass();
 
 	if (actualForm) {
 		form.fromJSON(actualForm);
 	} else {
-		// TODO internationalize
-		form.title = 'My New Form';
+		form.title = formtitle;
 		form.container = 'xmlForm';
 	}
-
-	$('#titleForm').val(form.title);
+	
 	form.renderForm(true);
 
 	window.onbeforeunload = function() {
 		if (warning) {
-			// TODO internationalize
-			return "Changes will be lost if you quit \n\n"
-					+ "To save the work before to quit, click in Save, "
-					+ "in section Form Options";
+			// internationalize
+			return jQuery.i18n.prop('msg_warning_onbeforeunload');
 		}
 	};
 
@@ -61,8 +68,8 @@ $(document).ready(function() {
 		if (elem == null) {
 			return true;
 		}
-		// TODO internationalize
-		elem.title = 'Field title';
+		// internationalize
+//		elem.title = jQuery.i18n.prop('msg_form_fieldTitle');
 
 		form.elements.push(elem);
 		form.renderForm();
@@ -87,7 +94,7 @@ $(document).ready(function() {
 	});
 
 	initForm();
-});
+};
 
 function initForm() {
 	$('#xmlForm ol li').click(function() {
@@ -105,7 +112,7 @@ function editField(id) {
 
 	// showing the properties
 	$('#properties').show();
-	$('#propertiesSpecific').children('ul li').hide();
+	$('#propertiesSpecific ul li').children().hide();
 	element.showProperties();
 }
 
@@ -129,8 +136,17 @@ function move(value) {
 
 	form.elements[editElement] = form.elements[newElement];
 	form.elements[newElement] = currentField;
-
 	editElement = newElement;
+	
 	form.renderForm();
 	$('li#field_' + editElement).click();
+}
+
+function sendFormToServer(){
+	var xml = form.toXML();
+	sendFormAjax(xml); //a4j:jsFunction
+}
+
+function updateTitle(value){
+	form.updateTitle(value);
 }

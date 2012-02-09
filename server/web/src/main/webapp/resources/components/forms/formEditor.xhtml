@@ -17,16 +17,31 @@
 	</composite:interface>
 	<composite:implementation>
 		<!-- TODO Temporary. This buttons will be created as separated components. -->
-		<h:commandButton value="#{msgs.form_update_button}" action="#{editFormBean.saveForm}" >
-			<f:setPropertyActionListener target="#{listFormsBean.updateList}" value="true" />
+		<a4j:commandButton onclick="sendFormToServer();"
+			value="#{msgs.form_update_button}" action="#"
+			disabled="#{!editFormBean.editForm}" />
+		<a4j:jsFunction name="sendFormAjax" action="#{editFormBean.saveForm}"
+			execute="@form" status="formEditor_status">
+			<a4j:param name="xml" assignTo="#{editFormBean.xml}" />
+			<f:setPropertyActionListener target="#{listFormsBean.updateList}"
+				value="true" />
+		</a4j:jsFunction>
+		<a4j:commandButton value="#{msgs.form_delete_button}" action="#"
+			disabled="#{!editFormBean.editForm}"
+			rendered="#{!editFormBean.newForm}" />
+		<a4j:commandButton value="#{msgs.form_cancel_button}" action="#" />
+		<a4j:commandButton value="#{msgs.form_new}"
+			action="#{editFormBean.clean}" render="panelContent" />
+		<h:commandButton value="#{msgs.form_import_button}"
+			onclick="showImportForm('#{msgs.form_import_title}');">
+			<a4j:ajax execute="@form" render="importForm:importFormId" />
 		</h:commandButton>
-		<h:commandButton value="#{msgs.form_delete_button}" action="#{editFormBean.saveForm}" />
-		<h:commandButton value="#{msgs.form_cancel_button}" action="#{editFormBean.saveForm}" />
-		<h:commandButton value="#{msgs.form_import_button}" 
-				onclick="showImportForm('#{msgs.form_import_title}');">
-				<a4j:ajax execute="@form" render="importForm:importFormId"/>
-				</h:commandButton>
-		<forms:formRender/>	
+		<a4j:status name="formEditor_status">
+			<f:facet name="start">
+				<h:graphicImage value="#{resource['img:ajax-loader.gif']}" />
+			</f:facet>
+		</a4j:status>
+		<forms:formRender />
 	</composite:implementation>
 </body>
 </html>

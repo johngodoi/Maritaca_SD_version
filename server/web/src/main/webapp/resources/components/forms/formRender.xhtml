@@ -13,34 +13,14 @@
 	<composite:interface>
 	</composite:interface>
 	<composite:implementation>
-		<h:outputStylesheet name="h5style.css" library="css"></h:outputStylesheet>
-		<h:outputScript name="h5FormClass.js" library="javascript" />
-		<h:outputScript name="h5FieldClasses.js" library="javascript" />
-		<h:outputScript name="h5Script.js" library="javascript" />
-		<!-- c:choose>
-			<c:when test="#{editFormBean.newForm}">
-				<p>#{msgs.form_new}</p>
-			</c:when>
-		</c:choose>
-		<c:choose>
-			<c:when test="#{editFormBean.editForm}">
-				<p>#{msgs.form_edit}</p>
-			</c:when>
-		</c:choose-->
 		<h:panelGrid id="formRenderTable" columns="3"
 			styleClass="formRenderTable">
 			<tr>
 				<td><label>#{msgs.form_title}</label></td>
-				<td><input type="text" id="titleForm"
-					value="#{editFormBean.form.title}" readonly="readonly" /></td>
+				<h:inputText value="#{editFormBean.form.title}" id="titleForm"
+					readonly="#{!editFormBean.editForm}" onkeyup="updateTitle(value);" />
 				<td></td>
 			</tr>
-			<!-- h:outputText styleClass="formLabel" value="#{msgs.form_title}" />
-			<h:inputText styleClass="formIdValue" id="titleForm"
-				value="#{editFormBean.form.title}"
-				readonly="#{!editFormBean.editForm}" /-->
-			<!--h:outputText styleClass="formLabel"
-				value="#{msgs.form_renderer_xml}" /-->
 
 			<tr valign="top">
 				<td>
@@ -52,6 +32,8 @@
 									readonly="readonly" size="12" /></li>
 								<li><input type="radio" readonly="readonly" />Radiobox</li>
 								<li><input type="checkbox" readonly="readonly" />Checkbox</li>
+								<li><input type="number" readonly="readonly" value="0" size="12"/></li>
+								<li><input type="date" readonly="readonly" value="2012-01-01"/></li>
 							</ol>
 						</fieldset>
 					</div>
@@ -74,22 +56,56 @@
 									type="text" id="fieldHelp" />
 							</label></li>
 							<li><label>#{msgs.form_edit_fieldRequired}</label> <label><input
-									type="radio" id="fieldRequiredTrue" name="fieldRequired" />#{msgs.commons_true}</label>
+									type="radio" id="fieldRequiredTrue" name="fieldRequired" value="true" />#{msgs.commons_true}</label>
 								<label><input type="radio" id="fieldRequiredFalse"
-									name="fieldRequired" />#{msgs.commons_false}</label></li>
+									name="fieldRequired" value="false" />#{msgs.commons_false}</label></li>
 						</ul>
 						<div id="propertiesSpecific">
 							<ul>
-								<li><label>#{msgs.form_edit_fieldMaxValue} <input
-										type="text" id="fieldMaxValue" class="numeric" /></label></li>
-								<li><label>#{msgs.form_edit_fieldSize} <input
-										type="text" id="fieldSize" class="numeric" /></label></li>
-								<li><label>#{msgs.form_edit_fieldDefault} <input
-										type="text" id="fieldDefault" /></label></li>
+								<li>
+									<label>#{msgs.form_edit_fieldMaxValue} 
+										<input type="number" id="fieldMaxValue" size="4" class="numeric" />
+									</label>
+								</li>
+								<li> <!-- maxValue Date -->
+									<label>#{msgs.form_edit_fieldMaxValue} 
+										<input type="date" id="fieldMaxValueDate"/>
+									</label>
+								</li>
+								<li>
+									<label>#{msgs.form_edit_fieldMinValue} 
+										<input type="number" id="fieldMinValue" size="4" class="numeric" />
+									</label>
+								</li>
+								<li> <!-- minValue Date -->
+									<label>#{msgs.form_edit_fieldMinValue} 
+										<input type="date" id="fieldMinValueDate"/>
+									</label>
+								</li>
+								<li>
+									<label>#{msgs.form_edit_fieldSize} 
+										<input type="number" id="fieldSize" size="4" class="numeric" />
+									</label>
+								</li>
+								<li> <!-- default text types -->
+									<label>#{msgs.form_edit_fieldDefault} 
+										<input type="text" id="fieldDefault" />
+									</label>
+								</li>
+								<li> <!-- default numeric types -->
+									<label>#{msgs.form_edit_fieldDefault} 
+										<input type="number" id="fieldNumericDefault" size="4" />
+									</label>
+								</li>
+								<li> <!-- default date -->
+									<label>#{msgs.form_edit_fieldDefault} 
+										<input type="date" id="fieldDateDefault" />
+									</label>
+								</li>
 							</ul>
 						</div>
 						<center>
-							<button  id="fieldSave" type="button">#{msgs.commons_save}</button>
+							<button id="fieldSave" type="button">#{msgs.commons_save}</button>
 							<button id="fieldDelete" type="button">#{msgs.commons_delete}</button>
 						</center>
 					</fieldset>
@@ -107,6 +123,7 @@
 			</c:if>
 
 		</h:panelGrid>
+		<h:outputScript>initFormEditor('#{(editFormBean.form.title!=null)?editFormBean.form.title:msgs.form_new}');</h:outputScript>
 	</composite:implementation>
 </body>
 </html>
