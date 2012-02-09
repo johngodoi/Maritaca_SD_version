@@ -42,7 +42,7 @@ var Field = function() {
 		xml += tagCreator('label', this.title);
 		xml += tagCreator('help', this.help);
 		xml += this.addXMLElements();
-		xml += '\n</' + this.type + '>';
+		xml += '</' + this.type + '>';
 		return xml;
 	};
 	
@@ -60,10 +60,25 @@ var Field = function() {
 		this.required = $('#fieldRequiredTrue').is(':checked');
 		this.saveSpecificProperties();
 	};
+	
+	this.setFromXMLDoc = function(xmlDoc){
+		var $xmlDoc = $( xmlDoc );
+		if(xmlDoc.nodeName != this.type){
+			console.error(xmlDoc.nodeName + "is not a compatible type for " + this.type);
+			return;
+		}
+		this.id = $xmlDoc.attr('id');
+		this.required = $xmlDoc.attr('required');
+
+		this.title = $xmlDoc.find('label').text();
+		this.help = $xmlDoc.find('help').text();
+		this.setSpecificFromXMLDoc($xmlDoc);
+	};
 };
 
 // Class TextBox: Inherits from Field
 var TextBox = function() {
+	this.type = 'text';
 	// TODO evaluate the size default
 	this.size = '100';
 	this.maxValue = '';
@@ -85,12 +100,13 @@ var TextBox = function() {
 	
 	this.addXMLSpecificAttributes = function() {
 		var xml = attribCreator('max', this.maxValue);
+		if(this.bydefault)
+			xml += attribCreator('value', this.bydefault);
 		return xml;
 	};
 	
 	this.addXMLElements = function(){
 		var xml = tagCreator('size', this.size);
-		xml += tagCreator('defaultvalue', this.bydefault);
 		return xml;
 
 	};
@@ -107,6 +123,12 @@ var TextBox = function() {
 		this.maxValue = $('#fieldMaxValue').val();
 		this.size = $('#fieldSize').val();
 	};
+	
+	this.setSpecificFromXMLDoc = function($xmlDoc){
+		this.maxValue = $xmlDoc.attr('max');
+		this.size = $xmlDoc.find('size').text();
+		this.bydefault = $xmlDoc.attr('value');
+	};
 };
 
 // Inheritance to TextBox from Field
@@ -119,6 +141,7 @@ var CheckBox = function() {
 
 //// Number Field ////
 var NumberField = function(){
+	this.type = 'number';
 	this.bydefault = '';
 	this.maxValue = '';
 	this.minValue = '';
@@ -166,10 +189,17 @@ var NumberField = function(){
 			att += attribCreator('value', this.bydefault);
 		return att;
 	};
+	
+	this.setSpecificFromXMLDoc = function($xmlDoc){
+		this.maxValue = $xmlDoc.attr('max');
+		this.minValue = $xmlDoc.attr('min');
+		this.bydefault = $xmlDoc.attr('value');
+	};
 };
 NumberField.prototype = new Field();
 
 var DateField = function() {
+	this.type = 'date';
 	this.bydefault = '';
 	this.maxValue = '';
 	this.minValue = '';
@@ -215,6 +245,12 @@ var DateField = function() {
 		if(this.bydefault)
 			att += attribCreator('value', this.bydefault);
 		return att;
+	};
+	
+	this.setSpecificFromXMLDoc = function($xmlDoc){
+		this.maxValue = $xmlDoc.attr('max');
+		this.minValue = $xmlDoc.attr('min');
+		this.bydefault = $xmlDoc.attr('value');
 	};
 };
 DateField.prototype = new Field();
