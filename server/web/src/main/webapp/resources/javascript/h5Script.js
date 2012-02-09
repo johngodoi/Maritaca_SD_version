@@ -1,11 +1,11 @@
 var editElement = null;
 var form = null;
 var warning = false;
-var actualForm = localStorage['actualForm'];
+var currentForm = localStorage['currentForm'];
 
 function initFormEditor(formtitle) {
 	// This will initialize the plugin jQuery.i18n
-	// The file properties is reference by path
+	// The file properties is referenced by path
 	jQuery.i18n.properties({
 	    name:'Messages', 
 	    path:'../../resources/bundle/', 
@@ -13,17 +13,19 @@ function initFormEditor(formtitle) {
 	});
 	
 	if(formtitle == undefined){
-		formtitle = jQuery.i18n.prop('msg_form_title'); //'My New Form';
+		formtitle = jQuery.i18n.prop('msg_form_title');
 	}
 
 	form = new FormClass();
 
-	if (actualForm) {
-		form.fromJSON(actualForm);
-	} else {
-		form.title = formtitle;
-		form.container = 'xmlForm';
+	if (currentForm) {
+		$('#loadFormLocal').show();
+		$('#deleteFormLocal').show();
 	}
+
+	form.title = formtitle;
+	$('#hiddenTitleForm').val(formtitle);
+	form.container = 'xmlForm';
 	
 	form.renderForm(true);
 
@@ -68,9 +70,6 @@ function initFormEditor(formtitle) {
 		if (elem == null) {
 			return true;
 		}
-		// internationalize
-//		elem.title = jQuery.i18n.prop('msg_form_fieldTitle');
-
 		form.elements.push(elem);
 		form.renderForm();
 
@@ -93,6 +92,35 @@ function initFormEditor(formtitle) {
 		form.renderForm();
 	});
 
+	$('#saveFormLocal').click(function() {
+		form.title = $('#hiddenTitleForm').val();
+		form.renderForm();
+		$('li#field_' + editElement).click();
+		localStorage['currentForm'] = form.toJSON();
+		$('#loadFormLocal').show();
+		$('#deleteFormLocal').show();
+		warning = false;
+	});
+	
+	$('#loadFormLocal').click(function(){
+		form.fromJSON(currentForm);
+		form.renderForm();
+	});
+	
+	$('#deleteFormLocal').click(function(){
+		localStorage.clear();
+		$('#loadFormLocal').hide();
+		$('#deleteFormLocal').hide();
+	});
+	
+	$('#cleanForm').click(function() {
+		form.elements = new Array();
+		$('#properties').hide();
+		form.renderForm();
+		
+		initForm();
+	});
+	
 	initForm();
 };
 
