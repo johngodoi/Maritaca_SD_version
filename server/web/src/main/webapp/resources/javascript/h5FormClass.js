@@ -37,7 +37,7 @@ var FormClass = function() {
 	};
 	
 	this.toJSON = function() {
-		return '{"label":"' + this.title + '","container":"' + this.container +	
+		return '{"title":"' + this.title + '","container":"' + this.container +	
 				'","elements":' + JSON.stringify(this.elements) + '}';
 	};
 	
@@ -47,8 +47,11 @@ var FormClass = function() {
 		this.container = jsonObject.container;
 		for(var i in jsonObject.elements) {
 			var elem = jsonObject.elements[i];
-			var element = new Field();
-			element.help = elem.help;
+			var element = fieldFactory(elem.type);
+			if (element == null) {
+				return true;
+			}
+			element.setJSONValues(elem);
 			
 			this.elements.push(element);
 		}
@@ -56,6 +59,7 @@ var FormClass = function() {
 	
 	this.updateTitle = function(newtitle){
 		this.title = newtitle;
+		$('#hiddenTitleForm').val(newtitle);
 		$('#' + this.container + ' legend').html(newtitle);
 	};
 };
