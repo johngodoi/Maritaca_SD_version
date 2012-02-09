@@ -163,7 +163,7 @@ var CheckBox = function() {
 	};
 	
 	this.addAddCheckBoxButton = function(field){
-		var addCheckBoxText = "Add Item";
+		var addCheckBoxText = "Add Item"; //TODO Internationalize this message
 		var addCheckBoxId   = "addCheckBoxId";
 		
 		field.append('<button type="button" id="'+addCheckBoxId+'">'+
@@ -196,6 +196,7 @@ var CheckBox = function() {
 			if($("tr."+inputFieldClass).size()>1){
 				$('tr#'+inputFieldId).remove();				
 			} else {
+				//TODO Internationalize this message
 				alert("Can't remove the last element.");
 			}
 		});
@@ -210,7 +211,7 @@ var CheckBox = function() {
 		var fieldContentId = "field_"+label+"_id";
 		
 		ul.append('<li id="'+this.checkBoxId+'">'+
-				  '<label> Check Box Options: </label>'+
+				  '<label> Check Box Options: </label>'+ // TODO Internationalize
 				  '<table id="'+fieldContentId+'"></table>'+
 				  '</li>');
 		
