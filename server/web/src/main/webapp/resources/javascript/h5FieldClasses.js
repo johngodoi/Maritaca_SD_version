@@ -113,8 +113,126 @@ var TextBox = function() {
 TextBox.prototype = new Field();
 
 var CheckBox = function() {
-	this.options = new Array();
+	this.component        = "checkBox";
+	this.optionsTitles    = new Array();
+	this.optionsTitles[0] = '';
+		
+	this.addXMLSpecificAttributes = function(){
+		
+	};
+	
+	this.addXMLElements = function(){
+		
+	};
+	
+	this.toHTMLSpecific = function(){
+		var html = '';
+		
+		for(var i=0; i<this.optionsTitles.length; i++){
+			html += '<input type="checkbox">';
+			html += this.optionsTitles[i];
+			html += '</input>';
+		}
+		
+		return html;
+	};
+	
+	/**
+	 * Check box component layout:
+	 * 
+	 * Check Box:  [Add]
+	 *    ________ [Remove]
+	 *    ________ [Remove]
+	 *    ...
+	 *    ________ [Remove]
+	 */
+	this.showSpecificProperties = function(){		
+		$('#propertiesSpecific').show();
+		
+		$('#fieldMaxValue').hide();
+		$('#fieldSize').hide();
+		$('#fieldDefault').hide();
+		
+		if(!this.checkBoxFieldExists()){		
+			var checkBoxField = createField(this.component);		
+			this.addInputField(checkBoxField);
+			this.addAddCheckBoxButton(checkBoxField);
+		}
+	};
+	
+	this.checkBoxFieldExists = function(){
+		var checkBoxFieldId = "field_checkBox_id";
+		if($("#"+checkBoxFieldId).size()==0){
+			return false;
+		} else {
+			return true;
+		}
+	};
+	
+	this.addAddCheckBoxButton = function(field){
+		var addCheckBoxText = "Add Item";
+		var addCheckBoxId   = "addCheckBoxId";
+		
+		field.append('<button type="button" id="'+addCheckBoxId+'">'+
+					  addCheckBoxText+
+					 '</button>');
+		
+		var fAddInputField = this.addInputField;
+		$('input#'+addCheckBoxId).bind("click",function(e){		
+			fAddInputField(field);
+		});
+	};
+	
+	this.addInputField = function(field){
+		var newDate            = new Date;
+		var uuid               = newDate.getTime();
+		var inputFieldId       = "inputField_" +uuid;
+		var removeFieldId      = "removeField_"+uuid;
+		var inputFieldClass    = "inputFieldClass";
+		var removeCheckBoxText = "Remove";
+		var checkBoxFieldId    = "checkBoxField";
+		
+		field.append('<tr id="'+inputFieldId+'" class="'+inputFieldClass+'"><td>'+
+					 '<input type="text" id="'+checkBoxFieldId+'"/>'+
+					 '<button type="button" id="'+removeFieldId+'">'+
+					 removeCheckBoxText +
+					 '</button>'+
+					 '</tr></td>');
+		
+		$('input#'+removeFieldId).bind("click", function(e){
+			if($("tr."+inputFieldClass).size()>1){
+				$('tr#'+inputFieldId).remove();				
+			} else {
+				alert("Can't remove the last element.");
+			}
+		});
+	};
+	
+	/**
+	 * Creates the <li> tag inside the properties. 
+	 * @param label
+	 */
+	function createField(label){
+		var ul = $('#propertiesSpecific > ul');
+		var fieldContentId = "field_"+label+"_id";
+		
+		ul.append('<li>');
+		ul.append('<label> Check Box Options: </label>');
+		ul.append('<table id="'+fieldContentId+'"></table>');
+		ul.append('</li>');
+		
+		return $("table#"+fieldContentId);
+	}
+	
+	this.saveSpecificProperties = function(){
+		var itensToSave = new Array();
+		$('input#checkBoxField').each(function() {
+			itensToSave.push( $(this).val() );
+		});
+		this.optionsTitles = itensToSave;
+	};
 };
+CheckBox.prototype = new Field();
 
 var fieldFactory = function(type){
 	var field;
@@ -122,11 +240,15 @@ var fieldFactory = function(type){
 	case 'text':
 		field = new TextBox();
 		break;
-
+	
+	case 'checkbox':
+		field = new CheckBox();
+		break;
+		
 	default:
 		return null;
 	}
 	
 	field.type = type;
-	return field
-}
+	return field;
+};
