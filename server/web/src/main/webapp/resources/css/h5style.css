@@ -73,6 +73,29 @@ input[type=text], input[type=number], input[type=date] {
 	cursor: move;
 }
 
+#settings {
+	float: left;
+	clear: left;
+	left: 0px;
+	top: 170px;
+	width: 180px;
+	background-color: #FDEDD0;
+	padding: 10px;
+	margin: 10px 0px;
+}
+
+#settings ol {
+	list-style: none;
+}
+
+#settings ol li{
+	margin: 10px 0px;
+}
+
+#settings ol li label{
+	font-weight: bold;
+}
+
 #xmlForm{
 	float: left;
 	width: 300px;

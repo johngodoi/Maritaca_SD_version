@@ -46,6 +46,15 @@ var Field = function() {
 		return xml;
 	};
 	
+	this.setJSONValues = function(element){
+		this.type = element.type;
+		this.id = element.id;
+		this.required = element.required;
+		this.title = element.title;
+		this.help = element.help;
+		this.setJSONValuesSpecific(element);
+	};
+	
 	this.showProperties = function(){
 		$('#fieldLabel').val(this.title);
 		$('#fieldHelp').val(this.help);
@@ -97,6 +106,11 @@ var TextBox = function() {
 		return html;
 	};
 	
+	this.setJSONValuesSpecific = function(element) {
+		this.size = element.size;
+		this.maxValue = element.maxValue;
+		this.bydefault = element.bydefault;
+	};
 	
 	this.addXMLSpecificAttributes = function() {
 		var xml = attribCreator('max', this.maxValue);
@@ -130,14 +144,12 @@ var TextBox = function() {
 		this.bydefault = $xmlDoc.attr('value');
 	};
 };
-
 // Inheritance to TextBox from Field
 TextBox.prototype = new Field();
 
 var CheckBox = function() {
 	this.options = new Array();
 };
-
 
 //// Number Field ////
 var NumberField = function(){
@@ -158,7 +170,6 @@ var NumberField = function(){
 		return html;
 	};
 	
-	
 	this.addXMLSpecificAttributes = function() {
 		return this.specificAttributes();
 	};
@@ -167,6 +178,12 @@ var NumberField = function(){
 		//TODO: return IF comparisons
 		return "";
 
+	};
+	
+	this.setJSONValuesSpecific = function(element) {
+		this.bydefault = element.bydefault;
+		this.maxValue = element.maxValue;
+		this.minValue = element.minValue;
 	};
 	
 	this.showSpecificProperties = function(){
@@ -223,7 +240,12 @@ var DateField = function() {
 	this.addXMLElements = function(){
 		//TODO: return IF comparisons
 		return "";
-
+	};
+	
+	this.setJSONValuesSpecific = function(element) {
+		this.bydefault = element.bydefault;
+		this.maxValue = element.maxValue;
+		this.minValue = element.minValue;
 	};
 	
 	this.showSpecificProperties = function(){
