@@ -39,8 +39,8 @@ var Field = function() {
 		xml += '<' + this.type + ' id="' + this.id + '" required="' + this.required  + '" ';
 		xml += this.addXMLSpecificAttributes();
 		xml += '>';
-		xml += '\n<label>' + this.title + '</label>';
-		xml += '\n<help>' + this.help + '</help>';
+		xml += tagCreator('label', this.title);
+		xml += tagCreator('help', this.help);
 		xml += this.addXMLElements();
 		xml += '\n</' + this.type + '>';
 		return xml;
@@ -49,15 +49,15 @@ var Field = function() {
 	this.showProperties = function(){
 		$('#fieldLabel').val(this.title);
 		$('#fieldHelp').val(this.help);
-		$('#fieldRequiredTrue:checked').val(this.required);
-		$('#fieldRequiredFalse:checked').val(!this.required);
+		$('#fieldRequiredTrue').prop('checked', this.required);
+		$('#fieldRequiredFalse').prop('checked', !this.required);
 		this.showSpecificProperties();
 	};
 	
 	this.saveProperties = function(){
 		this.title = $('#fieldLabel').val();
 		this.help = $('#fieldHelp').val();
-		this.required = $('#fieldRequiredTrue:checked').val() == 'on' ? true : false;
+		this.required = $('#fieldRequiredTrue').is(':checked');
 		this.saveSpecificProperties();
 	};
 };
@@ -71,34 +71,34 @@ var TextBox = function() {
 	
 	this.toHTMLSpecific = function() {
 		var html = '';
-		
-		html += '<input type="text" ';
-		html += 'id="field_' + this.id + '" ';
-		html += 'maxlength="' + this.size + '" ';
+		html +='<input ';
+		html += attribCreator('type', this.type);
+		html += attribCreator('id', 'field_' + this.id);
+		html += attribCreator('maxlength', this.size);
 		if(this.bydefault)
-			html += 'value="' + this.bydefault + '" ';
-		html += '//>';
+			html += attribCreator('value', this.bydefault);
+		html += '/>';
 		
 		return html;
 	};
 	
 	
 	this.addXMLSpecificAttributes = function() {
-		var xml = 'max="' + this.maxValue + '"';
+		var xml = attribCreator('max', this.maxValue);
 		return xml;
 	};
 	
 	this.addXMLElements = function(){
-		var xml = '\n<size>' + this.size + '</size>';
-		xml += '\n<defaultvalue>' + this.bydefault + '</defaultvalue>';
+		var xml = tagCreator('size', this.size);
+		xml += tagCreator('defaultvalue', this.bydefault);
 		return xml;
 
 	};
 	
 	this.showSpecificProperties = function(){
-		$('#fieldDefault').show().val(this.bydefault);
-		$('#fieldMaxValue').show().val(this.maxValue);
-		$('#fieldSize').show().val(this.size);
+		$('#fieldDefault').val(this.bydefault).parent().show();
+		$('#fieldMaxValue').val(this.maxValue).parent().show();
+		$('#fieldSize').val(this.size).parent().show();
 		$('#propertiesSpecific').show();
 	};
 	
@@ -116,6 +116,7 @@ var CheckBox = function() {
 	this.component        = "checkBox";
 	this.optionsTitles    = new Array();
 	this.optionsTitles[0] = '';
+	this.checkBoxId       = "checkBoxId";
 		
 	this.addXMLSpecificAttributes = function(){
 		
@@ -140,32 +141,24 @@ var CheckBox = function() {
 	/**
 	 * Check box component layout:
 	 * 
-	 * Check Box:  [Add]
-	 *    ________ [Remove]
+	 * Check Box:  
 	 *    ________ [Remove]
 	 *    ...
-	 *    ________ [Remove]
+	 *    ________ [Remove]    
+	 *    [Add]
 	 */
-	this.showSpecificProperties = function(){		
+	this.showSpecificProperties = function(){
 		$('#propertiesSpecific').show();
-		
-		$('#fieldMaxValue').hide();
-		$('#fieldSize').hide();
-		$('#fieldDefault').hide();
-		
-		if(!this.checkBoxFieldExists()){		
-			var checkBoxField = createField(this.component);		
-			this.addInputField(checkBoxField);
+						
+		if($("li#"+this.checkBoxId).length==0){
+			var checkBoxField = this.createField(this.component);
+
+			for(var i=0; i<this.optionsTitles.length; i++){
+				this.addInputField(checkBoxField,this.optionsTitles[i]);
+			}		
 			this.addAddCheckBoxButton(checkBoxField);
-		}
-	};
-	
-	this.checkBoxFieldExists = function(){
-		var checkBoxFieldId = "field_checkBox_id";
-		if($("#"+checkBoxFieldId).size()==0){
-			return false;
 		} else {
-			return true;
+			$("li#"+this.checkBoxId).children().show();
 		}
 	};
 	
@@ -174,32 +167,32 @@ var CheckBox = function() {
 		var addCheckBoxId   = "addCheckBoxId";
 		
 		field.append('<button type="button" id="'+addCheckBoxId+'">'+
+					'<img src="../../resources/images/add.png"/>'+
 					  addCheckBoxText+
 					 '</button>');
 		
 		var fAddInputField = this.addInputField;
-		$('input#'+addCheckBoxId).bind("click",function(e){		
-			fAddInputField(field);
+		$('button#'+addCheckBoxId).bind("click",function(e){
+			fAddInputField(field,"");			
 		});
 	};
 	
-	this.addInputField = function(field){
+	this.addInputField = function(field, value){
 		var newDate            = new Date;
 		var uuid               = newDate.getTime();
 		var inputFieldId       = "inputField_" +uuid;
 		var removeFieldId      = "removeField_"+uuid;
 		var inputFieldClass    = "inputFieldClass";
-		var removeCheckBoxText = "Remove";
 		var checkBoxFieldId    = "checkBoxField";
 		
 		field.append('<tr id="'+inputFieldId+'" class="'+inputFieldClass+'"><td>'+
-					 '<input type="text" id="'+checkBoxFieldId+'"/>'+
-					 '<button type="button" id="'+removeFieldId+'">'+
-					 removeCheckBoxText +
-					 '</button>'+
+					 '<input type="text" id="'+checkBoxFieldId+'" value="'+value+'"/>'+
+					 '<a id="'+removeFieldId+'">'+
+					 '<img src="../../resources/images/delete.png"/>'+
+					 '</a>'+
 					 '</tr></td>');
 		
-		$('input#'+removeFieldId).bind("click", function(e){
+		$('a#'+removeFieldId).bind("click", function(e){
 			if($("tr."+inputFieldClass).size()>1){
 				$('tr#'+inputFieldId).remove();				
 			} else {
@@ -212,17 +205,17 @@ var CheckBox = function() {
 	 * Creates the <li> tag inside the properties. 
 	 * @param label
 	 */
-	function createField(label){
+	this.createField = function(label){
 		var ul = $('#propertiesSpecific > ul');
 		var fieldContentId = "field_"+label+"_id";
 		
-		ul.append('<li>');
-		ul.append('<label> Check Box Options: </label>');
-		ul.append('<table id="'+fieldContentId+'"></table>');
-		ul.append('</li>');
+		ul.append('<li id="'+this.checkBoxId+'">'+
+				  '<label> Check Box Options: </label>'+
+				  '<table id="'+fieldContentId+'"></table>'+
+				  '</li>');
 		
 		return $("table#"+fieldContentId);
-	}
+	};
 	
 	this.saveSpecificProperties = function(){
 		var itensToSave = new Array();
@@ -234,21 +227,139 @@ var CheckBox = function() {
 };
 CheckBox.prototype = new Field();
 
+
+//// Number Field ////
+var NumberField = function(){
+	this.bydefault = '';
+	this.maxValue  = '';
+	this.minValue  = '';
+	
+	this.toHTMLSpecific = function() {
+		var html = '';
+		
+		html += '<input ';
+		html += attribCreator( 'type' , this.type);
+		html += attribCreator('id', 'field_' + this.id);
+		html += this.specificAttributes();
+		html += '/>';
+		
+		return html;
+	};
+	
+	
+	this.addXMLSpecificAttributes = function() {
+		return this.specificAttributes();
+	};
+	
+	this.addXMLElements = function(){
+		//TODO: return IF comparisons
+		return "";
+
+	};
+	
+	this.showSpecificProperties = function(){
+		$('#fieldNumericDefault').val(this.bydefault).parent().show();
+		$('#fieldMaxValue').val(this.maxValue).parent().show();
+		$('#fieldMinValue').val(this.minValue).parent().show();
+		$('#propertiesSpecific').show();
+	};
+	
+	this.saveSpecificProperties = function(){
+		this.bydefault = $('#fieldNumericDefault').val();
+		this.minValue = $('#fieldMinValue').val();
+		this.maxValue = $('#fieldMaxValue').val();
+	};
+	
+	this.specificAttributes = function(){
+		var att = attribCreator('min', this.minValue);
+		att += attribCreator('max', this.maxValue);
+		if(this.bydefault)
+			att += attribCreator('value', this.bydefault);
+		return att;
+	};
+};
+NumberField.prototype = new Field();
+
+var DateField = function() {
+	this.bydefault = '';
+	this.maxValue = '';
+	this.minValue = '';
+	
+	this.toHTMLSpecific = function() {
+		var html = '';
+		
+		html += '<input ';
+		html += attribCreator( 'type' , this.type);
+		html += attribCreator('id', 'field_' + this.id);
+		html += this.specificAttributes();
+		html += '/>';
+		
+		return html;
+	};
+	
+	this.addXMLSpecificAttributes = function() {
+		return this.specificAttributes();
+	};
+	
+	this.addXMLElements = function(){
+		//TODO: return IF comparisons
+		return "";
+
+	};
+	
+	this.showSpecificProperties = function(){
+		$('#fieldDateDefault').val(this.bydefault).parent().show();
+		$('#fieldMaxValueDate').val(this.maxValue).parent().show();
+		$('#fieldMinValueDate').val(this.minValue).parent().show();
+		$('#propertiesSpecific').show();
+	};
+
+	this.saveSpecificProperties = function(){
+		this.bydefault = $('#fieldDateDefault').val();
+		this.maxValue = $('#fieldMaxValueDate').val();
+		this.minValue = $('#fieldMinValueDate').val();
+	};
+
+	this.specificAttributes = function(){
+		var att = attribCreator('min', this.minValue);
+		att += attribCreator('max', this.maxValue);
+		if(this.bydefault)
+			att += attribCreator('value', this.bydefault);
+		return att;
+	};
+};
+DateField.prototype = new Field();
+
 var fieldFactory = function(type){
 	var field;
 	switch (type) {
 	case 'text':
 		field = new TextBox();
+		field.title = jQuery.i18n.prop('msg_form_textBoxTitle');
 		break;
-	
+	case 'number':
+		field = new NumberField();
+		field.title = jQuery.i18n.prop('msg_form_numberTitle');
+		break;
+	case 'date':
+		field = new DateField();
+		field.title = jQuery.i18n.prop('msg_form_dateTitle');
+		break;
 	case 'checkbox':
 		field = new CheckBox();
 		break;
-		
 	default:
 		return null;
 	}
 	
 	field.type = type;
 	return field;
+};
+
+var  attribCreator = function (field, value){
+	return field + '="' + value + '" ';
+};
+
+var  tagCreator = function (tag, value){
+	return '<' + tag + '>' + value + '</' + tag + '>';
 };
