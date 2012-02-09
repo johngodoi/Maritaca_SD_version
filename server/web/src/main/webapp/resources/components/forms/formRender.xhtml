@@ -19,7 +19,7 @@
 				<td><label>#{msgs.form_title}</label></td>
 				<h:inputText value="#{editFormBean.form.title}" id="titleForm"
 					readonly="#{!editFormBean.editForm}" onkeyup="updateTitle(value);" />
-				<td></td>
+				<td><input type="hidden" id="hiddenTitleForm" /></td>
 			</tr>
 
 			<tr valign="top">
@@ -33,7 +33,24 @@
 								<li><input type="radio" readonly="readonly" />Radiobox</li>
 								<li><input type="checkbox" readonly="readonly" />Checkbox</li>
 								<li><input type="number" readonly="readonly" value="0" size="12"/></li>
-								<li><input type="date" readonly="readonly" value="2012-01-01"/></li>
+								<li><input type="date" readonly="readonly" value="2012-01-01" size="12"/></li>
+							</ol>
+						</fieldset>
+						
+						<!-- settings form -->
+						<fieldset id="settings">
+							<legend>#{msgs.form_edit_formSettings}</legend>
+							<ol>
+								<li>
+									<button id="saveFormLocal" type="button">#{msgs.form_edit_saveLocalStorage}</button>
+								</li>
+								<li><button id="loadFormLocal" type="button" 
+											style="display: none">#{msgs.form_edit_loadLocalStorage}</button>
+								</li>	
+								<li><button id="deleteFormLocal" type="button" 
+											style="display: none">#{msgs.form_edit_deleteLocalStorage}</button>
+								</li>
+								<li><button id="cleanForm" type="button">#{msgs.form_edit_formClean}</button></li>
 							</ol>
 						</fieldset>
 					</div>
