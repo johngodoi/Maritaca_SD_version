@@ -123,7 +123,15 @@
 			</c:if>
 
 		</h:panelGrid>
-		<h:outputScript>initFormEditor('#{(editFormBean.form.title!=null)?editFormBean.form.title:msgs.form_new}');</h:outputScript>
+		<h:outputScript>initFormEditor('#{(editFormBean.form.title!=null)?editFormBean.form.title:msgs.form_new}');
+		if(#{!editFormBean.newForm}){
+		try{
+			loadFormFromXML('#{editFormBean.xml}');
+			}catch(err){
+			alert('error loading ' + err )
+			}
+		}
+		</h:outputScript>
 	</composite:implementation>
 </body>
 </html>

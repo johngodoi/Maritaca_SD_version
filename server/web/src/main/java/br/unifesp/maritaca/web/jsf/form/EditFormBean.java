@@ -4,8 +4,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
+import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.User;
+import br.unifesp.maritaca.web.Manager;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
 
 @ManagedBean
@@ -14,6 +16,8 @@ public class EditFormBean extends AbstractBean {
 	private static final long serialVersionUID = 1L;
 	@ManagedProperty("#{currentUserBean.user}")
 	private User user;
+	@ManagedProperty("#{manager}")
+	private Manager manager;
 	private Form form;
 	private String saveStatus;
 	private String xml;
@@ -54,12 +58,13 @@ public class EditFormBean extends AbstractBean {
 			return;
 		this.form = form;
 		// if form has key, it is not a new form
-		if (form.getKey() == null) {
+		if (this.form.getKey() == null) {
 			setNewForm(true);
 		} else {
-			if (form.getXml() == null) {
+			if (this.form.getXml() == null) {
 				this.form = formAnswCtrl.getForm(form.getKey(), false);
 			}
+			xml = this.form.getXml();
 		}
 	}
 
@@ -84,7 +89,13 @@ public class EditFormBean extends AbstractBean {
 	}
 
 	public boolean isEditForm() {
-		return editForm;
+		if(isNewForm()){
+			return true;
+		}else if(form!=null && form.getKey()!=null){
+			return manager.isOperationEnabled(form, Operation.EDIT);
+		}else{
+			return editForm;
+		}
 	}
 
 	public void setEditForm(boolean editForm) {
@@ -115,6 +126,14 @@ public class EditFormBean extends AbstractBean {
 		setXml("");
 		setNewForm(true);
 		setEditForm(true);
+	}
+
+	public Manager getManager() {
+		return manager;
+	}
+
+	public void setManager(Manager manager) {
+		this.manager = manager;
 	}
 
 }

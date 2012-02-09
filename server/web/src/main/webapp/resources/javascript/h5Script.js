@@ -150,3 +150,28 @@ function sendFormToServer(){
 function updateTitle(value){
 	form.updateTitle(value);
 }
+
+function loadFormFromXML(xml){
+	try{
+	var xmlDoc = $.parseXML( xml );
+	}catch(err){
+		console.log(err);
+		return;
+	}
+    var $xml = $( xmlDoc );
+    try{
+    $xml.find('questions').each(function(){
+    	 var elems = this.childNodes;
+    	 for(var i = 0; i<elems.length; i++){
+    		 var field = fieldFactory(elems[i].nodeName);
+    		 if(field!=null){
+    			field.setFromXMLDoc(elems[i]);
+    			form.elements.push(field);
+    		 }
+    	 }
+    });
+    form.renderForm();
+    }catch(err){
+    	console.log(err);
+    }
+}
