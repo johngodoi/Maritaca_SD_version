@@ -135,7 +135,7 @@ public class Form implements Comparable<Form> {
 	@Override
 	public int compareTo(Form form) {
 		if (getFlagToOrder() == 0) {
-			return getTitle().compareTo(form.getTitle());
+			return getTitle().toLowerCase().compareTo(form.getTitle().toLowerCase());
 		} else {
 			return getCreationDate().compareTo(form.getCreationDate());
 		}

@@ -50,6 +50,7 @@ public class ImportFormBean extends AbstractBean {
 	public void listener(FileUploadEvent event) throws Exception {
 		UploadedFile file = event.getUploadedFile();
 		String data = new String(file.getData());
+		
 		setForm(file.getName(), data);
 		setSuccessful(true);
 	}
@@ -72,6 +73,7 @@ public class ImportFormBean extends AbstractBean {
 	}
 
 	public void setForm(String title, String xml) {
+		xml = xml.replace("\n", "");
 		Form form = new Form();
 		form.setTitle(title);
 		form.setXml(xml);

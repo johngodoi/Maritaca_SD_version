@@ -13,8 +13,7 @@
 	<composite:interface>
 	</composite:interface>
 	<composite:implementation>
-		<h:panelGrid id="formRenderTable" columns="3"
-			styleClass="formRenderTable">
+		<h:panelGrid id="formRenderTable" columns="3">
 			<tr>
 				<td><label>#{msgs.form_title}</label></td>
 				<h:inputText value="#{editFormBean.form.title}" id="titleForm"
@@ -75,9 +74,9 @@
 									type="text" id="fieldHelp" />
 							</label></li>
 							<li><label>#{msgs.form_edit_fieldRequired}</label> <label><input
-									type="radio" id="fieldRequiredTrue" name="fieldRequired" value="true" />#{msgs.commons_true}</label>
+									type="radio" id="fieldRequiredTrue" name="fieldRequired" />#{msgs.commons_true}</label>
 								<label><input type="radio" id="fieldRequiredFalse"
-									name="fieldRequired" value="false" />#{msgs.commons_false}</label></li>
+									name="fieldRequired" />#{msgs.commons_false}</label></li>
 						</ul>
 						<div id="propertiesSpecific">
 							<ul>
@@ -142,7 +141,15 @@
 			</c:if>
 
 		</h:panelGrid>
-		<h:outputScript>initFormEditor('#{(editFormBean.form.title!=null)?editFormBean.form.title:msgs.form_new}');</h:outputScript>
+		<h:outputScript>initFormEditor('#{(editFormBean.form.title!=null)?editFormBean.form.title:msgs.form_new}');
+		if(#{!editFormBean.newForm} || #{importFormBean.successful}){
+		try{
+			loadFormFromXML('#{editFormBean.xml}');
+			}catch(err){
+				alert('#{msgs.form_edit_error_loading}, ' + err )
+			}
+		}
+		</h:outputScript>
 	</composite:implementation>
 </body>
 </html>
