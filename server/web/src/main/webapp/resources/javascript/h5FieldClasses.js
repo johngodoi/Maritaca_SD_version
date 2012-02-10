@@ -8,6 +8,8 @@
 //		showSpecificProperties: show the properties of a specific field 
 //		saveSpecificProperties: updates the properties of a field
 //      setFromXMLDoc: loads the data from xml
+//      setSpecificFromXMLDoc: parses the given document object setting the corresponding
+//                             properties in the current field
 //	See TextBox class as example
 //
 var Field = function() {
