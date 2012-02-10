@@ -41,6 +41,7 @@
   <param-name>org.richfaces.skin</param-name>
   <param-value>blueSky</param-value>
  </context-param>
+ 
  <filter>
   <filter-name>homeFilter</filter-name>
   <filter-class>br.unifesp.maritaca.web.servlet.HomeFilter</filter-class>
