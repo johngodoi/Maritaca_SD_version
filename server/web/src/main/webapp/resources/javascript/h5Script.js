@@ -18,6 +18,7 @@ function initFormEditor(formtitle) {
 
 	form = new FormClass();
 
+	currentForm = localStorage['currentForm'];
 	if (currentForm) {
 		$('#loadFormLocal').show();
 		$('#deleteFormLocal').show();
@@ -103,6 +104,7 @@ function initFormEditor(formtitle) {
 	});
 	
 	$('#loadFormLocal').click(function(){
+		form.elements = new Array();
 		form.fromJSON(currentForm);
 		form.renderForm();
 	});

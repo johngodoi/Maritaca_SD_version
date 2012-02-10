@@ -60,6 +60,10 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 
 		if (form.getUser() == null || form.getUser().getKey() == null)
 			throw new IllegalArgumentException("User cannot be null");
+		
+		if(form.getTitle() == null || form.getTitle().length()==0){
+			return false;//with out title...
+		}
 
 		if (entityManager.rowDataExists(User.class, form.getUser().getKey())) {
 			boolean newForm = form.getKey() == null;// true if form is new

@@ -8,6 +8,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
 import br.unifesp.maritaca.core.User;
+import br.unifesp.maritaca.model.ModelFactory;
 
 @ManagedBean
 @SessionScoped
@@ -25,6 +26,7 @@ public class CurrentUserBean implements Serializable {
 		if (user != null) {
 			HttpSession hs = getSession(false);
 			hs.setAttribute("currentuser", user);
+			ModelFactory.getInstance().registryUser(user);
 		}
 	}
 

@@ -89,11 +89,11 @@ public class EditFormBean extends AbstractBean {
 	}
 
 	public boolean isEditForm() {
-		if(isNewForm()){
+		if (isNewForm()) {
 			return true;
-		}else if(form!=null && form.getKey()!=null){
+		} else if (form != null && form.getKey() != null) {
 			return manager.isOperationEnabled(form, Operation.EDIT);
-		}else{
+		} else {
 			return editForm;
 		}
 	}
@@ -105,11 +105,15 @@ public class EditFormBean extends AbstractBean {
 	public String deleteForm() {
 		if (getForm().getKey() != null) {
 			formAnswCtrl.deleteForm(getForm());
+			clean();
 		}
 		return null;
 	}
 
 	public String getXml() {
+		if (form != null && form.getXml() != null) {
+			return form.getXml();
+		}
 		return xml;
 	}
 
@@ -119,8 +123,8 @@ public class EditFormBean extends AbstractBean {
 		}
 		this.xml = xml;
 	}
-	
-	public void clean(){
+
+	public void clean() {
 		setForm(new Form());
 		setSaveStatus("");
 		setXml("");

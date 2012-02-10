@@ -8,7 +8,11 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UIViewRoot;
+import javax.faces.context.FacesContext;
 
+import org.richfaces.component.UIPanelMenu;
+import org.richfaces.component.UITabPanel;
 import org.richfaces.event.ItemChangeEvent;
 
 import br.unifesp.maritaca.access.operation.Operation;
@@ -64,15 +68,15 @@ public class Manager extends AbstractBean implements Serializable {
 		mod = new ModuleImpl();
 		mod.setTitle("Groups");
 		mod.setId("groups");
-		
+
 		submod = new SubModuleImpl();
 		submod.setTitle("My Groups");
 		submod.setComponent("listGroups");
 		mod.addModule(submod);
-		
+
 		submod = new SubModuleImpl();
 		submod.setTitle("Group Editor");
-		submod.setComponent("groupEditor");		
+		submod.setComponent("groupEditor");
 		mod.addModule(submod);
 
 		getEnabledModules().add(mod);
@@ -117,16 +121,44 @@ public class Manager extends AbstractBean implements Serializable {
 
 	public void activeModAndSub(String mod, String submod) {
 
+		// boolean modChanged = false;
+		boolean submodChanged = false;
 		if (!getActiveModule().getId().equals(mod)) {
 			setActiveModuleByString(mod);
-			getActiveModule().setActiveSubModuleByString(submod);
+			setActiveSubModuleInActiveMod(submod);
+			// modChanged = submodChanged = true;
 		} else if (!getActiveModule().getActiveSubModule().getId()
 				.equals(submod)) {
-			getActiveModule().setActiveSubModuleByString(submod);
+			setActiveSubModuleInActiveMod(submod);
 		} else {
 			return;
 		}
 
+		// FacesContext fc = FacesContext.getCurrentInstance();
+		// UIViewRoot uivr = fc.getViewRoot();
+
+		// if (modChanged) {
+		// UITabPanel tabPanel = (UITabPanel) uivr
+		// .findComponent("mainForm:mainTab");
+		// if (tabPanel != null) {
+		// tabPanel.setActiveItem(getActiveModule().getActiveSubModule()
+		// .getId());
+		// System.out.println("tab changed in modsub " + mod);
+		// }
+		// }
+
+	}
+
+	public void setActiveSubModuleInActiveMod(String submod) {
+		getActiveModule().setActiveSubModuleByString(submod);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		UIViewRoot uivr = fc.getViewRoot();
+		UIPanelMenu leftMenu = (UIPanelMenu) findComponent("panelLeftMenu",
+				uivr);
+		if (leftMenu != null) {
+			leftMenu.setActiveItem(getActiveModule().getActiveSubModule()
+					.getComponent());
+		}
 	}
 
 	/**
@@ -184,16 +216,16 @@ public class Manager extends AbstractBean implements Serializable {
 		}
 
 	}
-	
-	public Operation getReadOperation(){
+
+	public Operation getReadOperation() {
 		return Operation.READ;
 	}
-	
-	public Operation getEditOperation(){
+
+	public Operation getEditOperation() {
 		return Operation.EDIT;
-	} 
-	
-	public Operation getDeleteOperation(){
+	}
+
+	public Operation getDeleteOperation() {
 		return Operation.DELETE;
-	} 
+	}
 }
