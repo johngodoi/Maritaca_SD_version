@@ -4,7 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:h="http://java.sun.com/jsf/html">
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich">
 <!-- This is a reusable template that lays out content in four regions:
        a header, menu, content area, and toolbar. 
         
@@ -38,6 +39,10 @@
 				<ui:insert name="footer" />
 			</ui:decorate>
 		</div>
+	</div>
+	<div id="dumbId" style="display: none;">
+	<!-- dark magic starts here for loading richfaces resources -->
+	<rich:toolbar rendered="false" />
 	</div>
 </h:body>
 </html>

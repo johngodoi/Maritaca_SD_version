@@ -70,7 +70,9 @@ public class EditFormBean extends AbstractBean {
 
 	public String saveForm() {
 		if (form.getXml() != null && form.getXml().length() > 0) {
-			form.setUser(user);
+			if (form.getUser() == null) {
+				form.setUser(user);
+			}
 			if (formAnswCtrl.saveForm(form))
 				setSaveStatus("success");
 			return "success";
