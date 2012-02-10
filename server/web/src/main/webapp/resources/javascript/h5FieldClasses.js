@@ -173,13 +173,24 @@ var Box = function(type) {
 	this.msgAddBox          = null; 
 	this.msgRemoveError     = null;
 	this.msgBoxLabel        = null;
+		
+	this.setJSONValuesSpecific = function(element) {
+		this.type          = element.type;
+		this.optionsTitles = element.optionsTitles;
+	};
 	
 	this.addXMLSpecificAttributes = function(){
-		
+		return "";
 	};
 	
 	this.addXMLElements = function(){
-		
+		var xml = '';
+		for(var i=0; i<this.optionsTitles.length; i++){
+			xml += '<option>';
+			xml += this.optionsTitles[i];
+			xml += '</option>';
+		}		
+		return xml;
 	};
 	
 	this.toHTMLSpecific = function(){		
@@ -268,6 +279,16 @@ var Box = function(type) {
 			itensToSave.push( $(this).val() );
 		});
 		this.optionsTitles = itensToSave;
+	};
+	
+	this.setSpecificFromXMLDoc = function($xmlDoc){
+		var parsedOptions = new Array();		
+		var foundOptions  = $xmlDoc.find('option');
+		
+		for(var i=0; i<foundOptions.length; i++){
+			parsedOptions.push(foundOptions[i].textContent);
+		}
+		this.optionsTitles = parsedOptions;
 	};
 };
 Box.prototype = new Field();
