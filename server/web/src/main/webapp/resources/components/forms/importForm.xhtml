@@ -19,7 +19,7 @@
 					<rich:fileUpload id="upload" 
 						fileUploadListener="#{importFormBean.listener}"
 						acceptedTypes="xml" listWidth="50px" listHeight="45px"
-						maxFilesQuantity="1" render="formRenderTable">
+						maxFilesQuantity="1" render="panelContent">
 					</rich:fileUpload>
 					<h:outputText value="#{msgs.form_import_fileUploadNote}" />
 				</rich:tab>
@@ -35,7 +35,7 @@
 						<br />
 						<a4j:commandButton value="#{msgs.form_import_urlSubmit}"
 							action="#{importFormBean.processUrl}"
-							render="formRenderTable, messageResult, successful" />
+							render="panelContent, messageResult, successful" />
 						<br />
 						<h:inputHidden value="${importFormBean.successful}" id="successful"/>
 						<h:outputText value="#{msgs.form_import_urlNote}" />

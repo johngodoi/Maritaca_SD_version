@@ -46,11 +46,6 @@
 	color: red;
 }
 
-/* Submodule: formRender */
-.formRenderTable {
-	border: 1px solid black;
-}
-
 .formIdValue,.formXmlValue {
 	width: 300px;
 }
@@ -87,4 +82,8 @@
 
 .rf-au{
 	font-size: small;
+}
+
+.rf-tb-itm{
+	padding: 0px;
 }

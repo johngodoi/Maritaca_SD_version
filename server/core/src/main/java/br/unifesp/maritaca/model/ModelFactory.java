@@ -13,6 +13,7 @@ import br.unifesp.maritaca.util.UserLocator;
 
 public class ModelFactory {
 	private static ModelFactory instance;
+	private HashMap<UUID, Integer> sessionCounter;
 	private HashMap<UUID, UserModel> userModelList;
 	private HashMap<UUID, ManagerModel> managerModelList;
 	private HashMap<UUID, FormAnswerModel> formAnswModelList;
@@ -27,6 +28,7 @@ public class ModelFactory {
 	}
 
 	private ModelFactory() {
+		sessionCounter = new HashMap<UUID, Integer>();
 		userModelList = new HashMap<UUID, UserModel>();
 		managerModelList = new HashMap<UUID, ManagerModel>();
 		formAnswModelList = new HashMap<UUID, FormAnswerModel>();
@@ -91,6 +93,12 @@ public class ModelFactory {
 	}
 
 	public void invalidateModelsForUser(User user) {
+		if(user==null || user.getKey() == null)return;
+		Integer counter = sessionCounter.get(user.getKey());
+		if(counter == null){
+			return;
+		}else if(--counter == 0){
+			sessionCounter.remove(user.getKey());
 			UserModel usMod = userModelList.remove(user.getKey());
 			FormAnswerModel faMod = formAnswModelList.remove(user.getKey());
 			ManagerModel manMod = managerModelList.remove(user.getKey());
@@ -106,6 +114,23 @@ public class ModelFactory {
 			if(manMod!=null){
 				manMod.close();
 			}
+		}else{
+			sessionCounter.put(user.getKey(), counter);
+		}
+		
+		System.out.println("User: " + user.getEmail() + " counter: " + counter);
+	}
+	
+	public void registryUser(User user){
+		if(user==null || user.getKey() == null)return;
+		Integer counter = sessionCounter.get(user.getKey());
+		if(counter == null){
+			sessionCounter.put(user.getKey(), 1);
+		}else{
+			sessionCounter.put(user.getKey(), ++counter);
+		}
+		
+		System.out.println("User: " + user.getEmail() + " counter: " + counter);
 	}
 
 	private User getCurrentUser() {

@@ -7,6 +7,7 @@
 //		toHTMLSpecific: return a string with HTML corresponding component
 //		showSpecificProperties: show the properties of a specific field 
 //		saveSpecificProperties: updates the properties of a field
+//      setFromXMLDoc: loads the data from xml
 //	See TextBox class as example
 //
 var Field = function() {
@@ -58,8 +59,10 @@ var Field = function() {
 	this.showProperties = function(){
 		$('#fieldLabel').val(this.title);
 		$('#fieldHelp').val(this.help);
-		$('#fieldRequiredTrue').prop('checked', this.required);
-		$('#fieldRequiredFalse').prop('checked', !this.required);
+		if(this.required)
+			$('#fieldRequiredTrue').attr('checked', true);
+		else
+			$('#fieldRequiredFalse').attr('checked', true);
 		this.showSpecificProperties();
 	};
 	
@@ -77,7 +80,8 @@ var Field = function() {
 			return;
 		}
 		this.id = $xmlDoc.attr('id');
-		this.required = $xmlDoc.attr('required');
+		var isRequired = $xmlDoc.attr('required');
+		this.required = isRequired == 'true'? true : false;
 
 		this.title = $xmlDoc.find('label').text();
 		this.help = $xmlDoc.find('help').text();
