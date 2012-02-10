@@ -125,12 +125,29 @@ var TextBox = function() {
 // Inheritance to TextBox from Field
 TextBox.prototype = new Field();
 
-var CheckBox = function() {
-	this.component        = "checkBox";
-	this.optionsTitles    = new Array();
-	this.optionsTitles[0] = '';
-	this.checkBoxId       = "checkBoxId";
-		
+
+/// Box ///
+var globalId = 0;
+var generateUUID = function(){
+	globalId++;
+	if(globalId >= 1000000){
+		globalId = 0;
+	}
+	return globalId;
+};
+
+var Box = function(type) {
+	this.component          = type;
+	this.optionsTitles      = new Array();
+	this.optionsTitles[0]   = '';
+	this.boxId              = '';
+	this.optionLabelInputId = this.boxId+"_optionLabelId";
+	this.type               = type;
+	this.boxClass           = "boxClass";
+	this.msgAddBox          = null; 
+	this.msgRemoveError     = null;
+	this.msgBoxLabel        = null;
+	
 	this.addXMLSpecificAttributes = function(){
 		
 	};
@@ -139,78 +156,65 @@ var CheckBox = function() {
 		
 	};
 	
-	this.toHTMLSpecific = function(){
-		var html = '';
-		
+	this.toHTMLSpecific = function(){		
+		var html = '';		
 		for(var i=0; i<this.optionsTitles.length; i++){
-			html += '<input type="checkbox">';
+			html += '<input type="'+this.type+'" name="'+this.boxId+'">';
 			html += this.optionsTitles[i];
 			html += '</input>';
-		}
-		
+		}		
 		return html;
 	};
 	
-	/**
-	 * Check box component layout:
-	 * 
-	 * Check Box:  
-	 *    ________ [Remove]
-	 *    ...
-	 *    ________ [Remove]    
-	 *    [Add]
-	 */
 	this.showSpecificProperties = function(){
 		$('#propertiesSpecific').show();
-						
-		if($("li#"+this.checkBoxId).length==0){
-			var checkBoxField = this.createField(this.component);
-
-			for(var i=0; i<this.optionsTitles.length; i++){
-				this.addInputField(checkBoxField,this.optionsTitles[i]);
-			}		
-			this.addAddCheckBoxButton(checkBoxField);
-		} else {
-			$("li#"+this.checkBoxId).children().show();
+		
+		if($("li."+this.boxClass).length>0){
+			$("li."+this.boxClass).remove();
 		}
+		
+		var boxField = this.createField(this.component);
+
+		for(var i=0; i<this.optionsTitles.length; i++){
+			this.addInputField(boxField,this.optionsTitles[i],this);
+		}		
+		this.addAddBoxButton(boxField);
 	};
 	
-	this.addAddCheckBoxButton = function(field){
-		var addCheckBoxText = "Add Item"; //TODO Internationalize this message
-		var addCheckBoxId   = "addCheckBoxId";
+	this.addAddBoxButton = function(field){
+		var addBoxId   = "add"+this.boxId;
 		
-		field.append('<button type="button" id="'+addCheckBoxId+'">'+
+		field.append('<button type="button" id="'+addBoxId+'">'+
 					'<img src="../../resources/images/add.png"/>'+
-					  addCheckBoxText+
+					  this.msgAddBox+
 					 '</button>');
 		
-		var fAddInputField = this.addInputField;
-		$('button#'+addCheckBoxId).bind("click",function(e){
-			fAddInputField(field,"");			
+		var myAddInputField = this.addInputField;
+		var myBox           = this;
+		$('button#'+addBoxId).bind("click",function(e){
+			myAddInputField(field,"",myBox);			
 		});
 	};
 	
-	this.addInputField = function(field, value){
-		var newDate            = new Date;
-		var uuid               = newDate.getTime();
-		var inputFieldId       = "inputField_" +uuid;
-		var removeFieldId      = "removeField_"+uuid;
-		var inputFieldClass    = "inputFieldClass";
-		var checkBoxFieldId    = "checkBoxField";
+	this.addInputField = function(field, value, myBox){
+		var uuid               = generateUUID();
+		var rowId              = myBox.boxId+"_row" +uuid;
+		var removeFieldId      = myBox.boxId+"_removeField"+uuid;
+		var rowClass           = myBox.boxId+"_rowClass";
+		var msgRemoveError     = myBox.msgRemoveError;
 		
-		field.append('<tr id="'+inputFieldId+'" class="'+inputFieldClass+'"><td>'+
-					 '<input type="text" id="'+checkBoxFieldId+'" value="'+value+'"/>'+
+		field.append('<tr id="'+rowId+'" class="'+rowClass+'"><td>'+
+					 '<input type="text" id="'+myBox.optionLabelInputId+'" value="'+value+'"/>'+
 					 '<a id="'+removeFieldId+'">'+
 					 '<img src="../../resources/images/delete.png"/>'+
 					 '</a>'+
 					 '</tr></td>');
 		
 		$('a#'+removeFieldId).bind("click", function(e){
-			if($("tr."+inputFieldClass).size()>1){
-				$('tr#'+inputFieldId).remove();				
+			if($("tr."+rowClass).size()>1){
+				$('tr#'+rowId).remove();				
 			} else {
-				//TODO Internationalize this message
-				alert("Can't remove the last element.");
+				alert(msgRemoveError);
 			}
 		});
 	};
@@ -220,26 +224,45 @@ var CheckBox = function() {
 	 * @param label
 	 */
 	this.createField = function(label){
-		var ul = $('#propertiesSpecific > ul');
-		var fieldContentId = "field_"+label+"_id";
+		var ul             = $('#propertiesSpecific > ul');
+		var contentTableId = this.boxId+"contentTableId";
+		var msgBoxLabel    = this.msgBoxLabel;
 		
-		ul.append('<li id="'+this.checkBoxId+'">'+
-				  '<label> Check Box Options: </label>'+ // TODO Internationalize
-				  '<table id="'+fieldContentId+'"></table>'+
+		ul.append('<li class="'+this.boxClass+'">'+
+				  '<label> '+msgBoxLabel+': </label>'+
+				  '<table id="'+contentTableId+'"></table>'+
 				  '</li>');
 		
-		return $("table#"+fieldContentId);
+		return $("table#"+contentTableId);
 	};
 	
 	this.saveSpecificProperties = function(){
 		var itensToSave = new Array();
-		$('input#checkBoxField').each(function() {
+		$('input#'+this.optionLabelInputId).each(function() {
 			itensToSave.push( $(this).val() );
 		});
 		this.optionsTitles = itensToSave;
 	};
 };
-CheckBox.prototype = new Field();
+Box.prototype = new Field();
+
+////CheckBox Field ////
+var CheckBox  = function(){
+	this.boxId = this.component+generateUUID();
+	this.msgAddBox          = jQuery.i18n.prop('msg_box_add'); 
+	this.msgRemoveError     = jQuery.i18n.prop('msg_box_remove_error');
+	this.msgBoxLabel        = jQuery.i18n.prop('msg_box_label');
+}; 
+CheckBox.prototype = new Box("checkbox");
+
+////RadioBox Field ////
+var RadioBox  = function(){
+	this.boxId = this.component+generateUUID();
+	this.msgAddBox          = jQuery.i18n.prop('msg_box_add'); 
+	this.msgRemoveError     = jQuery.i18n.prop('msg_box_remove_error');
+	this.msgBoxLabel        = jQuery.i18n.prop('msg_box_label');
+}; 
+RadioBox.prototype = new Box("radio");
 
 //// Number Field ////
 var NumberField = function(){
@@ -370,6 +393,9 @@ var fieldFactory = function(type){
 		break;
 	case 'checkbox':
 		field = new CheckBox();
+		break;
+	case 'radio':
+		field = new RadioBox();
 		break;
 	default:
 		return null;
