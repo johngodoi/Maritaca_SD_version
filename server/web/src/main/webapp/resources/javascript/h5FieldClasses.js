@@ -151,16 +151,151 @@ var TextBox = function() {
 // Inheritance to TextBox from Field
 TextBox.prototype = new Field();
 
-var CheckBox = function() {
-	this.options = new Array();
+
+/// Box ///
+var globalId = 0;
+var generateUUID = function(){
+	globalId++;
+	if(globalId >= 1000000){
+		globalId = 0;
+	}
+	return globalId;
 };
+
+var Box = function(type) {
+	this.component          = type;
+	this.optionsTitles      = new Array();
+	this.optionsTitles[0]   = '';
+	this.boxId              = '';
+	this.optionLabelInputId = this.boxId+"_optionLabelId";
+	this.type               = type;
+	this.boxClass           = "boxClass";
+	this.msgAddBox          = null; 
+	this.msgRemoveError     = null;
+	this.msgBoxLabel        = null;
+	
+	this.addXMLSpecificAttributes = function(){
+		
+	};
+	
+	this.addXMLElements = function(){
+		
+	};
+	
+	this.toHTMLSpecific = function(){		
+		var html = '';		
+		for(var i=0; i<this.optionsTitles.length; i++){
+			html += '<input type="'+this.type+'" name="'+this.boxId+'">';
+			html += this.optionsTitles[i];
+			html += '</input>';
+		}		
+		return html;
+	};
+	
+	this.showSpecificProperties = function(){
+		$('#propertiesSpecific').show();
+		
+		if($("li."+this.boxClass).length>0){
+			$("li."+this.boxClass).remove();
+		}
+		
+		var boxField = this.createField(this.component);
+
+		for(var i=0; i<this.optionsTitles.length; i++){
+			this.addInputField(boxField,this.optionsTitles[i],this);
+		}		
+		this.addAddBoxButton(boxField);
+	};
+	
+	this.addAddBoxButton = function(field){
+		var addBoxId   = "add"+this.boxId;
+		
+		field.append('<button type="button" id="'+addBoxId+'">'+
+					'<img src="../../resources/images/add.png"/>'+
+					  this.msgAddBox+
+					 '</button>');
+		
+		var myAddInputField = this.addInputField;
+		var myBox           = this;
+		$('button#'+addBoxId).bind("click",function(e){
+			myAddInputField(field,"",myBox);			
+		});
+	};
+	
+	this.addInputField = function(field, value, myBox){
+		var uuid               = generateUUID();
+		var rowId              = myBox.boxId+"_row" +uuid;
+		var removeFieldId      = myBox.boxId+"_removeField"+uuid;
+		var rowClass           = myBox.boxId+"_rowClass";
+		var msgRemoveError     = myBox.msgRemoveError;
+		
+		field.append('<tr id="'+rowId+'" class="'+rowClass+'"><td>'+
+					 '<input type="text" id="'+myBox.optionLabelInputId+'" value="'+value+'"/>'+
+					 '<a id="'+removeFieldId+'">'+
+					 '<img src="../../resources/images/delete.png"/>'+
+					 '</a>'+
+					 '</tr></td>');
+		
+		$('a#'+removeFieldId).bind("click", function(e){
+			if($("tr."+rowClass).size()>1){
+				$('tr#'+rowId).remove();				
+			} else {
+				alert(msgRemoveError);
+			}
+		});
+	};
+	
+	/**
+	 * Creates the <li> tag inside the properties. 
+	 * @param label
+	 */
+	this.createField = function(label){
+		var ul             = $('#propertiesSpecific > ul');
+		var contentTableId = this.boxId+"contentTableId";
+		var msgBoxLabel    = this.msgBoxLabel;
+		
+		ul.append('<li class="'+this.boxClass+'">'+
+				  '<label> '+msgBoxLabel+': </label>'+
+				  '<table id="'+contentTableId+'"></table>'+
+				  '</li>');
+		
+		return $("table#"+contentTableId);
+	};
+	
+	this.saveSpecificProperties = function(){
+		var itensToSave = new Array();
+		$('input#'+this.optionLabelInputId).each(function() {
+			itensToSave.push( $(this).val() );
+		});
+		this.optionsTitles = itensToSave;
+	};
+};
+Box.prototype = new Field();
+
+////CheckBox Field ////
+var CheckBox  = function(){
+	this.boxId = this.component+generateUUID();
+	this.msgAddBox          = jQuery.i18n.prop('msg_box_add'); 
+	this.msgRemoveError     = jQuery.i18n.prop('msg_box_remove_error');
+	this.msgBoxLabel        = jQuery.i18n.prop('msg_box_label');
+}; 
+CheckBox.prototype = new Box("checkbox");
+
+////RadioBox Field ////
+var RadioBox  = function(){
+	this.boxId = this.component+generateUUID();
+	this.msgAddBox          = jQuery.i18n.prop('msg_box_add'); 
+	this.msgRemoveError     = jQuery.i18n.prop('msg_box_remove_error');
+	this.msgBoxLabel        = jQuery.i18n.prop('msg_box_label');
+}; 
+RadioBox.prototype = new Box("radio");
 
 //// Number Field ////
 var NumberField = function(){
 	this.type = 'number';
 	this.bydefault = '';
-	this.maxValue = '';
-	this.minValue = '';
+	this.maxValue  = '';
+	this.minValue  = '';
 	
 	this.toHTMLSpecific = function() {
 		var html = '';
@@ -295,6 +430,12 @@ var fieldFactory = function(type){
 	case 'date':
 		field = new DateField();
 		field.title = jQuery.i18n.prop('msg_form_dateTitle');
+		break;
+	case 'checkbox':
+		field = new CheckBox();
+		break;
+	case 'radio':
+		field = new RadioBox();
 		break;
 	default:
 		return null;
