@@ -117,8 +117,6 @@ public class ModelFactory {
 		}else{
 			sessionCounter.put(user.getKey(), counter);
 		}
-		
-		System.out.println("User: " + user.getEmail() + " counter: " + counter);
 	}
 	
 	public void registryUser(User user){
@@ -129,8 +127,6 @@ public class ModelFactory {
 		}else{
 			sessionCounter.put(user.getKey(), ++counter);
 		}
-		
-		System.out.println("User: " + user.getEmail() + " counter: " + counter);
 	}
 
 	private User getCurrentUser() {

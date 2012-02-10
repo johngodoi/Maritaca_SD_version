@@ -15,7 +15,7 @@
 	<composite:implementation>
 		<h:panelGrid id="formRenderTable" columns="3">
 			<tr>
-				<td><label>#{msgs.form_title}</label></td>
+				<td><strong><label>#{msgs.form_title}</label></strong></td>
 				<h:inputText value="#{editFormBean.form.title}" id="titleForm"
 					readonly="#{!editFormBean.editForm}" onkeyup="updateTitle(value);" />
 				<td><input type="hidden" id="hiddenTitleForm" /></td>
