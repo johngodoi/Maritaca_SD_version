@@ -274,21 +274,44 @@ Box.prototype = new Field();
 
 ////CheckBox Field ////
 var CheckBox  = function(){
-	this.boxId = this.component+generateUUID();
-	this.msgAddBox          = jQuery.i18n.prop('msg_box_add'); 
-	this.msgRemoveError     = jQuery.i18n.prop('msg_box_remove_error');
-	this.msgBoxLabel        = jQuery.i18n.prop('msg_box_label');
+	this.boxId            = this.component+generateUUID();
+	this.msgAddBox        = jQuery.i18n.prop('msg_box_add'); 
+	this.msgRemoveError   = jQuery.i18n.prop('msg_box_remove_error');
+	this.msgBoxLabel      = jQuery.i18n.prop('msg_box_label');
 }; 
 CheckBox.prototype = new Box("checkbox");
 
 ////RadioBox Field ////
 var RadioBox  = function(){
-	this.boxId = this.component+generateUUID();
-	this.msgAddBox          = jQuery.i18n.prop('msg_box_add'); 
-	this.msgRemoveError     = jQuery.i18n.prop('msg_box_remove_error');
-	this.msgBoxLabel        = jQuery.i18n.prop('msg_box_label');
+	this.boxId            = this.component+generateUUID();
+	this.msgAddBox        = jQuery.i18n.prop('msg_box_add'); 
+	this.msgRemoveError   = jQuery.i18n.prop('msg_box_remove_error');
+	this.msgBoxLabel      = jQuery.i18n.prop('msg_box_label');
 }; 
 RadioBox.prototype = new Box("radio");
+
+////ComboBox Field ////
+var ComboBox  = function(){
+	this.boxId            = this.component+generateUUID();
+	this.msgAddBox        = jQuery.i18n.prop('msg_box_add'); 
+	this.msgRemoveError   = jQuery.i18n.prop('msg_box_remove_error');
+	this.msgBoxLabel      = jQuery.i18n.prop('msg_box_label');
+	
+	this.toHTMLSpecific = function(){
+		var html = "<select>";
+		
+		for(var i=0; i<this.optionsTitles.length; i++){
+			html += '<option value="'+this.optionsTitles[i]+'">';
+			html += this.optionsTitles[i];
+			html += '</option>';
+		}		
+		
+		html += "</select>";		
+		return html;
+	};
+}; 
+ComboBox.prototype = new Box("combobox");
+
 
 //// Number Field ////
 var NumberField = function(){
@@ -433,9 +456,15 @@ var fieldFactory = function(type){
 		break;
 	case 'checkbox':
 		field = new CheckBox();
+		field.title = jQuery.i18n.prop('msg_form_checkBoxTitle');
 		break;
 	case 'radio':
 		field = new RadioBox();
+		field.title = jQuery.i18n.prop('msg_form_radioBoxTitle');
+		break;
+	case 'combobox':
+		field = new ComboBox();
+		field.title = jQuery.i18n.prop('msg_form_comboBoxTitle');
 		break;
 	default:
 		return null;
