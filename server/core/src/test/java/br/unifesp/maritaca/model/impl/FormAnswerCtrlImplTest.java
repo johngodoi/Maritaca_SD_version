@@ -53,6 +53,8 @@ public class FormAnswerCtrlImplTest {
 	public void testSaveForm() {
 		Form form = new Form();
 		form.setUser(uuid2);
+		form.setTitle("title");
+		form.setXml("xml");
 
 		when(em.persist(any())).thenAnswer(new Answer<Boolean>() {
 
