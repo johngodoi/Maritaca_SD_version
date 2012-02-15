@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import br.unifesp.maritaca.access.AccessLevel;
 import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.core.Answer;
@@ -26,6 +29,7 @@ import br.unifesp.maritaca.util.UserLocator;
 import br.unifesp.maritaca.util.Utils;
 
 public class FormAnswerModelImpl implements FormAnswerModel {
+	private static final Log log = LogFactory.getLog(FormAnswerModelImpl.class);
 	private EntityManager entityManager;
 	private UserModel userModel;
 	private User currentUser;
@@ -95,6 +99,7 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 						// default permissions don't save
 						// delete form
 						deleteForm(form);
+						log.error("Not possible to establish default permissions, form not saved");
 						throw new RuntimeException(
 								"Not possible to establish default permissions, form not saved");
 					}

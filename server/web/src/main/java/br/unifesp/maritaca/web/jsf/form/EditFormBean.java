@@ -5,6 +5,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.User;
@@ -14,6 +17,7 @@ import br.unifesp.maritaca.web.jsf.AbstractBean;
 @ManagedBean
 @ViewScoped
 public class EditFormBean extends AbstractBean {
+	private static final Log log = LogFactory.getLog(EditFormBean.class);
 	private static final long serialVersionUID = 1L;
 	@ManagedProperty("#{currentUserBean.user}")
 	private User user;
