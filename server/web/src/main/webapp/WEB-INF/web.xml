@@ -70,6 +70,10 @@
    <param-name>keyspace</param-name>
    <param-value>Maritaca</param-value>
   </init-param>
+  <init-param>
+   <param-name>log4j-properties-location</param-name>
+   <param-value>WEB-INF/log4j.properties</param-value>
+  </init-param>
   <load-on-startup>1</load-on-startup>
  </servlet>
  <servlet>
