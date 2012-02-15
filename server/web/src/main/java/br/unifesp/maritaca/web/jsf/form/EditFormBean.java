@@ -1,5 +1,6 @@
 package br.unifesp.maritaca.web.jsf.form;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
@@ -68,18 +69,19 @@ public class EditFormBean extends AbstractBean {
 		}
 	}
 
-	public String saveForm() {
+	public void saveForm() {
 		if (form.getXml() != null && form.getXml().length() > 0) {
 			if (form.getUser() == null) {
 				form.setUser(user);
 			}
-			if (formAnswCtrl.saveForm(form))
+			if (formAnswCtrl.saveForm(form)) {
 				setSaveStatus("success");
-			return "success";
+				addMessage("form_edit_save_success", FacesMessage.SEVERITY_INFO);
+				return;
+			}
 		}
 
-		setSaveStatus("error");
-		return "error";
+		addMessage("form_edit_save_error", FacesMessage.SEVERITY_ERROR);
 	}
 
 	public String getSaveStatus() {
