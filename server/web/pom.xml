@@ -67,12 +67,12 @@
 		<dependency>
 			<groupId>com.sun.faces</groupId>
 			<artifactId>jsf-api</artifactId>
-			<version>2.1.4</version><!--$NO-MVN-MAN-VER$-->
+			<version>2.1.4</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 		<dependency>
 			<groupId>com.sun.faces</groupId>
 			<artifactId>jsf-impl</artifactId>
-			<version>2.1.4</version><!--$NO-MVN-MAN-VER$-->
+			<version>2.1.4</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -147,6 +147,18 @@
 			<artifactId>JOpenId</artifactId>
 			<version>1.08</version>
 		</dependency>
+		<!-- Logging -->
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.16</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+
 		<!-- various -->
 		<dependency>
 			<groupId>commons-lang</groupId>

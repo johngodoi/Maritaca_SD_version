@@ -14,6 +14,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ExceptionQueuedEvent;
 import javax.faces.event.ExceptionQueuedEventContext;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import me.prettyprint.hector.api.exceptions.HectorException;
 
 /**
@@ -23,6 +26,7 @@ import me.prettyprint.hector.api.exceptions.HectorException;
  * 
  */
 public class GlobalExceptionHandler extends ExceptionHandlerWrapper {
+	private static final Log log = LogFactory.getLog(GlobalExceptionHandler.class);
 	ExceptionHandler wrapped;
 
 	public GlobalExceptionHandler(ExceptionHandler wrapped) {
@@ -58,15 +62,17 @@ public class GlobalExceptionHandler extends ExceptionHandlerWrapper {
 			} else if (thr instanceof HectorException) {
 				addMessage("error_hector_exception",
 						FacesMessage.SEVERITY_ERROR);
+				log.error("Error accessing data", thr);
 			} else if (thr instanceof IllegalArgumentException) {
 				addMessage("error_illegal_argument",
 						FacesMessage.SEVERITY_ERROR);
+				log.error("Illegal argument", thr);
 			} else if(thr instanceof ELException){
 				continue;//this error are handle for JSF
 			}else{
 				addMessage("error_unexpected", FacesMessage.SEVERITY_ERROR);
+				log.error("Error not identified", thr);
 			}
-
 			i.remove();
 		}
 		getWrapped().handle();
@@ -79,11 +85,12 @@ public class GlobalExceptionHandler extends ExceptionHandlerWrapper {
 	 */
 	private void handleViewExpiredException(ViewExpiredException ex) {
 		try {
+			log.warn("View expired", ex);
 			getFacesContext().getExternalContext().redirect(
 					getFacesContext().getExternalContext()
 							.getRequestContextPath());
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error("not possible to redirect to login page", e);
 		}
 	}
 
