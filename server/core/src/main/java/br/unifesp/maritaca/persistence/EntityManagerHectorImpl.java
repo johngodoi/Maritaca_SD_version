@@ -47,11 +47,15 @@ import me.prettyprint.hector.api.query.SliceQuery;
 import org.apache.cassandra.db.marshal.UUIDType;
 import org.apache.cassandra.thrift.ColumnDef;
 import org.apache.cassandra.thrift.IndexType;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import br.unifesp.maritaca.persistence.annotations.Column;
 import br.unifesp.maritaca.persistence.annotations.Minimal;
 
 public class EntityManagerHectorImpl implements EntityManager {
+	private static final Log log = LogFactory
+			.getLog(EntityManagerHectorImpl.class);
 	private static EntityManagerHectorImpl instance;
 
 	private Cluster cluster;
@@ -242,7 +246,7 @@ public class EntityManagerHectorImpl implements EntityManager {
 				}
 			}
 
-			System.out.println(line);
+			log.debug(line);
 		}
 		return result;
 	}
@@ -319,7 +323,7 @@ public class EntityManagerHectorImpl implements EntityManager {
 		}
 		if (!ghost || keysOnly) {
 			result.add(obj);
-		} 
+		}
 	}
 
 	public void addHost(String host, int port) {
@@ -509,8 +513,9 @@ public class EntityManagerHectorImpl implements EntityManager {
 							+ toUpperFirst(f.getName()), String.class);
 					method.invoke(result, value);
 				} catch (Exception e) {
-					// TODO log de dados perdidos, campo nao encontrado
-					e.printStackTrace();
+					log.error("Losing data, method set" + f.getName()
+							+ "not found in class "
+							+ result.getClass().getSimpleName(), e);
 				}
 			}
 
@@ -580,7 +585,7 @@ public class EntityManagerHectorImpl implements EntityManager {
 		try {
 			cluster.getConnectionManager().shutdown();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("not possible to close the connection with cassandra", e);
 		}
 
 	}

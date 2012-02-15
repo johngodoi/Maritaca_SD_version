@@ -49,6 +49,17 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<!-- Logging -->
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>${commons-logging.version}</version>
+		</dependency>
 		<!-- USER LOCATOR -->
 		<dependency>
 			<groupId>com.sun.faces</groupId>

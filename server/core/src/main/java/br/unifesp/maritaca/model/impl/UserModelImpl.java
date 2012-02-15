@@ -10,6 +10,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import br.unifesp.maritaca.core.Group;
 import br.unifesp.maritaca.core.GroupUser;
 import br.unifesp.maritaca.core.User;
@@ -19,7 +22,7 @@ import br.unifesp.maritaca.persistence.EntityManager;
 import br.unifesp.maritaca.util.UserLocator;
 
 public class UserModelImpl implements UserModel, Serializable {
-
+	private static final Log log = LogFactory.getLog(UserModelImpl.class);
 	private static final long serialVersionUID = 1L;
 
 	private EntityManager entityManager;
@@ -299,7 +302,8 @@ public class UserModelImpl implements UserModel, Serializable {
 					result.add(obj);
 				}
 			} catch (Exception e) {
-				// TODO: add log
+				log.error("Exception executing the method " + methodName + 
+						" in the class "  + cl.getSimpleName());
 				continue;
 			}
 		}
@@ -401,7 +405,7 @@ public class UserModelImpl implements UserModel, Serializable {
 				}
 			}
 		}
-		//TODO Add log warning in this case...
+		log.warn("user " + user + " cannot be deleted from group " + group); 
 		return false; // User is not in the given group
 	}
 	
