@@ -87,3 +87,32 @@
 .rf-tb-itm{
 	padding: 0px;
 }
+
+.maritacaMessages{
+	float: right;
+	margin-right: 20px;
+}
+
+.maritacaMsg{
+	display: none;
+	padding: 5px;
+	font-family: sans-serif;
+	font-size: small;
+	background-color:#dddddd;
+	margin-bottom: 2px;
+}
+
+.errMsg{
+	background-color: #FF4747;
+	border-color: #8A0000;
+}
+
+.infoMsg{
+	background-color: #A3DBFF;
+	border-color: #5A63FF;
+}
+
+.warnMsg{
+	background-color: #FFE459;
+	border-color: #FFAC24;
+}

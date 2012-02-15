@@ -68,7 +68,7 @@
 		<dependency>
 			<groupId>br.unifesp.maritaca</groupId>
 			<artifactId>maritaca-core</artifactId>
-			<version>{maritaca.version}</version>
+			<version>${maritaca.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.jersey</groupId>

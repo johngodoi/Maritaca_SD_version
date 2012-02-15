@@ -13,4 +13,9 @@
 <!-- 	<lifecycle> -->
 <!-- 		<phase-listener>br.unifesp.maritaca.web.utils.LifeCycleListener</phase-listener> -->
 <!-- 	</lifecycle> -->
+	<factory>
+		<exception-handler-factory>
+			br.unifesp.maritaca.web.exception.GlobalExceptionHandlerFactory
+		</exception-handler-factory>
+	</factory>
 </faces-config>
