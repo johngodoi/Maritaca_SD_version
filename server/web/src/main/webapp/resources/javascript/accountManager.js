@@ -4,7 +4,9 @@ var MAX_PASSWORD_SIZE = 20;
 window.onload = function(){
 	var saveAccountId     = window.document.forms[0].id+":createAccountButton";
 	var saveAccountButton = document.getElementById(saveAccountId);	
-	saveAccountButton.disabled=true;
+	if(saveAccountButton != null){
+		saveAccountButton.disabled=true;
+	}	
 };
 
 function returnMinPasswordSize() {

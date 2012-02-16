@@ -27,14 +27,14 @@
 </h:head>
 
 <h:body>
-<a4j:outputPanel ajaxRendered="true">
+	<div id="maritacaMessages" class="maritacaMessages"></div>
+	<a4j:outputPanel ajaxRendered="true">
 		<c:forEach var="msg" items="#{maritacaMessages.messages}">
 		<h:outputScript>
 		addMessage("#{msgs[msg.message]}","#{msg.type}");
 			</h:outputScript>
 		</c:forEach>
 	</a4j:outputPanel>
-<div id="maritacaMessages" class="maritacaMessages"></div>
 	<div id="main">
 		<h:outputStylesheet library="css" name="styles.css" target="body" />
 		<ui:decorate template="/decorators/header.xhtml">
