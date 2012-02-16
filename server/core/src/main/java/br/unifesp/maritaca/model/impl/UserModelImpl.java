@@ -10,9 +10,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import org.mortbay.log.Log;
+
 import br.unifesp.maritaca.core.Group;
 import br.unifesp.maritaca.core.GroupUser;
 import br.unifesp.maritaca.core.User;
+import br.unifesp.maritaca.exception.InvalidNumberOfEntries;
 import br.unifesp.maritaca.model.ManagerModel;
 import br.unifesp.maritaca.model.UserModel;
 import br.unifesp.maritaca.persistence.EntityManager;
@@ -245,65 +248,50 @@ public class UserModelImpl implements UserModel, Serializable {
 		} else if (foundGroups.size() == 1) {
 			return foundGroups.get(0);
 		} else {
-			throw new RuntimeException("Invalid number of groups with name:"
-					+ groupName);
+			throw new InvalidNumberOfEntries(groupName, Group.class);
 		}
 	}
 
 	@Override
 	public List<User> usersStartingWith(String startingString) {
-		try {
-			return objectsStartingWith(User.class, startingString, "getEmail");
-		} catch (NoSuchMethodException e) {
-			// TODO: add log, getMail not found in USER
-			return new ArrayList<User>(0);
-		}
+		return objectsStartingWith(User.class, startingString, "getEmail");
 	}
 
 	@Override
 	public List<Group> groupsStartingWith(String startingString) {
-		try {
-			return objectsStartingWith(Group.class, startingString, "getName");
-		} catch (NoSuchMethodException e) {
-			// TODO: add log, getMail not found in USER
-			return new ArrayList<Group>(0);
-		}
+		return objectsStartingWith(Group.class, startingString, "getName");
 	}
 
 	/**
-	 * Returns a list<T> with the objects that start with startingString Objects
-	 * are in MINIMAL representation
+	 * Returns a list<T> with the objects that start with startingString. Returned
+	 * Objects are in MINIMAL representation.
 	 * 
 	 * @param cl
 	 * @param startingStr
 	 * @param methodName
 	 * @return
-	 * @throws NoSuchMethodException
 	 */
 	private <T> List<T> objectsStartingWith(Class<T> cl, String startingStr,
-			String methodName) throws NoSuchMethodException {
-		Method method;
+			String methodName) {
 		try {
-			method = cl.getMethod(methodName);
-		} catch (SecurityException e) {
-			throw new RuntimeException(e);
-		}
-		// TODO: improve this, since ti get all elements in a column family
-		// it could be not optimal with big collections
-		List<T> resultEM = entityManager.listAll(cl, true);
-		ArrayList<T> result = new ArrayList<T>(0);
-		for (T obj : resultEM) {
-			try {
+			// TODO: improve this. Retrieving all elements in a column family
+			// is expensive with big collections.
+			Method method = cl.getMethod(methodName);
+			List<T> resultEM = entityManager.listAll(cl, true);
+			ArrayList<T> result = new ArrayList<T>(0);
+			for (T obj : resultEM) {
+
 				String value = (String) method.invoke(obj);
 				if (value != null && value.matches("^" + startingStr + ".*")) {
 					result.add(obj);
 				}
-			} catch (Exception e) {
-				// TODO: add log
-				continue;
 			}
+			return result;
+		} catch (Exception e) {
+			Log.warn("Couldn't invoke: " + methodName
+					+ " in object from class: " + cl.getName());
+			return new ArrayList<T>();
 		}
-		return result;
 	}
 
 	@Override
@@ -343,6 +331,7 @@ public class UserModelImpl implements UserModel, Serializable {
 		verifyEntity(group);
 		
 		if(!removeGroupUserFromGroup(group)){
+			Log.warn("Could not remove group: " + group.toString());
 			return false;
 		} else {
 			return entityManager.delete(group);
@@ -395,14 +384,18 @@ public class UserModelImpl implements UserModel, Serializable {
 		for(GroupUser groupUser : groupsUserFromUser){
 			if(groupUser.getGroup().getKey().equals(group.getKey())){
 				if(!entityManager.delete(groupUser)){
+					Log.warn("Couldn't delete groupUser: "
+							+ groupUser.toString());
 					return false;
 				} else {
 					return true;
 				}
 			}
 		}
-		//TODO Add log warning in this case...
-		return false; // User is not in the given group
+		// User is not in the given group
+		Log.warn("User: " + user.toString() + ", not found in group: "
+				+ group.toString());
+		return false;
 	}
 	
 	@Override

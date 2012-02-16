@@ -9,6 +9,7 @@ import javax.faces.bean.RequestScoped;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
 import br.unifesp.maritaca.web.jsf.account.CurrentUserBean;
+import br.unifesp.maritaca.web.utils.Utils;
 
 @ManagedBean
 @RequestScoped
@@ -43,7 +44,7 @@ public class MaritacaLoginBean extends AbstractBean {
 	public String submit() {
 		User dbUser = super.userCtrl.getUser(getUser().getEmail());
 		if(dbUser==null || !getUser().getPassword().equals(dbUser.getPassword())){
-			setStatus("Login failed!");
+			setStatus(Utils.getMessageFromResourceProperties("login_failed"));
 			return "/faces/views/login";			
 		} else {
 			getCurrentUserBean().setUser(dbUser);
