@@ -10,6 +10,8 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.expressme.openid.Association;
 import org.expressme.openid.Authentication;
 import org.expressme.openid.Endpoint;
@@ -18,12 +20,14 @@ import org.expressme.openid.OpenIdManager;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
 import br.unifesp.maritaca.web.jsf.account.AccountEditorBean;
+import br.unifesp.maritaca.web.utils.Utils;
 
 @ManagedBean
 @SessionScoped
 public class OpenIdLoginBean extends AbstractBean implements Serializable{
 
 	private static final long serialVersionUID = 1L;
+	private static final Log  log              = LogFactory.getLog(OpenIdLoginBean.class);
 
 	@ManagedProperty("#{accountEditorBean}")
 	private AccountEditorBean accountEditorBean;
@@ -87,7 +91,8 @@ public class OpenIdLoginBean extends AbstractBean implements Serializable{
     	try {
 			FacesContext.getCurrentInstance().getExternalContext().redirect(url);
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e);
+			throw new RuntimeException(e);
 		}
     }
 
@@ -151,10 +156,14 @@ public class OpenIdLoginBean extends AbstractBean implements Serializable{
 
 				facesRedirect(url);
 			} else {
-				throw new RuntimeException("Unsupported OP: " + op);
+				log.error("Invalid OP for openid authentication: " + op);
+				throw new RuntimeException();
 			}
 
 		} catch (Exception e) {
+			log.error(e.getMessage());
+			throw new RuntimeException(
+					Utils.getMessageFromResourceProperties("login_open_id_error"));
 		}
 	}
 	
