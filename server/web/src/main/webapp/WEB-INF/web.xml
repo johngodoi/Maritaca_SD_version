@@ -102,6 +102,17 @@
   <servlet-name>LogoutServlet</servlet-name>
   <url-pattern>/logout</url-pattern>
  </servlet-mapping>
+ <!-- OAuth -->
+ <servlet>
+  <display-name>AuthorizationServer</display-name>
+  <servlet-name>AuthorizationServer</servlet-name>
+  <servlet-class>br.unifesp.maritaca.web.oauth.AuthorizationServer</servlet-class>
+ </servlet>
+ <servlet-mapping>
+  <servlet-name>AuthorizationServer</servlet-name>
+  <url-pattern>/oauth/*</url-pattern>
+ </servlet-mapping>
+ 
  <welcome-file-list>
   <welcome-file>faces/views/login.xhtml</welcome-file>
  </welcome-file-list>

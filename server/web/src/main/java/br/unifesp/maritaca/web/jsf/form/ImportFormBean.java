@@ -2,6 +2,7 @@ package br.unifesp.maritaca.web.jsf.form;
 
 import java.net.URI;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
@@ -11,6 +12,8 @@ import javax.faces.validator.ValidatorException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.commons.validator.UrlValidator;
 import org.richfaces.event.FileUploadEvent;
 import org.richfaces.model.UploadedFile;
@@ -33,6 +36,7 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 @RequestScoped
 public class ImportFormBean extends AbstractBean {
 
+	private static final Log log = LogFactory.getLog(ImportFormBean.class);
 	private static final long serialVersionUID = 1L;
 
 	private String url;
@@ -53,6 +57,7 @@ public class ImportFormBean extends AbstractBean {
 		
 		setForm(file.getName(), data);
 		setSuccessful(true);
+		addMessage("form_import_successful", FacesMessage.SEVERITY_INFO);
 	}
 
 	// TODO Validate the xml content.
@@ -68,7 +73,9 @@ public class ImportFormBean extends AbstractBean {
 			setForm(getUrl(), xml);
 			setResult(value);
 			setSuccessful(true);
+			addMessage("form_import_successful", FacesMessage.SEVERITY_INFO);
 		} catch (Exception e) {
+			log.error("Invalid URL", e);
 		}
 	}
 
