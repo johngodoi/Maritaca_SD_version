@@ -2,3 +2,6 @@
 /.classpath
 /.project
 /.settings
+RestTester-build*
+RestTester.pro.user
+*~
