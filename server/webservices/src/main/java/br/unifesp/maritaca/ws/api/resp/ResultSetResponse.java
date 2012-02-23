@@ -1,7 +1,6 @@
 package br.unifesp.maritaca.ws.api.resp;
 
 import java.util.Collection;
-import java.util.List;
 
 import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlAttribute;

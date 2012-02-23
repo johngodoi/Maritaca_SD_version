@@ -17,6 +17,8 @@ import javax.faces.event.ExceptionQueuedEventContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import br.unifesp.maritaca.exception.InvalidNumberOfEntries;
+
 import me.prettyprint.hector.api.exceptions.HectorException;
 
 /**
@@ -67,6 +69,12 @@ public class GlobalExceptionHandler extends ExceptionHandlerWrapper {
 				addMessage("error_illegal_argument",
 						FacesMessage.SEVERITY_ERROR);
 				log.error("Illegal argument", thr);
+			} else if(thr instanceof InvalidNumberOfEntries ){
+				InvalidNumberOfEntries invNumEnt = (InvalidNumberOfEntries) thr;
+				addMessage("error_invalid_number_of_entities", FacesMessage.SEVERITY_ERROR);
+				log.error("Entity: "+ invNumEnt.getEntity().getName()+
+						  " have multiple entries for value: "+invNumEnt.getEntry()
+						  ,thr);
 			} else if(thr instanceof ELException){
 				continue;//this error are handle for JSF
 			}else{
