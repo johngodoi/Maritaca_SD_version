@@ -1,7 +1,6 @@
 package br.unifesp.maritaca.ws.api.resp;
 
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name="error")

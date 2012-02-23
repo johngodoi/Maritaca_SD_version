@@ -8,11 +8,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 
+import org.mortbay.log.Log;
+
 import br.unifesp.maritaca.core.Group;
 import br.unifesp.maritaca.core.GroupUser;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
 import br.unifesp.maritaca.web.jsf.account.CurrentUserBean;
+import br.unifesp.maritaca.web.utils.Utils;
 
 /**
  * Bean used to present groups to the user.
@@ -57,6 +60,9 @@ public class ListGroupsBean extends AbstractBean{
 	public void removeGroup(Group group){
 		if(super.userCtrl.removeGroup(group)){
 			getMyGroups().remove(group);
+		} else {
+			throw new RuntimeException(
+					Utils.getMessageFromResourceProperties("group_remove_error"));
 		}		
 	}
 
@@ -76,8 +82,9 @@ public class ListGroupsBean extends AbstractBean{
 					myGroup.setOwner(owner);
 					myGroups.add(myGroup);	
 				}else{
-					/*TODO Add a log warning here saying that this group was deleted but
-					 *     there is still information about him in the GroupUser table. */
+					// Group deleted but has entry in GroupUser
+					Log.warn("Group "+groupUser.getGroup().toString()+
+							 " was deleted but has entry in the GroupUser table");
 				}
 			}
 		}		

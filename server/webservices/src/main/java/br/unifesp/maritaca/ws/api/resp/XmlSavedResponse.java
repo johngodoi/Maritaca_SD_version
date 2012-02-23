@@ -2,9 +2,6 @@ package br.unifesp.maritaca.ws.api.resp;
 
 import javax.ws.rs.core.Response;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
-
-import br.unifesp.maritaca.core.Form;
 
 @XmlRootElement(name="xmlsaved")
 public class XmlSavedResponse extends MaritacaResponse{
