@@ -5,8 +5,9 @@ import javax.ws.rs.ext.Provider;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
-import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.Answer;
+import br.unifesp.maritaca.core.Form;
+import br.unifesp.maritaca.core.OAuthToken;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.ws.api.resp.ErrorResponse;
 import br.unifesp.maritaca.ws.api.resp.MaritacaResponse;
@@ -31,7 +32,8 @@ public class JAXBContextResolver implements ContextResolver<JAXBContext> {
 			MaritacaResponse.class, 
 			XmlSavedResponse.class,
 			ErrorResponse.class,
-			ResultSetResponse.class};
+			ResultSetResponse.class,
+			OAuthToken.class};
 
 	public JAXBContextResolver() {
 		try {

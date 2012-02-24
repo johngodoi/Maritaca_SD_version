@@ -17,25 +17,25 @@ import br.unifesp.maritaca.ws.exceptions.MaritacaWSException;
 @Path("/answer")
 public class AnswersServiceImpl implements AnswersService {
 
-	private FormAnswerModel formAnswModel;
+	private FormAnswerModel formRespModel;
 
 	public AnswersServiceImpl() {
-		formAnswModel = ModelFactory.getInstance().createFormResponseModel();
+		formRespModel = ModelFactory.getInstance().createFormResponseModel();
 	}
 
 	public FormAnswerModel getFormAnswerModel() {
-		return formAnswModel;
+		return formRespModel;
 	}
 
 	public void setFormAnswerModel(FormAnswerModel formResponse) {
-		this.formAnswModel = formResponse;
+		this.formRespModel = formResponse;
 	}
 	
 	@Override
 	public Answer getAnswer(String respId)throws MaritacaWSException{
 		UUID uuid = UUID.fromString(respId);
 		Answer resp = null;
-		resp = formAnswModel.getAnswer(uuid);
+		resp = formRespModel.getAnswer(uuid);
 		if(resp != null)
 		return resp;
 		else{
@@ -52,7 +52,7 @@ public class AnswersServiceImpl implements AnswersService {
 		answ.setForm(formId);
 		answ.setXml(xmlAnsw);
 		answ.setUser(userId);
-		if (formAnswModel.saveAnswer(answ)) {
+		if (formRespModel.saveAnswer(answ)) {
 			XmlSavedResponse okresp = new XmlSavedResponse();
 			okresp.setId(answ.getKey());
 			okresp.setType(MaritacaResponse.RESPONSE_TYPE);
@@ -72,7 +72,7 @@ public class AnswersServiceImpl implements AnswersService {
 			uuid = UUID.fromString(formId);
 		}
 		ResultSetResponse<Answer> resp = new ResultSetResponse<Answer>();
-		resp.setList(formAnswModel.listAllAnswersMinimal(uuid));
+		resp.setList(formRespModel.listAllAnswersMinimal(uuid));
 		return resp;
 	}
 

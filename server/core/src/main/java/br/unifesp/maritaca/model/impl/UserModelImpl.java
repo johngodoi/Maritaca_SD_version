@@ -15,8 +15,9 @@ import org.apache.commons.logging.LogFactory;
 
 import br.unifesp.maritaca.core.Group;
 import br.unifesp.maritaca.core.GroupUser;
-import br.unifesp.maritaca.core.OAuthToken;
+import br.unifesp.maritaca.core.OAuthClient;
 import br.unifesp.maritaca.core.OAuthCode;
+import br.unifesp.maritaca.core.OAuthToken;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.exception.InvalidNumberOfEntries;
 import br.unifesp.maritaca.model.ManagerModel;
@@ -392,7 +393,8 @@ public class UserModelImpl implements UserModel, Serializable {
 		for (GroupUser groupUser : groupsUserFromUser) {
 			if (groupUser.getGroup().getKey().equals(group.getKey())) {
 				if (!entityManager.delete(groupUser)) {
-					log.warn("Couldn't delete groupUser: "	+ groupUser.toString());
+					log.warn("Couldn't delete groupUser: "
+							+ groupUser.toString());
 					return false;
 				} else {
 					return true;
@@ -427,50 +429,59 @@ public class UserModelImpl implements UserModel, Serializable {
 			}
 		}
 	}
-	
+
+	@Override
+	public boolean saveAuthorizationCode(OAuthCode oAuthCode) {
+		verifyEM(entityManager);
+		if (oAuthCode == null)
+			return false;
+
+		//TODO: verify that this code must be unique
+		return entityManager.persist(oAuthCode);
+	}
+
 	@Override
 	public User getUserByToken(String token) {
-		List<OAuthToken> oauth = entityManager.cQuery(OAuthToken.class, "accessToken", token);
-		for(OAuthToken oauthtoken : oauth){
-			return entityManager.find(User.class, oauthtoken.getUser().getKey());
+		List<OAuthToken> oauth = entityManager.cQuery(OAuthToken.class,
+				"accessToken", token);
+		for (OAuthToken oauthtoken : oauth) {
+			return entityManager
+					.find(User.class, oauthtoken.getUser().getKey());
 		}
 		return null;
 	}
 
 	@Override
 	public boolean saveAuthToken(OAuthToken token) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	
-	@Override
-	public boolean saveAuthorizationCode(String oAuthCode) {
 		verifyEM(entityManager);
-		if (oAuthCode == null)
-			return false;
-		OAuthCode code = new OAuthCode();
-		code.setCode(oAuthCode);
-		
-		return entityManager.persist(code);
+		return entityManager.persist(token);
 	}
-	
+
 	@Override
-	public boolean isRegisteredOAuthCode(String authCode) {
+	public OAuthClient findOauthClient(String clientId) {
+		verifyEM(entityManager);
+		List<OAuthClient> list = entityManager.cQuery(OAuthClient.class,
+				"clientId", clientId);
+		for (OAuthClient client : list) {
+			return client;// always returns the first
+		}
+		return null;
+	}
+
+	@Override
+	public OAuthCode findOauthCode(String authCode) {
 		verifyEM(entityManager);
 		if (authCode == null) {
-			return false;
+			return null;
+		}
+
+		List<OAuthCode> foundCode = entityManager.cQuery(OAuthCode.class,
+				"code", authCode);
+
+		for(OAuthCode code: foundCode){
+			return code; //return first
 		}
 		
-		List<OAuthCode> foundCode = entityManager
-				.cQuery(OAuthCode.class, "code", authCode);
-		
-		if (foundCode.size() == 0) {
-			return false;
-		} else if(foundCode.size() == 1) {
-			return true;
-		} else {
-			// TODO exception
-			return false;
-		}
+		return null;
 	}
 }

@@ -9,56 +9,38 @@ import br.unifesp.maritaca.persistence.annotations.Column;
 import br.unifesp.maritaca.persistence.annotations.Minimal;
 
 @Entity
-public class OAuthCode {
+public class OAuthClient {
 	@Id
 	private UUID key;
-	
+
 	@Column(indexed = true)
-	@Minimal
-	private String code;
-	
-	@Column
 	@Minimal
 	private String clientId;
 	
 	@Column
-	@Minimal
-	private User user;
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
+	private String secret;
 
 	public UUID getKey() {
 		return key;
 	}
-
+	
 	public void setKey(UUID key) {
 		this.key = key;
 	}
-
+	
 	public String getClientId() {
 		return clientId;
 	}
-
+	
 	public void setClientId(String clientId) {
 		this.clientId = clientId;
 	}
 	
-	public User getUser() {
-		return user;
-	}
-	public void setUser(User user) {
-		this.user = user;
+	public String getSecret() {
+		return secret;
 	}
 	
-	public void setUser(String key){
-		User user = new User();
-		user.setKey(key);
-		setUser(user);
+	public void setSecret(String secret) {
+		this.secret = secret;
 	}
 }

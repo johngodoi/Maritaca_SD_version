@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 public @interface Column {
 	String name() default "";
 	boolean indexed() default false;
+	int ttl() default 0;
 }

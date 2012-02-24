@@ -3,12 +3,11 @@ package br.unifesp.maritaca.web.jsf.login;
 import java.io.IOException;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
 
-import net.smartam.leeloo.common.OAuth;
-
+import br.unifesp.maritaca.web.jsf.account.CurrentUserBean;
 import br.unifesp.maritaca.web.utils.Utils;
 
 @ManagedBean
@@ -17,17 +16,9 @@ public class LoginManagerBean {
 
 	private String redirectUri;
 	private String clientId;
-	private String responseType;	
-
-	public LoginManagerBean() {
-	}
-	
-	public void saveRequest(){
-		FacesContext        context  = FacesContext.getCurrentInstance();
-		HttpServletRequest  request  = (HttpServletRequest) context.getExternalContext().getRequest();
-		
-		System.out.println(request.toString());
-	}
+	private String responseType;
+	@ManagedProperty("#{currentUserBean}")
+	private CurrentUserBean currentUser;
 	
 	/**
 	 * Redirects the user to the successful login page, which can be: <li>The
@@ -38,12 +29,13 @@ public class LoginManagerBean {
 			String successfulLoginUrl;
 			
 			if (getRedirectUri()!= null && getResponseType()!=null && getClientId()!=null) {
-				successfulLoginUrl = Utils.buildServletUrl("/ws/oauth/generatecode") + buildQueryString();
+				successfulLoginUrl = Utils.buildServletUrl("/oauth/oauth/generatecode") + buildQueryString();
 			} else {
 				successfulLoginUrl = Utils.buildViewUrl("/views/home.xhtml");
 			}
 			
 			FacesContext context = FacesContext.getCurrentInstance();
+			//context.getExternalContext().dispatch(successfulLoginUrl);
 			context.getExternalContext().redirect(successfulLoginUrl);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -51,9 +43,11 @@ public class LoginManagerBean {
 	}
 
 	private String buildQueryString() {
-		return  OAuth.OAUTH_CLIENT_ID + "=" + getClientId() + "&" +
-				OAuth.OAUTH_REDIRECT_URI + "=" + getRedirectUri() +  "&" +
-				OAuth.OAUTH_RESPONSE_TYPE + "=" + getResponseType();
+		return  "client_id=" + getClientId() + "&" +
+				"redirect_uri=" + getRedirectUri() +  "&" +
+				"response_type=" + getResponseType() + "&" +
+				"userid=" + getCurrentUser().getUser().getKey();
+		
 	}
 
 	public String getRedirectUri() {
@@ -78,5 +72,13 @@ public class LoginManagerBean {
 
 	public void setClientId(String clientId) {
 		this.clientId = clientId;
+	}
+
+	public CurrentUserBean getCurrentUser() {
+		return currentUser;
+	}
+
+	public void setCurrentUser(CurrentUserBean currentUser) {
+		this.currentUser = currentUser;
 	}
 }
