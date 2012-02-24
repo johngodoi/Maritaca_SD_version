@@ -3,6 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:rich="http://richfaces.org/rich">
 <head>
 <title>Not present in rendered output</title>
@@ -28,7 +29,11 @@
 				<h:inputSecret id="password" value="#{maritacaLoginBean.user.password}" />
 			</h:panelGrid>
 			<h:commandButton value="#{msgs.login}" action="#{maritacaLoginBean.submit}"
-			onclick="encryptPassword(this.form,false)"/>
+			onclick="encryptPassword(this.form,false)">
+				<f:param name="#{oAuthParametersBean.redirectUri}"  value="#{loginManagerBean.redirectUri}"/>
+				<f:param name="#{oAuthParametersBean.clientId}"     value="#{loginManagerBean.clientId}"/>
+				<f:param name="#{oAuthParametersBean.responseType}" value="#{loginManagerBean.responseType}"/>
+			</h:commandButton>
 			<h:commandLink value="#{msgs.login_create_account_link}"
 				action="/faces/views/createAccount"/>
 		</h:form>

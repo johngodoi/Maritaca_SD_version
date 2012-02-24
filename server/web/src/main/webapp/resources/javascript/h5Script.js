@@ -186,10 +186,16 @@ function loadFormFromXML(xml){
 	var xmlDoc = $.parseXML( xml );
 	}catch(err){
 		console.log(err);
+		addMessage(jQuery.i18n.prop('msg_error_xmlprocess'), 'error');
 		return;
 	}
     var $xml = $( xmlDoc );
+    var size = $xml.find('questions').size();
+    //TODO: verify xml structure
     try{
+    	if(size == 0){//temporal while verification
+    		throw "no questions";
+    	}
     $xml.find('questions').each(function(){
     	 var elems = this.childNodes;
     	 for(var i = 0; i<elems.length; i++){
@@ -202,6 +208,7 @@ function loadFormFromXML(xml){
     });
     form.renderForm();
     }catch(err){
+    	addMessage(jQuery.i18n.prop('msg_error_noquestions'), 'warn');
     	console.log(err);
     }
 }

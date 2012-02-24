@@ -20,6 +20,9 @@ public class MaritacaLoginBean extends AbstractBean {
 	@ManagedProperty("#{currentUserBean}")
 	private CurrentUserBean currentUserBean;
 	
+	@ManagedProperty("#{loginManagerBean}")
+	private LoginManagerBean loginManagerBean;
+	
 	private User user;
 	private String status;
 
@@ -43,13 +46,19 @@ public class MaritacaLoginBean extends AbstractBean {
 
 	public String submit() {
 		User dbUser = super.userCtrl.getUser(getUser().getEmail());
-		if(dbUser==null || !getUser().getPassword().equals(dbUser.getPassword())){
-			setStatus(Utils.getMessageFromResourceProperties("login_failed"));
-			return "/faces/views/login";			
+		if(loginSuccessful(dbUser)){
+			getCurrentUserBean().setUser(dbUser);			
+			getLoginManagerBean().login();
+			return "";			
 		} else {
-			getCurrentUserBean().setUser(dbUser);
-			return "/faces/views/home";
+			setStatus(Utils.getMessageFromResourceProperties("login_failed"));
+			return "/faces/views/login";
 		}
+	}
+
+	private boolean loginSuccessful(User dbUser) {
+		return (dbUser!=null &&
+				getUser().getPassword().equals(dbUser.getPassword()));
 	}
 
 	public String getStatus() {
@@ -67,4 +76,13 @@ public class MaritacaLoginBean extends AbstractBean {
 	public void setCurrentUserBean(CurrentUserBean currentUserBean) {
 		this.currentUserBean = currentUserBean;
 	}
+
+	public LoginManagerBean getLoginManagerBean() {
+		return loginManagerBean;
+	}
+
+	public void setLoginManagerBean(LoginManagerBean loginManagerBean) {
+		this.loginManagerBean = loginManagerBean;
+	}
+
 }

@@ -15,6 +15,8 @@ import org.apache.commons.logging.LogFactory;
 
 import br.unifesp.maritaca.core.Group;
 import br.unifesp.maritaca.core.GroupUser;
+import br.unifesp.maritaca.core.OAuthToken;
+import br.unifesp.maritaca.core.OAuthCode;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.exception.InvalidNumberOfEntries;
 import br.unifesp.maritaca.model.ManagerModel;
@@ -413,6 +415,7 @@ public class UserModelImpl implements UserModel, Serializable {
 	 */
 	@Override
 	public User getOwnerOfGroup(Group gr) {
+		verifyEM(entityManager);
 		if (gr.getOwner() != null) {
 			return getUser(gr.getOwner().getKey());
 		} else {
@@ -422,6 +425,52 @@ public class UserModelImpl implements UserModel, Serializable {
 			} else {
 				return null;
 			}
+		}
+	}
+	
+	@Override
+	public User getUserByToken(String token) {
+		List<OAuthToken> oauth = entityManager.cQuery(OAuthToken.class, "accessToken", token);
+		for(OAuthToken oauthtoken : oauth){
+			return entityManager.find(User.class, oauthtoken.getUser().getKey());
+		}
+		return null;
+	}
+
+	@Override
+	public boolean saveAuthToken(OAuthToken token) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	@Override
+	public boolean saveAuthorizationCode(String oAuthCode) {
+		verifyEM(entityManager);
+		if (oAuthCode == null)
+			return false;
+		OAuthCode code = new OAuthCode();
+		code.setCode(oAuthCode);
+		
+		return entityManager.persist(code);
+	}
+	
+	@Override
+	public boolean isRegisteredOAuthCode(String authCode) {
+		verifyEM(entityManager);
+		if (authCode == null) {
+			return false;
+		}
+		
+		List<OAuthCode> foundCode = entityManager
+				.cQuery(OAuthCode.class, "code", authCode);
+		
+		if (foundCode.size() == 0) {
+			return false;
+		} else if(foundCode.size() == 1) {
+			return true;
+		} else {
+			// TODO exception
+			return false;
 		}
 	}
 }

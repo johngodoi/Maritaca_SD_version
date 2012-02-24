@@ -36,6 +36,17 @@
 			<artifactId>jersey-server</artifactId>
 			<version>1.9.1</version>
 		</dependency>
+		<!-- OAuth -->
+		<dependency>
+			<groupId>net.smartam.leeloo</groupId>
+			<artifactId>oauth2-authzserver</artifactId>
+			<version>0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>net.smartam.leeloo</groupId>
+			<artifactId>oauth2-common</artifactId>
+			<version>0.1</version>
+		</dependency>
 		<!-- Logging -->
 		<dependency>
 			<groupId>log4j</groupId>
