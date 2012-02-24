@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import br.unifesp.maritaca.core.Group;
 import br.unifesp.maritaca.core.GroupUser;
+import br.unifesp.maritaca.core.OAuthClient;
+import br.unifesp.maritaca.core.OAuthCode;
 import br.unifesp.maritaca.core.OAuthToken;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.EntityManager;
@@ -150,14 +152,16 @@ public interface UserModel extends GenericModel{
 	 * @param authCode
 	 * @return true if successful, false otherwise
 	 */
-	boolean saveAuthorizationCode(String authCode);
+	boolean saveAuthorizationCode(OAuthCode authCode);
+
+
+	OAuthClient findOauthClient(String clientId);
 
 	/**
 	 * Search the authorization code in the database
 	 * @param authCode
-	 * @return true if found, false  otherwise
+	 * @return OAuthCode or null if not found
 	 */
-	boolean isRegisteredOAuthCode(String authCode);
+	OAuthCode findOauthCode(String code);
 
-	
 }

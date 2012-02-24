@@ -4,16 +4,20 @@ import static br.unifesp.maritaca.util.Utils.verifyEM;
 
 import java.util.Map;
 import java.util.UUID;
+
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Configuration;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
 import br.unifesp.maritaca.core.Group;
 import br.unifesp.maritaca.core.GroupUser;
+import br.unifesp.maritaca.core.OAuthClient;
+import br.unifesp.maritaca.core.OAuthCode;
+import br.unifesp.maritaca.core.OAuthToken;
+import br.unifesp.maritaca.core.OpenId;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.EntityManager;
 import br.unifesp.maritaca.persistence.EntityManagerFactory;
-import br.unifesp.maritaca.util.UserLocator;
 
 public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel {
 
@@ -21,7 +25,6 @@ public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel 
 	private User currentUser;
 
 	public ManagerModelImpl() {
-		setCurrentUser(UserLocator.getCurrentUser());
 	}
 
 	@Override
@@ -81,6 +84,17 @@ public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel 
 
 		entityManager.createTable(GroupUser.class);
 		entityManager.createTable(FormPermissions.class);
+		entityManager.createTable(OpenId.class);
+		entityManager.createTable(OAuthToken.class);
+		entityManager.createTable(OAuthCode.class);
+		
+		if(!entityManager.tableExists(OAuthClient.class)){
+			entityManager.createTable(OAuthClient.class);
+			OAuthClient oaclient = new OAuthClient();
+			oaclient.setClientId("maritacamobile");
+			oaclient.setSecret("maritacasecret");
+			entityManager.persist(oaclient);
+		}
 
 	}
 

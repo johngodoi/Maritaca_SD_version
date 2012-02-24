@@ -5,10 +5,10 @@
 #include <QNetworkRequest>
 #include <QtScript/QScriptEngine>
 
-const QString OAuth2::CLIENT_ID="131804060198305";
-const QString OAuth2::CLIENT_SECRET="n7JnmCSMWZPjL1NVgQGRG-Qh";
-const QString OAuth2::AUTH_END_POINT="http://localhost:8080/maritaca/ws/oauth/requestcode";
-const QString OAuth2::TOKEN_END_POINT="http://localhost:8080/maritaca/ws/oauth/accesstoken";
+const QString OAuth2::CLIENT_ID="maritacamobile";
+const QString OAuth2::CLIENT_SECRET="maritacasecret";
+const QString OAuth2::AUTH_END_POINT="http://localhost:8080/maritaca/oauth/oauth/requestcode";
+const QString OAuth2::TOKEN_END_POINT="http://localhost:8080/maritaca/oauth/oauth/accesstoken";
 const QString OAuth2::RESP_TYPE="code";
 const QString OAuth2::SCOPE="read";
 const QString OAuth2::STATE="auth";

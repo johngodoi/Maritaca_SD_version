@@ -1,30 +1,28 @@
 package br.unifesp.maritaca.ws.impl;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import static org.mockito.Matchers.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.UUID;
 
 import javax.ws.rs.core.Response;
 
-import org.hamcrest.BaseMatcher;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.model.FormAnswerModel;
-import br.unifesp.maritaca.ws.api.resp.ErrorResponse;
+import br.unifesp.maritaca.ws.api.resp.MaritacaResponse;
 import br.unifesp.maritaca.ws.api.resp.ResultSetResponse;
 import br.unifesp.maritaca.ws.api.resp.XmlSavedResponse;
-import br.unifesp.maritaca.ws.api.resp.MaritacaResponse;
 import br.unifesp.maritaca.ws.exceptions.MaritacaWSException;
 
 public class FormsServiceImplTest {
@@ -36,8 +34,8 @@ public class FormsServiceImplTest {
 	@Before
 	public void setUp() throws Exception {
 		frControl = mock(FormAnswerModel.class);
-		formService = new FormsServiceImpl();
-		formService.setFormResponse(frControl);
+		formService = new FormsServiceImpl(uuid);
+		formService.setFormAnswerModel(frControl);
 	}
 
 	@After
