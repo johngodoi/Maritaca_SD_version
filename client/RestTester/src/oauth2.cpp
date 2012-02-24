@@ -5,12 +5,12 @@
 #include <QNetworkRequest>
 #include <QtScript/QScriptEngine>
 
-const QString OAuth2::CLIENT_ID="51227273628.apps.googleusercontent.com";
+const QString OAuth2::CLIENT_ID="131804060198305";
 const QString OAuth2::CLIENT_SECRET="n7JnmCSMWZPjL1NVgQGRG-Qh";
-const QString OAuth2::AUTH_END_POINT="https://accounts.google.com/o/oauth2/auth";
-const QString OAuth2::TOKEN_END_POINT="https://accounts.google.com/o/oauth2/token";
+const QString OAuth2::AUTH_END_POINT="http://localhost:8080/maritaca/ws/oauth/requestcode";
+const QString OAuth2::TOKEN_END_POINT="http://localhost:8080/maritaca/ws/oauth/accesstoken";
 const QString OAuth2::RESP_TYPE="code";
-const QString OAuth2::SCOPE="https://www.googleapis.com/auth/tasks";
+const QString OAuth2::SCOPE="read";
 const QString OAuth2::STATE="auth";
 const QString OAuth2::AUTH_CODE="authorization_code";
 

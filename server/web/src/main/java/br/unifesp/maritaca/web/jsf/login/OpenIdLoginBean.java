@@ -32,6 +32,9 @@ public class OpenIdLoginBean extends AbstractBean implements Serializable{
 	@ManagedProperty("#{accountEditorBean}")
 	private AccountEditorBean accountEditorBean;
 	
+	@ManagedProperty("#{loginManagerBean}")
+	private LoginManagerBean loginManagerBean;
+	
     private static final String ATTR_MAC       = "openid_mac";
     private static final String ATTR_ALIAS     = "openid_alias";
 	private static final String ATTR_END_POINT = "openid.op_endpoint";
@@ -72,8 +75,7 @@ public class OpenIdLoginBean extends AbstractBean implements Serializable{
         
         if(getAccountEditorBean().registeredEmail()){
         	loadUserInfoFromDatabase();        	
-        	String returnUrl   = returnToUrl("/views/home.xhtml");
-        	facesRedirect(returnUrl);
+        	getLoginManagerBean().login();
         }
     }
     
@@ -137,8 +139,8 @@ public class OpenIdLoginBean extends AbstractBean implements Serializable{
 		try {
 			FacesContext       context     = FacesContext.getCurrentInstance();
 			String             op          = parseOp(context);			
-			String             returnUrl   = returnToUrl("/views/createAccount.xhtml");
-			String             returnRealm = retrieveRealm();
+			String             returnUrl   = Utils.buildViewUrl("/views/createAccount.xhtml");
+			String             returnRealm = Utils.buildServerAddressUrl();
 	        HttpServletRequest request     = (HttpServletRequest) context.getExternalContext().getRequest();
 									
 			setManager(new OpenIdManager());
@@ -166,26 +168,6 @@ public class OpenIdLoginBean extends AbstractBean implements Serializable{
 					Utils.getMessageFromResourceProperties("login_open_id_error"));
 		}
 	}
-	
-    /**
-     * Create the current url and add another url path fragment on it.
-     * Obtain from the current context the url and add another url path fragment at
-     * the end.
-     * @param urlExtension f.e. /nextside.xhtml
-     * @return the hole url including the new fragment
-     */
-    private String returnToUrl(String urlExtension) {
-        FacesContext context = FacesContext.getCurrentInstance();
-        String returnToUrl = retrieveRealm() + 
-        		context.getApplication().getViewHandler().getActionURL(context, urlExtension);
-        return returnToUrl;
-    }
-    
-    private String retrieveRealm(){
-        FacesContext context = FacesContext.getCurrentInstance();
-        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
-        return "http://" + request.getServerName() + ":" + request.getServerPort();
-    }
 
 	private String parseOp(FacesContext context) {
 		Map<String, String> params = context.getExternalContext()
@@ -199,5 +181,13 @@ public class OpenIdLoginBean extends AbstractBean implements Serializable{
 
 	public void setAccountEditorBean(AccountEditorBean accountEditorBean) {
 		this.accountEditorBean = accountEditorBean;
+	}
+
+	public LoginManagerBean getLoginManagerBean() {
+		return loginManagerBean;
+	}
+
+	public void setLoginManagerBean(LoginManagerBean loginManagerBean) {
+		this.loginManagerBean = loginManagerBean;
 	}
 }
