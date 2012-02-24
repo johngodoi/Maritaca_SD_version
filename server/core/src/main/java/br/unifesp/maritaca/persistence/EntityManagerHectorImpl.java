@@ -119,8 +119,13 @@ public class EntityManagerHectorImpl implements EntityManager {
 			}
 
 			if (result != null) {
-
 				HColumn column = getHColumn(f.getName(), result);
+				
+				int timeToLive = (f.getAnnotation(Column.class)).ttl();
+				if(timeToLive>0){
+					column.setTtl(timeToLive);
+				}
+				
 				mutator.addInsertion(key, obj.getClass().getSimpleName(),
 						column);
 			}

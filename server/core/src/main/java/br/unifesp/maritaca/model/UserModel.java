@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import br.unifesp.maritaca.core.Group;
 import br.unifesp.maritaca.core.GroupUser;
+import br.unifesp.maritaca.core.OAuthToken;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.EntityManager;
 
@@ -15,7 +16,7 @@ import br.unifesp.maritaca.persistence.EntityManager;
  * This interface contains methods related to both users and groups.
  * @author tiagobarabasz
  */
-public interface UserModel {
+public interface UserModel extends GenericModel{
 	boolean saveUser(User user);
 
 	User getUser(UUID uuid);
@@ -128,5 +129,20 @@ public interface UserModel {
 
 	void close();
 
+	/**
+	 * Returns an user with a valid access token
+	 * @param token
+	 * @return User if token is valid, or null if
+	 * token not exist or token have expired
+	 */
+	User getUserByToken(String token);
+	
+	/**
+	 * Save a access, refresh token for an user
+	 * with expiration date = current time + 3600
+	 * @param token
+	 * @return
+	 */
+	boolean saveAuthToken(OAuthToken token);
 	
 }

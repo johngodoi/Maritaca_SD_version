@@ -35,7 +35,7 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 	private User currentUser;
 
 	public FormAnswerModelImpl() {
-		currentUser = UserLocator.getCurrentUser();
+		//currentUser = UserLocator.getCurrentUser();
 		// verifyEntity(currentUser);
 	}
 
@@ -48,6 +48,9 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 	}
 
 	public User getCurrentUser() {
+		if(currentUser==null){
+			setCurrentUser(UserLocator.getCurrentUser());
+		}
 		return currentUser;
 	}
 

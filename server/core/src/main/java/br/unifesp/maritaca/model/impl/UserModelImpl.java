@@ -15,6 +15,7 @@ import org.apache.commons.logging.LogFactory;
 
 import br.unifesp.maritaca.core.Group;
 import br.unifesp.maritaca.core.GroupUser;
+import br.unifesp.maritaca.core.OAuthToken;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.exception.InvalidNumberOfEntries;
 import br.unifesp.maritaca.model.ManagerModel;
@@ -423,5 +424,20 @@ public class UserModelImpl implements UserModel, Serializable {
 				return null;
 			}
 		}
+	}
+
+	@Override
+	public User getUserByToken(String token) {
+		List<OAuthToken> oauth = entityManager.cQuery(OAuthToken.class, "accessToken", token);
+		for(OAuthToken oauthtoken : oauth){
+			return entityManager.find(User.class, oauthtoken.getUser().getKey());
+		}
+		return null;
+	}
+
+	@Override
+	public boolean saveAuthToken(OAuthToken token) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
