@@ -12,7 +12,7 @@ import br.unifesp.maritaca.core.Group;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.EntityManager;
 
-public interface FormAnswerModel {
+public interface FormAnswerModel extends GenericModel{
 	boolean saveForm(Form form);
 
 	Form getForm(UUID uid, boolean minimal);

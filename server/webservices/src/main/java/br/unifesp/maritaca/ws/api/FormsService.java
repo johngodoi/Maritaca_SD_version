@@ -11,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.ws.api.resp.MaritacaResponse;
+import br.unifesp.maritaca.ws.api.resp.XmlSavedResponse;
 import br.unifesp.maritaca.ws.exceptions.MaritacaWSException;
 
 public interface FormsService {

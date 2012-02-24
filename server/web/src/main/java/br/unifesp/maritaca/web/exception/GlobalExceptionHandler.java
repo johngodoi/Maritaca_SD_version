@@ -57,10 +57,6 @@ public class GlobalExceptionHandler extends ExceptionHandlerWrapper {
 			// messages are keys in messages_properties
 			if (thr instanceof ViewExpiredException) {
 				handleViewExpiredException((ViewExpiredException) thr);
-			} else if (thr.getMessage().equals("null source")) {
-				ViewExpiredException ex = new ViewExpiredException(
-						"session closed", thr.getCause(), "");
-				handleViewExpiredException(ex);
 			} else if (thr instanceof HectorException) {
 				addMessage("error_hector_exception",
 						FacesMessage.SEVERITY_ERROR);
@@ -77,7 +73,11 @@ public class GlobalExceptionHandler extends ExceptionHandlerWrapper {
 						  ,thr);
 			} else if(thr instanceof ELException){
 				continue;//this error are handle for JSF
-			}else{
+			}else if (thr.getMessage()!= null && thr.getMessage().equals("null source")) {
+				ViewExpiredException ex = new ViewExpiredException(
+						"session closed", thr.getCause(), "");
+				handleViewExpiredException(ex);
+			} else{
 				addMessage("error_unexpected", FacesMessage.SEVERITY_ERROR);
 				log.error("Error not identified", thr);
 			}

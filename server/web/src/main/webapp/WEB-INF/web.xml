@@ -2,7 +2,7 @@
 <web-app id="WebApp_ID" version="2.5"
  xmlns="http://java.sun.com/xml/ns/javaee"
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
- <display-name>Archetype Created Web Application</display-name>
+ <display-name>Maritaca Web</display-name>
  <icon>
   <small-icon>/resources/img/maritaca.gif</small-icon>
  </icon>
@@ -42,24 +42,8 @@
   <param-value>blueSky</param-value>
  </context-param>
  
- <filter>
-  <filter-name>homeFilter</filter-name>
-  <filter-class>br.unifesp.maritaca.web.servlet.HomeFilter</filter-class>
- </filter>
- <filter-mapping>
-  <filter-name>homeFilter</filter-name>
-  <url-pattern>/faces/views/home.xhtml</url-pattern>
- </filter-mapping>
- <servlet>
-  <servlet-name>Jersey REST Service</servlet-name>
-  <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
-  <init-param>
-   <param-name>com.sun.jersey.config.property.packages</param-name>
-   <param-value>br.unifesp.maritaca.ws</param-value>
-  </init-param>
-  <load-on-startup>1</load-on-startup>
- </servlet>
- <servlet>
+ <!-- SERVLETS -->
+  <servlet>
   <servlet-name>MaritacaInitServlet</servlet-name>
   <servlet-class>br.unifesp.maritaca.web.servlet.MaritacaInitServlet</servlet-class>
   <init-param>
@@ -75,6 +59,23 @@
    <param-value>WEB-INF/log4j.properties</param-value>
   </init-param>
   <load-on-startup>1</load-on-startup>
+ </servlet> 
+  <servlet>
+  <servlet-name>Jersey REST Service</servlet-name>
+  <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+  <init-param>
+   <param-name>com.sun.jersey.config.property.packages</param-name>
+   <param-value>br.unifesp.maritaca.ws</param-value>
+  </init-param>
+  <init-param>
+   <param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
+   <param-value>br.unifesp.maritaca.web.servlet.RestfulFilter</param-value>
+  </init-param>
+  <init-param>
+   <param-name>com.sun.jersey.spi.container.ContainerResponseFilters</param-name>
+   <param-value>br.unifesp.maritaca.web.servlet.RestfulFilter</param-value>
+  </init-param>
+  <load-on-startup>1</load-on-startup>
  </servlet>
  <servlet>
   <servlet-name>Faces Servlet</servlet-name>
@@ -86,6 +87,14 @@
   <servlet-name>LogoutServlet</servlet-name>
   <servlet-class>br.unifesp.maritaca.web.servlet.LogoutServlet</servlet-class>
  </servlet>
+ 
+ <!-- FILTERS -->
+ <filter>
+  <filter-name>homeFilter</filter-name>
+  <filter-class>br.unifesp.maritaca.web.servlet.HomeFilter</filter-class>
+ </filter>
+ 
+ <!-- MAPPING -->
  <servlet-mapping>
   <servlet-name>Faces Servlet</servlet-name>
   <url-pattern>/faces/*</url-pattern>
@@ -102,6 +111,12 @@
   <servlet-name>LogoutServlet</servlet-name>
   <url-pattern>/logout</url-pattern>
  </servlet-mapping>
+ 
+  <filter-mapping>
+  <filter-name>homeFilter</filter-name>
+  <url-pattern>/faces/views/home.xhtml</url-pattern>
+ </filter-mapping>
+ 
  <welcome-file-list>
   <welcome-file>faces/views/login.xhtml</welcome-file>
  </welcome-file-list>
