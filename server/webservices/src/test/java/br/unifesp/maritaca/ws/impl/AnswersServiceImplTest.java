@@ -33,7 +33,7 @@ public class AnswersServiceImplTest {
 	@Before
 	public void setUp() throws Exception {
 		frControl = mock(FormAnswerModel.class);
-		answService = new AnswersServiceImpl();
+		answService = new AnswersServiceImpl("747dea60-146e-11e1-a7c0-d2b70b6d4d67");
 		answService.setFormAnswerModel(frControl);
 	}
 

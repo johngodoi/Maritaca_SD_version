@@ -1,7 +1,7 @@
 package br.unifesp.maritaca.model.impl;
 
-import static br.unifesp.maritaca.util.Utils.verifyEM;
-import static br.unifesp.maritaca.util.Utils.verifyEntity;
+import static br.unifesp.maritaca.util.UtilsCore.verifyEM;
+import static br.unifesp.maritaca.util.UtilsCore.verifyEntity;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -34,7 +34,6 @@ public class UserModelImpl implements UserModel, Serializable {
 	private User currentUser;
 
 	public UserModelImpl() {
-		setCurrentUser(UserLocator.getCurrentUser());
 	}
 
 	public EntityManager getEntityManager() {

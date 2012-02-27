@@ -136,6 +136,7 @@ public class ModelFactory {
 		}else{
 			sessionCounter.put(key, counter);
 		}
+		//TODO: add timeout to invalidate models for user
 		
 		log.debug("session invalidated for user: " + key + " counter: " + counter);
 	}
