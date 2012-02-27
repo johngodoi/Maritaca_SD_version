@@ -55,7 +55,8 @@ public class LoginManagerBean {
 	}
 
 	public void setRedirectUri(String redirectUri) {
-		this.redirectUri = redirectUri;
+		if(!"".equals(redirectUri))
+			this.redirectUri = redirectUri;
 	}
 
 	public String getResponseType() {
@@ -63,7 +64,8 @@ public class LoginManagerBean {
 	}
 
 	public void setResponseType(String responseType) {
-		this.responseType = responseType;
+		if(!"".equals(responseType))
+			this.responseType = responseType;
 	}
 
 	public String getClientId() {
@@ -71,7 +73,8 @@ public class LoginManagerBean {
 	}
 
 	public void setClientId(String clientId) {
-		this.clientId = clientId;
+		if(!"".equals(clientId))
+			this.clientId = clientId;
 	}
 
 	public CurrentUserBean getCurrentUser() {

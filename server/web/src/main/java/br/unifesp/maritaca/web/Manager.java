@@ -12,7 +12,6 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
 import org.richfaces.component.UIPanelMenu;
-import org.richfaces.component.UITabPanel;
 import org.richfaces.event.ItemChangeEvent;
 
 import br.unifesp.maritaca.access.operation.Operation;
@@ -122,7 +121,7 @@ public class Manager extends AbstractBean implements Serializable {
 	public void activeModAndSub(String mod, String submod) {
 
 		// boolean modChanged = false;
-		boolean submodChanged = false;
+		// boolean submodChanged = false;
 		if (!getActiveModule().getId().equals(mod)) {
 			setActiveModuleByString(mod);
 			setActiveSubModuleInActiveMod(submod);
@@ -171,7 +170,6 @@ public class Manager extends AbstractBean implements Serializable {
 	 * @return UIComponent or null Temporary function, uiviewroot.findComponent
 	 *         not working...
 	 */
-	@SuppressWarnings("unused")
 	private UIComponent findComponent(String id, UIComponent parent) {
 		if (parent == null)
 			return null;

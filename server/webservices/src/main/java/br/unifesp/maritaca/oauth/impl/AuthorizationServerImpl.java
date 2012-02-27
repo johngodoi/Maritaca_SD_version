@@ -21,6 +21,7 @@ import br.unifesp.maritaca.ws.util.UtilsWS;
 @Path("/oauth")
 public class AuthorizationServerImpl implements AuthorizationServer {
 
+	private static final int TOKEN_LENGTH = 64;
 	private final String WEB_LOGIN_URI = "/faces/views/login.xhtml";
 	private static UserModel userModel;
 
@@ -92,8 +93,8 @@ public class AuthorizationServerImpl implements AuthorizationServer {
 		
 		//generate tokens
 		OAuthToken authToken = new OAuthToken();
-		authToken.setAccessToken(Utils.randomString());
-		authToken.setRefreshToken(Utils.randomString());
+		authToken.setAccessToken(Utils.randomString(TOKEN_LENGTH));
+		authToken.setRefreshToken(Utils.randomString(20));
 		//TODO: verify if tokens exist
 		authToken.setUser(oAuthCode.getUser());
 		

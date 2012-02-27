@@ -1,6 +1,5 @@
 package br.unifesp.maritaca.web.utils;
 
-import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ResourceBundle;
 
@@ -71,7 +70,6 @@ public class Utils {
 		FacesContext context = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
         String contextPath = request.getContextPath();
-        String queryString = request.getQueryString();
 		return buildServerAddressUrl() + contextPath + string + "?";
 	}
 }

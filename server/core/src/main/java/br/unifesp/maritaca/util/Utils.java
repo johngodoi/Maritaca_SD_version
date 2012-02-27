@@ -11,13 +11,23 @@ public class Utils {
 	private static final int STRING_LENGTH = 10;
 
 	public static final String randomString() {
-		return RandomStringUtils.randomAlphanumeric(STRING_LENGTH);
+		return randomString(STRING_LENGTH);
+	}
+
+	public static final String randomString(int length) {
+		if (length >= 0)
+			return RandomStringUtils.randomAlphanumeric(length);
+		else
+			return RandomStringUtils.randomAlphanumeric(STRING_LENGTH);
 	}
 
 	/**
 	 * Verify if object is not null and has a key
-	 * @param obj: object Entity, must have a getKey method
-	 * @throws IllegalArgumentException is false
+	 * 
+	 * @param obj
+	 *            : object Entity, must have a getKey method
+	 * @throws IllegalArgumentException
+	 *             is false
 	 */
 	public static <T> void verifyEntity(T obj) {
 		boolean verify = false;
@@ -44,8 +54,10 @@ public class Utils {
 
 	/**
 	 * verify if entity manager != null
+	 * 
 	 * @param em
-	 * @throws RuntimeException if false
+	 * @throws RuntimeException
+	 *             if false
 	 */
 	public static void verifyEM(EntityManager em) {
 		if (em == null)
