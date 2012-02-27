@@ -1,6 +1,6 @@
 package br.unifesp.maritaca.model.impl;
 
-import static br.unifesp.maritaca.util.Utils.verifyEM;
+import static br.unifesp.maritaca.util.UtilsCore.verifyEM;
 
 import java.util.Map;
 import java.util.UUID;
@@ -88,6 +88,7 @@ public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel 
 		entityManager.createTable(OAuthToken.class);
 		entityManager.createTable(OAuthCode.class);
 		
+		//client id for mobile client
 		if(!entityManager.tableExists(OAuthClient.class)){
 			entityManager.createTable(OAuthClient.class);
 			OAuthClient oaclient = new OAuthClient();

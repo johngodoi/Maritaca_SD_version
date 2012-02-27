@@ -1,7 +1,7 @@
 package br.unifesp.maritaca.model.impl;
 
-import static br.unifesp.maritaca.util.Utils.verifyEM;
-import static br.unifesp.maritaca.util.Utils.verifyEntity;
+import static br.unifesp.maritaca.util.UtilsCore.verifyEM;
+import static br.unifesp.maritaca.util.UtilsCore.verifyEntity;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,7 +26,7 @@ import br.unifesp.maritaca.model.FormAnswerModel;
 import br.unifesp.maritaca.model.UserModel;
 import br.unifesp.maritaca.persistence.EntityManager;
 import br.unifesp.maritaca.util.UserLocator;
-import br.unifesp.maritaca.util.Utils;
+import br.unifesp.maritaca.util.UtilsCore;
 
 public class FormAnswerModelImpl implements FormAnswerModel {
 	private static final Log log = LogFactory.getLog(FormAnswerModelImpl.class);
@@ -35,8 +35,6 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 	private User currentUser;
 
 	public FormAnswerModelImpl() {
-		//currentUser = UserLocator.getCurrentUser();
-		// verifyEntity(currentUser);
 	}
 
 	public EntityManager getEntityManager() {
@@ -65,14 +63,14 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 	public boolean saveForm(Form form) {
 		verifyEM(entityManager);
 
-		if (form.getUser() == null || form.getUser().getKey() == null)
-			throw new IllegalArgumentException("User cannot be null");
+		verifyEntity(form.getUser());
 		
 		if(form.getTitle() == null || form.getTitle().length()==0){
 			return false;//with out title...
 		}
-
+		
 		if (entityManager.rowDataExists(User.class, form.getUser().getKey())) {
+			//TODO: user must be set from currentuser variable
 			boolean newForm = form.getKey() == null;// true if form is new
 			boolean hasPermission = true;
 			if (!newForm
@@ -141,7 +139,7 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 	private String getUniqueUrl() {
 		// TODO: check if this random string is enough
 		// maybe it is better to generate uuid-based string
-		String url = Utils.randomString();
+		String url = UtilsCore.randomString();
 		if (!urlForSharingExists(url))
 			return url;
 		else
@@ -194,6 +192,7 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 
 	@Override
 	public boolean saveAnswer(Answer response) {
+		//TODO: add permission verification
 		verifyEM(entityManager);
 
 		if (response == null)

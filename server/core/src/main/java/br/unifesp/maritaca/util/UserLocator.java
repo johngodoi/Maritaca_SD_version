@@ -28,7 +28,6 @@ public class UserLocator {
 		}else{
 			log.debug("user must be from rest or servlet");
 			//it must be a restful request
-			//TODO get current user from restful request
 		}
 		
 		return user;
