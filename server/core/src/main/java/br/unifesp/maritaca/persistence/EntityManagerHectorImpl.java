@@ -92,7 +92,7 @@ public class EntityManagerHectorImpl implements EntityManager {
 			try {
 				createTable(obj.getClass());
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error(e);
 				return false;
 			}
 		}
@@ -509,7 +509,7 @@ public class EntityManagerHectorImpl implements EntityManager {
 					date = sdf.parse(value);
 					method.invoke(result, date);
 				} catch (ParseException e) {
-					System.out.println("Date not set");
+					log.error("date not set", e);
 				}
 			} else {
 				try {
