@@ -14,7 +14,7 @@ import br.unifesp.maritaca.core.OAuthToken;
 import br.unifesp.maritaca.model.ModelFactory;
 import br.unifesp.maritaca.model.UserModel;
 import br.unifesp.maritaca.oauth.api.AuthorizationServer;
-import br.unifesp.maritaca.util.Utils;
+import br.unifesp.maritaca.util.UtilsCore;
 import br.unifesp.maritaca.ws.exceptions.MaritacaWSException;
 import br.unifesp.maritaca.ws.util.UtilsWS;
 
@@ -53,7 +53,7 @@ public class AuthorizationServerImpl implements AuthorizationServer {
 			HttpServletResponse response) throws IOException {
 
 		OAuthCode oauthCode = new OAuthCode();
-		oauthCode.setCode(Utils.randomString());
+		oauthCode.setCode(UtilsCore.randomString());
 		//TODO: verify if code exists
 		
 		String user = request.getParameter("userid");
@@ -93,8 +93,8 @@ public class AuthorizationServerImpl implements AuthorizationServer {
 		
 		//generate tokens
 		OAuthToken authToken = new OAuthToken();
-		authToken.setAccessToken(Utils.randomString(TOKEN_LENGTH));
-		authToken.setRefreshToken(Utils.randomString(20));
+		authToken.setAccessToken(UtilsCore.randomString(TOKEN_LENGTH));
+		authToken.setRefreshToken(UtilsCore.randomString(20));
 		//TODO: verify if tokens exist
 		authToken.setUser(oAuthCode.getUser());
 		
