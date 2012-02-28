@@ -60,7 +60,6 @@
   </init-param>
   <load-on-startup>1</load-on-startup>
  </servlet>
- 
  <servlet>
   <servlet-name>OAuth Service</servlet-name>
   <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
@@ -70,7 +69,6 @@
   </init-param>
   <load-on-startup>1</load-on-startup>
  </servlet>
-  
   <servlet>
   <servlet-name>Jersey REST Service</servlet-name>
   <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
@@ -105,6 +103,10 @@
   <filter-name>homeFilter</filter-name>
   <filter-class>br.unifesp.maritaca.web.servlet.HomeFilter</filter-class>
  </filter>
+  <filter>
+  <filter-name>loginFilter</filter-name>
+  <filter-class>br.unifesp.maritaca.web.servlet.LoginFilter</filter-class>
+ </filter>
  
  <!-- MAPPING -->
  <servlet-mapping>
@@ -132,6 +134,10 @@
   <filter-mapping>
   <filter-name>homeFilter</filter-name>
   <url-pattern>/faces/views/home.xhtml</url-pattern>
+ </filter-mapping>
+   <filter-mapping>
+  <filter-name>loginFilter</filter-name>
+  <url-pattern>/faces/views/login.xhtml</url-pattern>
  </filter-mapping>
  
  <welcome-file-list>
