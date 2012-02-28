@@ -12,7 +12,8 @@
   </modules>
   
   <properties>
-    <maritaca.version>0.0.4</maritaca.version>
+  	<!-- This version corresponds to the current Maritaca milestone -->
+    <maritaca.version>0.0.6</maritaca.version>
     <org.springframework.version>3.0.6.RELEASE</org.springframework.version>
     <junit.version>4.8.1</junit.version>
     <mockito.version>1.9.0-rc1</mockito.version>

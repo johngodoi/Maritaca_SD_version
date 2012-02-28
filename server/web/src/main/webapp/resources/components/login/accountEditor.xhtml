@@ -26,7 +26,7 @@
 				<h:outputText value="#{msgs.account_first_name}:" />
 				<h:inputText  value="#{accountEditorBean.user.firstname}"
 					label="#{msgs.account_first_name}" id="firstName" required="true">
-					<f:validateLength minimum="4" maximum="12" />
+					<f:validateLength minimum="2" maximum="20" />
 				</h:inputText>
 				<h:message for="firstName" styleClass="error" />
 
@@ -34,15 +34,16 @@
 				<h:outputText value="#{msgs.account_last_name}:" />
 				<h:inputText value="#{accountEditorBean.user.lastname}"
 					label="#{msgs.account_last_name}" id="lastName">
-					<f:validateLength minimum="4" maximum="12" />
+					<f:validateLength minimum="2" maximum="20" />
 				</h:inputText>
 				<h:message for="lastName" styleClass="error" />
 
 				<!-- Row 3 -->
 				<h:outputText value="#{msgs.account_email}:" />
-				<h:inputText value="#{accountEditorBean.user.email}" id="email"
+				<h:inputText value="#{accountEditorBean.email}" id="email"
 					label="#{msgs.account_email}" required="true">
-					<f:ajax event="blur" render="emailError" />
+					<rich:validator/>
+					<f:ajax event="blur" render="emailError"  />
 				</h:inputText>
 				<h:panelGroup>
 					<h:message for="email" styleClass="error" />
@@ -54,28 +55,35 @@
 
 				<!-- Row 4 -->
 				<h:outputText value="#{msgs.account_password}:" />
-				<h:inputSecret value="#{accountEditorBean.user.password}"
-					label="#{msgs.account_password}" id="password" required="true"
+				<h:inputSecret id="pass" required="true"
 					onkeyup="checkPassword(this.form)">
 				</h:inputSecret>
-				<h:outputText	value="#{msgs.account_passwd_size_error }"
-								id="passwdLengthError" styleClass="error">
-					<f:param value="returnMinPasswordSize()"/>
-					<f:param value="returnMaxPasswordSize()"/>								
-				</h:outputText>
-
+				<h:panelGroup>
+					<h:message for="pass" styleClass="error" />
+					<h:outputFormat value="#{msgs.account_passwd_size_error }"
+								id="passwdLengthError" styleClass="error"
+								style="display: none">
+						<f:param value="#{6}"/>
+						<f:param value="#{20}"/>						
+					</h:outputFormat>
+				</h:panelGroup>
+				
 				<!-- Row 5 -->
 				<h:outputText value="#{msgs.account_create_retype_passwd}:" />
-				<h:inputSecret value="#{accountEditorBean.confirmPassword}"
-					label="#{msgs.account_create_retype_passwd}" required="true"
-					id="passwordConfirm" onkeyup="checkPassword(this.form)">
+				<h:inputSecret id="passConfirm" required="true" 
+						onkeyup="checkPassword(this.form)">
 				</h:inputSecret>
 				<h:panelGroup>
+					<h:message for="passConfirm" styleClass="error" />
 					<h:outputText value="#{msgs.account_passwd_dont_match }"
-						id="confirmPasswdError" styleClass="error"/>
-					<br />
-					<h:message for="passwordConfirm" styleClass="error" />
+						id="confirmPasswdError" styleClass="error" 
+						style="display: none"/>
 				</h:panelGroup>
+				
+				<h:inputHidden value="#{accountEditorBean.user.password}" 
+						id="password"/>
+				<h:inputHidden value="#{accountEditorBean.confirmPassword}" 
+						id="passwordConfirm"/>
 			</h:panelGrid>
 
 			<!-- Lower section buttons: Create/Cancel -->
