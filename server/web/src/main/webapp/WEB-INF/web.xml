@@ -11,7 +11,7 @@
  </icon>
  <context-param>
   <param-name>com.prime.facestrace.DISABLE_TRACE</param-name>
-  <param-value>false</param-value>
+  <param-value>true</param-value>
  </context-param>
  <context-param>
   <param-name>com.sun.faces.enableMissingResourceLibraryDetection</param-name>
@@ -39,7 +39,7 @@
  </context-param>
  <context-param>
   <param-name>org.richfaces.skin</param-name>
-  <param-value>blueSky</param-value>
+  <param-value>emeraldTown</param-value>
  </context-param>
  
  <!-- SERVLETS -->

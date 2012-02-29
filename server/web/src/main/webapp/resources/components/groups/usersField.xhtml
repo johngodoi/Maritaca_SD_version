@@ -25,7 +25,7 @@
 
 				<a4j:commandButton value="#{msgs.group_add_user_button}"
 					action="#{groupsManagerBean.addEmail}" execute="selectedEmail"
-					render="emailList addEmailError" />
+					render="emailList addEmailError" styleClass="inputButton"/>
 
 				<h:outputText styleClass="error" id="addEmailError"
 					value="#{groupsManagerBean.addEmailError}" />
@@ -38,7 +38,7 @@
 				<rich:list value="#{groupsManagerBean.addedEmailsList}" var="email"
 					id="emailList">
 						#{email}
-						<a4j:commandButton value="-" type="button"
+						<a4j:commandButton value="-" type="button" styleClass="inputButton"
 						action="#{groupsManagerBean.removeEmail(email)}"
 						render="emailList addEmailError" immediate="true" />
 				</rich:list>

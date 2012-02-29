@@ -14,13 +14,17 @@
 	<ui:composition>
 		<div id="heading">
 			<h:panelGrid id="headerPanel" columns="8" styleClass="headerPanel">
-				<h:graphicImage value="#{resource['img:project_logo.png']}" />
+				<h:graphicImage value="#{resource['img:project_logo.png']}" styleClass="projectLogo"/>
+				<h:panelGrid id="projectName" columns="1" styleClass="projectNameDescription">
+					<h:outputText value="#{msgs.project_name}"       styleClass="projectName"/>
+					<h:outputText value="#{msgs.project_name_full}"  styleClass="projectNameFull"/>
+				</h:panelGrid>
 				<ui:insert name="heading" />
 			</h:panelGrid>
 			<!-- <h:outputScript name="adsense.js" library="javascript"/>
 			<script type="text/javascript"
 				src="http://pagead2.googlesyndication.com/pagead/show_ads.js"/>
-				-->
+			-->
 		</div>
 	</ui:composition>
 </h:body>

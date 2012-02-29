@@ -1,12 +1,21 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:login="http://java.sun.com/jsf/composite/components/login"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 	<center>
-		<h:panelGrid columns="2">
-			<login:maritacaLogin/>
-			<login:openIdLogin/>
+		<h:panelGrid columns="2" cellpadding="20">
+			<h:panelGrid columns="1" cellpadding="20" styleClass="projectDescriptionArea">
+				<h:outputText value="#{msgs.project_welcome}"      styleClass="projectWelcome"/>
+				<h:outputText value="#{msgs.project_description1}" styleClass="projectDescription"/>
+				<h:outputText value="#{msgs.project_description2}" styleClass="projectDescription"/>
+				<h:outputText value="#{msgs.project_description3}" styleClass="projectDescription"/>
+			</h:panelGrid>
+			<h:panelGrid columns="1" cellpadding="20" styleClass="loginArea">
+				<login:maritacaLogin/>
+				<login:openIdLogin/>
+			</h:panelGrid>
 		</h:panelGrid>
 	</center>
 </ui:composition>

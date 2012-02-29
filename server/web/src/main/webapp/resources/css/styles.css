@@ -7,7 +7,13 @@
 #heading {
 	padding: 10px;
 	margin-bottom: 10px;
-	background: #dddddd;
+	background-image: -webkit-gradient(
+	linear,
+	left bottom,
+	left top,
+	color-stop(0.70, rgb(235,250,240)),
+	color-stop(1, rgb(142,204,155))
+	);	
 	border: 1px solid #cccccc;
 	font-size: 1.4em;
 	font-style: italic;
@@ -16,10 +22,83 @@
 	text-align: center;
 }
 
+form.headerMenu{
+	float: right;
+	vertical-align: top;
+	height: 121px;
+}
+
+table.headerPanel{
+	
+}
+
+input.inputButton{
+	font-weight: bold;
+}
+
+a.createAccountLink{
+	color: #17801a;
+}
+
+a.userNameLink{
+	font-style: italic;
+	color: #000000;
+	font-size: 18px;
+	text-decoration: none;
+}
+
+img.upperIcon{
+	width: 22px;
+	height: 22px;
+}
+
+.rf-p{
+	background-color: #ffffff;
+}
+
+.rf-tb{
+	background-image: -webkit-gradient(
+	linear,
+	left top,
+	left bottom,
+	color-stop(0.11, rgb(131,212,162)),
+	color-stop(0.36, rgb(170,230,189))
+	);	
+}
+
+.loginArea{
+	border: 1px solid #cccccc;
+	width: 300px;	
+}
+
+.projectDescriptionArea{
+	width: 500px;
+}
+
+#heading .projectName{
+	text-align: left;
+	font-size: 2.4em;
+	font-style: normal;
+	font-weight: bold;
+	color: #1e7315;
+}
+
+#heading .projectNameFull{
+	font-size: 0.7em;
+	text-align: right;
+	font-weight: bold;
+}
+
 #footer {
 	padding: 10px;
 	margin-top: 10px;
-	background: #dddddd;
+	background: -webkit-gradient(
+	linear,
+	left top,
+	left bottom,	
+	color-stop(0.70, rgb(235,250,240)),
+	color-stop(1, rgb(142,204,155))
+	);	
 	border: 1px solid #cccccc;
 	font-size: 0.8em;
 	font-family: sans-serif;
@@ -30,10 +109,23 @@
 #content {
 	border: thin solid lightGray;
 	top: 160px;
+	height: 600px;
+}
+
+.projectWelcome{
+	font-weight: bold;
+	font-size: 2.4em;
+}
+
+.projectDescription{
+	font-size: 1.2em;
+	text-align: justify;
+	
 }
 
 .panelContent {
-	width: 850px;
+	width: 853px;
+	height: 560px;
 	padding: 0px;
 }
 
@@ -115,4 +207,9 @@
 .warnMsg{
 	background-color: #FFE459;
 	border-color: #FFAC24;
+}
+
+.label1{
+	color: #1e7315;
+	font-weight: bold;
 }

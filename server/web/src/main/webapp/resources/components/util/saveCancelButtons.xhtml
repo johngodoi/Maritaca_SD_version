@@ -13,11 +13,11 @@
 	</composite:interface>
 	<composite:implementation>
 		<h:panelGrid columns="2">
-			<h:commandButton value="#{msgs.group_save_button}"
+			<h:commandButton value="#{msgs.group_save_button}" styleClass="inputButton"
 				action="#{cc.attrs.save}">
 			</h:commandButton>
 			<h:commandButton value="#{msgs.group_save_cancel}"
-				action="#{cc.attrs.cancel}" immediate="true" />
+				action="#{cc.attrs.cancel}" immediate="true" styleClass="inputButton"/>
 		</h:panelGrid>
 	</composite:implementation>
 </body>
