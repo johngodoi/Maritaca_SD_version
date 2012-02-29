@@ -29,9 +29,9 @@ var Field = function() {
 		html += '</label>';
 		html += '<div class="order">' + 
 						'<a href="#" onclick="move(-1); return false;">' + 
-							'<img src="../../resources/images/arrow_up.png" alt="up" /></a>' + 
+							'<img src="../../resources/img/arrow_up.png" alt="up" /></a>' + 
 						'<a href="#" onclick="move(1); return false;">' + 
-							'<img src="../../resources/images/arrow_down.png" alt="down" /></a></div>';
+							'<img src="../../resources/img/arrow_down.png" alt="down" /></a></div>';
 		html += this.toHTMLSpecific();
 		
 		return html;
@@ -224,7 +224,7 @@ var Box = function(type) {
 		var addBoxId   = "add"+this.boxId;
 		
 		field.append('<button type="button" id="'+addBoxId+'">'+
-					'<img src="../../resources/images/add.png"/>'+
+					'<img src="../../resources/img/add.png"/>'+
 					  this.msgAddBox+
 					 '</button>');
 		
@@ -245,7 +245,7 @@ var Box = function(type) {
 		field.append('<tr id="'+rowId+'" class="'+rowClass+'"><td>'+
 					 '<input type="text" id="'+myBox.optionLabelInputId+'" value="'+value+'"/>'+
 					 '<a id="'+removeFieldId+'">'+
-					 '<img src="../../resources/images/delete.png"/>'+
+					 '<img src="../../resources/img/delete.png"/>'+
 					 '</a>'+
 					 '</tr></td>');
 		
