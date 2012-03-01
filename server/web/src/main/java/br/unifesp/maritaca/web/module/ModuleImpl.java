@@ -15,7 +15,6 @@ public class ModuleImpl implements Module, Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private String title;
-	private String id;
 	private SubModule activeSubModule;
 	private List<SubModule> subModules;
 

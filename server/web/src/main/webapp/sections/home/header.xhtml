@@ -4,12 +4,5 @@
 	xmlns:f="http://java.sun.com/jsf/core">
 
 <h:form styleClass="headerMenu">
-	<h:commandLink action="#{accountEditorBean.useCurrentUser}" styleClass="userNameLink">
-		<h:outputText	value="#{currentUserBean.user.email}" />
-		<h:graphicImage value="#{resource['img:settings_button.png']}" styleClass="upperIcon" />
-	</h:commandLink>
-	<h:commandLink action="#{logoutBean.logout}">
-		<h:graphicImage value="#{resource['img:logout_button.png']}"  styleClass="upperIcon"/>
-	</h:commandLink>
 </h:form>
 </html>

@@ -77,6 +77,17 @@ public class Manager extends AbstractBean implements Serializable {
 		submod.setTitle("Group Editor");
 		submod.setComponent("groupEditor");
 		mod.addModule(submod);
+		
+		getEnabledModules().add(mod);
+		
+		mod = new ModuleImpl();
+		mod.setTitle("Settings");
+		mod.setId("settings");
+
+		submod = new SubModuleImpl();
+		submod.setTitle("Account");
+		submod.setComponent("accountEditor");
+		mod.addModule(submod);
 
 		getEnabledModules().add(mod);
 	}

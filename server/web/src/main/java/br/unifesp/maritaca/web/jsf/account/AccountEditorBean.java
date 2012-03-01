@@ -7,6 +7,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import br.unifesp.maritaca.core.User;
+import br.unifesp.maritaca.web.Manager;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
 
 /**
@@ -20,6 +21,9 @@ public class AccountEditorBean extends AbstractBean implements Serializable{
 	
 	@ManagedProperty("#{currentUserBean}")
 	private CurrentUserBean currentUserBean;
+	
+	@ManagedProperty("#{manager}")
+	private Manager moduleManager;
 	
 	private static final long serialVersionUID = 1L;
 	private User     user;
@@ -103,8 +107,12 @@ public class AccountEditorBean extends AbstractBean implements Serializable{
 	 * and redirects to the account edition/creation page.
 	 */
 	public String useCurrentUser(){
-		setUser(getCurrentUserBean().getUser());		
-		return "/faces/views/editAccount";
+		setUser(getCurrentUserBean().getUser());
+		
+		getModuleManager().setActiveModuleByString("Settings");
+		getModuleManager().setActiveSubModuleInActiveMod("account");
+		
+		return null;
 	}
 	
 	public Boolean passwordsMatch(){
@@ -133,5 +141,13 @@ public class AccountEditorBean extends AbstractBean implements Serializable{
 
 	public void setCurrentUserBean(CurrentUserBean currentUserBean) {
 		this.currentUserBean = currentUserBean;
+	}
+
+	public Manager getModuleManager() {
+		return moduleManager;
+	}
+
+	public void setModuleManager(Manager moduleManager) {
+		this.moduleManager = moduleManager;
 	}
 }

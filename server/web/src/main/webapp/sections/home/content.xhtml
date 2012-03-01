@@ -32,18 +32,50 @@
 					<!-- FOR EACH MODULE, CREATE A GRID PANEL FOR LEFT NAVIGATION BAR & CONTENT -->
 				</rich:tab>
 			</c:forEach>
+			
+			<!---------- LOGGED USER AND LOGOUT TABS --------->
+			<!-- These tabs appears as buttons to the user! -->
+			<rich:tab header=""
+					  headerDisabledClass="transparentTopPanelItem emptyTopPanelItem"
+					  disabled="true"/>
+			<rich:tab header=""
+					  headerClass="transparentTopPanelItem userSettingsTopPanelItem">
+				    <f:facet name="header">
+				    	<h:panelGrid>	
+				    		<h:form id="editAccountForm">
+								<a4j:commandLink	styleClass="userNameLink"
+													action="#{accountEditorBean.useCurrentUser}"
+													value="#{currentUserBean.user.email}"/>
+							</h:form>
+						</h:panelGrid>
+					</f:facet>
+			</rich:tab>
+			<rich:tab header=""
+					  headerClass="transparentTopPanelItem"
+					  disabled="true">
+					  <f:facet name="header">
+					  	<h:panelGrid>	
+					  		<h:form id="logoutForm">				  	
+					  		<a4j:commandLink action="#{logoutBean.logout}" >
+                				<h:graphicImage value="#{resource['img:logout_button.png']}" />
+        					</a4j:commandLink>
+        					</h:form>
+        				</h:panelGrid>					  	
+					  </f:facet>
+			</rich:tab>
 		</rich:tabPanel>
 	</h:form>
 	<h:form id="menuAndContentForm">
 		<h:panelGrid columns="2" columnClasses="cols,cols" id="menuAndContent">
-			<rich:panelMenu id="panelLeftMenu" styleClass="menuLeft"
+			<rich:panelMenu id="panelLeftMenu" styleClass="menuLeft" 
 				activeItem="#{manager.activeModule.activeSubModule.id}">
 				<!-- LEFT MENU -->
 				<c:forEach var="subModule"
 					items="#{manager.activeModule.subModules}">
 					<rich:panelMenuItem label="#{subModule.title}" id="#{subModule.id}"
 						actionListener="#{manager.activeModule.processAction}"
-						render="panelContent" mode="ajax">
+						render="panelContent" mode="ajax"
+						styleClass="subModuleLabel">
 					</rich:panelMenuItem>
 				</c:forEach>
 			</rich:panelMenu>
@@ -66,5 +98,3 @@
 		</h:form>
 	</div>
 </ui:composition>
-
-
