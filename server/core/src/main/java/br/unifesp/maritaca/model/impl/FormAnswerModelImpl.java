@@ -256,7 +256,7 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 			entityManager.delete(form);
 			// TODO delete answers?
 		} else {
-			// user does has permission
+			// user does not has permission
 			// TODO: generate exception?
 		}
 	}
@@ -493,7 +493,7 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		long now = System.currentTimeMillis();
 		// verify expiration date
 		if (fp.getExpDate() != null && fp.getExpDate() < now) {
-				// TODO delete fp?, it has expired
+				// TODO delete fp?, it has expired or add ttl in column?
 		} else if (!fp.getFormAccess().equals(AccessLevel.PRIVATE_ACCESS)) {
 			// date ok, verify access
 			form = getForm(fp.getForm().getKey(), minimal);

@@ -32,7 +32,7 @@ function initFormEditor(formtitle) {
 
 	window.onbeforeunload = function() {
 		if (warning) {
-			// internationalize
+			// jquery internationalization
 			return jQuery.i18n.prop('msg_warning_onbeforeunload');
 		}
 	};
@@ -46,7 +46,7 @@ function initFormEditor(formtitle) {
 		elem.addEventListener('dragstart', function(e) {
 			e.dataTransfer.effectAllowed = 'copy';
 			e.dataTransfer.setData('Text', $(this)
-					.find('input').attr('type'));
+					.find('img').attr('id'));
 		});
 	}
 
@@ -67,6 +67,7 @@ function initFormEditor(formtitle) {
 			e.preventDefault();
 		}
 		type = e.dataTransfer.getData('Text');
+		// fieldFactory Method, located in h5FieldClasses.js
 		var elem = fieldFactory(type);
 		if (elem == null) {
 			return true;

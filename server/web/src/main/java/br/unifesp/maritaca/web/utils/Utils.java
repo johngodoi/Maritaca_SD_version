@@ -11,7 +11,7 @@ import javax.xml.bind.Marshaller;
 
 public class Utils {
 	public static final String SPACEWILDCARD="_";	
-	public static final String EMAIL_REG_EXP=".+@.+\\.[a-z]+";
+	public static final String EMAIL_REG_EXP="^[\\w\\-]([\\.\\w])+[\\w]+@([\\w\\-]+\\.)+[a-zA-Z]{2,4}$";
 	
 	public static String getCompactedVersion(String str){
 		if(str == null) return null;

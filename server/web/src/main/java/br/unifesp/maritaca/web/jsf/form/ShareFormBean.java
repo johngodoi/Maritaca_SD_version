@@ -82,8 +82,8 @@ public class ShareFormBean extends AbstractBean {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		HttpServletRequest request = (HttpServletRequest) fc
 				.getExternalContext().getRequest();
-
-		return "http://" + request.getLocalName() + ":"
+ 
+		return request.getScheme() + "://" + request.getServerName() + ":"
 				+ request.getLocalPort() + request.getContextPath()
 				+ ROOT_FOR_SHARING;
 	}

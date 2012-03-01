@@ -12,34 +12,26 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Servlet Filter implementation class HomeFilter
+ * Servlet Filter implementation class LoginFilter
+ * Checks if the the user is authenticated to redirect him
+ * to home.xhtml
  */
-public class HomeFilter implements Filter {
-
-
-	/**
-	 * @see Filter#destroy()
-	 */
-	public void destroy() {
-	}
+public class LoginFilter implements Filter {
 
 	/**
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
-	public void doFilter(ServletRequest request, ServletResponse response,
-			FilterChain chain) throws IOException, ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		if (request instanceof HttpServletRequest) {
 			HttpServletRequest hreq = (HttpServletRequest) request;
 			HttpSession session = hreq.getSession(true);
-			if (session.isNew() || session.getAttribute("currentuser") == null) {
-				session.invalidate();
-				((HttpServletResponse) response).sendRedirect(hreq
-						.getContextPath());
+			if (session.getAttribute("currentuser") != null) {
+				((HttpServletResponse) response).sendRedirect(hreq.getContextPath() + "/faces/views/home.xhtml");
 			} else {
 				chain.doFilter(request, response);
 			}
 		} else {
-			// it must be a no http-client, what to do?
+			//it must be a no http-client, what to do?
 			throw new RuntimeException("request not allowed");
 		}
 	}
@@ -48,6 +40,11 @@ public class HomeFilter implements Filter {
 	 * @see Filter#init(FilterConfig)
 	 */
 	public void init(FilterConfig fConfig) throws ServletException {
+	}
+
+	@Override
+	public void destroy() {
+		
 	}
 
 }
