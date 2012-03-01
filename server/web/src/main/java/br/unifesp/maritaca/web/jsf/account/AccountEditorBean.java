@@ -5,10 +5,12 @@ import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.validation.constraints.Pattern;
 
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.web.Manager;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
+import br.unifesp.maritaca.web.utils.Utils;
 
 /**
  * Bean responsible for handling user creation.
@@ -19,6 +21,12 @@ import br.unifesp.maritaca.web.jsf.AbstractBean;
 @SessionScoped
 public class AccountEditorBean extends AbstractBean implements Serializable{
 	
+	// TODO Use bean attributes instead of User attributes in xhtml.
+	// TODO Verify the use of Pattern in email validation and the use of 
+	//		ValidationMessages.properties
+	@Pattern(regexp = Utils.EMAIL_REG_EXP, message="{email.invalid}")
+	private String email;
+	
 	@ManagedProperty("#{currentUserBean}")
 	private CurrentUserBean currentUserBean;
 	
@@ -27,6 +35,7 @@ public class AccountEditorBean extends AbstractBean implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	private User     user;
+	
 	private String   confirmPassword;
 	
 	public AccountEditorBean() {
@@ -49,7 +58,8 @@ public class AccountEditorBean extends AbstractBean implements Serializable{
 	public String saveAccount(){
 		if(!passwordsMatch() || registeredEmail()){
 			return null;
-		}		
+		}
+		getUser().setEmail(getEmail());
 		if(!super.userCtrl.saveUser(getUser())){
 			return null;
 		}
@@ -65,7 +75,7 @@ public class AccountEditorBean extends AbstractBean implements Serializable{
 	 * @return true if the email is already taken, false otherwise.
 	 */
 	public Boolean registeredEmail(){
-		String email = getUser().getEmail();
+		String email = getEmail();
 		if(email==null || email.isEmpty()){
 			return false;
 		}
@@ -149,5 +159,13 @@ public class AccountEditorBean extends AbstractBean implements Serializable{
 
 	public void setModuleManager(Manager moduleManager) {
 		this.moduleManager = moduleManager;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 }

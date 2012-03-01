@@ -1,4 +1,4 @@
-var MIN_PASSWORD_SIZE = 8;
+var MIN_PASSWORD_SIZE = 6;
 var MAX_PASSWORD_SIZE = 20;
 
 window.onload = function(){
@@ -6,7 +6,7 @@ window.onload = function(){
 	var saveAccountButton = document.getElementById(saveAccountId);	
 	if(saveAccountButton != null){
 		saveAccountButton.disabled=true;
-	}	
+	}
 };
 
 function returnMinPasswordSize() {
@@ -18,8 +18,8 @@ function returnMaxPasswordSize() {
 }
 
 function checkPassword(form) {
-	var password = form[form.id + ":password"].value;
-	var passwordConfirm = form[form.id + ":passwordConfirm"].value;
+	var password = form[form.id + ":pass"].value;
+	var passwordConfirm = form[form.id + ":passConfirm"].value;
 
 	if (!checkPasswordSize(form, password)) {
 		return;
@@ -35,11 +35,11 @@ function checkPasswordSize(form, password) {
 
 	if (password.length < MIN_PASSWORD_SIZE
 			|| password.length > MAX_PASSWORD_SIZE) {
-		message.style.visibility = 'visible';
+		message.style.display = 'block';
 		disableSaveAccount(form);
 		return false;
 	} else {
-		message.style.visibility = 'hidden';
+		message.style.display = 'none';
 		enableSaveAccount(form);
 		return true;
 	}
@@ -49,11 +49,11 @@ function checkPasswordsMatches(form, password, passwordConfirm) {
 	var message = document.getElementById(form.id + ":confirmPasswdError");
 
 	if (password == passwordConfirm && password != "") {
-		message.style.visibility = 'hidden';
+		message.style.display = 'none';
 		enableSaveAccount(form);
 		return true;
 	} else {
-		message.style.visibility = 'visible';
+		message.style.display = 'block';
 		disableSaveAccount(form);
 		return false;
 	}
@@ -68,11 +68,11 @@ function enableSaveAccount(form) {
 }
 
 function encryptPassword(form, confirm) {
-	var password = form[form.id + ":password"].value;
+	var password = form[form.id + ":pass"].value;
 	form[form.id + ":password"].value = $.sha1(password);
 
 	if (confirm) {
-		var passwordConfirm = form[form.id + ":passwordConfirm"].value;
+		var passwordConfirm = form[form.id + ":passConfirm"].value;
 		form[form.id + ":passwordConfirm"].value = $.sha1(passwordConfirm);
 	}
 }
