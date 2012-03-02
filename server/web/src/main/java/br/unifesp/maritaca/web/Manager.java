@@ -36,7 +36,7 @@ public class Manager extends AbstractBean implements Serializable {
 		mod.setTitle("Forms");
 		mod.setId("forms");
 		SubModule submod = new SubModuleImpl();
-		submod.setTitle("My Forms");
+		submod.setTitle("Forms List");
 		submod.setComponent("listForms");
 		mod.addModule(submod);
 		setActiveModule(mod);

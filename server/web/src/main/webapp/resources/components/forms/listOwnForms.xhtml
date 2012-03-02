@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
+<!-- TODO REMOVER ARQUIVO -->
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:composite="http://java.sun.com/jsf/composite"
@@ -14,9 +14,8 @@
 	</composite:interface>
 	<composite:implementation>
 		<h:dataTable value="#{listFormsBean.forms}" var="aForm" width="100%"
-			columnClasses="columnClass1, columnClass1, columnClass1"
-			cellspacing="0" id="listforms">
-			<f:facet name="header">#{msgs.form_list}</f:facet>
+			id="listforms">
+			<f:facet name="header">#{msgs.form_list_my_forms}</f:facet>
 			<h:column>
 				<f:facet name="header">
 					<a4j:commandLink value="#{msgs.form_list_titleHeader}"

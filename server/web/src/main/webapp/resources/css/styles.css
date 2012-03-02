@@ -1,20 +1,29 @@
 /******************************** Modifications by ID ********************************/
 #main {
-	width: 1024px;
-	margin-left: auto;
-	margin-right: auto;
+	width:       1024px;
+	margin-left:   auto;
+	margin-right:  auto;
 }
 
 #heading {
 	padding: 10px;
 	margin-bottom: 10px;
-	background-image: -webkit-gradient(
-	linear,
-	left bottom,
-	left top,
-	color-stop(0.70, rgb(235,250,240)),
-	color-stop(1, rgb(142,204,155))
-	);	
+	
+	background:rgb(142,204,155); /* for non-css3 browsers */	
+	background-image: -webkit-gradient( 
+		linear,
+		left bottom,
+		left top,
+		color-stop(0.70, rgb(235,250,240)),
+		color-stop(1, rgb(142,204,155))
+	);	/* for webkit browsers */	
+	filter: progid:DXImageTransform.Microsoft.gradient(
+		startColorstr='rgb(235,250,240)', endColorstr='rgb(142,204,155)'
+	); /* for IE */
+	background: -moz-linear-gradient(
+		top, rgb(142,204,155), rgb(235,250,240)
+	); /* for firefox 3.6+ */ 	
+	
 	border: 1px solid #cccccc;
 	font-size: 1.4em;
 	font-style: italic;
@@ -40,21 +49,28 @@
 }
 
 #content {
-	border: thin solid lightGray;
-	top: 160px;
-	height: 600px;
+	border:		thin solid lightGray;
+	top:		160px;
+	min-height:	600px;
 }
 
 #footer {
 	padding: 10px;
 	margin-top: 10px;
+	background:rgb(142,204,155); /* for non-css3 browsers */	
 	background: -webkit-gradient(
-	linear,
-	left top,
-	left bottom,	
-	color-stop(0.70, rgb(235,250,240)),
-	color-stop(1, rgb(142,204,155))
-	);	
+		linear,
+		left top,
+		left bottom,	
+		color-stop(0.70, rgb(235,250,240)),
+		color-stop(1, rgb(142,204,155))
+	); /* for webkit browsers */
+	filter: progid:DXImageTransform.Microsoft.gradient(
+		startColorstr='rgb(142,204,155)', endColorstr='rgb(235,250,240)'
+	); /* for IE */
+	background: -moz-linear-gradient(
+		top, rgb(235,250,240), rgb(142,204,155)
+	); /* for firefox 3.6+ */ 
 	border: 1px solid #cccccc;
 	font-size: 0.8em;
 	font-family: sans-serif;
@@ -63,6 +79,61 @@
 }
 
 /******************************** Modifications by Tag ********************************/
+table.maritacaTable{
+	border: 1px solid #cccccc;	
+	padding: 10px;
+	vertical-align: middle;
+}
+
+table.maritacaTable td, table.maritacaTable th{
+	border: 1px solid #cccccc;
+}
+
+table > thead > tr:first-child > th{
+	color:              white;
+	background-color: #227b19;
+	font-size:           16px;
+	background-image: linear-gradient(bottom, rgb(47,117,77) 18%, rgb(53,71,53) 63%);
+	background-image: -o-linear-gradient(bottom, rgb(47,117,77) 18%, rgb(53,71,53) 63%);
+	background-image: -moz-linear-gradient(bottom, rgb(47,117,77) 18%, rgb(53,71,53) 63%);
+	background-image: -webkit-linear-gradient(bottom, rgb(47,115,102) 18%, rgb(54,71,70) 63%);
+	background-image: -ms-linear-gradient(bottom, rgb(47,117,77) 18%, rgb(53,71,53) 63%);
+}
+
+table > thead > tr:first-child{
+	height: 18px;
+}
+
+table > thead > tr:not(:first-child){
+	height: 16px;
+}
+
+table > tbody > tr{
+	height: 14px;
+}
+
+table tr:not(:first-child) th, .rf-tb{
+	color:            black;
+	background-image: linear-gradient(bottom, rgb(195,247,215) 41%, rgb(123,189,136) 95%);
+	background-image: -o-linear-gradient(bottom, rgb(195,247,215) 41%, rgb(123,189,136) 95%);
+	background-image: -moz-linear-gradient(bottom, rgb(195,247,215) 41%, rgb(123,189,136) 95%);
+	background-image: -webkit-linear-gradient(bottom, rgb(195,247,215) 41%, rgb(123,189,136) 95%);
+	background-image: -ms-linear-gradient(bottom, rgb(195,247,215) 41%, rgb(123,189,136) 95%);
+}
+
+table th, th > a:visited,  th > a{
+	font-size:       14px;
+	text-decoration: none;
+	color:          black;
+	padding-top:      5px;
+	padding-bottom:   5px;	
+}
+
+table tr a:HOVER, .subModuleLabel:HOVER{
+	color: #ffa800;
+}
+
+
 form.headerMenu{
 	float: right;
 	vertical-align: top;
@@ -77,7 +148,7 @@ input.inputButton{
 	font-weight: bold;
 }
 
-a, a:visited{
+td > a, td > a:visited{
 	color: #17801a;
 }
 
@@ -126,11 +197,6 @@ span.projectBetaDisclaimer{
 /******************************** Modifications by Class ********************************/
 .subModuleLabel, .subModuleLabel:HOVER{
 	background-color: rgb(235,250,240);
-	color:                       black;
-}
-
-.subModuleLabel:HOVER, .rf-pm-top-itm-sel.subModuleLabel:HOVER{
-	font-style: italic;
 }
 
 .rf-pm-top-itm-sel.subModuleLabel{
@@ -263,14 +329,4 @@ td.rf-pm-top-itm-lbl{
 
 .rf-pm-top-itm-sel {
 	background: #dddddd;
-}
-
-.rf-tb{
-	background-image: -webkit-gradient(
-	linear,
-	left top,
-	left bottom,
-	color-stop(0.11, rgb(131,212,162)),
-	color-stop(0.36, rgb(170,230,189))
-	);	
 }

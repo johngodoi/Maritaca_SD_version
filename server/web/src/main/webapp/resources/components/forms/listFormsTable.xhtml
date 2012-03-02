@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<!-- TODO REMOVER ARQUIVO -->
+
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:composite="http://java.sun.com/jsf/composite"
@@ -8,17 +8,22 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
-
 	<composite:interface>
 		<composite:attribute name="submodule" required="true" />
+		<composite:attribute name="formList"  required="true" />
+		<composite:attribute name="title"     required="true" />
 	</composite:interface>
 	<composite:implementation>
-		<h:dataTable value="#{listFormsBean.sharedForms}" var="aForm" width="100%"
-			id="listforms">
-			<f:facet name="header">#{msgs.form_list_shared_forms}</f:facet>
+		<h:dataTable value="#{cc.attrs.formList}" var="aForm" width="100%"
+			id="listforms" styleClass="maritacaTable">
+			<f:facet name="header">
+				<h:outputText value="#{cc.attrs.title}"/>
+			</f:facet>
 			<h:column>
 				<f:facet name="header">
-					<h:outputText value="#{msgs.form_list_titleHeader}"/>
+					<a4j:commandLink value="#{msgs.form_list_titleHeader}"
+						action="#{listFormsBean.sortByName}" render="listforms">
+					</a4j:commandLink>
 				</f:facet>
 				<a4j:commandLink value="#{aForm.title}"
 					action="#{manager.activeModAndSub('Forms', 'formEditor')}"
@@ -34,14 +39,16 @@
 
 			<h:column>
 				<f:facet name="header">
-					<h:outputText value="#{msgs.form_list_creationDateHeader}"/>
+					<a4j:commandLink value="#{msgs.form_list_creationDateHeader}"
+						render="listforms, sorted" action="#{listFormsBean.sortByDate}">
+					</a4j:commandLink>
 				</f:facet>
 				<h:outputText value="#{aForm.creationDate}" styleClass="listItemOption"/>
 			</h:column>
 
 			<h:column>
 				<f:facet name="header">
-					<h:outputText value="#{msgs.form_list_optionsHeader}"/>
+					#{msgs.form_list_optionsHeader}
 				</f:facet>
 
 				<rich:dropDownMenu mode="ajax" styleClass="listItemOption">
@@ -75,14 +82,12 @@
 						render="shareForm:shareFormId" label="#{msgs.form_share}"
 						action="#{shareFormBean.setForm(aForm)}"
 						onclick="showShareForm('#{msgs.form_share_settings}');">
-
 					</rich:menuItem>
 
 					<rich:menuItem icon="#{resource['img:remove.png']}"
 						render="panelContent" label="#{msgs.commons_delete}"
 						action="#{editFormBean.deleteForm}"
-						actionListener="#{listFormsBean.listOwnFormsChanged}"
-						rendered="#{listFormsBean.canDelete(aForm)}">
+						actionListener="#{listFormsBean.listOwnFormsChanged}">
 						<f:setPropertyActionListener target="#{editFormBean.form}"
 							value="#{aForm}" />
 					</rich:menuItem>
@@ -101,8 +106,7 @@
 		</h:dataTable>
 		<center>
 			<h:outputText value="#{msgs.form_list_empty}"
-				rendered="#{empty listFormsBean.sharedForms}"
-				styleClass="columnClass1" />
+				rendered="#{empty listFormsBean.forms}" styleClass="columnClass1" />
 		</center>
 	</composite:implementation>
 </ui:composition>

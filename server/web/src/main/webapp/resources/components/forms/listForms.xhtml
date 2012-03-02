@@ -13,8 +13,15 @@
 		<composite:attribute name="submodule" required="true" />
 	</composite:interface>
 	<composite:implementation>
-		<forms:listOwnForms submodule="#{cc.attrs.submodule}" />
-		<br/>
-		<forms:listSharedForms submodule="#{cc.attrs.submodule}" />
+		<h:panelGrid columns="1" width="100%">
+		<forms:listFormsTable	submodule="#{cc.attrs.submodule}"
+								formList="#{listFormsBean.forms}"
+								title="#{msgs.form_list_my_forms}"/>
+		</h:panelGrid>								
+		<forms:listFormsTable 	submodule="#{cc.attrs.submodule}"
+								formList="#{listFormsBean.sharedForms}"
+								title="#{msgs.form_list_shared_forms}"/>
+
+								
 	</composite:implementation>
 </ui:composition>
