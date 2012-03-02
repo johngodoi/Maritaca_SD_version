@@ -12,7 +12,11 @@ div#divElements {
 #divFormTitle {
 	text-align: center;
 	padding: 10px;
-	background-color: rgb(235,250,240);
+	background-image: linear-gradient(bottom, rgb(195,247,215) 41%, rgb(123,189,136) 95%);
+	background-image: -o-linear-gradient(bottom, rgb(195,247,215) 41%, rgb(123,189,136) 95%);
+	background-image: -moz-linear-gradient(bottom, rgb(195,247,215) 41%, rgb(123,189,136) 95%);
+	background-image: -webkit-linear-gradient(bottom, rgb(195,247,215) 41%, rgb(123,189,136) 95%);
+	background-image: -ms-linear-gradient(bottom, rgb(195,247,215) 41%, rgb(123,189,136) 95%);
 }
 
 div#divFormTitle > label {

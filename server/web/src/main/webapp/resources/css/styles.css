@@ -89,7 +89,12 @@ table.maritacaTable td, table.maritacaTable th{
 	border: 1px solid #cccccc;
 }
 
-table > thead > tr:first-child > th{
+table.formEditorToolbar > tbody > tr > td > div > span{
+	color: white;
+	font-size: 12px;
+}
+
+table > thead > tr:first-child > th, .formEditorToolbar{
 	color:              white;
 	background-color: #227b19;
 	font-size:           16px;
@@ -112,7 +117,7 @@ table > tbody > tr{
 	height: 14px;
 }
 
-table tr:not(:first-child) th, .rf-tb{
+table tr:not(:first-child) th{
 	color:            black;
 	background-image: linear-gradient(bottom, rgb(195,247,215) 41%, rgb(123,189,136) 95%);
 	background-image: -o-linear-gradient(bottom, rgb(195,247,215) 41%, rgb(123,189,136) 95%);
