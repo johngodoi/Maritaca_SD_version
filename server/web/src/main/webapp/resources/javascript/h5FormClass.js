@@ -59,7 +59,6 @@ var FormClass = function() {
 	
 	this.updateTitle = function(newtitle){
 		this.title = newtitle;
-		$('#hiddenTitleForm').val(newtitle);
 		$('#' + this.container + ' legend').html(newtitle);
 	};
 };

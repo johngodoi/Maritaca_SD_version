@@ -1,11 +1,23 @@
 div#div-wrap {
 	width: 1000px;
 	margin: auto;
+	padding-left: 0px;
 }
 
 div#divElements {
 	float: left;
-	width: 220px;
+	width: 210px;
+}
+
+#divFormTitle {
+	text-align: center;
+	padding: 10px;
+	background-color: rgb(235,250,240);
+}
+
+div#divFormTitle > label {
+	font-size: 16px;
+	font-weight: bold;
 }
 
 fieldset {
@@ -54,7 +66,7 @@ input[type=text], input[type=number], input[type=date] {
 
 #components{
 	float: left;
-	width: 180px;
+	width: 190px;
 	background-color: #D5E1DD;
 	padding: 10px;
 	margin: 10px 0px;
@@ -62,11 +74,17 @@ input[type=text], input[type=number], input[type=date] {
 
 #components ol {
 	list-style: none;
+	padding-left: 0px;
+	margin: 0;
+	padding: 0;
 }
 
 #components ol li{
-	margin: 10px 5px;
+	float: left;
+	margin: 0;
+	padding: 5px 0px 5px 0px;
 	cursor: move;
+	width: 8.5em;
 }
 
 #components ol li *{
@@ -98,14 +116,15 @@ input[type=text], input[type=number], input[type=date] {
 
 #xmlForm{
 	float: left;
-	width: 300px;
+	width: 385px;
 	background-color: #EFEFEF;
 	padding: 10px;
-	margin: 10px 0px;
+	margin: 10px 0;
 }
 
 #xmlForm ol {
 	list-style: none;
+	padding-left: 0px;
 }
 
 #xmlForm ol li{
@@ -151,8 +170,8 @@ input[type=text], input[type=number], input[type=date] {
 	display: none;
 	background-color: #CCE9CC;
 	padding: 10px;
-	margin: 10px;
-	width: 250px;
+	margin: 10px 0;
+	width: 200px;
 }
 
 #properties div{
@@ -161,6 +180,7 @@ input[type=text], input[type=number], input[type=date] {
 
 #properties ul {
 	list-style: none;
+	padding-left: 0px;
 }
 
 #properties ul li{
