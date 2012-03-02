@@ -41,6 +41,10 @@
 				disabled="#{!editFormBean.editForm}"
 				icon="#{resource['img:save.png']}" status="formEditor_status" />
 
+			<rich:menuItem label="#{msgs.form_edit_formClean}" mode="client"
+				icon="#{resource['img:remove.png']}"
+				id="cleanForm" onclick="cleanForm()"/>
+
 			<rich:menuItem label="#{msgs.commons_delete}" mode="ajax"
 				render="menuAndContent" disabled="#{!editFormBean.editForm}"
 				rendered="#{!editFormBean.newForm}"
@@ -53,7 +57,6 @@
 				<f:setPropertyActionListener
 					target="#{manager.activeSubModuleInActiveMod}"
 					value="listForms" />
-
 			</rich:menuItem>
 
 			<rich:toolbarGroup location="right">

@@ -27,11 +27,22 @@ var Field = function() {
 		if(this.required)
 			html += ' <span class="required">*</span>';
 		html += '</label>';
+		
+		var up = jQuery.i18n.prop('msg_up');
+		var down = jQuery.i18n.prop('msg_down');
+		var deleteField = jQuery.i18n.prop('msg_delete');
+		
 		html += '<div class="order">' + 
-						'<a href="#" onclick="move(-1); return false;">' + 
-							'<img src="../../resources/img/arrow_up.png" alt="up" /></a>' + 
-						'<a href="#" onclick="move(1); return false;">' + 
-							'<img src="../../resources/img/arrow_down.png" alt="down" /></a></div>';
+					'<a href="#" onclick="move(-1); return false;">' + 
+						'<img src="../../resources/img/arrow_up.png" alt="up"' +
+						'title="' + up + '"/></a>' + 
+					'<a href="#" onclick="move(1); return false;">' + 
+						'<img src="../../resources/img/arrow_down.png" alt="down"' +
+						'title="' + down + '"/></a>' +
+					'<a href="#" onclick="deleteField(); return false;">' + 
+						'<img src="../../resources/img/delete.png" alt="down"' +
+						'title="' + deleteField + '"/></a>' +
+				'</div>';
 		html += this.toHTMLSpecific();
 		
 		return html;
@@ -59,13 +70,20 @@ var Field = function() {
 	};
 	
 	this.showProperties = function(){
-		$('#fieldLabel').val(this.title);
-		$('#fieldHelp').val(this.help);
-		if(this.required)
-			$('#fieldRequiredTrue').attr('checked', true);
-		else
-			$('#fieldRequiredFalse').attr('checked', true);
-		this.showSpecificProperties();
+		// general properties are:
+		var label = jQuery.i18n.prop('msg_field_labelProperty');
+		var help = jQuery.i18n.prop('msg_field_helpProperty');
+		
+		var html = '<table>';
+		html += createTextProperty('fieldLabel', this.title, label);
+		html += createTextProperty('fieldHelp', this.help, help);
+		html += createRequiredProperty(this.required);
+		
+		html += this.showSpecificProperties();
+
+		html += '</table>';
+		
+		$('#properties').append(html);
 	};
 	
 	this.saveProperties = function(){
@@ -105,6 +123,7 @@ var TextBox = function() {
 		html += attribCreator('type', this.type);
 		html += attribCreator('id', 'field_' + this.id);
 		html += attribCreator('maxlength', this.size);
+		html += attribCreator('readonly', 'readonly');
 		if(this.bydefault)
 			html += attribCreator('value', this.bydefault);
 		html += '/>';
@@ -132,10 +151,15 @@ var TextBox = function() {
 	};
 	
 	this.showSpecificProperties = function(){
-		$('#fieldDefault').val(this.bydefault).parent().show();
-		$('#fieldMaxValue').val(this.maxValue).parent().show();
-		$('#fieldSize').val(this.size).parent().show();
-		$('#propertiesSpecific').show();
+		var defaultTitle = jQuery.i18n.prop('msg_field_defaultProperty');
+		var maxValueTitle = jQuery.i18n.prop('msg_field_maxValueProperty');
+		var sizeTitle = jQuery.i18n.prop('msg_field_sizeProperty');
+		
+		var html = createTextProperty('fieldDefault', this.bydefault, defaultTitle) ;
+		html += createNumberProperty('fieldMaxValue', this.maxValue, maxValueTitle) ;
+		html += createNumberProperty('fieldSize', this.size, sizeTitle);
+		
+		return html;
 	};
 	
 	this.saveSpecificProperties = function(){
@@ -152,7 +176,6 @@ var TextBox = function() {
 };
 // Inheritance to TextBox from Field
 TextBox.prototype = new Field();
-
 
 /// Box ///
 var globalId = 0;
@@ -175,7 +198,21 @@ var Box = function(type) {
 	this.msgAddBox          = null; 
 	this.msgRemoveError     = null;
 	this.msgBoxLabel        = null;
+
+	this.toHTMLSpecific = function(){
+		var html = '';
+		html +='<input ';
+		html += attribCreator('type', this.type);
+		html += attribCreator('name', this.boxId);
+		html += attribCreator('readonly', 'readonly');
+		html + '>';
+		html += this.optionsTitles[i];
+		// TODO set the default value
+		html += '</input>';
 		
+		return html;
+	};
+	
 	this.setJSONValuesSpecific = function(element) {
 		this.type          = element.type;
 		this.optionsTitles = element.optionsTitles;
@@ -193,16 +230,6 @@ var Box = function(type) {
 			xml += '</option>';
 		}		
 		return xml;
-	};
-	
-	this.toHTMLSpecific = function(){		
-		var html = '';		
-		for(var i=0; i<this.optionsTitles.length; i++){
-			html += '<input type="'+this.type+'" name="'+this.boxId+'">';
-			html += this.optionsTitles[i];
-			html += '</input>';
-		}		
-		return html;
 	};
 	
 	this.showSpecificProperties = function(){
@@ -295,7 +322,7 @@ var Box = function(type) {
 };
 Box.prototype = new Field();
 
-////CheckBox Field ////
+//// CheckBox Field ////
 var CheckBox  = function(){
 	this.boxId            = this.component+generateUUID();
 	this.msgAddBox        = jQuery.i18n.prop('msg_box_add'); 
@@ -304,7 +331,7 @@ var CheckBox  = function(){
 }; 
 CheckBox.prototype = new Box("checkbox");
 
-////RadioBox Field ////
+//// RadioBox Field ////
 var RadioBox  = function(){
 	this.boxId            = this.component+generateUUID();
 	this.msgAddBox        = jQuery.i18n.prop('msg_box_add'); 
@@ -313,7 +340,7 @@ var RadioBox  = function(){
 }; 
 RadioBox.prototype = new Box("radio");
 
-////ComboBox Field ////
+//// ComboBox Field ////
 var ComboBox  = function(){
 	this.boxId            = this.component+generateUUID();
 	this.msgAddBox        = jQuery.i18n.prop('msg_box_add'); 
@@ -322,19 +349,17 @@ var ComboBox  = function(){
 	
 	this.toHTMLSpecific = function(){
 		var html = "<select>";
-		
-		for(var i=0; i<this.optionsTitles.length; i++){
-			html += '<option value="'+this.optionsTitles[i]+'">';
+		for(var i = 0; i < this.optionsTitles.length; i++){
+			html += '<option value="' + this.optionsTitles[i] + '">';
 			html += this.optionsTitles[i];
 			html += '</option>';
 		}		
-		
 		html += "</select>";		
+
 		return html;
 	};
 }; 
 ComboBox.prototype = new Box("combobox");
-
 
 //// Number Field ////
 var NumberField = function(){
@@ -349,6 +374,7 @@ var NumberField = function(){
 		html += '<input ';
 		html += attribCreator( 'type' , this.type);
 		html += attribCreator('id', 'field_' + this.id);
+		html += attribCreator('readonly', 'readonly');
 		html += this.specificAttributes();
 		html += '/>';
 		
@@ -372,14 +398,19 @@ var NumberField = function(){
 	};
 	
 	this.showSpecificProperties = function(){
-		$('#fieldNumericDefault').val(this.bydefault).parent().show();
-		$('#fieldMaxValue').val(this.maxValue).parent().show();
-		$('#fieldMinValue').val(this.minValue).parent().show();
-		$('#propertiesSpecific').show();
+		var defaultTitle = jQuery.i18n.prop('msg_field_defaultProperty');
+		var maxValueTitle = jQuery.i18n.prop('msg_field_maxValueProperty');
+		var minValueTitle = jQuery.i18n.prop('msg_field_minValueProperty');
+		
+		var html = createNumberProperty('fieldDefault', this.bydefault, defaultTitle) ;
+		html += createNumberProperty('fieldMaxValue', this.maxValue, maxValueTitle) ;
+		html += createNumberProperty('fieldMinValue', this.minValue, minValueTitle);
+		
+		return html;
 	};
 	
 	this.saveSpecificProperties = function(){
-		this.bydefault = $('#fieldNumericDefault').val();
+		this.bydefault = $('#fieldDefault').val();
 		this.minValue = $('#fieldMinValue').val();
 		this.maxValue = $('#fieldMaxValue').val();
 	};
@@ -400,6 +431,7 @@ var NumberField = function(){
 };
 NumberField.prototype = new Field();
 
+//// Date Field ////
 var DateField = function() {
 	this.type = 'date';
 	this.bydefault = '';
@@ -412,6 +444,7 @@ var DateField = function() {
 		html += '<input ';
 		html += attribCreator( 'type' , this.type);
 		html += attribCreator('id', 'field_' + this.id);
+		html += attribCreator('readonly', 'readonly');
 		html += this.specificAttributes();
 		html += '/>';
 		
@@ -434,16 +467,21 @@ var DateField = function() {
 	};
 	
 	this.showSpecificProperties = function(){
-		$('#fieldDateDefault').val(this.bydefault).parent().show();
-		$('#fieldMaxValueDate').val(this.maxValue).parent().show();
-		$('#fieldMinValueDate').val(this.minValue).parent().show();
-		$('#propertiesSpecific').show();
+		var defaultTitle = jQuery.i18n.prop('msg_field_defaultProperty');
+		var maxValueTitle = jQuery.i18n.prop('msg_field_maxValueProperty');
+		var minValueTitle = jQuery.i18n.prop('msg_field_minValueProperty');
+		
+		var html = createDateProperty('fieldDefault', this.bydefault, defaultTitle) ;
+		html += createDateProperty('fieldMaxValue', this.maxValue, maxValueTitle) ;
+		html += createDateProperty('fieldMinValue', this.minValue, minValueTitle);
+		
+		return html;
 	};
 
 	this.saveSpecificProperties = function(){
-		this.bydefault = $('#fieldDateDefault').val();
-		this.maxValue = $('#fieldMaxValueDate').val();
-		this.minValue = $('#fieldMinValueDate').val();
+		this.bydefault = $('#fieldDefault').val();
+		this.maxValue = $('#fieldMaxValue').val();
+		this.minValue = $('#fieldMinValue').val();
 	};
 
 	this.specificAttributes = function(){
@@ -462,6 +500,7 @@ var DateField = function() {
 };
 DateField.prototype = new Field();
 
+//// Field Factory Method ////
 var fieldFactory = function(type){
 	var field;
 	switch (type) {
@@ -497,10 +536,5 @@ var fieldFactory = function(type){
 	return field;
 };
 
-var  attribCreator = function (field, value){
-	return field + '="' + value + '" ';
-};
 
-var  tagCreator = function (tag, value){
-	return '<' + tag + '>' + value + '</' + tag + '>';
-};
+

@@ -18,6 +18,8 @@ function initFormEditor(formtitle) {
 
 	form = new FormClass();
 
+	// It used to be use to localStorage
+	// This will be maintained a little more
 	currentForm = localStorage['currentForm'];
 	if (currentForm) {
 		$('#loadFormLocal').show();
@@ -25,7 +27,7 @@ function initFormEditor(formtitle) {
 	}
 
 	form.title = formtitle;
-	$('#hiddenTitleForm').val(formtitle);
+	$('input[id$=":titleForm"]').val(formtitle);
 	form.container = 'xmlForm';
 	
 	form.renderForm(true);
@@ -80,22 +82,9 @@ function initFormEditor(formtitle) {
 		return true;
 	});
 
-	$('#fieldSave').click(function() {
-		var element = form.elements[editElement];
-		element.saveProperties();
-
-		form.renderForm();
-		$('li#field_' + editElement).click();
-	});
-
-	$('#fieldDelete').click(function() {
-		form.elements.splice(editElement, 1);
-		$('#properties').hide();
-		form.renderForm();
-	});
-
+	// localStorage
 	$('#saveFormLocal').click(function() {
-		form.title = $('#hiddenTitleForm').val();
+		form.title = form[form.id + ":titleForm"].value;
 		form.renderForm();
 		$('li#field_' + editElement).click();
 		localStorage['currentForm'] = form.toJSON();
@@ -104,24 +93,18 @@ function initFormEditor(formtitle) {
 		warning = false;
 	});
 	
+	// localStorage
 	$('#loadFormLocal').click(function(){
 		form.elements = new Array();
 		form.fromJSON(currentForm);
 		form.renderForm();
 	});
 	
+	// localStorage
 	$('#deleteFormLocal').click(function(){
 		localStorage.clear();
 		$('#loadFormLocal').hide();
 		$('#deleteFormLocal').hide();
-	});
-	
-	$('#cleanForm').click(function() {
-		form.elements = new Array();
-		$('#properties').hide();
-		form.renderForm();
-		
-		initForm();
 	});
 	
 	initForm();
@@ -143,8 +126,32 @@ function editField(id) {
 
 	// showing the properties
 	$('#properties').show();
-	$('#propertiesSpecific ul li').children().hide();
+	$('#properties table').remove();
 	element.showProperties();
+}
+
+// This function deletes a Field using the icon
+function deleteField() {
+	form.elements.splice(editElement, 1);
+	$('#properties').hide();
+	form.renderForm();
+}
+
+function cleanForm() {
+	form.elements = new Array();
+	$('#properties').hide();
+	form.renderForm();
+	
+	initForm();
+}
+
+function fieldSave() {
+	var element = form.elements[editElement];
+	element.saveProperties();
+
+	form.renderForm();
+	$('li#field_' + editElement).click();
+	addMessage(jQuery.i18n.prop('msg_saveautomatic'), 'info');
 }
 
 // move the component up and down
