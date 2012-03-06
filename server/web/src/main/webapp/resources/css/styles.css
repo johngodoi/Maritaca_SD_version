@@ -79,6 +79,10 @@
 }
 
 /******************************** Modifications by Tag ********************************/
+div#divFormTitle > input{
+	font-size: 16px;
+}
+
 table.maritacaTable{
 	border: 1px solid #cccccc;	
 	padding: 10px;

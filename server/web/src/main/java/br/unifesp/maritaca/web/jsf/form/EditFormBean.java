@@ -78,6 +78,10 @@ public class EditFormBean extends AbstractBean {
 			if (form.getUser() == null) {
 				form.setUser(user);
 			}
+			if(form.getTitle()==null||form.getTitle().length()==0){
+				addMessage("form_edit_missing_title", FacesMessage.SEVERITY_ERROR);				
+				return;
+			}
 			if (formAnswCtrl.saveForm(form)) {
 				setSaveStatus("success");
 				addMessage("form_edit_save_success", FacesMessage.SEVERITY_INFO);
