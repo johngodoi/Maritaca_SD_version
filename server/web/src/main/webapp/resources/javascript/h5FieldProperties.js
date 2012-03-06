@@ -6,6 +6,7 @@ var inputCreator = function(type, id, value, name, size, styleClass) {
 	inputString += attribCreator('id', id);
 	inputString += attribCreator('value', value);
 	inputString += attribCreator('onchange', 'fieldSave()');
+	inputString += attribCreator('class', styleClass);
 	switch (type) {
 		case 'radio':
 			inputString += attribCreator('name', name);
@@ -14,7 +15,6 @@ var inputCreator = function(type, id, value, name, size, styleClass) {
 			break;
 		case 'number':
 			inputString += attribCreator('size', size);
-			inputString += attribCreator('class', styleClass);
 			break;
 		default:
 			break;
@@ -30,6 +30,13 @@ var  attribCreator = function (field, value){
 var  tagCreator = function (tag, value){
 	return '<' + tag + '>' + value + '</' + tag + '>';
 };
+
+//general method to create a label
+var createLabelProperty = function(id, title){
+	var label = '<tr><td colspan="2">' + tagCreator('label', title) + '</td></tr>';
+	return label;
+};
+
 
 //general method to create text component
 var createTextProperty = function(id, value, title){

@@ -192,7 +192,7 @@ var Box = function(type) {
 	this.optionsTitles      = new Array();
 	this.optionsTitles[0]   = '';
 	this.boxId              = '';
-	this.optionLabelInputId = this.boxId+"_optionLabelId";
+	this.optionLabelInputClass = this.boxId+"_optionLabel";
 	this.type               = type;
 	this.boxClass           = "boxClass";
 	this.msgAddBox          = null; 
@@ -201,15 +201,15 @@ var Box = function(type) {
 
 	this.toHTMLSpecific = function(){
 		var html = '';
-		html +='<input ';
-		html += attribCreator('type', this.type);
-		html += attribCreator('name', this.boxId);
-		html += attribCreator('readonly', 'readonly');
-		html + '>';
-		html += this.optionsTitles[i];
-		// TODO set the default value
-		html += '</input>';
-		
+		for(var i=0; i<this.optionsTitles.length; i++){
+			html +='<input ';
+			html += attribCreator('type', this.type);
+			html += attribCreator('name', this.boxId);
+			html += attribCreator('readonly', 'readonly');
+			html += '>';
+			html += this.optionsTitles[i];
+			html += '</input>';	
+		}				
 		return html;
 	};
 	
@@ -232,79 +232,71 @@ var Box = function(type) {
 		return xml;
 	};
 	
+	
 	this.showSpecificProperties = function(){
-		$('#propertiesSpecific').show();
+		var html = createLabelProperty("",this.msgBoxLabel);
 		
-		if($("li."+this.boxClass).length>0){
-			$("li."+this.boxClass).remove();
+		html += this.openTable();
+		for(var i=0; i<this.optionsTitles.length; i++){
+			html += this.createOptionRow(this.optionsTitles[i],i);
+		}
+		html += this.closeTable();		
+		html += this.addItemButton("");
+		
+		return html;
+	};
+	
+	this.addItemButton = function(value){		
+		var html =	'<tr><td colspan="2">'+
+						'<button type="button" onclick="new Box().addBoxOptionField();">'+						
+						'<img src="../../resources/img/add.png"/>'+
+							this.msgAddBox+
+						'</button>'+
+					'</td></tr>';
+		return html;
+	};
+	
+	this.addBoxOptionField = function(){
+		var html     = this.createOptionRow("");
+		$("table#boxOptionsTable").append(html);
+	};
+	
+	this.openTable = function(value){
+		var htmlTable ='<tr><td colspan="2">';		
+		htmlTable    += '<table id="boxOptionsTable">';		
+		return htmlTable;
+	};
+	
+	this.closeTable = function(value){
+		var htmlTable = '</table>';
+		htmlTable    += '</td></tr>';
+		return htmlTable;
+	};
+	
+	this.createOptionRow = function(value,rowNumber){
+		var uuid = generateUUID();
+		var htmlRow = '<tr id="'+uuid+'">';
+		htmlRow    += '   <td colspan="2">';
+		htmlRow    += inputCreator("text","",value,"","",this.optionLabelInputClass);
+		
+		if(rowNumber != 0){
+			htmlRow+= '      <a  onclick="new Box().deleteBoxField(\''+uuid+'\');fieldSave();">'; 
+	        htmlRow+= '         <img src="../../resources/img/delete.png"/>'; 
+	        htmlRow+= '      </a>';	
 		}
 		
-		var boxField = this.createField(this.component);
-
-		for(var i=0; i<this.optionsTitles.length; i++){
-			this.addInputField(boxField,this.optionsTitles[i],this);
-		}		
-		this.addAddBoxButton(boxField);
+		htmlRow    += '   </td>';
+		htmlRow    += '</tr>';
+		return htmlRow;
 	};
 	
-	this.addAddBoxButton = function(field){
-		var addBoxId   = "add"+this.boxId;
-		
-		field.append('<button type="button" id="'+addBoxId+'">'+
-					'<img src="../../resources/img/add.png"/>'+
-					  this.msgAddBox+
-					 '</button>');
-		
-		var myAddInputField = this.addInputField;
-		var myBox           = this;
-		$('button#'+addBoxId).bind("click",function(e){
-			myAddInputField(field,"",myBox);			
-		});
-	};
-	
-	this.addInputField = function(field, value, myBox){
-		var uuid               = generateUUID();
-		var rowId              = myBox.boxId+"_row" +uuid;
-		var removeFieldId      = myBox.boxId+"_removeField"+uuid;
-		var rowClass           = myBox.boxId+"_rowClass";
-		var msgRemoveError     = myBox.msgRemoveError;
-		
-		field.append('<tr id="'+rowId+'" class="'+rowClass+'"><td>'+
-					 '<input type="text" id="'+myBox.optionLabelInputId+'" value="'+value+'"/>'+
-					 '<a id="'+removeFieldId+'">'+
-					 '<img src="../../resources/img/delete.png"/>'+
-					 '</a>'+
-					 '</tr></td>');
-		
-		$('a#'+removeFieldId).bind("click", function(e){
-			if($("tr."+rowClass).size()>1){
-				$('tr#'+rowId).remove();				
-			} else {
-				alert(msgRemoveError);
-			}
-		});
-	};
-	
-	/**
-	 * Creates the <li> tag inside the properties. 
-	 * @param label
-	 */
-	this.createField = function(label){
-		var ul             = $('#propertiesSpecific > ul');
-		var contentTableId = this.boxId+"contentTableId";
-		var msgBoxLabel    = this.msgBoxLabel;
-		
-		ul.append('<li class="'+this.boxClass+'">'+
-				  '<label> '+msgBoxLabel+': </label>'+
-				  '<table id="'+contentTableId+'"></table>'+
-				  '</li>');
-		
-		return $("table#"+contentTableId);
+	this. deleteBoxField = function(id){
+		$("tr#"+id).remove();
 	};
 	
 	this.saveSpecificProperties = function(){
 		var itensToSave = new Array();
-		$('input#'+this.optionLabelInputId).each(function() {
+		$('input.'+this.optionLabelInputClass).each(function() {
 			itensToSave.push( $(this).val() );
 		});
 		this.optionsTitles = itensToSave;
