@@ -63,7 +63,7 @@ function initFormEditor(formtitle) {
 	});
 
 	destiny.addEventListener('drop', function(e) {
-		// TODO this stops the redirect, I don't know why, but
+		// this stops the redirect, I don't know why, but
 		// it works.
 		if (e.preventDefault) {
 			e.preventDefault();
@@ -137,7 +137,7 @@ function deleteField() {
 	form.renderForm();
 }
 
-function cleanForm() {
+function clearForm() {
 	form.elements = new Array();
 	$('#properties').hide();
 	form.renderForm();
@@ -181,8 +181,33 @@ function move(value) {
 }
 
 function sendFormToServer(){
+	if(form.elements.length == 0) {
+		closePopup('#dialogSaveFormAs');
+		addMessage(jQuery.i18n.prop('msg_error_emptyForm'), 'error');
+		return;
+	}
 	var xml = form.toXML();
 	sendFormAjax(xml); //a4j:jsFunction
+}
+
+function saveFormAsDialog(thetitle) {
+	$('input[id$=":saveFormAsTitle"]').val(form.title);
+	showSaveAsDialog(thetitle);
+}
+
+function saveFormAs(){
+	if(form.elements.length == 0) {
+		closePopup('#dialogSaveFormAs');
+		addMessage(jQuery.i18n.prop('msg_error_emptyForm'), 'error');
+		return;
+	}
+	var newTitle = $('input[id$=":saveFormAsTitle"]').val();
+	$('input[id$=":titleForm"]').val(newTitle);
+	$('#' + form.container + ' legend').html(newTitle);
+	form.title = newTitle;
+	var xml = form.toXML();
+	saveFormAsAjax(xml);	
+	closePopup('#dialogSaveFormAs');
 }
 
 function updateTitle(value){

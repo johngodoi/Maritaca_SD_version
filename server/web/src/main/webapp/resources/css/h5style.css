@@ -9,8 +9,9 @@ div#divElements {
 	width: 210px;
 }
 
+
 #divFormTitle {
-	text-align: center;
+	text-align: left;
 	padding: 10px;
 	background-image: linear-gradient(bottom, rgb(195,247,215) 41%, rgb(123,189,136) 95%);
 	background-image: -o-linear-gradient(bottom, rgb(195,247,215) 41%, rgb(123,189,136) 95%);
@@ -73,7 +74,7 @@ input[type=text], input[type=number], input[type=date] {
 	width: 190px;
 	background-color: #D5E1DD;
 	padding: 10px;
-	margin: 10px 0px;
+	margin: 0;
 }
 
 #components ol {
@@ -120,10 +121,10 @@ input[type=text], input[type=number], input[type=date] {
 
 #xmlForm{
 	float: left;
-	width: 385px;
+	width: 387px;
 	background-color: #EFEFEF;
 	padding: 10px;
-	margin: 10px 0;
+	margin: 0 0 0 5px;
 }
 
 #xmlForm ol {
@@ -174,7 +175,7 @@ input[type=text], input[type=number], input[type=date] {
 	display: none;
 	background-color: #CCE9CC;
 	padding: 10px;
-	margin: 10px 0;
+	margin: 0 0 0 5px;
 	width: 200px;
 }
 

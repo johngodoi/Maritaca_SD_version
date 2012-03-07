@@ -18,33 +18,39 @@
 	<composite:implementation>
 
 		<rich:toolbar styleClass="formEditorToolbar">
-			<rich:toolbarGroup location="left">
-				<rich:dropDownMenu mode="ajax" styleClass="listItemOption">
-					<f:facet name="label" direction="topLeft">
-						<h:graphicImage value="#{resource['img:down.png']}" />
-					</f:facet>
-					<rich:menuItem action="#{editFormBean.clean}" render="panelContent"
-						label="#{msgs.form_new}" mode="ajax"
-						icon="#{resource['img:edit_form.png']}" />
-					<rich:menuItem label="#{msgs.form_import_button}"
-						onclick="showImportForm('#{msgs.form_import_title}');"
-						execute="@form" render="importForm:importFormId"
-						icon="#{resource['img:import.png']}" />
-				</rich:dropDownMenu>
-				<rich:menuItem action="#{editFormBean.clean}" render="panelContent"
-					label="#{msgs.form_new}" mode="ajax"
-					icon="#{resource['img:edit_form.png']}" />
-			</rich:toolbarGroup>
 
-			<rich:menuItem onclick="sendFormToServer();"
-				label="#{msgs.form_update_button}" mode="client"
-				disabled="#{!editFormBean.editForm}"
+			<!-- New option -->
+			<rich:menuItem label="#{msgs.commons_new}" 
+				action="#{editFormBean.clean}" 
+				render="panelContent" mode="ajax"
+				icon="#{resource['img:new.png']}" />
+
+			<!-- Import option -->
+			<!-- TODO: Bug from richfaces, analyse!! -->
+			<rich:menuItem label="#{msgs.commons_import}"
+				onclick="showImportForm('#{msgs.form_import_title}');"
+				execute="@form" render="importForm:importFormId"
+				icon="#{resource['img:import.png']}" />
+
+			<!-- Save option -->
+			<rich:menuItem label="#{msgs.commons_save}" 
+				onclick="sendFormToServer();"
+				mode="client" disabled="#{!editFormBean.editForm}"
 				icon="#{resource['img:save.png']}" status="formEditor_status" />
 
-			<rich:menuItem label="#{msgs.form_edit_formClean}" mode="client"
-				icon="#{resource['img:remove.png']}"
-				id="cleanForm" onclick="cleanForm()"/>
+			<!-- Save as option -->
+			<rich:menuItem label="#{msgs.commons_saveas}" 
+				onclick="saveFormAsDialog('#{msgs.commons_saveas}');" 
+				mode="client" disabled="#{!editFormBean.editForm}"
+				icon="#{resource['img:save.png']}" status="formEditor_status" />
 
+			<!-- Clear option -->
+			<rich:menuItem label="#{msgs.commons_clear}" 
+				onclick="clearForm()"
+				mode="client" id="clearForm" 
+				icon="#{resource['img:clear.png']}"/>
+
+			<!-- Delete option -->
 			<rich:menuItem label="#{msgs.commons_delete}" mode="ajax"
 				render="menuAndContent" disabled="#{!editFormBean.editForm}"
 				rendered="#{!editFormBean.newForm}"
@@ -59,6 +65,15 @@
 					value="listForms" />
 			</rich:menuItem>
 
+			<rich:toolbarGroup>
+				<rich:dropDownMenu mode="ajax" styleClass="listItemOption">
+					<f:facet name="label" direction="topLeft">
+						<h:outputLabel value="#{msgs.commons_more}" styleClass="listItemOption" />
+					</f:facet>
+					<!-- add more options -->					
+				</rich:dropDownMenu>
+			</rich:toolbarGroup>
+
 			<rich:toolbarGroup location="right">
 				<a4j:status name="formEditor_status">
 					<f:facet name="start">
@@ -66,14 +81,42 @@
 					</f:facet>
 				</a4j:status>
 			</rich:toolbarGroup>
-
+	
 		</rich:toolbar>
+		
+		<!-- Save Method -->
 		<a4j:jsFunction name="sendFormAjax" action="#{editFormBean.saveForm}"
 			execute="@form" status="formEditor_status">
 			<a4j:param name="xml" assignTo="#{editFormBean.xml}" />
 			<f:setPropertyActionListener target="#{listFormsBean.updateList}"
 				value="true" />
 		</a4j:jsFunction>
+
+		<!-- SaveAs Method -->
+		<a4j:jsFunction name="saveFormAsAjax" action="#{editFormBean.saveFormAs}"
+			execute="@form" status="formEditor_status">
+			<a4j:param name="xml" assignTo="#{editFormBean.xml}" />
+			<f:setPropertyActionListener target="#{listFormsBean.updateList}"
+				value="true" />
+		</a4j:jsFunction>
+
+		<!-- Popup to SaveAs -->
+		<div id="dialogSaveFormAs" style="display: none;">
+			<h:form id="saveFormAs">
+				<h:panelGrid>
+					<h:outputLabel value="#{msgs.form_saveas_title}:" />
+					<h:inputText id="saveFormAsTitle" />
+					<h:panelGroup>
+						<a4j:commandButton value="#{msgs.commons_save}" 
+							type="button"
+							onclick="saveFormAs()"/>
+						<a4j:commandButton value="#{msgs.commons_cancel}"
+							type="button"
+							onclick="closePopup('#dialogSaveFormAs')"/>
+					</h:panelGroup>
+				</h:panelGrid>
+			</h:form>
+		</div>
 
 		<forms:formRender />
 	</composite:implementation>
