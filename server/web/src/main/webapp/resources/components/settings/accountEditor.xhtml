@@ -8,29 +8,29 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
 	<composite:interface>
-		<composite:attribute name="cancelNavigation"
-				method-signature="java.lang.String action()" />
+		<composite:attribute name="submodule" required="false" />
+		<composite:attribute name="cancelNavigation" required="true" method-signature="java.lang.String action()"/>
 	</composite:interface>
 	<composite:implementation>
 		<h:outputScript library="javascript" name="accountManager.js" />
 		<h:outputScript library="javascript" name="jquery-1.7.1.js" />
 		<h:outputScript library="javascript" name="jquery.sha1.js" />
 		
-		<h:form id="accountEditorForm">
-			<h:panelGrid columns="3">
+			<h:panelGrid columns="3" columnClasses="loginColumn1, loginColumn2, loginColumn3"
+						 styleClass="maritacaAccountEditionTable">
 				<!-- Row 1 -->
 				<h:outputText value="#{msgs.account_first_name}:" />
-				<h:inputText  value="#{accountEditorBean.user.firstname}"
+				<h:inputText  value="#{accountEditorBean.firstName}"
 					label="#{msgs.account_first_name}" id="firstName" required="true">
-					<f:validateLength minimum="2" maximum="20" />
+					<rich:validator/>
 				</h:inputText>
 				<h:message for="firstName" styleClass="error" />
 
 				<!-- Row 2 -->
 				<h:outputText value="#{msgs.account_last_name}:" />
-				<h:inputText value="#{accountEditorBean.user.lastname}"
+				<h:inputText value="#{accountEditorBean.lastName}"
 					label="#{msgs.account_last_name}" id="lastName">
-					<f:validateLength minimum="2" maximum="20" />
+					<rich:validator/>
 				</h:inputText>
 				<h:message for="lastName" styleClass="error" />
 
@@ -39,7 +39,7 @@
 				<h:inputText value="#{accountEditorBean.email}" id="email"
 					label="#{msgs.account_email}" required="true">
 					<rich:validator/>
-					<f:ajax event="blur" render="emailError"  />
+					<f:ajax event="blur" execute="@this" render="emailError"  />
 				</h:inputText>
 				<h:panelGroup>
 					<h:message for="email" styleClass="error" />
@@ -50,46 +50,34 @@
 				</h:panelGroup>
 
 				<!-- Row 4 -->
-				<h:outputText value="#{msgs.account_password}:" />
-				<h:inputSecret id="pass" required="true"
-					onkeyup="checkPassword(this.form)">
-				</h:inputSecret>
-				<h:panelGroup>
-					<h:message for="pass" styleClass="error" />
-					<h:outputFormat value="#{msgs.account_passwd_size_error }"
-								id="passwdLengthError" styleClass="error"
-								style="display: none">
-						<f:param value="#{6}"/>
-						<f:param value="#{20}"/>						
-					</h:outputFormat>
-				</h:panelGroup>
-				
+				<h:outputText   value="#{msgs.account_password}:"         />
+				<h:inputSecret  id="pass" onkeyup="checkPassword(this)"   />
+				<h:outputFormat id="passSizeError" style="display:none;" styleClass="error"
+				                value="#{msgs.account_passwd_size_error}">
+				               	<f:param value="#{6}"/>
+								<f:param value="#{20}"/>	
+				</h:outputFormat>
+											
 				<!-- Row 5 -->
-				<h:outputText value="#{msgs.account_create_retype_passwd}:" />
-				<h:inputSecret id="passConfirm" required="true" 
-						onkeyup="checkPassword(this.form)">
-				</h:inputSecret>
-				<h:panelGroup>
-					<h:message for="passConfirm" styleClass="error" />
-					<h:outputText value="#{msgs.account_passwd_dont_match }"
-						id="confirmPasswdError" styleClass="error" 
-						style="display: none"/>
-				</h:panelGroup>
+				<h:outputText  value="#{msgs.account_create_retype_passwd}:" />
+				<h:inputSecret id="passConfirm"	onkeyup="checkPassword(this)"/>
+				<h:outputText  id="passMatchError" style="display:none;" styleClass="error"
+				               value="#{msgs.account_passwd_dont_match}"     />
+
+				<!-- Lower section buttons: Create/Cancel -->
+				<!-- Hidden fields: Contains the passwords sent to server(using SHA1) -->							
+				<h:inputHidden value="#{accountEditorBean.encryptedPassword}" 
+							   id="passwordEncrypted"/>
 				
-				<h:inputHidden value="#{accountEditorBean.user.password}" 
-						id="password"/>
-				<h:inputHidden value="#{accountEditorBean.confirmPassword}" 
-						id="passwordConfirm"/>
+				<h:panelGrid columns="2">
+					<h:commandButton value="#{msgs.account_create_button}"
+						action="#{accountEditorBean.saveButtonPressed}"
+						id="saveAccountButton" onclick="encryptPassword(this.form)">
+					</h:commandButton>
+					<h:commandButton value="#{msgs.account_create_cancel}"
+						action="#{cc.attrs.cancelNavigation}" immediate="true" />
+				</h:panelGrid>
 			</h:panelGrid>
 
-			<!-- Lower section buttons: Create/Cancel -->
-			<h:commandButton value="#{msgs.account_create_button}"
-				action="#{accountEditorBean.saveAccount}" id="createAccountButton"
-				onclick="encryptPassword(this.form,true)">				
-			</h:commandButton>
-			
-			<h:commandButton value="#{msgs.account_create_cancel}"
-				action="#{cc.attrs.cancelNavigation}" immediate="true" />
-		</h:form>
 	</composite:implementation>	
 </ui:composition>

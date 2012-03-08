@@ -6,7 +6,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:groups="http://java.sun.com/jsf/composite/components/groups"
-	xmlns:util="http://java.sun.com/jsf/composite/components/util">
+	xmlns:util="http://java.sun.com/jsf/composite/components/util"
+	xmlns:f="http://java.sun.com/jsf/core">
 <head>
 	<title>Not present in rendered output</title>
 </head>
@@ -16,9 +17,31 @@
 	</composite:interface>
 	<composite:implementation>
 		<rich:panel>
-			<groups:nameField />
-			<groups:descriptionField />
-			<groups:allowUsersField />
+			<!-- Group Name -->
+			<h:outputText value="#{msgs.group_name}:" />
+			<h:inputText value="#{groupsManagerBean.groupName}" id="groupName">
+				<f:ajax event="blur" render="groupExistsError" />
+				<rich:validator />
+			</h:inputText>			
+			<h:outputText
+					value="#{groupsManagerBean.registeredGroupName() ? msgs.group_name_already_used : ''}"
+					id="groupExistsError" styleClass="error" />			
+			
+			<!-- Group Description -->
+			<h:outputText value="#{msgs.group_description}:" />
+			<h:inputText value="#{groupsManagerBean.groupDescription}"
+						 id="groupDescription">
+			</h:inputText>
+						
+			<!-- Allow Users -->
+			<h:outputText value="#{msgs.group_allow_user_join}:" />
+			<h:selectOneRadio value="#{groupsManagerBean.allowUserJoin}" >
+				<f:selectItem itemLabel="#{msgs.group_allow_user_join_yes}"
+					itemValue="true"/>
+				<f:selectItem itemLabel="#{msgs.group_allow_user_join_no}"
+					itemValue="false" />
+			</h:selectOneRadio>
+			
 			<groups:usersField />
 			<util:saveCancelButtons save="#{groupsManagerBean.save()}"
 				cancel="#{groupsManagerBean.cancel()}" />

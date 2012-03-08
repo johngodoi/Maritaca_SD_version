@@ -2,10 +2,13 @@ package br.unifesp.maritaca.web.jsf.account;
 
 import java.io.Serializable;
 
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.web.Manager;
@@ -27,45 +30,118 @@ public class AccountEditorBean extends AbstractBean implements Serializable{
 	@Pattern(regexp = Utils.EMAIL_REG_EXP, message="{email.invalid}")
 	private String email;
 	
+	@Size(min = 3, max = 20)
+	private String firstName;
+	
+	@Size(max = 20)
+	private String lastName;
+	
+	private String encryptedPassword;
+	
+	/* Managed Properties */
 	@ManagedProperty("#{currentUserBean}")
-	private CurrentUserBean currentUserBean;
+	private CurrentUserBean currentUserBean;	
 	
 	@ManagedProperty("#{manager}")
 	private Manager moduleManager;
 	
 	private static final long serialVersionUID = 1L;
-	private User     user;
-	
-	private String   confirmPassword;
-	
+			
 	public AccountEditorBean() {
 		super(false, true);
-		clearUser();
+		clearUserInformation();
+	}
+	
+	@PostConstruct
+	public void updateUserInformation(){
+		if(getCurrentUserBean()!=null && getCurrentUserBean().getUser()!=null){
+			fillInformationFromUser(getCurrentUserBean().getUser());
+		}
 	}
 			
-	private void clearUser(){
-		setUser(new User());
+	private void clearUserInformation(){
+		setEmail("");
+		setFirstName("");
+		setLastName("");
 	}
-
-	public User getUser() {
+	
+	public String saveButtonPressed(){
+		if(getCurrentUserBean().getUser()!=null){
+			return updateAccount();
+		} else{
+			return saveNewAccount();
+		}
+	}
+	
+	private String updateAccount(){
+		User userToUpdate = createUserFromInformation();
+		userToUpdate.setKey(getCurrentUserBean().getUser().getKey());
+		
+		return saveAccount(userToUpdate);
+	}
+	
+	public User createUserFromInformation(){
+		User user = new User();
+		
+		user.setEmail(getEmail());
+		user.setFirstname(getFirstName());
+		user.setLastname(getLastName());
+		user.setPassword(getEncryptedPassword());
+		
 		return user;
 	}
-
-	public void setUser(User user) {
-		this.user = user;
+	
+	public void fillInformationFromUser(User user){
+		setEmail(user.getEmail());
+		setFirstName(user.getFirstname());
+		setLastName(user.getLastname());
+		setEncryptedPassword(user.getPassword());
 	}
-			              
-	public String saveAccount(){
-		if(!passwordsMatch() || registeredEmail()){
+	
+	/**
+	 * Create a new user based on information provided
+	 * and saves it.
+	 * @return null if not successful (refresh current view)
+	 * or the navigation string to the home page if successful. 
+	 */
+	private String saveNewAccount(){
+		User userToSave = createUserFromInformation();		
+		return saveAccount(userToSave);
+	}
+	
+	/**
+	 * Saves the user passed as parameter. In case of success also set
+	 * it as the current user.
+	 * @param user
+	 * @return true if successful, false otherwise.
+	 */
+	private String saveAccount(User userToSave){
+		if(!validateAccount()){
 			return null;
 		}
-		getUser().setEmail(getEmail());
-		if(!super.userCtrl.saveUser(getUser())){
+		
+		boolean saveSuccessful = super.userCtrl.saveUser(userToSave);
+		User    savedUser      = super.userCtrl.getUser(getEmail());
+		
+		if(!saveSuccessful || savedUser == null){
+			addMessage("account_create_error", FacesMessage.SEVERITY_ERROR);
 			return null;
+		} else {
+			addMessage("account_create_success", FacesMessage.SEVERITY_INFO);
+			getCurrentUserBean().setUser(savedUser);
+			clearUserInformation();
+			return "/faces/views/home";
+
 		}
-		getCurrentUserBean().setUser(getUser());
-		clearUser();
-		return "/faces/views/home";
+	}
+	
+	private boolean validateAccount(){
+		if(registeredEmail()){
+			addMessage("account_create_used_email", FacesMessage.SEVERITY_ERROR);
+			return false;
+		} else {
+			return true;
+		}		
 	}
 	
 	/**
@@ -98,8 +174,14 @@ public class AccountEditorBean extends AbstractBean implements Serializable{
 	 * @return The String containing the URL of the view.
 	 */
 	public String cancelUserCreation(){
-		clearUser();
+		clearUserInformation();
 		return "/faces/views/login";
+	}
+	
+	public String editAccount(){
+		getModuleManager().setActiveModuleByString("Settings");
+		getModuleManager().setActiveSubModuleInActiveMod("accountEditor");
+		return null;
 	}
 	
 	/**
@@ -108,41 +190,10 @@ public class AccountEditorBean extends AbstractBean implements Serializable{
 	 * @return The String containing the URL of the view.
 	 */
 	public String cancelUserEdition(){
-		clearUser();
-		return "/faces/views/home";
-	}
-	
-	/**
-	 * Set the user been managed by this bean as the current user logged
-	 * and redirects to the account edition/creation page.
-	 */
-	public String useCurrentUser(){
-		setUser(getCurrentUserBean().getUser());
-		
-		getModuleManager().setActiveModuleByString("Settings");
-		getModuleManager().setActiveSubModuleInActiveMod("account");
-		
+		clearUserInformation();
+		getModuleManager().setActiveModuleByString("Forms");
+		getModuleManager().setActiveSubModuleInActiveMod("listForms");
 		return null;
-	}
-	
-	public Boolean passwordsMatch(){
-		if(getUser()==null || getConfirmPassword()==null || getUser().getPassword()==null){
-			return false;
-		} else {
-			if(getUser().getPassword().equals(getConfirmPassword())){
-				return true;
-			} else {
-				return false;
-			}
-		}
-	}
-
-	public String getConfirmPassword() {
-		return confirmPassword;
-	}
-
-	public void setConfirmPassword(String confirmPassword) {
-		this.confirmPassword = confirmPassword;
 	}
 
 	public CurrentUserBean getCurrentUserBean() {
@@ -167,5 +218,29 @@ public class AccountEditorBean extends AbstractBean implements Serializable{
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getEncryptedPassword() {
+		return encryptedPassword;
+	}
+
+	public void setEncryptedPassword(String encryptedPassword) {
+		this.encryptedPassword = encryptedPassword;
 	}
 }

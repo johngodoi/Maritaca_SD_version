@@ -1,11 +1,21 @@
 var MIN_PASSWORD_SIZE = 6;
 var MAX_PASSWORD_SIZE = 20;
 
+function saveAccountButton(){
+	return $('input[id$=":saveAccountButton"]')[0];
+}
+
+function disableSaveAccount() {
+	saveAccountButton().disabled = true;
+}
+
+function enableSaveAccount() {
+	saveAccountButton().disabled = false;
+}
+
 window.onload = function(){
-	var saveAccountId     = window.document.forms[0].id+":createAccountButton";
-	var saveAccountButton = document.getElementById(saveAccountId);	
-	if(saveAccountButton != null){
-		saveAccountButton.disabled=true;
+	if(saveAccountButton() != null){
+		disableSaveAccount();
 	}
 };
 
@@ -17,54 +27,46 @@ function returnMaxPasswordSize() {
 	return MAX_PASSWORD_SIZE;
 }
 
-function checkPassword(form) {
-	var password = form[form.id + ":pass"].value;
-	var passwordConfirm = form[form.id + ":passConfirm"].value;
+function checkPassword() {
+	var password        = $('input[id$=":pass"]')[0].value;
+	var passwordConfirm = $('input[id$=":passConfirm"]')[0].value;
 
-	if (!checkPasswordSize(form, password)) {
+	if (!checkPasswordSize(password)) {
 		return;
 	}
 
-	if (!checkPasswordsMatches(form, password, passwordConfirm)) {
+	if (!checkPasswordsMatches(password, passwordConfirm)) {
 		return;
 	}
 }
 
-function checkPasswordSize(form, password) {
-	var message = document.getElementById(form.id + ":passwdLengthError");
+function checkPasswordSize(password) {
+	var message = $('span[id$=":passSizeError"]')[0];
 
 	if (password.length < MIN_PASSWORD_SIZE
 			|| password.length > MAX_PASSWORD_SIZE) {
 		message.style.display = 'block';
-		disableSaveAccount(form);
+		disableSaveAccount();
 		return false;
 	} else {
 		message.style.display = 'none';
-		enableSaveAccount(form);
+		enableSaveAccount();
 		return true;
 	}
 }
 
-function checkPasswordsMatches(form, password, passwordConfirm) {
-	var message = document.getElementById(form.id + ":confirmPasswdError");
-
+function checkPasswordsMatches(password, passwordConfirm) {
+	var message = $('span[id$=":passMatchError"]')[0];
+	
 	if (password == passwordConfirm && password != "") {
 		message.style.display = 'none';
-		enableSaveAccount(form);
+		enableSaveAccount();
 		return true;
 	} else {
 		message.style.display = 'block';
-		disableSaveAccount(form);
+		disableSaveAccount();
 		return false;
 	}
-}
-
-function disableSaveAccount(form) {
-	form[form.id + ":createAccountButton"].disabled = true;
-}
-
-function enableSaveAccount(form) {
-	form[form.id + ":createAccountButton"].disabled = false;
 }
 
 function encryptPassword(form, confirm) {

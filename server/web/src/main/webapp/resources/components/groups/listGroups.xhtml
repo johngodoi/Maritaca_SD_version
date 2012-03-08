@@ -14,29 +14,14 @@
 	</composite:interface>
 	<composite:implementation>
 		<rich:dataTable value="#{listGroupsBean.myGroups}" var="aGroup"
-			id="myGroupTable">
+			id="myGroupTable" styleClass="maritacaTable">
 			<f:facet name="header">#{msgs.group_list_header}</f:facet>
 
 			<rich:column>
 				<f:facet name="header">#{msgs.group_list_name}</f:facet>				
-					#{aGroup.name}
-			</rich:column>
-
-			<rich:column>
-				<f:facet name="header">#{msgs.group_list_description}</f:facet>				
-					#{aGroup.description}
-			</rich:column>
-
-			<rich:column>
-				<f:facet name="header">#{msgs.group_list_owner}</f:facet>				
-					#{aGroup.owner.email}
-			</rich:column>
-
-			<rich:column>
-				<f:facet name="header">#{msgs.group_list_options}</f:facet>
-				<rich:dropDownMenu mode="ajax" styleClass="listItemOption">
-					<f:facet name="label">
-						<h:graphicImage value="#{resource['img:down.png']}" />
+					
+				<rich:dropDownMenu mode="ajax">
+					<f:facet name="label"><a href="">#{aGroup.name}</a><h:graphicImage value="#{resource['img:down.png']}" />
 					</f:facet>
 					<!-- Leave Group -->
 					<rich:menuItem icon="#{resource['img:down.png']}"
@@ -54,6 +39,16 @@
 						action="#{listGroupsBean.removeGroup(aGroup)}"
 						render="myGroupTable"/>
 				</rich:dropDownMenu>
+			</rich:column>
+
+			<rich:column>
+				<f:facet name="header">#{msgs.group_list_description}</f:facet>				
+					#{aGroup.description}
+			</rich:column>
+
+			<rich:column>
+				<f:facet name="header">#{msgs.group_list_owner}</f:facet>				
+					#{aGroup.owner.email}
 			</rich:column>
 		</rich:dataTable>
 	</composite:implementation>

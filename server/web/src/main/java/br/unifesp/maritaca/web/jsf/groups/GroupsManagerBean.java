@@ -5,11 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import br.unifesp.maritaca.core.Group;
 import br.unifesp.maritaca.core.GroupUser;
@@ -29,11 +33,15 @@ import br.unifesp.maritaca.web.utils.Utils;
 @ViewScoped
 public class GroupsManagerBean extends AbstractBean implements Serializable {
 
+	private static final Log log = LogFactory.getLog(GroupsManagerBean.class);
+	
 	/* Error messages resources */
 	private static final String GROUP_ADD_ERROR_USER_NOT_FOUND = "group_add_error_user_not_found";
-	private static final String GROUP_ADD_ERROR_USER_ADDED = "group_add_error_user_added";
-	private static final String GROUP_ADD_EMPTY_EMAIL = "group_add_empty_email";
-
+	private static final String GROUP_ADD_ERROR_USER_ADDED     = "group_add_error_user_added";
+	private static final String GROUP_ADD_EMPTY_EMAIL          = "group_add_empty_email";
+	private static final String GROUP_ADD_SUCESS               = "group_add_sucess";
+	private static final String GROUP_ADD_FAILURE              = "group_add_fail";
+	
 	private static final long serialVersionUID = 1L;
 
 	@ManagedProperty("#{currentUserBean}")
@@ -232,19 +240,21 @@ public class GroupsManagerBean extends AbstractBean implements Serializable {
 	 */
 	public String save() {
 		String    returnString = null;
-		Boolean   success      = false;
+		Boolean   success      = true;
 		UserModel userModel    = super.userCtrl;
 
 		Group group = createGroupObj();
 		if (userModel.saveGroup(group)) {
-			if(newGroup(group)){
-				success = saveNewGroupUsers(group);
-			} else {
+			if(!newGroup(group)){
 				success = updateGroupUsers(group);
 			}
 
-			if (!success) {
+			if (success) {
+				addMessage(GROUP_ADD_SUCESS, FacesMessage.SEVERITY_INFO);
 				returnString = "/faces/views/home";
+			} else {
+				addMessage(GROUP_ADD_FAILURE, FacesMessage.SEVERITY_ERROR);
+				log.error("Error saving group: " + group.toString());
 			}
 		}
 

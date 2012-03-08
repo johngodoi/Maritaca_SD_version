@@ -83,7 +83,7 @@ public class OpenIdLoginBean extends AbstractBean implements Serializable{
      * Loads user info from database.
      */
     private void loadUserInfoFromDatabase() {
-    	String email = getAccountEditorBean().getUser().getEmail();
+    	String email = getAccountEditorBean().getEmail();
     	User   user  = super.userCtrl.findUserByEmail(email);
     	
     	getAccountEditorBean().getCurrentUserBean().setUser(user);		
@@ -119,7 +119,7 @@ public class OpenIdLoginBean extends AbstractBean implements Serializable{
 		currentUser.setFirstname(authentication.getFirstname());
 		currentUser.setLastname(authentication.getLastname());
 		
-		getAccountEditorBean().setUser(currentUser);
+		getAccountEditorBean().fillInformationFromUser(currentUser);
 	}
 
 	public OpenIdManager getManager() {

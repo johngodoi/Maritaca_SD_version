@@ -7,12 +7,11 @@
 	<center>
 		<!-- Fills user data if returning from openId authentication -->
 		<h:form>
-			<h:inputHidden value="#{openIdLoginBean.onLoad}" />
+			<h:inputHidden value="#{openIdLoginBean.onLoad}" />		
+			<!-- Calls the accountEditor -->
+			<settings:accountEditor
+				cancelNavigation="#{accountEditorBean.cancelUserCreation()}" />
 		</h:form>
-		
-		<!-- Calls the accountEditor -->
-		<settings:accountEditor
-			cancelNavigation="#{accountEditorBean.cancelUserCreation}" />
 	</center>
 </h:body>
 </html>

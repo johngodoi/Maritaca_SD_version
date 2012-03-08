@@ -40,7 +40,8 @@
 			</c:when>						
 			
 			<c:when test="#{cc.attrs.submodule.component eq 'accountEditor'}">
-				<settings:accountEditor submodule="#{cc.attrs.submodule}" />
+				<settings:accountEditor submodule="#{cc.attrs.submodule}"
+										cancelNavigation="#{accountEditorBean.cancelUserEdition}"/>
 			</c:when>	
 														
 			<c:otherwise> ${msgs.commons_emptyComponent}</c:otherwise>

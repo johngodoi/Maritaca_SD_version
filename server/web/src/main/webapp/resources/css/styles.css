@@ -87,6 +87,7 @@ table.maritacaTable{
 	border: 1px solid #cccccc;	
 	padding: 10px;
 	vertical-align: middle;
+	width: 100%;
 }
 
 table.maritacaTable td, table.maritacaTable th{
@@ -204,6 +205,21 @@ span.projectBetaDisclaimer{
 }
 
 /******************************** Modifications by Class ********************************/
+.maritacaAccountEditionTable{
+	padding: 50px;
+	margin-right: auto;
+}
+
+.loginColumn1{
+}
+.loginColumn2{
+}
+.loginColumn3{
+	float: left;
+	width: 350px;
+	font-size: 14px;
+}
+
 .subModuleLabel, .subModuleLabel:HOVER{
 	background-color: rgb(235,250,240);
 }

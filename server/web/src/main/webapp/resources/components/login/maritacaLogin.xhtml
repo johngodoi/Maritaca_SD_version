@@ -31,8 +31,8 @@
 				<h:inputHidden value="#{maritacaLoginBean.user.password}" 
 						id="password"/>
 			</h:panelGrid>
-			<h:commandButton value="#{msgs.login}" action="#{maritacaLoginBean.submit}"
-  				        onclick="encryptPassword(this.form,false)" styleClass="inputButton">
+			<h:commandButton	value="#{msgs.login}" action="#{maritacaLoginBean.submit}"
+  				        		onclick="encryptPassword(this.form,false)" styleClass="inputButton">
 				<f:param name="#{oAuthParametersBean.redirectUri}"  value="#{loginManagerBean.redirectUri}"/>
 				<f:param name="#{oAuthParametersBean.clientId}"     value="#{loginManagerBean.clientId}"/>
 				<f:param name="#{oAuthParametersBean.responseType}" value="#{loginManagerBean.responseType}"/>
