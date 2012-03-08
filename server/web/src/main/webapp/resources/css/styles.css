@@ -203,6 +203,19 @@ span.projectBetaDisclaimer{
 	font-family: cursive;	
 }
 
+table > thead > tr > th.columnEmptyListClass {
+	border-bottom: thin dotted gray;
+	background-image: none;
+	font-style: italic;
+	font-weight: normal;
+}
+
+td > div.rf-ddm-itm-sel, td > div.rf-ddm-sel {
+	background-color: #ffa800;
+	color: black;
+	background-image: none;
+}
+
 /******************************** Modifications by Class ********************************/
 .subModuleLabel, .subModuleLabel:HOVER{
 	background-color: rgb(235,250,240);
@@ -276,11 +289,6 @@ span.projectBetaDisclaimer{
 	float: right;
 }
 
-.columnClass1 {
-	border-bottom: thin dotted gray;
-	height: 30px;
-}
-
 .maritacaMessages{
 	float: right;
 	margin-right: 20px;
@@ -313,6 +321,18 @@ span.projectBetaDisclaimer{
 .label1{
 	color: #1e7315;
 	font-weight: bold;
+}
+
+.listFormColumnTitle {
+	width: 45%;
+}
+
+.listFormColumnCreationDate {
+	width: 25%;
+}
+
+.listFormColumnOwner {
+	width: 30%;
 }
 
 /******************************** Modifications to the Skin ********************************/

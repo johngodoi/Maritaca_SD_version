@@ -14,14 +14,18 @@
 	</composite:interface>
 	<composite:implementation>
 		<h:panelGrid columns="1" width="100%">
-		<forms:listFormsTable	submodule="#{cc.attrs.submodule}"
+			<forms:listFormsTable	submodule="#{cc.attrs.submodule}"
 								formList="#{listFormsBean.forms}"
-								title="#{msgs.form_list_my_forms}"/>
-		</h:panelGrid>								
-		<forms:listFormsTable 	submodule="#{cc.attrs.submodule}"
+								title="#{msgs.form_list_my_forms}"
+								idem="listMyForms"/>
+		</h:panelGrid>							
+		
+		<h:panelGrid columns="1" width="100%">	
+			<forms:listFormsTable 	submodule="#{cc.attrs.submodule}"
 								formList="#{listFormsBean.sharedForms}"
-								title="#{msgs.form_list_shared_forms}"/>
-
+								title="#{msgs.form_list_shared_forms}"
+								idem="listShadesForms"/>
+		</h:panelGrid>
 								
 	</composite:implementation>
 </ui:composition>
