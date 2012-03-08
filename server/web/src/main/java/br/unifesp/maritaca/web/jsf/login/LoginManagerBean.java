@@ -35,10 +35,9 @@ public class LoginManagerBean {
 			}
 			
 			FacesContext context = FacesContext.getCurrentInstance();
-			//context.getExternalContext().dispatch(successfulLoginUrl);
 			context.getExternalContext().redirect(successfulLoginUrl);
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 

@@ -104,7 +104,7 @@ public class AccountEditorBean extends AbstractBean implements Serializable{
 	 * @return null if not successful (refresh current view)
 	 * or the navigation string to the home page if successful. 
 	 */
-	private String saveNewAccount(){
+	public String saveNewAccount(){
 		User userToSave = createUserFromInformation();		
 		return saveAccount(userToSave);
 	}
