@@ -7,9 +7,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:groups="http://java.sun.com/jsf/composite/components/groups"
 	xmlns:util="http://java.sun.com/jsf/composite/components/util"
-	xmlns:f="http://java.sun.com/jsf/core">
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j">
 <head>
-	<title>Not present in rendered output</title>
+<title>Not present in rendered output</title>
 </head>
 <body>
 	<composite:interface>
@@ -17,32 +18,68 @@
 	</composite:interface>
 	<composite:implementation>
 		<rich:panel>
-			<!-- Group Name -->
-			<h:outputText value="#{msgs.group_name}:" />
-			<h:inputText value="#{groupsManagerBean.groupName}" id="groupName">
-				<f:ajax event="blur" render="groupExistsError" />
-				<rich:validator />
-			</h:inputText>			
-			<h:outputText
+			<h:panelGrid columns="2" columnClasses="editorC1,editorC2">
+
+				<!-- Group Name -->
+				<h:outputText value="#{msgs.group_name}:" />
+				<h:inputText value="#{groupsManagerBean.groupName}" id="groupName">
+					<f:ajax event="blur" render="groupExistsError" />
+					<rich:validator />
+				</h:inputText>
+				
+				<h:inputHidden/>
+				<h:outputText
 					value="#{groupsManagerBean.registeredGroupName() ? msgs.group_name_already_used : ''}"
-					id="groupExistsError" styleClass="error" />			
+					id="groupExistsError" styleClass="error" />
+
+				<!-- Group Description -->
+				<h:outputText value="#{msgs.group_description}:" />
+				<h:inputText value="#{groupsManagerBean.groupDescription}"
+					id="groupDescription">
+				</h:inputText>
+
+				<!-- Group Policy -->
+				<h:outputText value="#{msgs.group_admission_policy}:" />
+				<h:selectOneRadio value="#{groupsManagerBean.allowUserJoin}">
+					<f:selectItem itemLabel="#{msgs.group_admission_policy_public}"
+						itemValue="true" />
+					<f:selectItem itemLabel="#{msgs.group_admission_policy_private}"
+						itemValue="false" />
+				</h:selectOneRadio>
+
+				<!-- Group Users -->
+				<h:outputText value="#{msgs.group_users}:" />
+				<h:panelGrid columns="2">
+					<rich:autocomplete
+						autocompleteMethod="#{groupsManagerBean.usersStartingWith}"
+						mode="cachedAjax" value="#{groupsManagerBean.selectedEmail}"
+						minChars="4" id="selectedEmail">
+					</rich:autocomplete>
+					<a4j:commandButton value="#{msgs.group_add_user_button}"
+						action="#{groupsManagerBean.addEmail}" execute="selectedEmail"
+						render="emailList addEmailError"/>
+				</h:panelGrid>
+
+				<!-- Error Msg -->
+				<h:inputHidden/>
+				<h:outputText styleClass="error" id="addEmailError"
+					value="#{groupsManagerBean.addEmailError}" />
+
+				<!-- Added users -->
+				<h:inputHidden/>
+				<rich:panel>
+					<rich:list value="#{groupsManagerBean.addedEmailsList}" var="email"
+						id="emailList">
+						#{email}
+						<a4j:commandButton value="-" type="button"
+							action="#{groupsManagerBean.removeEmail(email)}"
+							render="emailList addEmailError" immediate="true" />
+					</rich:list>
+				</rich:panel>			
+			</h:panelGrid>
 			
-			<!-- Group Description -->
-			<h:outputText value="#{msgs.group_description}:" />
-			<h:inputText value="#{groupsManagerBean.groupDescription}"
-						 id="groupDescription">
-			</h:inputText>
-						
-			<!-- Allow Users -->
-			<h:outputText value="#{msgs.group_allow_user_join}:" />
-			<h:selectOneRadio value="#{groupsManagerBean.allowUserJoin}" >
-				<f:selectItem itemLabel="#{msgs.group_allow_user_join_yes}"
-					itemValue="true"/>
-				<f:selectItem itemLabel="#{msgs.group_allow_user_join_no}"
-					itemValue="false" />
-			</h:selectOneRadio>
-			
-			<groups:usersField />
+
+			<!-- Save & Cancel -->
 			<util:saveCancelButtons save="#{groupsManagerBean.save()}"
 				cancel="#{groupsManagerBean.cancel()}" />
 		</rich:panel>

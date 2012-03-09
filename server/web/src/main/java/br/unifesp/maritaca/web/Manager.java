@@ -69,7 +69,7 @@ public class Manager extends AbstractBean implements Serializable {
 		mod.setId("groups");
 
 		submod = new SubModuleImpl();
-		submod.setTitle("My Groups");
+		submod.setTitle("Groups List");
 		submod.setComponent("listGroups");
 		mod.addModule(submod);
 

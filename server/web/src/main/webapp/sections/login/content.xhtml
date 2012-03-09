@@ -3,7 +3,8 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:login="http://java.sun.com/jsf/composite/components/login"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:settings="http://java.sun.com/jsf/composite/components/settings">
 	<center>
 		<h:panelGrid columns="2" cellpadding="20">
 			<h:panelGrid columns="1" cellpadding="20" styleClass="projectDescriptionArea">
@@ -12,9 +13,20 @@
 				<h:outputText value="#{msgs.project_description2}" styleClass="projectDescription"/>
 				<h:outputText value="#{msgs.project_description3}" styleClass="projectDescription"/>
 			</h:panelGrid>
-			<h:panelGrid columns="1" cellpadding="20" styleClass="loginArea">
+
+			<h:panelGrid columns="1" cellpadding="20" styleClass="loginArea"
+				rendered="#{!accountEditorBean.creatingAccount}">
 				<login:maritacaLogin/>
 				<login:openIdLogin/>
+			</h:panelGrid>
+			
+			<h:panelGrid columns="1" styleClass="loginArea"
+				rendered="#{accountEditorBean.creatingAccount}">
+				<h:outputText value="#{msgs.account_create}" styleClass="label1"/>
+				<h:form>
+					<settings:accountEditor
+						cancelNavigation="#{accountEditorBean.cancelUserCreation()}" />
+				</h:form>
 			</h:panelGrid>
 		</h:panelGrid>
 	</center>

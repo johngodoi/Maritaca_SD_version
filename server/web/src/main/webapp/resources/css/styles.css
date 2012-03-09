@@ -154,7 +154,7 @@ table.headerPanel{
 	
 }
 
-input.inputButton{
+input[type="submit"]{
 	font-weight: bold;
 }
 
@@ -205,19 +205,33 @@ span.projectBetaDisclaimer{
 }
 
 /******************************** Modifications by Class ********************************/
-.maritacaAccountEditionTable{
-	padding: 50px;
-	margin-right: auto;
+td.editorC2 input[type="text"], td.editorC2 span, td.editorC2 input[type="password"]{
+	width: 98%;
 }
 
-.loginColumn1{
+td.editorC2 input[type="password"]{
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-moz-box-shadow: 0 0 2px #888;
+	-webkit-box-shadow: 0 0 2px #888;
+	box-shadow: 0 0 2px #888;
+	border: solid 1px #999;	
 }
-.loginColumn2{
+
+
+td.editorC1{
+	width: 100px; 
+	text-align: right;
+	font-size: 12px;
 }
-.loginColumn3{
-	float: left;
-	width: 350px;
-	font-size: 14px;
+td.editorC2{
+	width: 190px;
+	text-align: right;
+}
+
+tr > td > span.error{
+	height: 12px;
 }
 
 .subModuleLabel, .subModuleLabel:HOVER{
@@ -265,6 +279,7 @@ span.projectBetaDisclaimer{
 
 .error {
 	color: red;
+	font-size: 10px;
 }
 
 .formIdValue,.formXmlValue {

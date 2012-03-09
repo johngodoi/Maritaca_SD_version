@@ -13,6 +13,8 @@
 		<composite:attribute name="submodule" required="true" />
 	</composite:interface>
 	<composite:implementation>
+	
+		<h:panelGrid columns="1" width="100%">
 		<rich:dataTable value="#{listGroupsBean.myGroups}" var="aGroup"
 			id="myGroupTable" styleClass="maritacaTable">
 			<f:facet name="header">#{msgs.group_list_header}</f:facet>
@@ -51,5 +53,6 @@
 					#{aGroup.owner.email}
 			</rich:column>
 		</rich:dataTable>
+		</h:panelGrid>
 	</composite:implementation>
 </ui:composition>

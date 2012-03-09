@@ -256,6 +256,9 @@ public class GroupsManagerBean extends AbstractBean implements Serializable {
 				addMessage(GROUP_ADD_FAILURE, FacesMessage.SEVERITY_ERROR);
 				log.error("Error saving group: " + group.toString());
 			}
+		} else {
+			addMessage(GROUP_ADD_FAILURE, FacesMessage.SEVERITY_ERROR);
+			log.error("Error saving group: " + group.toString());			
 		}
 
 		clearGroup();

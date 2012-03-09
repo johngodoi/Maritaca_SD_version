@@ -46,10 +46,13 @@ public class AccountEditorBean extends AbstractBean implements Serializable{
 	private Manager moduleManager;
 	
 	private static final long serialVersionUID = 1L;
+	
+	private boolean creatingAccount;
 			
 	public AccountEditorBean() {
 		super(false, true);
 		clearUserInformation();
+		setCreatingAccount(false);
 	}
 	
 	@PostConstruct
@@ -71,6 +74,11 @@ public class AccountEditorBean extends AbstractBean implements Serializable{
 		} else{
 			return saveNewAccount();
 		}
+	}
+	
+	public String createAccount(){
+		setCreatingAccount(true);
+		return null;
 	}
 	
 	private String updateAccount(){
@@ -175,7 +183,8 @@ public class AccountEditorBean extends AbstractBean implements Serializable{
 	 */
 	public String cancelUserCreation(){
 		clearUserInformation();
-		return "/faces/views/login";
+		setCreatingAccount(false);
+		return null;
 	}
 	
 	public String editAccount(){
@@ -242,5 +251,13 @@ public class AccountEditorBean extends AbstractBean implements Serializable{
 
 	public void setEncryptedPassword(String encryptedPassword) {
 		this.encryptedPassword = encryptedPassword;
+	}
+
+	public boolean isCreatingAccount() {
+		return creatingAccount;
+	}
+
+	public void setCreatingAccount(boolean creatingAccount) {
+		this.creatingAccount = creatingAccount;
 	}
 }

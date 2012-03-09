@@ -41,18 +41,25 @@ function checkPassword() {
 }
 
 function checkPasswordSize(password) {
-	var message = $('span[id$=":passSizeError"]')[0];
+	var msgPassShort = $('span[id$=":passSizeShort"]')[0];
+	var msgPassLong  = $('span[id$=":passSizeLong"]')[0];
 
-	if (password.length < MIN_PASSWORD_SIZE
-			|| password.length > MAX_PASSWORD_SIZE) {
-		message.style.display = 'block';
+	if (password.length < MIN_PASSWORD_SIZE){
+		msgPassShort.style.display = 'block';
+		msgPassLong.style.display  = 'none';
+		disableSaveAccount();
+		return false;
+	} else if(password.length > MAX_PASSWORD_SIZE){
+		msgPassShort.style.display = 'none';
+		msgPassLong.style.display  = 'block';
 		disableSaveAccount();
 		return false;
 	} else {
-		message.style.display = 'none';
+		msgPassShort.style.display = 'none';
+		msgPassLong.style.display  = 'none';
 		enableSaveAccount();
 		return true;
-	}
+	}	
 }
 
 function checkPasswordsMatches(password, passwordConfirm) {
@@ -69,12 +76,7 @@ function checkPasswordsMatches(password, passwordConfirm) {
 	}
 }
 
-function encryptPassword(form, confirm) {
-	var password = form[form.id + ":pass"].value;
-	form[form.id + ":password"].value = $.sha1(password);
-
-	if (confirm) {
-		var passwordConfirm = form[form.id + ":passConfirm"].value;
-		form[form.id + ":passwordConfirm"].value = $.sha1(passwordConfirm);
-	}
+function encryptPassword() {
+	var password = $('input[id$=":pass"]')[0].value;
+	$('input[id$=":passwordEncrypted"]')[0].value = $.sha1(password);
 }
