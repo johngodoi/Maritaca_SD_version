@@ -8,6 +8,7 @@
 #heading {
 	padding: 10px;
 	margin-bottom: 10px;
+	height: 127px;
 	
 	background:rgb(142,204,155); /* for non-css3 browsers */	
 	background-image: -webkit-gradient( 
@@ -48,15 +49,17 @@
 	bottom:         7px;
 }
 
-#content {
-	border:		thin solid lightGray;
+#content, center.loginPanel {
 	top:		160px;
 	min-height:	600px;
 }
 
+div.menuAndContentForm, center.loginPanel{
+	border:		thin solid lightGray;
+}
+
 #footer {
 	padding: 10px;
-	margin-top: 10px;
 	background:rgb(142,204,155); /* for non-css3 browsers */	
 	background: -webkit-gradient(
 		linear,
@@ -151,35 +154,32 @@ form.headerMenu{
 }
 
 table.headerPanel{
-	
+	height: 100%;
 }
 
 input[type="submit"]{
 	font-weight: bold;
 }
 
-td > a, td > a:visited{
+td > a, td > a:visited, a, a:visited{
 	color: #17801a;
 }
 
-a.userNameLink{
-	font-size:		 14px;
-	text-decoration: none;
+div.loggedUserPanel{
+	text-align: right;
+}
+
+div.loggedUserPanel > form > a {
+	font-size:		  14px;
+	font-weight:      bold;
+	text-decoration:  none;
+	vertical-align: bottom;
 }
 
 /*** Modifications Specific to some tags ***/
 img.upperIcon{
 	width: 22px;
 	height: 22px;
-}
-
-td.rf-tab-hdr.transparentTopPanelItem{
-	border: 0px;
-	vertical-align: middle;
-	background-image: none;
-	background-color: transparent;
-	padding-bottom: 0px;
-	color: #17801a;
 }
 
 td.rf-tab-hdr.userSettingsTopPanelItem{

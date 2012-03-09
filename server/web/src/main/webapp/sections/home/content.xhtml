@@ -20,9 +20,20 @@
 	<h:outputScript name="h5Script.js" library="javascript" />
 	<h:outputScript name="h5FieldProperties.js" library="javascript" />
 
+	<div class="loggedUserPanel">
+		<h:form>
+			<a4j:commandLink	action="#{accountEditorBean.editAccount}"
+								value="#{currentUserBean.user.email}"
+								render="menuAndContentForm"/>
+			<a4j:commandLink	action="#{logoutBean.logout}">
+        		<h:graphicImage value="#{resource['img:logout_button.png']}" />
+    	    </a4j:commandLink>
+		</h:form>	
+	</div>
+
 	<div>
 	<h:form id="mainForm">
-		<!-- TOP TABS -->
+		<!-- TOP TABS -->		
 		<rich:tabPanel activeItem="#{manager.activeModule.id}"
 			tabContentClass="tabContent" id="mainTab" switchType="server"
 			itemChangeListener="#{manager.tabChanged}">
@@ -33,41 +44,10 @@
 					<!-- FOR EACH MODULE, CREATE A GRID PANEL FOR LEFT NAVIGATION BAR & CONTENT -->
 				</rich:tab>
 			</c:forEach>
-			
-			<!--        LOGGED USER AND LOGOUT TABS         -->
-			<!-- These tabs appears as buttons to the user! -->
-			<rich:tab header=""
-					  headerDisabledClass="transparentTopPanelItem emptyTopPanelItem"
-					  disabled="true"/>
-			<rich:tab header=""
-					  headerClass="transparentTopPanelItem userSettingsTopPanelItem">
-				    <f:facet name="header">
-				    	<h:panelGrid>	
-				    		<h:form id="editAccountForm">
-								<a4j:commandLink	styleClass="userNameLink"
-													action="#{accountEditorBean.editAccount()}"
-													value="#{currentUserBean.user.email}"/>
-							</h:form>
-						</h:panelGrid>
-					</f:facet>
-			</rich:tab>
-			<rich:tab header=""
-					  headerClass="transparentTopPanelItem"
-					  disabled="true">
-					  <f:facet name="header">
-					  	<h:panelGrid>	
-					  		<h:form id="logoutForm">				  	
-					  		<a4j:commandLink action="#{logoutBean.logout}" >
-                				<h:graphicImage value="#{resource['img:logout_button.png']}" />
-        					</a4j:commandLink>
-        					</h:form>
-        				</h:panelGrid>					  	
-					  </f:facet>
-			</rich:tab>
 		</rich:tabPanel>
 	</h:form>
 	</div>
-	<div>
+	<div class="menuAndContentForm">
 	<h:form id="menuAndContentForm">
 		<h:panelGrid columns="2" columnClasses="cols,cols" id="menuAndContent">
 			<rich:panelMenu id="panelLeftMenu" styleClass="menuLeft" 
