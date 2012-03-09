@@ -45,11 +45,6 @@ public class OpenIdLoginBean extends AbstractBean implements Serializable{
 		super(false, true);
 	}
 	
-	public String getOnLoad(){
-		verifyOpenIdResponse();
-		return "";
-	}
-	
 	/**
      * Set the class members with date from the authentication response.
      * Extract the parameters from the authentication response (which comes
@@ -58,7 +53,7 @@ public class OpenIdLoginBean extends AbstractBean implements Serializable{
      * @param httpReq httpRequest
      * @return users identifier.
      */
-    private void verifyOpenIdResponse() {    	    	
+    public void verifyOpenIdResponse() {    	    	
     	FacesContext       context        = FacesContext.getCurrentInstance();    	
     	HttpServletRequest request        = (HttpServletRequest) context.getExternalContext().getRequest();
     	
@@ -141,7 +136,7 @@ public class OpenIdLoginBean extends AbstractBean implements Serializable{
 		try {
 			FacesContext       context     = FacesContext.getCurrentInstance();
 			String             op          = parseOp(context);			
-			String             returnUrl   = Utils.buildViewUrl("/views/createAccount.xhtml");
+			String             returnUrl   = Utils.buildViewUrl("/views/openIdLogin.xhtml");
 			String             returnRealm = Utils.buildServerAddressUrl();
 	        HttpServletRequest request     = (HttpServletRequest) context.getExternalContext().getRequest();
 									
