@@ -12,45 +12,23 @@
 		<composite:attribute name="submodule" required="true" />
 		<composite:attribute name="formList"  required="true" />
 		<composite:attribute name="title"     required="true" />
+		<composite:attribute name="idem"     required="true" />
 	</composite:interface>
 	<composite:implementation>
-		<h:dataTable value="#{cc.attrs.formList}" var="aForm" width="100%"
-			id="listforms" styleClass="maritacaTable">
+
+		<h:dataTable value="#{cc.attrs.formList}" id="#{cc.attrs.idem}" 
+			columnClasses="listFormColumnTitle, listFormColumnOwner, listFormColumnCreationDate"   
+			var="aForm" width="100%" styleClass="maritacaTable">
 			<f:facet name="header">
 				<h:outputText value="#{cc.attrs.title}"/>
 			</f:facet>
-			<h:column>
+			<h:column rendered="#{!cc.attrs.formList.isEmpty()}">
 				<f:facet name="header">
-					<a4j:commandLink value="#{msgs.form_list_titleHeader}"
+					<a4j:commandLink value="#{msgs.form_list_titleHeader}" 
 						action="#{listFormsBean.sortByName}" render="listforms">
 					</a4j:commandLink>
 				</f:facet>
-				<a4j:commandLink value="#{aForm.title}"
-					action="#{manager.activeModAndSub('Forms', 'formEditor')}"
-					render="menuAndContent" execute="@form">
-					<f:setPropertyActionListener target="#{editFormBean.form}"
-						value="#{aForm}" />
-					<f:setPropertyActionListener target="#{editFormBean.newForm}"
-						value="false" />
-					<f:setPropertyActionListener target="#{editFormBean.editForm}"
-						value="false" />
-				</a4j:commandLink>
-			</h:column>
-
-			<h:column>
-				<f:facet name="header">
-					<a4j:commandLink value="#{msgs.form_list_creationDateHeader}"
-						render="listforms, sorted" action="#{listFormsBean.sortByDate}">
-					</a4j:commandLink>
-				</f:facet>
-				<h:outputText value="#{aForm.creationDate}" styleClass="listItemOption"/>
-			</h:column>
-
-			<h:column>
-				<f:facet name="header">
-					#{msgs.form_list_optionsHeader}
-				</f:facet>
-
+				
 				<rich:dropDownMenu mode="ajax" styleClass="listItemOption">
 					<f:facet name="label">
 						<h:graphicImage value="#{resource['img:down.png']}" />
@@ -102,11 +80,43 @@
 							value="#{aForm}" />
 					</rich:menuItem>
 				</rich:dropDownMenu>
+				
+				<a4j:commandLink value="#{aForm.title}"
+					action="#{manager.activeModAndSub('Forms', 'formEditor')}"
+					render="menuAndContent" execute="@form">
+					<f:setPropertyActionListener target="#{editFormBean.form}"
+						value="#{aForm}" />
+					<f:setPropertyActionListener target="#{editFormBean.newForm}"
+						value="false" />
+					<f:setPropertyActionListener target="#{editFormBean.editForm}"
+						value="false" />
+				</a4j:commandLink>
+			</h:column>
+
+			<!-- Actually it is showing the key. But the architecture need to be improved -->
+			<h:column rendered="#{!cc.attrs.formList.isEmpty()}">
+				<f:facet name="header">
+					<a4j:commandLink value="#{msgs.form_list_ownerHeader}"
+						render="listforms, sorted" action="#{listFormsBean.sortByDate}">
+					</a4j:commandLink>
+				</f:facet>
+				<h:outputText value="#{aForm.user.key}" styleClass="listItemOption"/>
+			</h:column>
+
+			<h:column rendered="#{!cc.attrs.formList.isEmpty()}">
+				<f:facet name="header">
+					<a4j:commandLink value="#{msgs.form_list_creationDateHeader}"
+						render="listforms, sorted" action="#{listFormsBean.sortByDate}">
+					</a4j:commandLink>
+				</f:facet>
+				<h:outputText value="#{aForm.creationDate}" styleClass="listItemOption"/>
+			</h:column>
+			
+			<h:column rendered="#{cc.attrs.formList.isEmpty()}" headerClass="columnEmptyListClass">
+				<f:facet name="header">
+					<h:outputText value="#{msgs.form_list_empty}"/>
+				</f:facet>
 			</h:column>
 		</h:dataTable>
-		<center>
-			<h:outputText value="#{msgs.form_list_empty}"
-				rendered="#{empty listFormsBean.forms}" styleClass="columnClass1" />
-		</center>
 	</composite:implementation>
 </ui:composition>

@@ -18,63 +18,57 @@
 			<h:inputText value="#{editFormBean.form.title}" id="titleForm"
 				readonly="#{!editFormBean.editForm}" onkeyup="updateTitle(value);" />
 		</div>
-		<h:panelGrid id="formRenderTable" columns="3">
-			<tr valign="top">
-				<td>
-					<div id="divElements">
-						<fieldset id="components">
-							<legend>#{msgs.form_edit_availableComponents}</legend>
-							<ol>
-								<li><img src="../../resources/img/textbox.png" alt="Textbox" id="text"
-										width="85px" height="23px" title="Textbox"/></li>
-								<li><img src="../../resources/img/combobox.png" alt="Combobox" id="combobox"
-										width="85px" height="23px" title="Combobox"/></li>
-								<li><img src="../../resources/img/number.png" alt="Number" id="number"
-										width="85px" height="23px" title="Number"/></li>
-								<li><img src="../../resources/img/date.png" alt="Date" id="date"
-										width="85px" height="23px" title="Date"/></li>
-								<li><img src="../../resources/img/radiobox.png" alt="Radiobox" id="radio"
-										width="85px" height="23px" title="Radiobox"/></li>
-								<li><img src="../../resources/img/checkbox.png" alt="Checkbox" id="checkbox"
-										width="85px" height="23px" title="Checkbox"/></li>
-							</ol>
-						</fieldset>
-						
-					</div>
-				</td>
+		<h:panelGrid id="formRenderTable" columns="3" >
 
-				<td>
-					<fieldset id="xmlForm">
-						<legend style="width: 300px;"></legend>
-					</fieldset>
-				</td>
-
-				<td>
-					<fieldset id="properties">
-						<legend>#{msgs.form_edit_fieldProperties}</legend>
-						<!-- table of field properties -->
-					</fieldset>
-				</td>
-			</tr>
-			<h:inputHidden styleClass="formXmlValue"
-				value="#{editFormBean.form.xml}"
-				readonly="#{!editFormBean.editForm}" />
-
-			<c:if test="#{importFormBean.successful}">
-				<h:outputScript>
-					closePopup('#dialogImportForm');
-				</h:outputScript>
-			</c:if>
-
+			<div id="divElements">
+				<fieldset id="components">
+					<legend>#{msgs.form_edit_availableComponents}</legend>
+					<ol>
+						<li><img src="../../resources/img/textbox.png" alt="Textbox" id="text"
+								width="85px" height="23px" title="Textbox"/></li>
+						<li><img src="../../resources/img/combobox.png" alt="Combobox" id="combobox"
+								width="85px" height="23px" title="Combobox"/></li>
+						<li><img src="../../resources/img/number.png" alt="Number" id="number"
+								width="85px" height="23px" title="Number"/></li>
+						<li><img src="../../resources/img/date.png" alt="Date" id="date"
+								width="85px" height="23px" title="Date"/></li>
+						<li><img src="../../resources/img/radiobox.png" alt="Radiobox" id="radio"
+								width="85px" height="23px" title="Radiobox"/></li>
+						<li><img src="../../resources/img/checkbox.png" alt="Checkbox" id="checkbox"
+								width="85px" height="23px" title="Checkbox"/></li>
+					</ol>
+				</fieldset>
+			</div>
+				
+			<fieldset id="xmlForm">
+				<legend style="width: 300px;"></legend>
+			</fieldset>
+				
+			<fieldset id="properties">
+				<legend>#{msgs.form_edit_fieldProperties}</legend>
+				<!-- table of field properties -->
+			</fieldset>
 		</h:panelGrid>
-		<h:outputScript>initFormEditor('#{(editFormBean.form.title!=null)?editFormBean.form.title:msgs.form_new}');
-		if(#{!editFormBean.newForm} || #{importFormBean.successful}){
-		try{
-			loadFormFromXML('#{editFormBean.xml}');
-			}catch(err){
-				alert('#{msgs.form_edit_error_loading}, ' + err )
+				
+		<h:inputHidden styleClass="formXmlValue"
+			value="#{editFormBean.form.xml}"
+			readonly="#{!editFormBean.editForm}" />
+
+		<c:if test="#{importFormBean.successful}">
+			<h:outputScript>
+				closePopup('#dialogImportForm');
+			</h:outputScript>
+		</c:if>
+
+		<h:outputScript>
+			initFormEditor('#{(editFormBean.form.title!=null)?editFormBean.form.title:msgs.form_new}');
+			if(#{!editFormBean.newForm} || #{importFormBean.successful}){
+			try{
+				loadFormFromXML('#{editFormBean.xml}');
+				}catch(err){
+					alert('#{msgs.form_edit_error_loading}, ' + err )
+				}
 			}
-		}
 		</h:outputScript>
 	</composite:implementation>
 </body>

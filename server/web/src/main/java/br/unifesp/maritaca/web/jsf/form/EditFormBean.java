@@ -91,6 +91,17 @@ public class EditFormBean extends AbstractBean {
 
 		addMessage("form_edit_save_error", FacesMessage.SEVERITY_ERROR);
 	}
+	
+	public void saveFormAs() {
+		String title = form.getTitle();
+		setForm(new Form());
+		setSaveStatus("");
+		setNewForm(true);
+		setEditForm(true);
+		form.setXml(getXml());
+		form.setTitle(title);
+		saveForm();
+	}
 
 	public String getSaveStatus() {
 		return saveStatus;

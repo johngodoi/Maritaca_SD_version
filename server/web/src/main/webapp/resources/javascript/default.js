@@ -4,7 +4,6 @@ function showShareForm(thetitle){
 		modal: true,
 		title: thetitle,
 		width: 600,
-		height: 300
 	});
 	$("#dialogShareForm").dialog('open');
 }
@@ -15,9 +14,18 @@ function showImportForm(thetitle){
 		modal: true,
 		title: thetitle,
 		width: 600,
-		height: 220
 	});
 	$("#dialogImportForm").dialog('open');
+}
+
+function showSaveAsDialog(thetitle){
+	$('#dialogSaveFormAs').dialog({
+		autoOpen: false,
+		modal: true,
+		title: thetitle,
+		width: 600,
+	});
+	$("#dialogSaveFormAs").dialog('open');
 }
 
 function closePopup(popupId) {
