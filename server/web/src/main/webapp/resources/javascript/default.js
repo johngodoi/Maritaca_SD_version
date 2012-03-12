@@ -18,16 +18,6 @@ function showImportForm(thetitle){
 	$("#dialogImportForm").dialog('open');
 }
 
-function showSaveAsDialog(thetitle){
-	$('#dialogSaveFormAs').dialog({
-		autoOpen: false,
-		modal: true,
-		title: thetitle,
-		width: 600,
-	});
-	$("#dialogSaveFormAs").dialog('open');
-}
-
 function closePopup(popupId) {
 	$(popupId).dialog('close');
 }

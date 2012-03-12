@@ -102,20 +102,19 @@
 
 		<!-- Popup to SaveAs -->
 		<div id="dialogSaveFormAs" style="display: none;">
-			<h:form id="saveFormAs">
 				<h:panelGrid>
 					<h:outputLabel value="#{msgs.form_saveas_title}:" />
 					<h:inputText id="saveFormAsTitle" />
-					<h:panelGroup>
-						<a4j:commandButton value="#{msgs.commons_save}" 
-							type="button"
-							onclick="saveFormAs()"/>
-						<a4j:commandButton value="#{msgs.commons_cancel}"
-							type="button"
-							onclick="closePopup('#dialogSaveFormAs')"/>
-					</h:panelGroup>
 				</h:panelGrid>
-			</h:form>
+		</div>
+		
+		<!-- Popup to Confirm -->
+		<div id="dialog-confirm" style="display: none;">
+			<p>
+				<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;">
+				</span>
+				#{msgs.commons_unsavedData}
+			</p>
 		</div>
 
 		<forms:formRender />

@@ -5,7 +5,7 @@ var inputCreator = function(type, id, value, name, size, styleClass) {
 	inputString += attribCreator( 'type' , type);
 	inputString += attribCreator('id', id);
 	inputString += attribCreator('value', value);
-	inputString += attribCreator('onchange', 'fieldSave()');
+	inputString += attribCreator('onchange', 'saveField()');
 	inputString += attribCreator('class', styleClass);
 	switch (type) {
 		case 'radio':
@@ -52,7 +52,7 @@ var createNumberProperty = function(id, value, title) {
 	return label;
 };
 
-//general method to create number component
+//general method to create date component
 var createDateProperty = function(id, value, title) {
 	var label = '<tr><td>' + tagCreator('label', title) + '</td>';
 	label += '<td>' + inputCreator('date', id, value, null, null, null) + '</td></tr>';

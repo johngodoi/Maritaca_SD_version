@@ -63,9 +63,9 @@
 		<h:outputScript>
 			initFormEditor('#{(editFormBean.form.title!=null)?editFormBean.form.title:msgs.form_new}');
 			if(#{!editFormBean.newForm} || #{importFormBean.successful}){
-			try{
-				loadFormFromXML('#{editFormBean.xml}');
-				}catch(err){
+				try{
+					loadFormFromXML('#{editFormBean.xml}');
+				} catch(err) {
 					alert('#{msgs.form_edit_error_loading}, ' + err )
 				}
 			}
