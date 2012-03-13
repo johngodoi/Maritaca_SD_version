@@ -25,9 +25,9 @@
 			<h:commandLink	action="#{accountEditorBean.editAccount}"
 							value="#{currentUserBean.user.email}"
 							render="menuAndContentForm"/>
-			<a4j:commandLink	action="#{logoutBean.logout}">
+			<h:commandLink action="#{logoutBean.logout}">
         			<h:graphicImage value="#{resource['img:logout_button.png']}" />
-	    	    	</a4j:commandLink>
+			</h:commandLink>
 		</h:form>	
 	</div>
 
@@ -80,5 +80,21 @@
 		<h:form id="importForm">
 			<forms:importForm id="importFormId" />
 		</h:form>
+	</div>
+	
+	<!-- Popup to SaveAs -->
+	<div id="dialogSaveFormAs" style="display: none;">
+			<h:panelGrid>
+				<h:outputLabel value="#{msgs.form_saveas_title}:" />
+				<h:inputText id="saveFormAsTitle" />
+			</h:panelGrid>
+	</div>
+	
+	<!-- Popup to Confirm -->
+	<div id="dialog-confirm" style="display: none;">
+		<p>
+			<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"/>
+			#{msgs.commons_unsavedData}
+		</p>
 	</div>
 </ui:composition>

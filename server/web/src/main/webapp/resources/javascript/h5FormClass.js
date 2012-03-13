@@ -18,7 +18,7 @@ var FormClass = function() {
 		initForm();
 		
 		if(warning != undefined && deleteAlert != true) {
-			warning = false;
+			warning = true;
 		}
 	};
 	

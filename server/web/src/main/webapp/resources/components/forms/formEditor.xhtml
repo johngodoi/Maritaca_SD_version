@@ -21,8 +21,8 @@
 
 			<!-- New option -->
 			<rich:menuItem label="#{msgs.commons_new}" 
-				action="#{editFormBean.clean}" 
-				render="panelContent" mode="ajax"
+				onclick="newFormDialog()"
+				mode="client" id="newForm"
 				icon="#{resource['img:new.png']}" />
 
 			<!-- Import option -->
@@ -35,13 +35,13 @@
 			<!-- Save option -->
 			<rich:menuItem label="#{msgs.commons_save}" 
 				onclick="sendFormToServer();"
-				mode="client" disabled="#{!editFormBean.editForm}"
+				mode="client"
 				icon="#{resource['img:save.png']}" status="formEditor_status" />
 
 			<!-- Save as option -->
 			<rich:menuItem label="#{msgs.commons_saveas}" 
 				onclick="saveFormAsDialog('#{msgs.commons_saveas}');" 
-				mode="client" disabled="#{!editFormBean.editForm}"
+				mode="client"
 				icon="#{resource['img:save.png']}" status="formEditor_status" />
 
 			<!-- Clear option -->
@@ -52,7 +52,7 @@
 
 			<!-- Delete option -->
 			<rich:menuItem label="#{msgs.commons_delete}" mode="ajax"
-				render="menuAndContent" disabled="#{!editFormBean.editForm}"
+				render="menuAndContent"
 				rendered="#{!editFormBean.newForm}"
 				icon="#{resource['img:remove.png']}"
 				action="#{editFormBean.deleteForm}"
@@ -65,14 +65,14 @@
 					value="listForms" />
 			</rich:menuItem>
 
-			<rich:toolbarGroup>
+			<!-- rich:toolbarGroup>
 				<rich:dropDownMenu mode="ajax" styleClass="listItemOption">
 					<f:facet name="label" direction="topLeft">
 						<h:outputLabel value="#{msgs.commons_more}" styleClass="listItemOption" />
 					</f:facet>
-					<!-- add more options -->					
+										
 				</rich:dropDownMenu>
-			</rich:toolbarGroup>
+			</rich:toolbarGroup-->
 
 			<rich:toolbarGroup location="right">
 				<a4j:status name="formEditor_status">
@@ -83,6 +83,11 @@
 			</rich:toolbarGroup>
 	
 		</rich:toolbar>
+		
+		<!-- New Form -->
+		<a4j:jsFunction name="newForm" action="#{editFormBean.clean}" 
+				render="panelContent"
+		/>
 		
 		<!-- Save Method -->
 		<a4j:jsFunction name="sendFormAjax" action="#{editFormBean.saveForm}"
@@ -99,24 +104,6 @@
 			<f:setPropertyActionListener target="#{listFormsBean.updateList}"
 				value="true" />
 		</a4j:jsFunction>
-
-		<!-- Popup to SaveAs -->
-		<div id="dialogSaveFormAs" style="display: none;">
-			<h:form id="saveFormAs">
-				<h:panelGrid>
-					<h:outputLabel value="#{msgs.form_saveas_title}:" />
-					<h:inputText id="saveFormAsTitle" />
-					<h:panelGroup>
-						<a4j:commandButton value="#{msgs.commons_save}" 
-							type="button"
-							onclick="saveFormAs()"/>
-						<a4j:commandButton value="#{msgs.commons_cancel}"
-							type="button"
-							onclick="closePopup('#dialogSaveFormAs')"/>
-					</h:panelGroup>
-				</h:panelGrid>
-			</h:form>
-		</div>
 
 		<forms:formRender />
 	</composite:implementation>
