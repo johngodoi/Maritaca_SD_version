@@ -1,45 +1,37 @@
 package br.unifesp.maritaca.web.jsf.form;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collection;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ValueChangeEvent;
 import javax.servlet.http.HttpServletRequest;
 
-import org.richfaces.component.UIInplaceSelect;
-
-import br.unifesp.maritaca.access.AccessLevel;
 import br.unifesp.maritaca.core.Form;
-import br.unifesp.maritaca.core.FormPermissions;
 import br.unifesp.maritaca.core.Group;
-import br.unifesp.maritaca.web.jsf.AbstractBean;
+import br.unifesp.maritaca.web.jsf.util.ItemListBean;
 
 /**
  * Managedbean for the Form sharing service the bean loads the url for sharing.
  * In the future, it must load and update access levels of the form
  * 
- * @author emiguel
+ * @author emiguel, tiagobarabasz
  * 
  */
 @ManagedBean
 @ViewScoped
-public class ShareFormBean extends AbstractBean {
-	private static final long serialVersionUID = 1L;
-	private static final String ROOT_FOR_SHARING = "/ws/form/share/";
+public class ShareFormBean extends ItemListBean {
+	private static final long serialVersionUID = 1L;	
+	private static final String ROOT_FOR_SHARING      = "/ws/form/share/";
+	
 	private Form form;
-	private List<FormPermissions> formPermissions;
-	private boolean show;
-	private Group newGroup;
 
 	public ShareFormBean() {
-		super(true, false);
-		formPermissions = new ArrayList<FormPermissions>(0);
+		super(true, true);
 	}
-
+	
 	public Form getForm() {
 		return form;
 	}
@@ -49,7 +41,6 @@ public class ShareFormBean extends AbstractBean {
 			form = formAnswCtrl.getForm(form.getKey(), true);
 		}
 		this.form = form;
-		setShow(true);
 	}
 
 	public void setForm(String formKey) {
@@ -69,13 +60,9 @@ public class ShareFormBean extends AbstractBean {
 	public void setUrl(String newUrl) {
 		// formShare.setUrl(newUrl);
 	}
-
-	public boolean isShow() {
-		return show;
-	}
-
-	public void setShow(boolean show) {
-		this.show = show;
+	
+	public String cancel(){
+		return "/faces/views/home";
 	}
 
 	public String getRootForSharing() {
@@ -91,110 +78,53 @@ public class ShareFormBean extends AbstractBean {
 	public void setRootForSharing(String root) {
 	}
 
-	public List<FormPermissions> getFormPermissions() {
-		if (form != null) {
-			formPermissions = formAnswCtrl.getFormPermissions(getForm());
+	@Override
+	protected boolean saveObject(Object formObj) {
+		if(! (formObj instanceof Form) ){
+			return false;
 		}
-		return formPermissions;
+		
+		Form form = (Form) formObj;
+		
+		if(!super.formAnswCtrl.saveForm(form)){
+			return false;
+		}
+				
+		return true;
 	}
 
-	public void setFormPermissions(List<FormPermissions> formPermissions) {
-		this.formPermissions = formPermissions;
+	@Override
+	protected Object createObjectFromItem() {		
+		return form;
 	}
 
-	public AccessLevel[] getAccessLevels() {
-		return AccessLevel.values();
-	}
-
-	public void formAccessChanged(ValueChangeEvent event) {
-		AccessLevel newValue = (AccessLevel) event.getNewValue();
-
-		if (newValue.equals(event.getOldValue().toString()))
-			return;
-
-		FormPermissions fp = formAnswCtrl
-				.getFormPermissionById(getParamValue("formPerm"));
-		fp.setFormAccess(newValue);
-		savePermission(event, fp);
-	}
-
-	public void answAccessChanged(ValueChangeEvent event) {
-		AccessLevel newValue = (AccessLevel) event.getNewValue();
-
-		if (newValue.equals(event.getOldValue().toString()))
-			return;
-
-		FormPermissions fp = formAnswCtrl
-				.getFormPermissionById(getParamValue("formPerm"));
-		fp.setAnswAccess(newValue);
-		savePermission(event, fp);
-	}
-
-	private void savePermission(ValueChangeEvent event, FormPermissions fp) {
-		if (!formAnswCtrl.saveFormPermission(fp)) {
-			UIInplaceSelect uiis = (UIInplaceSelect) event.getComponent();
-			uiis.setValue(event.getOldValue());
-			return;
+	@Override
+	protected String searchItemInDatabase(String selectedItem) {
+		Group group = super.userCtrl.searchGroupByName(getSelectedItem());
+		
+		if(group==null){
+			return null;
+		} else {
+			return group.getName();
 		}
 	}
 
-	public void expDateChanged(ValueChangeEvent event) {
-		Date newValue = (Date) event.getNewValue();
-
-		if (newValue == null || newValue.before(new Date()))
-			return;
-
-		FormPermissions fp = formAnswCtrl
-				.getFormPermissionById(getParamValue("formPerm"));
-		fp.setExpDate(newValue.getTime());
-		formAnswCtrl.saveFormPermission(fp);
-	}
-
-	private String getParamValue(String paramname) {
-		FacesContext fc = FacesContext.getCurrentInstance();
-		return fc.getExternalContext().getRequestParameterMap().get(paramname);
-	}
-
-	public void setCurrentPermission(FormPermissions fp) {
-		// dumb
-	}
-
-	public String getCurrentPermission(FormPermissions fp) {
-		return fp.toString();
-	}
-
-	public void setCurrent(FormPermissions fp) {
-		// dumb
-	}
-
-	public String getNewGroup() {
-		if(newGroup != null){
-			return newGroup.getKey().toString();
+	@Override
+	public List<String> autoComplete(String prefix) {
+		Collection<Group> groups       = userCtrl.groupsStartingWith(prefix);
+		List<String>      groupsNames  = new ArrayList<String>();
+			
+		for(Group gr : groups){
+			//set data of the owner
+			gr.setOwner(userCtrl.getOwnerOfGroup(gr));
+			groupsNames.add(gr.getName());
 		}
-		return "";
+		return groupsNames;
 	}
 
-	public void setNewGroup(Group newGroup) {
-		this.newGroup = newGroup;
+	@Override
+	protected boolean newItem(Object form) {
+		//Forms being shared are already saved in the database
+		return false;
 	}
-	
-	public void setNewGroup(String groupId){
-		Group gr = new Group();
-		gr.setKey(groupId);
-		setNewGroup(gr);
-	}
-	
-	public void addGroup(){
-		if(getNewGroup()!=null){
-			//add group permission
-			formAnswCtrl.saveDefaultFormPermissions(getForm(), newGroup);
-		}else{
-			return; //group not added
-		}
-	}
-	
-	public void deletePermission(FormPermissions formPerm){
-		formAnswCtrl.deleteFormPermission(formPerm);
-	}
-
 }

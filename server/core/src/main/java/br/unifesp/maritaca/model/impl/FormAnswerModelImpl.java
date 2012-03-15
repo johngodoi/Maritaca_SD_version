@@ -15,6 +15,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import br.unifesp.maritaca.access.AccessLevel;
+import br.unifesp.maritaca.access.Policy;
 import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Form;
@@ -91,9 +92,8 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 				result = entityManager.persist(form);
 			}
 			if (result) {
-				if (newForm) {
 					// save permissions of a form
-					if (savePermissionNewForm(form)) {
+					if (saveFormPermissionsByPolicy(form)) {
 						// all saved correctly
 						return true;
 					} else {
@@ -104,8 +104,6 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 						throw new RuntimeException(
 								"Not possible to establish default permissions, form not saved");
 					}
-				} else
-					return true;
 			} else {
 				// form not saved
 				return false;
@@ -114,21 +112,6 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 			throw new IllegalArgumentException(
 					"User does not exist in database");
 		}
-	}
-
-	/**
-	 * save default permission of a new form
-	 * 
-	 * @param form
-	 * @return
-	 */
-	private boolean savePermissionNewForm(Form form) {
-		FormPermissions formPer = new FormPermissions();
-		formPer.setForm(form);
-		formPer.setGroup(userModel.getAllUsersGroup());
-		formPer.setFormAccess(AccessLevel.PRIVATE_ACCESS);
-		formPer.setAnswAccess(AccessLevel.PRIVATE_ACCESS);
-		return entityManager.persist(formPer);
 	}
 
 	/**
@@ -494,7 +477,7 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		// verify expiration date
 		if (fp.getExpDate() != null && fp.getExpDate() < now) {
 				// TODO delete fp?, it has expired or add ttl in column?
-		} else if (!fp.getFormAccess().equals(AccessLevel.PRIVATE_ACCESS)) {
+		} else if (!fp.getFormAccess().equals(AccessLevel.NO_ACCESS)) {
 			// date ok, verify access
 			form = getForm(fp.getForm().getKey(), minimal);
 		}
@@ -508,23 +491,38 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		userModel = null;
 	}
 
-	/**
-	 * Save a form permission with default access level (private)
-	 */
-	@Override
-	public boolean saveDefaultFormPermissions(Form form, Group group) {
-		FormPermissions formPerm = new FormPermissions();
-		formPerm.setForm(form);
-		formPerm.setGroup(group);
-		formPerm.setFormAccess(AccessLevel.PRIVATE_ACCESS);
-		formPerm.setAnswAccess(AccessLevel.PRIVATE_ACCESS);
-		return saveFormPermission(formPerm);
-	}
-
 	@Override
 	public void deleteFormPermission(FormPermissions formPerm) {
 		verifyEntity(formPerm);
 		entityManager.delete(formPerm);
+	}
+	
+	
+	private void deleteOldFormPermissions(Form form){
+		for(FormPermissions fp : getFormPermissions(form)){
+			deleteFormPermission(fp);
+		}		
+	}
+	
+	private boolean saveFormPermissionsByPolicy(Form form) {
+		deleteOldFormPermissions(form);
+		User                  owner       = userModel.getUser(form.getUser().getKey());
+		Policy                policy      = form.getPolicy();					
+		Group                 ownerGrp    = owner.getUserGroup();
+		Group                 allUsersGrp = userModel.getAllUsersGroup();		
+		List<FormPermissions> permissions = Policy.buildPermissions(policy, ownerGrp, allUsersGrp, null);
+		
+		return saveFormPermissions(form,permissions);
+	}
 
+	
+	private boolean saveFormPermissions(Form form,	List<FormPermissions> permissions) {
+		for(FormPermissions fp : permissions){
+			fp.setForm(form);
+			if(!saveFormPermission(fp)){
+				return false;
+			}
+		}
+		return true;
 	}
 }

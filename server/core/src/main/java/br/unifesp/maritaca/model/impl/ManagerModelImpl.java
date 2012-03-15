@@ -48,7 +48,7 @@ public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel 
 			rootUser.setFirstname(ROOT);
 			rootUser.setPassword(PASSROOT);
 			rootUser.setEmail(ROOTEMAIL);
-			if (entityManager.persist(rootUser)) {
+			if (entityManager.persist(rootUser)) {				
 				// save id of main user in Configuration table
 				Configuration cf = new Configuration();
 				cf.setName(CFG_ROOT);
@@ -74,12 +74,17 @@ public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel 
 		entityManager.createTable(Answer.class);
 
 		if (!entityManager.tableExists(Group.class)) {
-			entityManager.createTable(Group.class);
+			entityManager.createTable(Group.class);						
+
 			// create ALL_USERS group
 			Group gr = new Group();
 			gr.setName(ALL_USERS);
 			gr.setOwner(rootUser);
 			entityManager.persist(gr);
+			
+			if(rootUser!=null){
+				createRootUserGroup(rootUser);
+			}
 		}
 
 		entityManager.createTable(GroupUser.class);
@@ -97,6 +102,16 @@ public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel 
 			entityManager.persist(oaclient);
 		}
 
+	}
+
+	private void createRootUserGroup(User rootUser) {
+		Group groupUser = new Group();
+		groupUser.setOwner(rootUser);
+		groupUser.setName(rootUser.getEmail());
+		entityManager.persist(groupUser);
+		
+		rootUser.setUserGroup(groupUser);
+		entityManager.persist(rootUser);
 	}
 
 	@Override

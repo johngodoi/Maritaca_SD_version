@@ -6,109 +6,36 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:rich="http://richfaces.org/rich"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:util="http://java.sun.com/jsf/composite/components/util"
-	xmlns:group="http://java.sun.com/jsf/composite/components/groups"
 	xmlns:a4j="http://richfaces.org/a4j">
 <body>
 	<composite:interface>
 	</composite:interface>
 	<composite:implementation>
 		<div id="#{cc.clientId}">
-			<rich:panel>
+			<rich:panel id="shareFormPanel" >
 				<h:panelGrid columns="2" width="100%">
 					<h:outputText value="#{msgs.form_share_url}" />
 					<h:inputText
 						value="#{shareFormBean.rootForSharing}#{shareFormBean.url}"
 						readonly="true" style="width:100%;" />
+					
+					<h:outputText value="#{msgs.form_policy}: "/>
+					<f:ajax render="shareFormPanel" event="click">
+					<h:selectOneRadio value="#{shareFormBean.form.policy}">
+						<f:selectItems value="#{shareFormBean.form.policyItens}"/>															
+					</h:selectOneRadio>
+					</f:ajax>							
 				</h:panelGrid>
-				<center>
-					<p>
-						<b>#{msgs.group_access}</b>
-					</p>
-				</center>
-				<group:autocompleteGroup targetBean="#{shareFormBean}"
-					render="accessLevelId"
-					rendered="#{manager.isOperationEnabled(shareFormBean.form, manager.editOperation)}" />
-				<h:dataTable value="#{shareFormBean.formPermissions}" var="formPerm"
-					columnClasses="columnClass1, columnClass1" cellspacing="2"
-					id="accessLevelId">
-					<ui:param name="disableEdit"
-						value="#{!manager.isOperationEnabled(formPerm.form, manager.editOperation)}" />
-					<ui:param name="canDelete"
-						value="#{manager.isOperationEnabled(formPerm, manager.deleteOperation)}" />
-					<h:column>
-						<f:facet name="header">
-							<h:outputText value="#{msgs.group}" />
-						</f:facet>
-						<h:outputText value="#{formPerm.group.name}" />
-					</h:column>
 
-					<h:column>
-						<f:facet name="header">
-							<h:outputText value="#{msgs.group_access_form}" />
-						</f:facet>
-						<rich:inplaceSelect defaultLabel="#{formPerm.formAccess}"
-							valueChangeListener="#{shareFormBean.formAccessChanged}"
-							value="#{formPerm.formAccess}" disabled="#{disableEdit}">
-							<f:selectItems value="#{shareFormBean.accessLevels}" />
-							<a4j:ajax event="change" execute="@form"
-								status="#{formPerm.key}_status" render="#{cc.clientId}">
-							</a4j:ajax>
-							<f:param value="#{shareFormBean.getCurrentPermission(formPerm)}"
-								name="formPerm"></f:param>
-						</rich:inplaceSelect>
-					</h:column>
-
-					<h:column>
-						<f:facet name="header">
-							<h:outputText value="#{msgs.group_access_answ}" />
-						</f:facet>
-						<rich:inplaceSelect defaultLabel="#{formPerm.answAccess}"
-							valueChangeListener="#{shareFormBean.answAccessChanged}"
-							value="#{formPerm.answAccess}" disabled="#{disableEdit}">
-							<f:selectItems value="#{shareFormBean.accessLevels}" />
-							<a4j:ajax event="change" execute="@form"
-								status="#{formPerm.key}_status" render="#{cc.clientId}">
-							</a4j:ajax>
-							<f:param value="#{shareFormBean.getCurrentPermission(formPerm)}"
-								name="formPerm"></f:param>
-						</rich:inplaceSelect>
-
-					</h:column>
-
-					<h:column>
-						<f:facet name="header">
-							<h:outputText value="#{msgs.group_access_expdate}" />
-						</f:facet>
-						<rich:calendar value="#{formPerm.expirationDate}"
-							datePattern="dd/MM/yy hh:mm a" ellWidth="24px" cellHeight="22px"
-							style="width:200px"
-							valueChangeListener="#{shareFormBean.expDateChanged}"
-							disabled="#{disableEdit}">
-							<a4j:ajax event="change" execute="@form"
-								status="#{formPerm.key}_status" render="#{cc.clientId}">
-							</a4j:ajax>
-							<f:param value="#{shareFormBean.getCurrentPermission(formPerm)}"
-								name="formPerm"></f:param>
-						</rich:calendar>
-					</h:column>
-					<h:column>
-						<a4j:commandLink
-							action="#{shareFormBean.deletePermission(formPerm)}"
-							rendered="#{canDelete}" render="#{cc.clientId}"
-							status="#{formPerm.key}_status" execute="@parent">
-							<h:graphicImage value="#{resource['img:remove.png']}" />
-						</a4j:commandLink>
-					</h:column>
-					<h:column>
-						<a4j:status name="#{formPerm.key}_status">
-							<f:facet name="start">
-								<h:graphicImage value="#{resource['img:ajax-loader.gif']}" />
-							</f:facet>
-						</a4j:status>
-					</h:column>
-				</h:dataTable>
+				<rich:panel rendered="#{shareFormBean.form.policy.useList}">
+					<util:itemList	backBean="#{shareFormBean}"
+									listLabel="#{msgs.form_list_of_users}"/>
+				</rich:panel>
+				
+			<!-- Save & Cancel -->
+			<util:saveCancelButtons save="#{shareFormBean.save()}"
+									cancel="#{shareFormBean.cancel()}" />				
 			</rich:panel>
 		</div>
 	</composite:implementation>

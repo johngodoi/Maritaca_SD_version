@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:util="http://java.sun.com/jsf/composite/components/util"	
+	xmlns:a4j="http://richfaces.org/a4j">
+<head>
+<title>Not present in rendered output</title>
+</head>
+<body>
+	<composite:interface>
+		<composite:attribute name="backBean"	required="true"
+							 type="br.unifesp.maritaca.web.jsf.util.ItemListBean"/>
+		<composite:attribute name="listLabel"	required="true" />
+	</composite:interface>
+	<composite:implementation>
+		<h:outputText value="#{cc.attrs.listLabel}:" />
+		<h:panelGrid  columns="2">
+			<rich:autocomplete
+				autocompleteMethod="#{cc.attrs.backBean.autoComplete}"
+				mode="cachedAjax"
+				value="#{cc.attrs.backBean.selectedItem}"
+				minChars="4" id="selectedItem"/>													
+			<a4j:commandButton value="#{msgs.item_list_add_item_button}"
+						action="#{cc.attrs.backBean.addSelectedItem}"
+						execute="selectedItem"
+						render="itemList"/>					
+		</h:panelGrid>
+		
+		<rich:panel>
+			<rich:list	value="#{cc.attrs.backBean.usedItens}" var="item"
+						id="itemList">
+				#{item}
+				<a4j:commandButton	value="-" type="button"
+									render="itemList" immediate="true">
+					<f:setPropertyActionListener target="#{cc.attrs.backBean.removeItem}"
+												 value="#{item}"/>
+				</a4j:commandButton>
+			</rich:list>
+		</rich:panel>			
+	</composite:implementation>
+</body>
+</html>

@@ -1,6 +1,8 @@
 package br.unifesp.maritaca.core;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.persistence.Entity;
@@ -10,6 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import me.prettyprint.cassandra.utils.TimeUUIDUtils;
+import br.unifesp.maritaca.access.Policy;
 import br.unifesp.maritaca.persistence.annotations.Column;
 import br.unifesp.maritaca.persistence.annotations.Minimal;
 
@@ -33,6 +36,10 @@ public class Form implements Comparable<Form> {
 	@Column(indexed=true)
 	@Minimal
 	private String url;
+	
+	@Column
+	@Minimal
+	private Policy policy = Policy.PRIVATE;
 
 	@XmlElement(name = "id")
 	public UUID getKey() {
@@ -145,8 +152,28 @@ public class Form implements Comparable<Form> {
 	public int getFlagToOrder() {
 		return flagToOrder;
 	}
+	
+	public Map<String,Policy> getPolicyItens(){
+		Map<String,Policy> policyItens = new HashMap<String,Policy>(); 
+		for(Policy p : Policy.values()){
+			policyItens.put(p.toString(), p);
+		}		
+		return policyItens;
+	}
 
 	public void setFlagToOrder(int flagToOrder) {
 		this.flagToOrder = flagToOrder;
+	}
+
+	public Policy getPolicy() {
+		return policy;
+	}
+
+	public void setPolicy(String policy) {
+		this.policy = Policy.getPolicyFromString(policy);
+	}
+	
+	public void setPolicy(Policy policy) {
+		this.policy = policy;
 	}
 }

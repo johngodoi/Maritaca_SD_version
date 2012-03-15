@@ -32,6 +32,11 @@ public class FormPermissions {
 	
 	public FormPermissions() {
 	}
+	
+	public FormPermissions(AccessLevel formAccess, AccessLevel answAccess){
+		setFormAccess(formAccess);
+		setAnswAccess(answAccess);
+	}
 
 	public UUID getKey() {
 		return key;
@@ -129,4 +134,7 @@ public class FormPermissions {
 		this.answAccess = answAccess;
 	}
 
+	public FormPermissions clone(){
+		return null;
+	}
 }

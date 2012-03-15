@@ -38,7 +38,7 @@ public class GroupsManagerBean extends AbstractBean implements Serializable {
 	/* Error messages resources */
 	private static final String GROUP_ADD_ERROR_USER_NOT_FOUND = "group_add_error_user_not_found";
 	private static final String GROUP_ADD_ERROR_USER_ADDED     = "group_add_error_user_added";
-	private static final String GROUP_ADD_EMPTY_EMAIL          = "group_add_empty_email";
+	private static final String GROUP_ADD_EMPTY_EMAIL          = "item_list_add_empty_field";
 	private static final String GROUP_ADD_SUCESS               = "group_add_sucess";
 	private static final String GROUP_ADD_FAILURE              = "group_add_fail";
 	
@@ -285,23 +285,6 @@ public class GroupsManagerBean extends AbstractBean implements Serializable {
 			}
 		}
 		
-		return true;
-	}
-
-	private boolean saveNewGroupUsers(Group group) {
-		UserModel userModel   = super.userCtrl;		
-		User      currentUser = getCurrentUserBean().getUser();
-		
-		if(!getAddedUsers().contains(currentUser)){
-			getAddedUsers().add(currentUser);
-		}
-		
-		for (User usr : getAddedUsers()) {
-			GroupUser groupUser = newGroupUser(usr,group);
-			if (!userModel.saveGroupUser(groupUser)) {
-				return false;
-			}
-		}
 		return true;
 	}
 	
