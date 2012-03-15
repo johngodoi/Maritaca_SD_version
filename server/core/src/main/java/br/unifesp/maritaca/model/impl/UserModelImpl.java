@@ -46,9 +46,27 @@ public class UserModelImpl implements UserModel, Serializable {
 		if (user == null)
 			return false;
 		if (entityManager.persist(user)) {
+			if(user.getUserGroup()==null){
+				if(!createUserGroup(user)){
+					return false;
+				}
+			}
 			return addUserToGroup(user, getAllUsersGroup());
 		}
 		return false;
+	}
+
+	private boolean createUserGroup(User owner) {		
+		Group group = new Group();
+		group.setOwner(owner);
+		group.setName(owner.getEmail());
+		if(!saveGroup(group)){
+			return false;
+		}
+		
+		owner.setUserGroup(group);
+		
+		return saveUser(owner);
 	}
 
 	@Override
@@ -110,7 +128,7 @@ public class UserModelImpl implements UserModel, Serializable {
 				return false;
 			}
 			if (entityManager.persist(group)) {
-				// add current user to group
+				// add owner to group
 				GroupUser grUser = new GroupUser();
 				grUser.setGroup(group);
 				grUser.setUser(group.getOwner());

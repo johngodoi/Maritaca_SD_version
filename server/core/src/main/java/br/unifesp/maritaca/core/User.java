@@ -13,7 +13,7 @@ import br.unifesp.maritaca.persistence.annotations.Column;
 import br.unifesp.maritaca.persistence.annotations.Minimal;
 
 @XmlRootElement(name = "user")
-@XmlType(propOrder = { "key", "firstname", "lastname", "email" })
+@XmlType(propOrder = { "key", "firstname", "lastname", "email", "userGroup" })
 @Entity
 public class User implements Serializable, Cloneable{
 
@@ -28,6 +28,10 @@ public class User implements Serializable, Cloneable{
 	
 	@Column
 	private String lastname;
+	
+	@Column
+	@Minimal
+	private Group userGroup;
 	
 	@Column(indexed=true)
 	@Minimal
@@ -106,5 +110,19 @@ public class User implements Serializable, Cloneable{
 		}else{
 			return key.hashCode();
 		}
+	}
+
+	public Group getUserGroup() {
+		return userGroup;
+	}
+
+	public void setUserGroup(Group userGroup) {
+		this.userGroup = userGroup;
+	}
+	
+	public void setUserGroup(String userGroupId){
+		Group userGroup = new Group();
+		userGroup.setKey(userGroupId);
+		this.userGroup = userGroup;
 	}
 }

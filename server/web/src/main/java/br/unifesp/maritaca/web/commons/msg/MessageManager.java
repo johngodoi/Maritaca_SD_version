@@ -7,7 +7,7 @@ public class MessageManager {
 	private static MessageManager  instance;
 	private ResourceBundle         resourceBundle;
 	private Locale                 usedLocale;
-	private Locale[]               supportedLocales = { Locale.ENGLISH, Locale.ROOT };
+	//private Locale[]               supportedLocales = { Locale.ENGLISH, Locale.ROOT };
 	private static final String    MESSAGES_FILE    = "messages.properties";
 	
 	static {
