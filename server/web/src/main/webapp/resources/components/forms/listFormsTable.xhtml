@@ -41,7 +41,7 @@
 							value="#{aForm}" />
 						<f:setPropertyActionListener target="#{editFormBean.newForm}"
 							value="false" />
-						<f:setPropertyActionListener target="#{editFormBean.editForm}"
+						<f:setPropertyActionListener target="#{editFormBean.editableForm}"
 							value="false" />
 					</rich:menuItem>
 					<rich:menuItem render="menuAndContent"
@@ -52,7 +52,7 @@
 							value="#{aForm}" />
 						<f:setPropertyActionListener target="#{editFormBean.newForm}"
 							value="false" />
-						<f:setPropertyActionListener target="#{editFormBean.editForm}"
+						<f:setPropertyActionListener target="#{editFormBean.editableForm}"
 							value="true" />
 					</rich:menuItem>
 
@@ -62,6 +62,14 @@
 						onclick="showShareForm('#{msgs.form_share_settings}');">
 					</rich:menuItem>
 
+					<rich:menuItem icon="#{resource['img:project_logo_icon.png']}"
+						render="panelContent" label="#{msgs.form_edit_collectButton}"
+						action="#{editFormBean.deleteForm}"
+						actionListener="#{listFormsBean.listOwnFormsChanged}">
+						<f:setPropertyActionListener target="#{editFormBean.form}"
+							value="#{aForm}" />
+					</rich:menuItem>
+
 					<rich:menuItem icon="#{resource['img:remove.png']}"
 						render="panelContent" label="#{msgs.commons_delete}"
 						action="#{editFormBean.deleteForm}"
@@ -69,6 +77,7 @@
 						<f:setPropertyActionListener target="#{editFormBean.form}"
 							value="#{aForm}" />
 					</rich:menuItem>
+					
 					<rich:menuSeparator />
 					<!-- todo: check mode="server" in list answers, it must be ajax, but
 					it is not working in ajax mode -->
@@ -88,7 +97,7 @@
 						value="#{aForm}" />
 					<f:setPropertyActionListener target="#{editFormBean.newForm}"
 						value="false" />
-					<f:setPropertyActionListener target="#{editFormBean.editForm}"
+					<f:setPropertyActionListener target="#{editFormBean.editableForm}"
 						value="false" />
 				</a4j:commandLink>
 			</h:column>

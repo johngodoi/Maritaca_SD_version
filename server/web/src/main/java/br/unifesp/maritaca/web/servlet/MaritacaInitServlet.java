@@ -36,8 +36,8 @@ public class MaritacaInitServlet extends HttpServlet {
 		params.put("cluster", config.getInitParameter("cluster"));
 		params.put("keyspace", config.getInitParameter("keyspace"));
 
-		ManagerModel mm = ModelFactory.getInstance().createManagerModel();
-		mm.initMaritaca(params);
+		ManagerModel managerModel = ModelFactory.getInstance().createManagerModel();
+		managerModel.initMaritaca(params);
 
 	}
 

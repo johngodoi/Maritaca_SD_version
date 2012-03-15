@@ -7,18 +7,17 @@ import br.unifesp.maritaca.access.operation.Operation;
 
 public enum AccessLevel {
 
-	PRIVATE_ACCESS("private"), READ_ONLY("read-only", Operation.READ), READ_WRITE(
-			"read-write", Operation.READ, Operation.EDIT, Operation.DELETE);
+	NO_ACCESS,
+	READ_AND_LIST(Operation.LIST, Operation.READ),
+	WRITE_ONLY(Operation.WRITE),
+	FULL_ACCESS(Operation.values());
 
-	AccessLevel(String str, Operation... ops) {
-		this.description = str;
+	AccessLevel(Operation... ops) {
 		enabledOperations = new ArrayList<Operation>(0);
 		for (Operation op : ops) {
 			enabledOperations.add(op);
 		}
 	}
-
-	private String description;
 
 	private List<Operation> enabledOperations;
 
@@ -33,11 +32,6 @@ public enum AccessLevel {
 			}
 		}
 		return false;
-	}
-
-	@Override
-	public String toString() {
-		return description;
 	}
 
 	public static AccessLevel getAccessLevelFromString(String str) {

@@ -65,6 +65,13 @@
 					value="listForms" />
 			</rich:menuItem>
 
+			<!-- Ready to collect option -->
+			<rich:menuItem label="#{msgs.form_edit_collectButton}" 
+				onclick="collectFormDialog()"
+				rendered="#{!editFormBean.newForm}"
+				mode="client" id="collectForm" 
+				icon="#{resource['img:project_logo_icon.png']}"/>
+
 			<!-- rich:toolbarGroup>
 				<rich:dropDownMenu mode="ajax" styleClass="listItemOption">
 					<f:facet name="label" direction="topLeft">
@@ -86,8 +93,7 @@
 		
 		<!-- New Form -->
 		<a4j:jsFunction name="newForm" action="#{editFormBean.clean}" 
-				render="panelContent"
-		/>
+				render="panelContent"/>
 		
 		<!-- Save Method -->
 		<a4j:jsFunction name="sendFormAjax" action="#{editFormBean.saveForm}"
@@ -101,6 +107,7 @@
 		<a4j:jsFunction name="saveFormAsAjax" action="#{editFormBean.saveFormAs}"
 			execute="@form" status="formEditor_status">
 			<a4j:param name="xml" assignTo="#{editFormBean.xml}" />
+			<a4j:param name="newTitle" assignTo="#{editFormBean.saveFormAsTitle}" />
 			<f:setPropertyActionListener target="#{listFormsBean.updateList}"
 				value="true" />
 		</a4j:jsFunction>
