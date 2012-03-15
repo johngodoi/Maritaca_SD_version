@@ -280,7 +280,7 @@ var Box = function(type) {
 		htmlRow    += inputCreator("text","",value,"","",this.optionLabelInputClass);
 		
 		if(rowNumber != 0){
-			htmlRow+= '      <a  onclick="new Box().deleteBoxField(\''+uuid+'\');fieldSave();">'; 
+			htmlRow+= '      <a  onclick="new Box().deleteBoxField(\''+uuid+'\');saveField();">'; 
 	        htmlRow+= '         <img src="../../resources/img/delete.png"/>'; 
 	        htmlRow+= '      </a>';	
 		}

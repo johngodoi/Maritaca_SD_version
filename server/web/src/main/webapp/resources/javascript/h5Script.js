@@ -17,7 +17,7 @@ function initFormEditor(formtitle) {
 	}
 
 	form = new FormClass();
-
+	warning = false;
 	// It used to be use to localStorage
 	// This will be maintained a little more
 	currentForm = localStorage['currentForm'];
@@ -120,64 +120,53 @@ function initForm() {
 	});
 }
 
-function editField(id) {
-	editElement = id;
-	var element = form.elements[id];
-
-	// showing the properties
-	$('#properties').show();
-	$('#properties table').remove();
-	element.showProperties();
-}
-
-// This function deletes a Field using the icon
-function deleteField() {
-	form.elements.splice(editElement, 1);
-	$('#properties').hide();
-	form.renderForm();
+function newFormDialog() {
+	$( "#dialog-confirm" ).dialog({
+		autoOpen: false,
+		modal: true,
+		title: jQuery.i18n.prop('msg_form_newFormDialogTitle'),
+		width: 500,
+		buttons: {
+			"New Form" : function() {
+				newForm();
+				warning = false;	
+				$( this ).dialog( "close" );
+			},
+			Cancel: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	});
+	$("#dialog-confirm").dialog('open');
 }
 
 function clearForm() {
-	form.elements = new Array();
-	$('#properties').hide();
-	form.renderForm();
-	
-	initForm();
-}
-
-function fieldSave() {
-	var element = form.elements[editElement];
-	element.saveProperties();
-
-	form.renderForm();
-	$('li#field_' + editElement).click();
-	addMessage(jQuery.i18n.prop('msg_saveautomatic'), 'info');
-}
-
-// move the component up and down
-function move(value) {
-	$('#save').click();
-
-	// only values -1 and 1
-	if (Math.abs(value) != 1) {
-		return;
+	if(form.elements.length > 0) {
+		$( "#dialog-confirm" ).dialog({
+			autoOpen: false,
+			modal: true,
+			title: jQuery.i18n.prop('msg_form_clearDialogTitle'),
+			width: 500,
+			buttons: {
+				Clear : function() {
+					form.elements = new Array();
+					$('#properties').hide();
+					form.renderForm();
+					
+					initForm();
+					warning = false;	
+					
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
+		$("#dialog-confirm").dialog('open');
+	} else {
+		addMessage(jQuery.i18n.prop('msg_form_clearMessageInfo'), 'info');
 	}
-
-	if (value == 1 && editElement == form.elements.length - 1) {
-		return;
-	} else if (value == -1 && editElement == 0) {
-		return;
-	}
-
-	var currentField = form.elements[editElement];
-	var newElement = editElement + value;
-
-	form.elements[editElement] = form.elements[newElement];
-	form.elements[newElement] = currentField;
-	editElement = newElement;
-	
-	form.renderForm();
-	$('li#field_' + editElement).click();
 }
 
 function sendFormToServer(){
@@ -188,26 +177,39 @@ function sendFormToServer(){
 	}
 	var xml = form.toXML();
 	sendFormAjax(xml); //a4j:jsFunction
+	warning = false;
 }
 
 function saveFormAsDialog(thetitle) {
-	$('input[id$=":saveFormAsTitle"]').val(form.title);
-	showSaveAsDialog(thetitle);
-}
-
-function saveFormAs(){
-	if(form.elements.length == 0) {
-		closePopup('#dialogSaveFormAs');
-		addMessage(jQuery.i18n.prop('msg_error_emptyForm'), 'error');
-		return;
-	}
-	var newTitle = $('input[id$=":saveFormAsTitle"]').val();
-	$('input[id$=":titleForm"]').val(newTitle);
-	$('#' + form.container + ' legend').html(newTitle);
-	form.title = newTitle;
-	var xml = form.toXML();
-	saveFormAsAjax(xml);	
-	closePopup('#dialogSaveFormAs');
+	$('#saveFormAsTitle').val(form.title);
+	               
+	$('#dialogSaveFormAs').dialog({
+		autoOpen: false,
+		modal: true,
+		title: thetitle,
+		width: 600,
+		buttons: {
+			Save : function() {
+				if(form.elements.length == 0) {
+					$( this ).dialog( "close" );
+					addMessage(jQuery.i18n.prop('msg_error_emptyForm'), 'error');
+					return;
+				}
+				var newTitle = $('#saveFormAsTitle').val();
+				$('input[id$=":titleForm"]').val(newTitle);
+				$('#' + form.container + ' legend').html(newTitle);
+				form.title = newTitle;
+				var xml = form.toXML();
+				saveFormAsAjax(xml);	
+				warning = false;
+				$( this ).dialog( "close" );
+			},
+			Cancel: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	});
+	$("#dialogSaveFormAs").dialog('open');
 }
 
 function updateTitle(value){
@@ -239,9 +241,63 @@ function loadFormFromXML(xml){
     		 }
     	 }
     });
-    form.renderForm();
+    form.renderForm(true);
     }catch(err){
     	addMessage(jQuery.i18n.prop('msg_error_noquestions'), 'warn');
     	console.log(err);
     }
+}
+
+//////////////////// Field Operations /////////////////////
+function editField(id) {
+	editElement = id;
+	var element = form.elements[id];
+	
+	$('#properties').show();
+	$('#properties table').remove();
+	element.showProperties();
+}
+
+function deleteField() {
+	form.elements.splice(editElement, 1);
+	$('#properties').hide();
+	form.renderForm();
+	if (form.elements.length == 0)
+		warning = false;
+}
+
+function saveField() {
+	var element = form.elements[editElement];
+	element.saveProperties();
+	
+	form.renderForm();
+	$('li#field_' + editElement).click();
+	addMessage(jQuery.i18n.prop('msg_saveautomatic'), 'info');
+}
+///////////////////////////////////////////////////////////
+
+//move the field up and down
+function move(value) {
+	$('#save').click();
+
+	// only values -1 and 1
+	if (Math.abs(value) != 1) {
+		return;
+	}
+
+	if (value == 1 && editElement == form.elements.length - 1) {
+		return;
+	} else if (value == -1 && editElement == 0) {
+		return;
+	}
+
+	var currentField = form.elements[editElement];
+	var newElement = editElement + value;
+
+	form.elements[editElement] = form.elements[newElement];
+	form.elements[newElement] = currentField;
+	editElement = newElement;
+	
+	form.renderForm();
+	$('li#field_' + editElement).click();
 }
