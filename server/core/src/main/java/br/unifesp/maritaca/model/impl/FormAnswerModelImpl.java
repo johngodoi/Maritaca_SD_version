@@ -84,7 +84,7 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 				form.setUrl(getUniqueUrl());
 			} else {
 				// check permissions for updating
-				hasPermission = currentUserHasPermission(form, Operation.EDIT);
+				hasPermission = currentUserHasPermission(form, Operation.WRITE);
 			}
 
 			boolean result = false;
@@ -306,7 +306,7 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		}
 
 		if (fp.getKey() != null
-				&& !currentUserHasPermission(fp.getForm(), Operation.EDIT)) {
+				&& !currentUserHasPermission(fp.getForm(), Operation.WRITE)) {
 			// user does not have permission to edit
 			return false;
 		}

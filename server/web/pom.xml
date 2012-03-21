@@ -171,7 +171,16 @@
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
 			<scope>test</scope>
-		</dependency>
+		</dependency>		
+        <dependency>
+            <groupId>aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>1.2</version>
+            <url>http://www.eclipse.org/aspectj</url>
+            <properties>
+                <war.bundle>true</war.bundle>
+            </properties>
+        </dependency>
 	</dependencies>
 	<build>
 		<finalName>maritaca</finalName>
@@ -185,5 +194,6 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<aspectSourceDirectory>src/main/aspects</aspectSourceDirectory>
 	</build>
 </project>

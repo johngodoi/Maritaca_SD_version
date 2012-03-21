@@ -230,10 +230,6 @@ public class Manager extends AbstractBean implements Serializable {
 		return Operation.READ;
 	}
 
-	public Operation getEditOperation() {
-		return Operation.EDIT;
-	}
-
 	public Operation getDeleteOperation() {
 		return Operation.DELETE;
 	}

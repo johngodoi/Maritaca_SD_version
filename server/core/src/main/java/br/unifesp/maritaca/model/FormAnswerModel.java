@@ -13,8 +13,10 @@ import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.EntityManager;
 
 public interface FormAnswerModel extends GenericModel{
+	/* Permission Required: WRITE (if not new form)  */
 	boolean saveForm(Form form);
 
+	/* Permission Required: READ  */
 	Form getForm(UUID uid, boolean minimal);
 
 	void setEntityManager(EntityManager em);
@@ -23,6 +25,7 @@ public interface FormAnswerModel extends GenericModel{
 
 	Collection<Form> listAllFormsMinimal();
 
+	/* Permission Required: DELETE  */
 	void deleteForm(Form form);
 	
 	String getFormIdFromUrl(String url);
@@ -34,8 +37,10 @@ public interface FormAnswerModel extends GenericModel{
 	Collection<FormPermissions> getFormPermissionsByGroup(Group group);
 	
 	/************* ANSWER ***********/
+	/* Permission Required: WRITE (if not new answer)  */
 	boolean saveAnswer(Answer answer);
 
+	/* Permission Required: READ  */
 	Answer getAnswer(UUID uuid);
 
 	Collection<Answer> listAllAnswers(UUID formId);
