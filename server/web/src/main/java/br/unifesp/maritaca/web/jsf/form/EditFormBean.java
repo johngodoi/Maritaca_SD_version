@@ -51,11 +51,11 @@ public class EditFormBean extends AbstractBean {
 				return;
 			}
 			if (formAnswCtrl.saveForm(form)) {
+				setNewForm(false);
 				addMessage("form_edit_save_success", FacesMessage.SEVERITY_INFO);
 				return;
 			}
 		}
-
 		addMessage("form_edit_save_error", FacesMessage.SEVERITY_ERROR);
 	}
 	
@@ -74,6 +74,10 @@ public class EditFormBean extends AbstractBean {
 			clean();
 		}
 		return null;
+	}
+	
+	public void setFormAsCollectable(){
+		System.out.println("set as collectable: " + form.getTitle());
 	}
 
 	////// Getters and Setters //////

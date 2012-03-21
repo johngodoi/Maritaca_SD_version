@@ -51,19 +51,11 @@
 				icon="#{resource['img:clear.png']}"/>
 
 			<!-- Delete option -->
-			<rich:menuItem label="#{msgs.commons_delete}" mode="ajax"
-				render="menuAndContent"
+			<rich:menuItem label="#{msgs.commons_delete}" 
 				rendered="#{!editFormBean.newForm}"
-				icon="#{resource['img:remove.png']}"
-				action="#{editFormBean.deleteForm}"
-				actionListener="#{listFormsBean.listOwnFormsChanged}"
-				status="formEditor_status">
-				<f:setPropertyActionListener target="#{editFormBean.form}"
-					value="#{aForm}" />
-				<f:setPropertyActionListener
-					target="#{manager.activeSubModuleInActiveMod}"
-					value="listForms" />
-			</rich:menuItem>
+				onclick="deleteFormDialog()"			
+				mode="ajax"
+				icon="#{resource['img:remove.png']}"/>
 
 			<!-- Ready to collect option -->
 			<rich:menuItem label="#{msgs.form_edit_collectButton}" 
@@ -97,7 +89,8 @@
 		
 		<!-- Save Method -->
 		<a4j:jsFunction name="sendFormAjax" action="#{editFormBean.saveForm}"
-			execute="@form" status="formEditor_status">
+			execute="@form" status="formEditor_status"
+			render="menuAndContent">
 			<a4j:param name="xml" assignTo="#{editFormBean.xml}" />
 			<f:setPropertyActionListener target="#{listFormsBean.updateList}"
 				value="true" />
@@ -110,6 +103,31 @@
 			<a4j:param name="newTitle" assignTo="#{editFormBean.saveFormAsTitle}" />
 			<f:setPropertyActionListener target="#{listFormsBean.updateList}"
 				value="true" />
+		</a4j:jsFunction>
+
+		<!-- Delete Method -->
+		<a4j:jsFunction name="deleteFormAjax" action="#{editFormBean.deleteForm}"
+			status="formEditor_status"
+			render="menuAndContent"
+			actionListener="#{listFormsBean.listOwnFormsChanged}">
+			<f:setPropertyActionListener target="#{editFormBean.form}"
+				value="#{aForm}" />
+			<f:setPropertyActionListener
+				target="#{manager.activeSubModuleInActiveMod}"
+				value="listForms" />
+		</a4j:jsFunction>
+		
+		<!-- Collect Method -->
+		<a4j:jsFunction name="setFormAsCollectableAjax" 
+			action="#{editFormBean.setFormAsCollectable()}"
+			status="formEditor_status"
+			render="menuAndContent"
+			actionListener="#{listFormsBean.listOwnFormsChanged}">
+			<f:setPropertyActionListener target="#{editFormBean.form}"
+				value="#{aForm}" />
+			<f:setPropertyActionListener
+				target="#{manager.activeSubModuleInActiveMod}"
+				value="listForms" />
 		</a4j:jsFunction>
 
 		<forms:formRender />

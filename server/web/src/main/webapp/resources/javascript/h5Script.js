@@ -226,6 +226,30 @@ function saveFormAsDialog(thetitle) {
 	$("#dialogSaveFormAs").dialog('open');
 }
 
+function deleteFormDialog() {
+	var message = createMessageDialog(jQuery.i18n.prop('msg_form_messageDialogDeleteForm')); 
+	$('#dialog-confirm p').append(message);
+	
+	$( "#dialog-confirm" ).dialog({
+		autoOpen: false,
+		modal: true,
+		title: jQuery.i18n.prop('msg_form_deleteDialogTitle'),
+		width: 500,
+		buttons: {
+			"Delete Form" : function() {
+				deleteFormAjax();
+				$( this ).dialog( "close" );
+			},
+			Cancel: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	});
+	$("#dialog-confirm").dialog('open');
+	
+	$('#messageDialogConfirm').remove();
+}
+
 function collectFormDialog() {
 	var message = createMessageDialog(jQuery.i18n.prop('msg_form_messageDialogCollect')); 
 	$('#dialog-confirm p').append(message);
@@ -233,12 +257,11 @@ function collectFormDialog() {
 	$( "#dialog-confirm" ).dialog({
 		autoOpen: false,
 		modal: true,
-		title: jQuery.i18n.prop('msg_form_newFormDialogTitle'),
+		title: jQuery.i18n.prop('msg_form_collectDialogTitle'),
 		width: 500,
 		buttons: {
 			"Set to Collect" : function() {
-				newForm();
-				warning = false;	
+				setFormAsCollectableAjax();
 				$( this ).dialog( "close" );
 			},
 			Cancel: function() {

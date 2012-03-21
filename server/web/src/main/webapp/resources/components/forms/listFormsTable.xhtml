@@ -64,7 +64,7 @@
 
 					<rich:menuItem icon="#{resource['img:project_logo_icon.png']}"
 						render="panelContent" label="#{msgs.form_edit_collectButton}"
-						action="#{editFormBean.deleteForm}"
+						action="#{editFormBean.setFormAsCollectable()}"
 						actionListener="#{listFormsBean.listOwnFormsChanged}">
 						<f:setPropertyActionListener target="#{editFormBean.form}"
 							value="#{aForm}" />
