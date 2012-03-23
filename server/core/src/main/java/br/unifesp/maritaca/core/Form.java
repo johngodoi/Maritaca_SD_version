@@ -37,6 +37,10 @@ public class Form implements Comparable<Form> {
 	@Minimal
 	private String url;
 	
+	@Column(indexed = true)
+	@Minimal
+	private Group sharedlist;
+	
 	@Column
 	@Minimal
 	private Policy policy = Policy.PRIVATE;
@@ -175,5 +179,19 @@ public class Form implements Comparable<Form> {
 	
 	public void setPolicy(Policy policy) {
 		this.policy = policy;
+	}
+
+	public Group getSharedlist() {
+		return sharedlist;
+	}
+
+	public void setSharedlist(Group sharedlist) {
+		this.sharedlist = sharedlist;
+	}
+	
+	public void setSharedlist(String sharedlist){
+		Group g = new Group();
+		g.setKey(sharedlist);
+		setSharedlist(g);
 	}
 }

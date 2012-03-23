@@ -19,6 +19,15 @@ public class GroupUser {
 	@Minimal
 	private User user;
 
+	public GroupUser(){
+		
+	}
+	
+	public GroupUser(Group group, User user){
+		setGroup(group);
+		setUser(user);
+	}
+	
 	public UUID getKey() {
 		return key;
 	}

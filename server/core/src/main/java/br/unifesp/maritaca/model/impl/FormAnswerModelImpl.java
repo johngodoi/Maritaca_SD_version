@@ -15,7 +15,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import br.unifesp.maritaca.access.AccessLevel;
-import br.unifesp.maritaca.access.Policy;
 import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Form;
@@ -23,6 +22,7 @@ import br.unifesp.maritaca.core.FormPermissions;
 import br.unifesp.maritaca.core.Group;
 import br.unifesp.maritaca.core.GroupUser;
 import br.unifesp.maritaca.core.User;
+import br.unifesp.maritaca.exception.AuthorizationDenied;
 import br.unifesp.maritaca.model.FormAnswerModel;
 import br.unifesp.maritaca.model.UserModel;
 import br.unifesp.maritaca.persistence.EntityManager;
@@ -31,6 +31,7 @@ import br.unifesp.maritaca.util.UtilsCore;
 
 public class FormAnswerModelImpl implements FormAnswerModel {
 	private static final Log log = LogFactory.getLog(FormAnswerModelImpl.class);
+	
 	private EntityManager entityManager;
 	private UserModel userModel;
 	private User currentUser;
@@ -63,7 +64,6 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 	@Override
 	public boolean saveForm(Form form) {
 		verifyEM(entityManager);
-
 		verifyEntity(form.getUser());
 		
 		if(form.getTitle() == null || form.getTitle().length()==0){
@@ -73,7 +73,6 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		if (entityManager.rowDataExists(User.class, form.getUser().getKey())) {
 			//TODO: user must be set from currentuser variable
 			boolean newForm = form.getKey() == null;// true if form is new
-			boolean hasPermission = true;
 			if (!newForm
 					&& entityManager.find(Form.class, form.getKey()) == null) {
 				// form is new
@@ -84,14 +83,12 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 				form.setUrl(getUniqueUrl());
 			} else {
 				// check permissions for updating
-				hasPermission = currentUserHasPermission(form, Operation.WRITE);
+				Form originalForm = getForm(form.getKey(), true);
+				if(!currentUserHasPermission(originalForm, Operation.WRITE)){
+					throw new AuthorizationDenied(Form.class, form.getKey(), getCurrentUser().getKey(), Operation.WRITE);
+				}
 			}
-
-			boolean result = false;
-			if (hasPermission || newForm) {
-				result = entityManager.persist(form);
-			}
-			if (result) {
+			if (entityManager.persist(form)) {
 					// save permissions of a form
 					if (saveFormPermissionsByPolicy(form)) {
 						// all saved correctly
@@ -131,14 +128,18 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 
 	@Override
 	public Form getForm(UUID uid, boolean minimal) {
-		verifyEM(entityManager);
-		return entityManager.find(Form.class, uid, minimal);
+		verifyEM(entityManager);		
+		Form form = entityManager.find(Form.class, uid, minimal);
+		if(userHasPermission(getCurrentUser(), form, Operation.READ)){
+			return form;	
+		} else {
+			throw new AuthorizationDenied(Form.class, form.getKey(), getCurrentUser().getKey(), Operation.READ);
+		}		
 	}
 
 	@Override
 	public Collection<Form> listAllForms() {
 		verifyEM(entityManager);
-
 		return entityManager.listAll(Form.class);
 	}
 
@@ -149,7 +150,6 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 	@Override
 	public Collection<Form> listAllFormsMinimal() {
 		verifyEM(entityManager);
-
 		return entityManager.listAll(Form.class, true);
 	}
 
@@ -229,6 +229,7 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 	@Override
 	public void deleteForm(Form form) {
 		verifyEM(entityManager);
+		
 		// verify if current user has permissions
 		if (currentUserHasPermission(form, Operation.DELETE)) {
 
@@ -239,8 +240,7 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 			entityManager.delete(form);
 			// TODO delete answers?
 		} else {
-			// user does not has permission
-			// TODO: generate exception?
+			throw new AuthorizationDenied(Form.class, form.getKey(), getCurrentUser().getKey(), Operation.DELETE);
 		}
 	}
 
@@ -282,7 +282,12 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 		List<FormPermissions> result = entityManager.cQuery(
 				FormPermissions.class, "form", form.getKey().toString());
 		for (FormPermissions fp : result) {
-			fp.setGroup(userModel.getGroup(fp.getGroup().getKey()));
+			Group grp = userModel.getGroup(fp.getGroup().getKey());
+			if(grp == null){
+				throw new RuntimeException(
+						"Can't find group listed in FormPermissions: " + fp.getKey());
+			}
+			fp.setGroup(grp);
 		}
 		return result;
 	}
@@ -507,10 +512,10 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 	private boolean saveFormPermissionsByPolicy(Form form) {
 		deleteOldFormPermissions(form);
 		User                  owner       = userModel.getUser(form.getUser().getKey());
-		Policy                policy      = form.getPolicy();					
 		Group                 ownerGrp    = owner.getUserGroup();
+		Group                 listGrp     = form.getSharedlist();
 		Group                 allUsersGrp = userModel.getAllUsersGroup();		
-		List<FormPermissions> permissions = Policy.buildPermissions(policy, ownerGrp, allUsersGrp, null);
+		List<FormPermissions> permissions = form.getPolicy().buildPermissions(ownerGrp, allUsersGrp, listGrp);
 		
 		return saveFormPermissions(form,permissions);
 	}

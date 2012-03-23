@@ -7,8 +7,8 @@ import br.unifesp.maritaca.core.FormPermissions;
 import br.unifesp.maritaca.core.Group;
 
 public enum Policy {
-	PUBLIC(	new FormPermissions(AccessLevel.FULL_ACCESS,  AccessLevel.FULL_ACCESS),
-			new FormPermissions(AccessLevel.READ_AND_LIST,AccessLevel.FULL_ACCESS),
+	PUBLIC(	new FormPermissions(AccessLevel.READ_AND_LIST,   AccessLevel.FULL_ACCESS),
+			new FormPermissions(AccessLevel.FULL_ACCESS,     AccessLevel.FULL_ACCESS),
 			null),
 			
 	SHARED_HIERARCHICAL(
@@ -21,8 +21,8 @@ public enum Policy {
 			new FormPermissions(AccessLevel.FULL_ACCESS,   AccessLevel.FULL_ACCESS),
 			new FormPermissions(AccessLevel.READ_AND_LIST, AccessLevel.FULL_ACCESS)),
 			
-	PRIVATE(new FormPermissions(AccessLevel.FULL_ACCESS, AccessLevel.FULL_ACCESS),
-			new FormPermissions(AccessLevel.NO_ACCESS,   AccessLevel.NO_ACCESS),
+	PRIVATE(new FormPermissions(AccessLevel.NO_ACCESS,     AccessLevel.NO_ACCESS),
+			new FormPermissions(AccessLevel.FULL_ACCESS,   AccessLevel.FULL_ACCESS),
 			null);
 	
 	private FormPermissions publicPermissions;
@@ -51,7 +51,8 @@ public enum Policy {
 	
 	public static Policy getPolicyFromString(String str){
 		for(Policy p : Policy.values()){
-			if(p.name().replace(" ", "_").equals(str)){
+			String policyName = p.name().replace(" ", "_").toLowerCase();
+			if(policyName.equals(str)){
 				return p;
 			}
 		}		
@@ -90,12 +91,16 @@ public enum Policy {
 		}
 	}
 
-	public static List<FormPermissions> buildPermissions(Policy policy, Group owner, Group allUsers, Group list) {
+	/*
+	 * TODO: This method should clone the permissions before returning.
+	 * Otherwise the permissions might be changed by the caller. 
+	 */
+	public List<FormPermissions> buildPermissions(Group owner, Group allUsers, Group list) {
 		List<FormPermissions> permissions = new ArrayList<FormPermissions>();
 		
-		FormPermissions fpOwner  = policy.getOwnerPermissions();
-		FormPermissions fpAllUsr = policy.getAllUsersPermissions();
-		FormPermissions fpList   = policy.getListPermissions();						
+		FormPermissions fpOwner  = this.getOwnerPermissions();
+		FormPermissions fpAllUsr = this.getAllUsersPermissions();
+		FormPermissions fpList   = this.getListPermissions();						
 		
 		if(fpOwner!=null){
 			fpOwner.setGroup(owner);

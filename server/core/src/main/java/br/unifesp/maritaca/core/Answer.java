@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import br.unifesp.maritaca.access.Policy;
 import br.unifesp.maritaca.persistence.annotations.Column;
 import br.unifesp.maritaca.persistence.annotations.Minimal;
 
@@ -26,6 +27,10 @@ public class Answer {
 
 	@Column
 	private String xml;
+	
+	@Column
+	@Minimal
+	private Policy policy = Policy.PRIVATE;
 
 	@XmlElement(name = "id")
 	public UUID getKey() {
@@ -82,5 +87,13 @@ public class Answer {
 			return getKey().toString();
 		}
 		return super.toString();
+	}
+
+	public Policy getPolicy() {
+		return policy;
+	}
+
+	public void setPolicy(Policy policy) {
+		this.policy = policy;
 	}
 }

@@ -11,12 +11,14 @@ import javax.faces.application.ViewExpiredException;
 import javax.faces.context.ExceptionHandler;
 import javax.faces.context.ExceptionHandlerWrapper;
 import javax.faces.context.FacesContext;
+import javax.faces.el.EvaluationException;
 import javax.faces.event.ExceptionQueuedEvent;
 import javax.faces.event.ExceptionQueuedEventContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import br.unifesp.maritaca.exception.AuthorizationDenied;
 import br.unifesp.maritaca.exception.InvalidNumberOfEntries;
 
 import me.prettyprint.hector.api.exceptions.HectorException;
@@ -65,6 +67,15 @@ public class GlobalExceptionHandler extends ExceptionHandlerWrapper {
 				addMessage("error_illegal_argument",
 						FacesMessage.SEVERITY_ERROR);
 				log.error("Illegal argument", thr);
+			} else if(thr instanceof EvaluationException &&
+					  thr.getCause() instanceof AuthorizationDenied ){
+				AuthorizationDenied authDenied = (AuthorizationDenied) thr.getCause();
+				addMessage("error_authorization_denied", FacesMessage.SEVERITY_ERROR);
+				log.error("Authorization denied "+
+							"- operation: " + authDenied.getOperation() +
+							", target: "    + authDenied.getTarget()+
+							", targetId: "  + authDenied.getTargetId()+
+							", userId: "    + authDenied.getUserId());				
 			} else if(thr instanceof InvalidNumberOfEntries ){
 				InvalidNumberOfEntries invNumEnt = (InvalidNumberOfEntries) thr;
 				addMessage("error_invalid_number_of_entities", FacesMessage.SEVERITY_ERROR);
