@@ -1,6 +1,5 @@
 package br.unifesp.maritaca.model.impl;
 
-import static br.unifesp.maritaca.util.UtilsCore.verifyEM;
 import static br.unifesp.maritaca.util.UtilsCore.verifyEntity;
 
 import java.io.Serializable;
@@ -21,11 +20,12 @@ import br.unifesp.maritaca.core.OAuthToken;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.exception.InvalidNumberOfEntries;
 import br.unifesp.maritaca.model.ManagerModel;
+import br.unifesp.maritaca.model.UseEntityManager;
 import br.unifesp.maritaca.model.UserModel;
 import br.unifesp.maritaca.persistence.EntityManager;
 import br.unifesp.maritaca.util.UserLocator;
 
-public class UserModelImpl implements UserModel, Serializable {
+public class UserModelImpl implements UserModel, Serializable, UseEntityManager {
 	private static final Log log = LogFactory.getLog(UserModelImpl.class);
 	private static final long serialVersionUID = 1L;
 
@@ -42,7 +42,6 @@ public class UserModelImpl implements UserModel, Serializable {
 
 	@Override
 	public boolean saveUser(User user) {
-		verifyEM(entityManager);
 		if (user == null)
 			return false;
 		if (entityManager.persist(user)) {
@@ -71,8 +70,6 @@ public class UserModelImpl implements UserModel, Serializable {
 
 	@Override
 	public User getUser(UUID uuid) {
-		verifyEM(entityManager);
-
 		return entityManager.find(User.class, uuid);
 	}
 
@@ -83,20 +80,15 @@ public class UserModelImpl implements UserModel, Serializable {
 
 	@Override
 	public Collection<User> listAllUsers() {
-		verifyEM(entityManager);
-
 		return entityManager.listAll(User.class);
 	}
 
 	@Override
 	public Collection<User> listAllUsersMinimal() {
-		verifyEM(entityManager);
-
 		return entityManager.listAll(User.class, true);
 	}
 
 	public User getUser(String email) {
-		verifyEM(entityManager);
 		List<User> users = entityManager.cQuery(User.class, "email", email);
 		if (users == null || users.size() == 0) {
 			return null;
@@ -109,13 +101,11 @@ public class UserModelImpl implements UserModel, Serializable {
 
 	@Override
 	public Group getGroup(UUID uuid) {
-		verifyEM(entityManager);
 		return entityManager.find(Group.class, uuid);
 	}
 
 	@Override
 	public boolean saveGroup(Group group) {
-		verifyEM(entityManager);
 		if (group == null) {
 			throw new IllegalArgumentException("Invalid group");
 		}
@@ -161,7 +151,6 @@ public class UserModelImpl implements UserModel, Serializable {
 	 */
 	@Override
 	public Collection<Group> getGroupsByOwner(User owner) {
-		verifyEM(entityManager);
 		verifyEntity(owner);
 		return entityManager.cQuery(Group.class, "owner", owner.toString());
 	}
@@ -175,7 +164,6 @@ public class UserModelImpl implements UserModel, Serializable {
 	 */
 	@Override
 	public boolean addUserToGroup(User user, Group group) {
-		verifyEM(entityManager);
 		verifyEntity(user);
 		verifyEntity(group);
 
@@ -195,7 +183,6 @@ public class UserModelImpl implements UserModel, Serializable {
 	 */
 	@Override
 	public boolean userIsMemberOfGroup(User user, Group group) {
-		verifyEM(entityManager);
 		verifyEntity(user);
 		verifyEntity(group);
 
@@ -252,7 +239,6 @@ public class UserModelImpl implements UserModel, Serializable {
 
 	@Override
 	public Collection<GroupUser> getGroupsByMember(User user) {
-		verifyEM(entityManager);
 		verifyEntity(user);
 
 		return entityManager.cQuery(GroupUser.class, "user", user.getKey()
@@ -350,7 +336,6 @@ public class UserModelImpl implements UserModel, Serializable {
 
 	@Override
 	public boolean removeGroup(Group group) {
-		verifyEM(entityManager);
 		verifyEntity(group);
 
 		if (!removeGroupUserFromGroup(group)) {
@@ -368,7 +353,6 @@ public class UserModelImpl implements UserModel, Serializable {
 	 * @return true if successful, false otherwise
 	 */
 	private boolean removeGroupUserFromGroup(Group group) {
-		verifyEM(entityManager);
 		verifyEntity(group);
 		List<GroupUser> groupsUserFromUser;
 		groupsUserFromUser = entityManager.cQuery(GroupUser.class, "group",
@@ -402,7 +386,6 @@ public class UserModelImpl implements UserModel, Serializable {
 
 	@Override
 	public boolean removeUserFromGroup(Group group, User user) {
-		verifyEM(entityManager);
 		verifyEntity(group);
 
 		List<GroupUser> groupsUserFromUser = new ArrayList<GroupUser>();
@@ -436,7 +419,6 @@ public class UserModelImpl implements UserModel, Serializable {
 	 */
 	@Override
 	public User getOwnerOfGroup(Group gr) {
-		verifyEM(entityManager);
 		if (gr.getOwner() != null) {
 			return getUser(gr.getOwner().getKey());
 		} else {
@@ -451,7 +433,6 @@ public class UserModelImpl implements UserModel, Serializable {
 
 	@Override
 	public boolean saveAuthorizationCode(OAuthCode oAuthCode) {
-		verifyEM(entityManager);
 		if (oAuthCode == null)
 			return false;
 
@@ -472,13 +453,11 @@ public class UserModelImpl implements UserModel, Serializable {
 
 	@Override
 	public boolean saveAuthToken(OAuthToken token) {
-		verifyEM(entityManager);
 		return entityManager.persist(token);
 	}
 
 	@Override
 	public OAuthClient findOauthClient(String clientId) {
-		verifyEM(entityManager);
 		List<OAuthClient> list = entityManager.cQuery(OAuthClient.class,
 				"clientId", clientId);
 		for (OAuthClient client : list) {
@@ -489,7 +468,6 @@ public class UserModelImpl implements UserModel, Serializable {
 
 	@Override
 	public OAuthCode findOauthCode(String authCode) {
-		verifyEM(entityManager);
 		if (authCode == null) {
 			return null;
 		}

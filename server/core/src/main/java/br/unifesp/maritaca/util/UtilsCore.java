@@ -51,16 +51,4 @@ public class UtilsCore {
 			throw new IllegalArgumentException("Invalid entity" + obj);
 		}
 	}
-
-	/**
-	 * verify if entity manager != null
-	 * 
-	 * @param em
-	 * @throws RuntimeException
-	 *             if false
-	 */
-	public static void verifyEM(EntityManager em) {
-		if (em == null)
-			throw new RuntimeException("Entity manager not initialized");
-	}
 }

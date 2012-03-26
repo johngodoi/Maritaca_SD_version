@@ -1,6 +1,5 @@
 package br.unifesp.maritaca.model.impl;
 
-import static br.unifesp.maritaca.util.UtilsCore.verifyEM;
 import static br.unifesp.maritaca.util.UtilsCore.verifyEntity;
 
 import java.util.ArrayList;
@@ -24,12 +23,13 @@ import br.unifesp.maritaca.core.GroupUser;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.exception.AuthorizationDenied;
 import br.unifesp.maritaca.model.FormAnswerModel;
+import br.unifesp.maritaca.model.UseEntityManager;
 import br.unifesp.maritaca.model.UserModel;
 import br.unifesp.maritaca.persistence.EntityManager;
 import br.unifesp.maritaca.util.UserLocator;
 import br.unifesp.maritaca.util.UtilsCore;
 
-public class FormAnswerModelImpl implements FormAnswerModel {
+public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager {
 	private static final Log log = LogFactory.getLog(FormAnswerModelImpl.class);
 	
 	private EntityManager entityManager;
@@ -63,7 +63,6 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 	 */
 	@Override
 	public boolean saveForm(Form form) {
-		verifyEM(entityManager);
 		verifyEntity(form.getUser());
 		
 		if(form.getTitle() == null || form.getTitle().length()==0){
@@ -128,7 +127,6 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 
 	@Override
 	public Form getForm(UUID uid, boolean minimal) {
-		verifyEM(entityManager);		
 		Form form = entityManager.find(Form.class, uid, minimal);
 		if(userHasPermission(getCurrentUser(), form, Operation.READ)){
 			return form;	
@@ -139,7 +137,6 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 
 	@Override
 	public Collection<Form> listAllForms() {
-		verifyEM(entityManager);
 		return entityManager.listAll(Form.class);
 	}
 
@@ -149,7 +146,6 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 	 */
 	@Override
 	public Collection<Form> listAllFormsMinimal() {
-		verifyEM(entityManager);
 		return entityManager.listAll(Form.class, true);
 	}
 
@@ -176,7 +172,6 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 	@Override
 	public boolean saveAnswer(Answer response) {
 		//TODO: add permission verification
-		verifyEM(entityManager);
 
 		if (response == null)
 			throw new IllegalArgumentException("Response cannot be null");
@@ -199,13 +194,11 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 
 	@Override
 	public Answer getAnswer(UUID uuid) {
-		verifyEM(entityManager);
 		return entityManager.find(Answer.class, uuid);
 	}
 
 	@Override
 	public Collection<Answer> listAllAnswers(UUID formId) {
-		verifyEM(entityManager);
 		if (formId == null)
 			return entityManager.listAll(Answer.class);
 		else
@@ -215,7 +208,6 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 
 	@Override
 	public Collection<Answer> listAllAnswersMinimal(UUID formId) {
-		verifyEM(entityManager);
 		if (formId == null)
 			return entityManager.listAll(Answer.class, true);
 		else
@@ -227,9 +219,7 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 	 * Delete a Form if user has permission
 	 */
 	@Override
-	public void deleteForm(Form form) {
-		verifyEM(entityManager);
-		
+	public void deleteForm(Form form) {	
 		// verify if current user has permissions
 		if (currentUserHasPermission(form, Operation.DELETE)) {
 
@@ -246,7 +236,6 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 
 	@Override
 	public boolean urlForSharingExists(String url) {
-		verifyEM(entityManager);
 		// todo: improve this
 		// look for url in the Form columnFamily
 		List<Form> fsList = entityManager.cQuery(Form.class, "url", url, true);
@@ -255,8 +244,6 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 
 	@Override
 	public String getFormIdFromUrl(String url) {
-		verifyEM(entityManager);
-
 		// look for url in the FormShare columnFamily
 		List<Form> fsList = entityManager.cQuery(Form.class, "url", url, true);
 		if (fsList.size() > 0)
@@ -276,7 +263,6 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 
 	@Override
 	public List<FormPermissions> getFormPermissions(Form form) {
-		verifyEM(entityManager);
 		verifyEntity(form);
 
 		List<FormPermissions> result = entityManager.cQuery(
@@ -294,7 +280,6 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 
 	@Override
 	public FormPermissions getFormPermissionById(String formPermId) {
-		verifyEM(entityManager);
 		if (formPermId == null)
 			return null;
 		return entityManager.find(FormPermissions.class,
@@ -303,7 +288,6 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 
 	@Override
 	public boolean saveFormPermission(FormPermissions fp) {
-		verifyEM(entityManager);
 		// verify parameters
 		if (fp == null || fp.getForm() == null || fp.getGroup() == null) {
 			throw new IllegalArgumentException(
@@ -356,7 +340,6 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 	 */
 	@Override
 	public <T> boolean userHasPermission(User user, T entity, Operation op) {
-		verifyEM(entityManager);
 		if (user == null && op == null)
 			return false;
 		// check type
@@ -412,7 +395,6 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 	 */
 	@Override
 	public Collection<Form> listAllFormsMinimalByUser(User user) {
-		verifyEM(entityManager);
 		verifyEntity(user);
 		return entityManager.cQuery(Form.class, "user", user.getKey()
 				.toString(), true);
@@ -428,7 +410,6 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 	 */
 	@Override
 	public Collection<Form> listAllSharedForms(User user, boolean minimal) {
-		verifyEM(entityManager);
 		verifyEntity(user);
 		User currentUser = getCurrentUser();
 
@@ -458,7 +439,6 @@ public class FormAnswerModelImpl implements FormAnswerModel {
 	 */
 	@Override
 	public Collection<FormPermissions> getFormPermissionsByGroup(Group group) {
-		verifyEM(entityManager);
 		verifyEntity(group);
 
 		List<FormPermissions> result = entityManager.cQuery(

@@ -1,6 +1,5 @@
 package br.unifesp.maritaca.model.impl;
 
-import static br.unifesp.maritaca.util.UtilsCore.verifyEM;
 
 import java.util.Map;
 import java.util.UUID;
@@ -16,10 +15,11 @@ import br.unifesp.maritaca.core.OAuthCode;
 import br.unifesp.maritaca.core.OAuthToken;
 import br.unifesp.maritaca.core.OpenId;
 import br.unifesp.maritaca.core.User;
+import br.unifesp.maritaca.model.UseEntityManager;
 import br.unifesp.maritaca.persistence.EntityManager;
 import br.unifesp.maritaca.persistence.EntityManagerFactory;
 
-public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel {
+public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel, UseEntityManager {
 
 	private EntityManager entityManager;
 	private User currentUser;
@@ -123,8 +123,6 @@ public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel 
 
 	@Override
 	public User getRootUser() {
-		verifyEM(entityManager);
-
 		User rootUser = null;
 		for (Configuration cfUser : entityManager.cQuery(Configuration.class,
 				"name", CFG_ROOT)) {
@@ -141,6 +139,10 @@ public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel 
 
 	public void setCurrentUser(User currentUser) {
 		this.currentUser = currentUser;
+	}
+	
+	public EntityManager getEntityManager(){
+		return this.entityManager;
 	}
 	
 	@Override
