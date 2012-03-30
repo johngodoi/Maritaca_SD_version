@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -38,6 +39,7 @@ public class GroupsManagerBean extends AbstractBean implements Serializable {
 	/* Error messages resources */
 	private static final String GROUP_ADD_ERROR_USER_NOT_FOUND = "group_add_error_user_not_found";
 	private static final String GROUP_ADD_ERROR_USER_ADDED     = "group_add_error_user_added";
+	private static final String GROUP_REMOVE_OWNER_ERROR       = "group_remove_owner_error";
 	private static final String GROUP_ADD_EMPTY_EMAIL          = "item_list_add_empty_field";
 	private static final String GROUP_ADD_SUCESS               = "group_add_sucess";
 	private static final String GROUP_ADD_FAILURE              = "group_add_fail";
@@ -69,6 +71,11 @@ public class GroupsManagerBean extends AbstractBean implements Serializable {
 	public GroupsManagerBean() {
 		super(false, true);
 		clearGroup();
+	}
+	
+	@PostConstruct
+	public void updateGroupUsers(){
+		getAddedUsers().add(getCurrentUserBean().getUser());
 	}
 
 	/**
@@ -205,6 +212,13 @@ public class GroupsManagerBean extends AbstractBean implements Serializable {
 
 	public void removeEmail(String email) {
 		clearAddEmailError();
+		
+		String ownerUsrEmail = getCurrentUserBean().getUser().getEmail();				
+		if(email.equals(ownerUsrEmail)){
+			setAddEmailError(Utils
+					.getMessageFromResourceProperties(GROUP_REMOVE_OWNER_ERROR));
+			return;
+		}
 		if (emailAdded(email)) {
 			for (User u : getAddedUsers()) {
 				if (u.getEmail().equals(email)) {
@@ -240,22 +254,13 @@ public class GroupsManagerBean extends AbstractBean implements Serializable {
 	 */
 	public String save() {
 		String    returnString = null;
-		Boolean   success      = true;
 		UserModel userModel    = super.userCtrl;
 
 		Group group = createGroupObj();
-		if (userModel.saveGroup(group)) {
-			if(!newGroup(group)){
-				success = updateGroupUsers(group);
-			}
-
-			if (success) {
-				addMessage(GROUP_ADD_SUCESS, FacesMessage.SEVERITY_INFO);
-				returnString = "/faces/views/home";
-			} else {
-				addMessage(GROUP_ADD_FAILURE, FacesMessage.SEVERITY_ERROR);
-				log.error("Error saving group: " + group.toString());
-			}
+		if (userModel.saveGroup(group) && saveGroupUsers(group)) {
+			addMessage(GROUP_ADD_SUCESS, FacesMessage.SEVERITY_INFO);
+			getManager().setActiveModuleByString("Groups");
+			getManager().setActiveSubModuleInActiveMod("listGroups");
 		} else {
 			addMessage(GROUP_ADD_FAILURE, FacesMessage.SEVERITY_ERROR);
 			log.error("Error saving group: " + group.toString());			
@@ -265,11 +270,7 @@ public class GroupsManagerBean extends AbstractBean implements Serializable {
 		return returnString;
 	}
 
-	private boolean newGroup(Group group) {
-		return getGroupId()==null;
-	}
-
-	private boolean updateGroupUsers(Group group) {
+	private boolean saveGroupUsers(Group group) {
 		List<User> users = new ArrayList<User>(
 				super.userCtrl.searchUsersByGroup(group));
 		

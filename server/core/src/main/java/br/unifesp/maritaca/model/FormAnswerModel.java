@@ -28,9 +28,9 @@ public interface FormAnswerModel extends GenericModel{
 	
 	String getFormIdFromUrl(String url);
 	
-	Collection<Form> listAllFormsMinimalByUser(User user);
+	Collection<Form> listFormsFromCurrentUser(boolean minimal);
 	
-	Collection<Form> listAllSharedForms(User user, boolean minimal);
+	Collection<Form> listSharedFormsFromCurrentUser(boolean minimal);
 	
 	Collection<FormPermissions> getFormPermissionsByGroup(Group group);
 	
@@ -53,8 +53,6 @@ public interface FormAnswerModel extends GenericModel{
 
 	FormPermissions getFormPermissionById(String formPermId);
 
-	boolean saveFormPermission(FormPermissions fp);
-	
 	void deleteFormPermission(FormPermissions formPerm);
 
 	<T> boolean currentUserHasPermission(T entity, Operation op);
@@ -66,5 +64,4 @@ public interface FormAnswerModel extends GenericModel{
 	Collection<Form> listAllFormsSortedbyDate(User user);
 
 	void close();
-
 }

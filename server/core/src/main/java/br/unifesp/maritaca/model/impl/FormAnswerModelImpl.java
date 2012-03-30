@@ -2,6 +2,7 @@ package br.unifesp.maritaca.model.impl;
 
 import static br.unifesp.maritaca.util.UtilsCore.verifyEntity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -29,7 +30,9 @@ import br.unifesp.maritaca.persistence.EntityManager;
 import br.unifesp.maritaca.util.UserLocator;
 import br.unifesp.maritaca.util.UtilsCore;
 
-public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager {
+public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, Serializable{
+
+	private static final long serialVersionUID = 1L;
 	private static final Log log = LogFactory.getLog(FormAnswerModelImpl.class);
 	
 	private EntityManager entityManager;
@@ -83,8 +86,8 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager {
 			} else {
 				// check permissions for updating
 				Form originalForm = getForm(form.getKey(), true);
-				if(!currentUserHasPermission(originalForm, Operation.WRITE)){
-					throw new AuthorizationDenied(Form.class, form.getKey(), getCurrentUser().getKey(), Operation.WRITE);
+				if(!currentUserHasPermission(originalForm, Operation.UPDATE)){
+					throw new AuthorizationDenied(Form.class, form.getKey(), getCurrentUser().getKey(), Operation.UPDATE);
 				}
 			}
 			if (entityManager.persist(form)) {
@@ -108,6 +111,11 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager {
 			throw new IllegalArgumentException(
 					"User does not exist in database");
 		}
+	}
+
+	private void formUserGroupForSharedList(Form form) {
+		User owner = userModel.getUser(form.getUser().getKey());
+		form.setSharedlist(owner.getUserGroup());				
 	}
 
 	/**
@@ -151,7 +159,7 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager {
 
 	// TODO In the future implement this on entitymanager
 	public Collection<Form> listAllFormsSortedbyName(User user) {
-		Collection<Form> forms = listAllFormsMinimalByUser(user);
+		Collection<Form> forms = listFormsFromCurrentUser(true);
 		for (Form form : forms) {
 			form.setFlagToOrder(0);
 		}
@@ -161,7 +169,7 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager {
 
 	// TODO In the future implement this on entitymanager
 	public Collection<Form> listAllFormsSortedbyDate(User user) {
-		Collection<Form> forms = listAllFormsMinimalByUser(user);
+		Collection<Form> forms = listFormsFromCurrentUser(true);
 		for (Form form : forms) {
 			form.setFlagToOrder(1);
 		}
@@ -286,17 +294,17 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager {
 				UUID.fromString(formPermId));
 	}
 
-	@Override
-	public boolean saveFormPermission(FormPermissions fp) {
+	private boolean saveFormPermission(FormPermissions fp) {
 		// verify parameters
 		if (fp == null || fp.getForm() == null || fp.getGroup() == null) {
 			throw new IllegalArgumentException(
 					"Incomplete parameters, form permission not saved");
 		}
 
-		if (fp.getKey() != null
-				&& !currentUserHasPermission(fp.getForm(), Operation.WRITE)) {
-			// user does not have permission to edit
+		if (fp.getKey() == null	&& !currentUserHasPermission(fp.getForm(), Operation.CREATE)) {
+			// user does not have permission to update
+			return false;
+		} else if(!currentUserHasPermission(fp.getForm(),Operation.UPDATE)){
 			return false;
 		}
 
@@ -390,16 +398,14 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager {
 		return userHasPermission(user, formPerm.getForm(), op);
 	}
 
-	/**
-	 * get all forms of an user
-	 */
 	@Override
-	public Collection<Form> listAllFormsMinimalByUser(User user) {
+	public Collection<Form> listFormsFromCurrentUser(boolean minimal){
+		User user = getCurrentUser();
 		verifyEntity(user);
 		return entityManager.cQuery(Form.class, "user", user.getKey()
-				.toString(), true);
+				.toString(), minimal);		
 	}
-
+	
 	/**
 	 * @param User
 	 * @param Boolean
@@ -409,7 +415,9 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager {
 	 *         that are shared through Groups)
 	 */
 	@Override
-	public Collection<Form> listAllSharedForms(User user, boolean minimal) {
+	public Collection<Form> listSharedFormsFromCurrentUser(boolean minimal) {
+		User user = getCurrentUser();
+		
 		verifyEntity(user);
 		User currentUser = getCurrentUser();
 
@@ -490,6 +498,10 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager {
 	}
 	
 	private boolean saveFormPermissionsByPolicy(Form form) {
+		if (form == null || form.getUser() == null) {
+			throw new IllegalArgumentException(
+					"Incomplete parameters, form permission not saved");
+		}		
 		deleteOldFormPermissions(form);
 		User                  owner       = userModel.getUser(form.getUser().getKey());
 		Group                 ownerGrp    = owner.getUserGroup();
@@ -499,7 +511,6 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager {
 		
 		return saveFormPermissions(form,permissions);
 	}
-
 	
 	private boolean saveFormPermissions(Form form,	List<FormPermissions> permissions) {
 		for(FormPermissions fp : permissions){

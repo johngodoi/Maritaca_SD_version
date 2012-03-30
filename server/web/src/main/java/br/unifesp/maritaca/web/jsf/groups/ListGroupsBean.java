@@ -1,6 +1,5 @@
 package br.unifesp.maritaca.web.jsf.groups;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.annotation.PostConstruct;
@@ -8,10 +7,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 
-import org.mortbay.log.Log;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import br.unifesp.maritaca.core.Group;
-import br.unifesp.maritaca.core.GroupUser;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
 import br.unifesp.maritaca.web.jsf.account.CurrentUserBean;
@@ -30,6 +29,8 @@ public class ListGroupsBean extends AbstractBean{
 	@ManagedProperty("#{currentUserBean}")
 	private CurrentUserBean   currentUser;	
 	private Collection<Group> myGroups;
+	
+	private static final Log log = LogFactory.getLog(ListGroupsBean.class);
 	
 	public ListGroupsBean() {
 		super(false, true);
@@ -68,26 +69,33 @@ public class ListGroupsBean extends AbstractBean{
 
 	@PostConstruct
 	public void updateMyGroups() {
-		User              		newUser      = getCurrentUser().getUser();
-		Collection<GroupUser>	myGroupsUser = super.userCtrl.getGroupsByMember(newUser);
-		Collection<Group>       myGroups     = new ArrayList<Group>();
+		User              currentUsr  = getCurrentUser().getUser();				
+		Collection<Group> ownedGroups = super.userCtrl.getGroupsByOwner(currentUsr);
 		
-		Group myGroup;
-		User  owner;
-		for(GroupUser groupUser : myGroupsUser){
-			if(!myGroups.contains(groupUser)){
-				myGroup = super.userCtrl.getGroup(groupUser.getGroup().getKey());
-				if(myGroup!=null){
-					owner   = super.userCtrl.getUser(myGroup.getOwner().getKey());
-					myGroup.setOwner(owner);
-					myGroups.add(myGroup);	
-				}else{
-					// Group deleted but has entry in GroupUser
-					Log.warn("Group "+groupUser.getGroup().toString()+
-							 " was deleted but has entry in the GroupUser table");
-				}
-			}
-		}		
-		setMyGroups(myGroups);
+		removeAllUsersGroup(ownedGroups);
+		removeUserGroup(ownedGroups);
+		
+		fillOwnerEmail(ownedGroups);
+		
+		setMyGroups(ownedGroups);
 	}
+
+	private void fillOwnerEmail(Collection<Group> ownedGroups) {
+		for(Group grp : ownedGroups){
+			User owner = super.userCtrl.getUser(grp.getOwner().getKey());
+			grp.setOwner(owner);
+		}		
+	}
+
+	private void removeUserGroup(Collection<Group> ownedGroups) {
+		Group userGroup = getCurrentUser().getUser().getUserGroup();
+		if(!ownedGroups.remove(userGroup)){
+			log.error("User group for user "+getCurrentUser().getUser()+" not found");
+		}
+	}
+
+	private void removeAllUsersGroup(Collection<Group> ownedGroups) {
+		Group allUsrGrp = super.userCtrl.getAllUsersGroup();
+		ownedGroups.remove(allUsrGrp);
+	}		
 }

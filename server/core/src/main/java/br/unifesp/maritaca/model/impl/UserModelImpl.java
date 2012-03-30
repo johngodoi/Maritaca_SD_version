@@ -25,6 +25,7 @@ import br.unifesp.maritaca.model.UserModel;
 import br.unifesp.maritaca.persistence.EntityManager;
 import br.unifesp.maritaca.util.UserLocator;
 
+//TODO Ticket: 113 - Use exceptions instead of returning false
 public class UserModelImpl implements UserModel, Serializable, UseEntityManager {
 	private static final Log log = LogFactory.getLog(UserModelImpl.class);
 	private static final long serialVersionUID = 1L;
@@ -42,26 +43,26 @@ public class UserModelImpl implements UserModel, Serializable, UseEntityManager 
 
 	@Override
 	public boolean saveUser(User user) {
-		if (user == null)
+		if (user == null){
 			return false;
-		if (entityManager.persist(user)) {
-			if(user.getUserGroup()==null){
-				if(!createUserGroup(user)){
-					return false;
-				}
-			}
-			return addUserToGroup(user, getAllUsersGroup());
 		}
-		return false;
+		if (!entityManager.persist(user)) {
+			return false;
+		}		
+		if(user.getUserGroup()==null && !createUserGroup(user)){
+			return false;
+		}		
+		return true;
 	}
 
 	private boolean createUserGroup(User owner) {		
 		Group group = new Group();
 		group.setOwner(owner);
 		group.setName(owner.getEmail());
+		
 		if(!saveGroup(group)){
 			return false;
-		}
+		}				
 		
 		owner.setUserGroup(group);
 		
@@ -110,7 +111,7 @@ public class UserModelImpl implements UserModel, Serializable, UseEntityManager 
 			throw new IllegalArgumentException("Invalid group");
 		}
 		verifyEntity(group.getOwner());
-		if (group.getName().length() == 0) {
+		if (group.getName()==null || group.getName().length() == 0) {
 			throw new IllegalArgumentException("Incomplete parameters");
 		}
 
@@ -134,15 +135,7 @@ public class UserModelImpl implements UserModel, Serializable, UseEntityManager 
 			} else
 				return false; // group not saved
 		} else {
-			// look for group
-			Group g = getGroup(group.getKey());
-			if (g == null) {
-				// new group
-				group.setKey("");
-				return saveGroup(group);
-			} else
-				// update name
-				return entityManager.persist(group);
+			return entityManager.persist(group);
 		}
 	}
 
@@ -188,6 +181,11 @@ public class UserModelImpl implements UserModel, Serializable, UseEntityManager 
 
 		if (group.getOwner().equals(user)) {
 			// owner is default member of group
+			return true;
+		}
+		
+		if( group.equals(getAllUsersGroup()) ){
+			// all users are in the public group
 			return true;
 		}
 
@@ -241,8 +239,16 @@ public class UserModelImpl implements UserModel, Serializable, UseEntityManager 
 	public Collection<GroupUser> getGroupsByMember(User user) {
 		verifyEntity(user);
 
-		return entityManager.cQuery(GroupUser.class, "user", user.getKey()
-				.toString(), true);
+		GroupUser allGroupUser = new GroupUser();
+		allGroupUser.setUser(user);
+		allGroupUser.setGroup(getAllUsersGroup());
+		
+		Collection<GroupUser> groupsByMember;
+		groupsByMember =  entityManager.cQuery(GroupUser.class, "user", user.getKey()
+												.toString(), true);
+		groupsByMember.add(allGroupUser);
+		
+		return groupsByMember;
 	}
 
 	public Group searchGroupByName(String groupName) {
@@ -371,16 +377,28 @@ public class UserModelImpl implements UserModel, Serializable, UseEntityManager 
 
 	@Override
 	public Collection<User> searchUsersByGroup(Group group) {
-		String groupKey = group.getKey().toString();
-		List<GroupUser> groupsUserFromUser = entityManager.cQuery(
-				GroupUser.class, "group", groupKey);
-		Collection<User> foundUsers = new ArrayList<User>();
+		if(group.getOwner()==null){
+			throw new IllegalArgumentException("Invalid group");
+		}
+		
+		String           groupKey        = group.getKey().toString();
+		List<GroupUser>  grpsUsrFromUser = entityManager.cQuery(GroupUser.class, "group", groupKey);
+		Collection<User> foundUsers      = new ArrayList<User>();
 
-		for (GroupUser groupUser : groupsUserFromUser) {
-			User user = entityManager.find(User.class, groupUser.getUser()
-					.getKey());
+		if(group.equals(getAllUsersGroup())){
+			return listAllUsers();
+		}
+		
+		for (GroupUser groupUser : grpsUsrFromUser) {
+			User user = entityManager.find(User.class, groupUser.getUser().getKey());
 			foundUsers.add(user);
 		}
+				
+		if(!foundUsers.contains(group.getOwner())){
+			log.error("Group: " + group + " does not contain its owner");
+			throw new RuntimeException("Group owner not in group");			
+		}
+		
 		return foundUsers;
 	}
 

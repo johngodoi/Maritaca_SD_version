@@ -7,6 +7,7 @@ import static me.prettyprint.hector.api.factory.HFactory.createMutator;
 import static me.prettyprint.hector.api.factory.HFactory.createRangeSlicesQuery;
 import static me.prettyprint.hector.api.factory.HFactory.createSliceQuery;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -53,7 +54,11 @@ import org.apache.commons.logging.LogFactory;
 import br.unifesp.maritaca.persistence.annotations.Column;
 import br.unifesp.maritaca.persistence.annotations.Minimal;
 
-public class EntityManagerHectorImpl implements EntityManager {
+public class EntityManagerHectorImpl implements EntityManager, Serializable {
+	
+
+	private static final long serialVersionUID = 1L;
+	
 	private static final Log log = LogFactory
 			.getLog(EntityManagerHectorImpl.class);
 	private static EntityManagerHectorImpl instance;

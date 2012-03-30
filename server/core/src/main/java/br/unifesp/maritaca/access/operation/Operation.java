@@ -1,8 +1,10 @@
 package br.unifesp.maritaca.access.operation;
 
 public enum Operation {
+	CREATE,
 	READ,
-	WRITE,
+	UPDATE,	
 	DELETE,
+	SHARE,
 	LIST
 }

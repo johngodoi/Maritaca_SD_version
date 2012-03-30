@@ -9,7 +9,8 @@ public enum AccessLevel {
 
 	NO_ACCESS,
 	READ_AND_LIST(Operation.LIST, Operation.READ),
-	WRITE_ONLY(Operation.WRITE),
+	CREATE_ONLY(Operation.CREATE),
+	CREATE_AND_UPDATE(Operation.CREATE, Operation.UPDATE),
 	FULL_ACCESS(Operation.values());
 
 	AccessLevel(Operation... ops) {

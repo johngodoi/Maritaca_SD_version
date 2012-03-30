@@ -10,6 +10,7 @@ import javax.faces.event.ActionEvent;
 
 import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.core.Form;
+import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
 import br.unifesp.maritaca.web.jsf.account.CurrentUserBean;
 
@@ -25,7 +26,7 @@ public class ListFormsBean extends AbstractBean {
 	private CurrentUserBean currentUser;
 
 	public ListFormsBean() {
-		super(true, false);
+		super(true, true);
 		setUpdateList(false);
 	}
 
@@ -64,7 +65,20 @@ public class ListFormsBean extends AbstractBean {
 	@PostConstruct
 	public void updateFormsList(){
 		updateListOwnForms();
-		updateListSharedForms();		
+		updateListSharedForms();	
+		updateFormsOwners();
+	}
+
+	//TODO Temporary method. It fills the user emails in the forms list.
+	private void updateFormsOwners() {
+		for(Form f : getForms()){
+			User owner = super.userCtrl.getUser(f.getUser().getKey());
+			f.setUser(owner);
+		}
+		for(Form f : getSharedForms()){
+			User owner = super.userCtrl.getUser(f.getUser().getKey());
+			f.setUser(owner);
+		}
 	}
 
 	/**
@@ -83,12 +97,11 @@ public class ListFormsBean extends AbstractBean {
 	}
 
 	private void updateListOwnForms() {
-		setForms(formAnswCtrl.listAllFormsMinimalByUser(currentUser.getUser()));
+		setForms(formAnswCtrl.listFormsFromCurrentUser(true));
 	}
 
 	private void updateListSharedForms() {
-		setSharedForms(formAnswCtrl.listAllSharedForms(currentUser.getUser(),
-				true));
+		setSharedForms(formAnswCtrl.listSharedFormsFromCurrentUser(true));
 	}
 
 	public boolean isUpdateList() {

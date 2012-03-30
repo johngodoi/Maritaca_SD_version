@@ -9,12 +9,14 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
+import br.unifesp.maritaca.access.Policy;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.Group;
+import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.web.jsf.util.ItemListBean;
 
 /**
- * Managedbean for the Form sharing service the bean loads the url for sharing.
+ * Managed bean for the Form sharing service the bean loads the url for sharing.
  * In the future, it must load and update access levels of the form
  * 
  * @author emiguel, tiagobarabasz
@@ -35,12 +37,32 @@ public class ShareFormBean extends ItemListBean {
 	public Form getForm() {
 		return form;
 	}
-
+	
 	public void setForm(Form form) {
-		if (form.getUrl() == null) {
-			form = formAnswCtrl.getForm(form.getKey(), true);
+		//Creating a copy of the form in order to prevent temporary modifications
+		form = formAnswCtrl.getForm(form.getKey(), true);	
+		populateFormSharedList(form);
+		
+		this.form = form;		
+	}
+
+	private void populateFormSharedList(Form form) {
+		super.getUsedItens().clear();
+		if(form.getSharedlist()==null){
+			return;
+		}		
+		updateSharedList(form);
+		
+		Collection<User> usersFromList = userCtrl.searchUsersByGroup(form.getSharedlist());
+		for(User usr : usersFromList){
+			super.getUsedItens().add(usr.getEmail());
 		}
-		this.form = form;
+	}
+
+	private void updateSharedList(Form form) {
+		Group sharedList = form.getSharedlist();
+		sharedList = userCtrl.getGroup(sharedList.getKey());
+		form.setSharedlist(sharedList);		
 	}
 
 	public void setForm(String formKey) {
@@ -85,6 +107,16 @@ public class ShareFormBean extends ItemListBean {
 		}
 		
 		Form form = (Form) formObj;
+		
+		if(form.getPolicy().equals(Policy.PUBLIC)){
+			form.setSharedlist(super.userCtrl.getAllUsersGroup());
+		}
+		if(form.getPolicy().equals(Policy.SHARED_HIERARCHICAL)||
+				form.getPolicy().equals(Policy.SHARED_SOCIAL)){
+			String groupName = super.getUsedItens().get(0);
+			Group  group     = super.userCtrl.searchGroupByName(groupName);
+			form.setSharedlist(group);
+		}
 		
 		if(!super.formAnswCtrl.saveForm(form)){
 			return false;

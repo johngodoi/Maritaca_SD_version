@@ -100,7 +100,7 @@
 						render="listforms, sorted" action="#{listFormsBean.sortByDate}">
 					</a4j:commandLink>
 				</f:facet>
-				<h:outputText value="#{aForm.user.key}" styleClass="listItemOption"/>
+				<h:outputText value="#{aForm.user.email}" styleClass="listItemOption"/>
 			</h:column>
 
 			<h:column rendered="#{!cc.attrs.formList.isEmpty()}">

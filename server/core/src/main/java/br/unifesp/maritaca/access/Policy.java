@@ -14,7 +14,7 @@ public enum Policy {
 	SHARED_HIERARCHICAL(
 			new FormPermissions(AccessLevel.NO_ACCESS,     AccessLevel.NO_ACCESS),
 			new FormPermissions(AccessLevel.FULL_ACCESS,   AccessLevel.FULL_ACCESS),
-			new FormPermissions(AccessLevel.READ_AND_LIST, AccessLevel.WRITE_ONLY)),
+			new FormPermissions(AccessLevel.READ_AND_LIST, AccessLevel.CREATE_ONLY)),
 			
 	SHARED_SOCIAL(
 			new FormPermissions(AccessLevel.NO_ACCESS,     AccessLevel.NO_ACCESS),

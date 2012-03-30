@@ -111,7 +111,7 @@ public class EditFormBean extends AbstractBean {
 		if (isNewForm()) {
 			return true;
 		} else if (form != null && form.getKey() != null) {
-			return manager.isOperationEnabled(form, Operation.WRITE);
+			return manager.isOperationEnabled(form, Operation.UPDATE);
 		} else {
 			return editForm;
 		}

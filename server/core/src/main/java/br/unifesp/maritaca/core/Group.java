@@ -87,4 +87,14 @@ public class Group {
 	public void setAllowUsersToJoin(Boolean allowUsersToJoin) {
 		this.allowUsersToJoin = allowUsersToJoin;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof Group){
+			Group grp = (Group)obj;
+			return grp.getKey().equals(getKey());
+		} else {
+			return false;
+		}
+	}
 }
