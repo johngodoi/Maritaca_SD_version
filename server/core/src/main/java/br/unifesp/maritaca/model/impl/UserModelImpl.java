@@ -46,6 +46,11 @@ public class UserModelImpl implements UserModel, Serializable, UseEntityManager 
 		if (user == null){
 			return false;
 		}
+		
+		if(!updateUserGroup(user)){
+			return false;
+		}
+		
 		if (!entityManager.persist(user)) {
 			return false;
 		}		
@@ -54,6 +59,25 @@ public class UserModelImpl implements UserModel, Serializable, UseEntityManager 
 		}		
 		return true;
 	}
+
+	/*
+	 * Update the user group name if the user changed its email
+	 */
+	private boolean updateUserGroup(User user) {
+		if(user.getKey()==null){
+			return true;
+		}		
+		User dbUser = getUser(user.getKey());
+		if(dbUser.getEmail().equals(user.getEmail())){
+			return true;
+		} else {
+			Group userGroup = searchGroupByName(dbUser.getEmail());
+			userGroup.setName(user.getEmail());
+			
+			return entityManager.persist(userGroup);
+		}		
+	}
+
 
 	private boolean createUserGroup(User owner) {		
 		Group group = new Group();

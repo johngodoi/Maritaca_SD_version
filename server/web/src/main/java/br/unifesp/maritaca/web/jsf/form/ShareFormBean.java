@@ -5,15 +5,17 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
-import br.unifesp.maritaca.access.Policy;
 import br.unifesp.maritaca.core.Form;
+import br.unifesp.maritaca.core.FormPermissions;
 import br.unifesp.maritaca.core.Group;
-import br.unifesp.maritaca.core.User;
+import br.unifesp.maritaca.web.jsf.account.CurrentUserBean;
 import br.unifesp.maritaca.web.jsf.util.ItemListBean;
+import br.unifesp.maritaca.web.utils.Utils;
 
 /**
  * Managed bean for the Form sharing service the bean loads the url for sharing.
@@ -25,10 +27,15 @@ import br.unifesp.maritaca.web.jsf.util.ItemListBean;
 @ManagedBean
 @ViewScoped
 public class ShareFormBean extends ItemListBean {
+	@ManagedProperty("#{currentUserBean}")
+	private CurrentUserBean currentUserBean;
+	
 	private static final long serialVersionUID = 1L;	
-	private static final String ROOT_FOR_SHARING      = "/ws/form/share/";
+	private static final String ROOT_FOR_SHARING = "/ws/form/share/";
 	
 	private Form form;
+	
+	private static final String GROUP_REMOVE_OWNER_ERROR = "group_remove_owner_error";
 
 	public ShareFormBean() {
 		super(true, true);
@@ -48,21 +55,12 @@ public class ShareFormBean extends ItemListBean {
 
 	private void populateFormSharedList(Form form) {
 		super.getUsedItens().clear();
-		if(form.getSharedlist()==null){
-			return;
-		}		
-		updateSharedList(form);
-		
-		Collection<User> usersFromList = userCtrl.searchUsersByGroup(form.getSharedlist());
-		for(User usr : usersFromList){
-			super.getUsedItens().add(usr.getEmail());
+		for(FormPermissions fp : formAnswCtrl.getFormPermissions(form)){
+			Group group = super.userCtrl.getGroup(fp.getGroup().getKey());
+			if(!group.equals(super.userCtrl.getAllUsersGroup())){
+				super.getUsedItens().add(group.getName());
+			}			
 		}
-	}
-
-	private void updateSharedList(Form form) {
-		Group sharedList = form.getSharedlist();
-		sharedList = userCtrl.getGroup(sharedList.getKey());
-		form.setSharedlist(sharedList);		
 	}
 
 	public void setForm(String formKey) {
@@ -108,18 +106,15 @@ public class ShareFormBean extends ItemListBean {
 		
 		Form form = (Form) formObj;
 		
-		if(form.getPolicy().equals(Policy.PUBLIC)){
-			form.setSharedlist(super.userCtrl.getAllUsersGroup());
-		}
-		if(form.getPolicy().equals(Policy.SHARED_HIERARCHICAL)||
-				form.getPolicy().equals(Policy.SHARED_SOCIAL)){
-			String groupName = super.getUsedItens().get(0);
-			Group  group     = super.userCtrl.searchGroupByName(groupName);
-			form.setSharedlist(group);
-		}
-		
 		if(!super.formAnswCtrl.saveForm(form)){
 			return false;
+		}
+		
+		if(form.getPolicy().isUseList()){
+			for(String listName : getUsedItens()){
+				Group listGroup = super.userCtrl.searchGroupByName(listName);
+				super.formAnswCtrl.saveFormSharedList(form, listGroup);
+			}
 		}
 				
 		return true;
@@ -158,5 +153,26 @@ public class ShareFormBean extends ItemListBean {
 	protected boolean newItem(Object form) {
 		//Forms being shared are already saved in the database
 		return false;
+	}
+	
+	@Override
+	public void setRemoveItem(String item){
+		clearAddItemError();
+		
+		String currentUsrEmail = getCurrentUserBean().getUser().getEmail();		
+		if(item.equals(currentUsrEmail)){
+			setAddItemError(Utils
+					.getMessageFromResourceProperties(GROUP_REMOVE_OWNER_ERROR));
+			return;
+		}
+		getUsedItens().remove(item);
+	}
+
+	public CurrentUserBean getCurrentUserBean() {
+		return currentUserBean;
+	}
+
+	public void setCurrentUserBean(CurrentUserBean currentUserBean) {
+		this.currentUserBean = currentUserBean;
 	}
 }

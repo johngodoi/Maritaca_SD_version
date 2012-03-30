@@ -34,6 +34,8 @@ public interface FormAnswerModel extends GenericModel{
 	
 	Collection<FormPermissions> getFormPermissionsByGroup(Group group);
 	
+	void saveFormSharedList(Form form, Group list);
+	
 	/************* ANSWER ***********/
 	boolean saveAnswer(Answer answer);
 

@@ -33,6 +33,13 @@ public class FormPermissions {
 	public FormPermissions() {
 	}
 	
+	public FormPermissions(Form form, Group group, AccessLevel formAccess, AccessLevel answAccess){
+		setForm(form);
+		setGroup(group);
+		setFormAccess(formAccess);
+		setAnswAccess(answAccess);		
+	}
+
 	public FormPermissions(AccessLevel formAccess, AccessLevel answAccess){
 		setFormAccess(formAccess);
 		setAnswAccess(answAccess);

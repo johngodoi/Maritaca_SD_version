@@ -15,6 +15,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import br.unifesp.maritaca.access.AccessLevel;
+import br.unifesp.maritaca.access.Policy;
 import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Form;
@@ -111,11 +112,6 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 			throw new IllegalArgumentException(
 					"User does not exist in database");
 		}
-	}
-
-	private void formUserGroupForSharedList(Form form) {
-		User owner = userModel.getUser(form.getUser().getKey());
-		form.setSharedlist(owner.getUserGroup());				
 	}
 
 	/**
@@ -350,6 +346,9 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 	public <T> boolean userHasPermission(User user, T entity, Operation op) {
 		if (user == null && op == null)
 			return false;
+		if(user.equals(userModel.getManagerModel().getRootUser())){
+			return true;
+		}
 		// check type
 		if (entity instanceof Form) {
 			return userHasPermissionInForm(user, (Form) entity, op);
@@ -497,28 +496,35 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 		}		
 	}
 	
+	@Override
+	public void saveFormSharedList(Form form, Group group){
+		verifyEntity(form);
+		verifyEntity(group);
+		
+		Policy p = form.getPolicy();
+		
+		FormPermissions listPermissions = p.buildListFormPermission(form, group);
+		if(!saveFormPermission(listPermissions)){
+			throw new RuntimeException("Error saving form permissions");
+		}
+	}
+	
 	private boolean saveFormPermissionsByPolicy(Form form) {
 		if (form == null || form.getUser() == null) {
 			throw new IllegalArgumentException(
 					"Incomplete parameters, form permission not saved");
 		}		
 		deleteOldFormPermissions(form);
-		User                  owner       = userModel.getUser(form.getUser().getKey());
-		Group                 ownerGrp    = owner.getUserGroup();
-		Group                 listGrp     = form.getSharedlist();
-		Group                 allUsersGrp = userModel.getAllUsersGroup();		
-		List<FormPermissions> permissions = form.getPolicy().buildPermissions(ownerGrp, allUsersGrp, listGrp);
 		
-		return saveFormPermissions(form,permissions);
-	}
-	
-	private boolean saveFormPermissions(Form form,	List<FormPermissions> permissions) {
-		for(FormPermissions fp : permissions){
-			fp.setForm(form);
-			if(!saveFormPermission(fp)){
-				return false;
-			}
-		}
-		return true;
+		User   owner       = userModel.getUser(form.getUser().getKey());
+		Group  ownerGrp    = owner.getUserGroup();
+		Group  allUsersGrp = userModel.getAllUsersGroup();		
+
+		Policy p           = form.getPolicy();
+		
+		FormPermissions ownerPermissions  = p.buildOwnerFormPermission(form, ownerGrp);
+		FormPermissions publicPermissions = p.buildPublicFormPermission(form, allUsersGrp);
+		
+		return saveFormPermission(ownerPermissions)&& saveFormPermission(publicPermissions);
 	}
 }

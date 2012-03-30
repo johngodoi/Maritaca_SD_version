@@ -22,18 +22,20 @@ import org.mockito.stubbing.Answer;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.Group;
 import br.unifesp.maritaca.core.User;
+import br.unifesp.maritaca.model.ManagerModel;
 import br.unifesp.maritaca.model.UserModel;
 import br.unifesp.maritaca.persistence.EntityManager;
 
 public class FormAnswerCtrlImplTest {
-	private static final String uuid = "637dea60-146e-11e1-a7c0-d2b70b6d4d67";
+	private static final String uuid =  "637dea60-146e-11e1-a7c0-d2b70b6d4d67";
 	private static final String uuid2 = "537dea60-146e-11e1-a7c0-d2b70b6d4d67";
-	// private static final String uuid3 =
-	// "437dea60-146e-11e1-a7c0-d2b70b6d4d67";
+	private static final String uuid3 = "437dea60-146e-11e1-a7c0-d2b70b6d4d67";
 
 	private EntityManager em;
 	private FormAnswerModelImpl frControl;
 	private UserModel userModel;
+	
+	private User      root;
 
 	@Before
 	public void setUp() throws Exception {
@@ -42,6 +44,18 @@ public class FormAnswerCtrlImplTest {
 		frControl.setEntityManager(em);
 		userModel = mock(UserModel.class);
 		frControl.setUserModel(userModel);
+		
+		ManagerModel mm = mock(ManagerModelImpl.class);
+		
+		root = new User();
+		root.setKey(uuid3);
+		when(mm.getRootUser()).thenAnswer(new Answer<User>() {
+			@Override
+			public User answer(InvocationOnMock invocation) throws Throwable {
+				return root;
+			}			
+		});		
+		userModel.setManagerModel(mm);
 	}
 
 	@After

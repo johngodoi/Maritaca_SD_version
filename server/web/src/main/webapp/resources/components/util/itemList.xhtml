@@ -27,15 +27,17 @@
 			<a4j:commandButton value="#{msgs.item_list_add_item_button}"
 						action="#{cc.attrs.backBean.addSelectedItem}"
 						execute="selectedItem"
-						render="itemList"/>					
+						render="addItemError itemList"/>					
 		</h:panelGrid>
 		
+		<h:outputText styleClass="error" id="addItemError"
+					  value="#{cc.attrs.backBean.addItemError}" />
 		<rich:panel>
 			<rich:list	value="#{cc.attrs.backBean.usedItens}" var="item"
 						id="itemList">
 				#{item}
 				<a4j:commandButton	value="-" type="button"
-									render="itemList" immediate="true">
+									render="addItemError itemList" immediate="true">
 					<f:setPropertyActionListener target="#{cc.attrs.backBean.removeItem}"
 												 value="#{item}"/>
 				</a4j:commandButton>

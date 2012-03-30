@@ -1,8 +1,6 @@
 package br.unifesp.maritaca.access;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
 import br.unifesp.maritaca.core.Group;
 
@@ -29,8 +27,8 @@ public enum Policy {
 	private FormPermissions ownerPermissions;
 	private FormPermissions listPermissions;
 	
-	Policy(FormPermissions allUsersPermissions, FormPermissions ownerPermissions, FormPermissions listPermissions){
-		setAllUsersPermissions(allUsersPermissions);
+	Policy(FormPermissions publicPermissions, FormPermissions ownerPermissions, FormPermissions listPermissions){
+		setAllUsersPermissions(publicPermissions);
 		setOwnerPermissions(ownerPermissions);
 		setListPermissions(listPermissions);
 	}
@@ -90,30 +88,23 @@ public enum Policy {
 			return true;
 		}
 	}
-
-	/*
-	 * TODO: This method should clone the permissions before returning.
-	 * Otherwise the permissions might be changed by the caller. 
-	 */
-	public List<FormPermissions> buildPermissions(Group owner, Group allUsers, Group list) {
-		List<FormPermissions> permissions = new ArrayList<FormPermissions>();
+	
+	public FormPermissions buildPublicFormPermission(Form form, Group group ){
+		return buildFormPermission(form, group, getAllUsersPermissions());		
+	}
+	
+	public FormPermissions buildListFormPermission(Form form, Group group ){
+		return buildFormPermission(form, group, getListPermissions());
+	}
+	
+	public FormPermissions buildOwnerFormPermission(Form form, Group group ){
+		return buildFormPermission(form, group, getOwnerPermissions());
+	}
+	
+	private FormPermissions buildFormPermission(Form form, Group group, FormPermissions fp ){
+		AccessLevel answAccessLv = fp.getAnswAccess();
+		AccessLevel formAccessLv = fp.getFormAccess();
 		
-		FormPermissions fpOwner  = this.getOwnerPermissions();
-		FormPermissions fpAllUsr = this.getAllUsersPermissions();
-		FormPermissions fpList   = this.getListPermissions();						
-		
-		if(fpOwner!=null){
-			fpOwner.setGroup(owner);
-			permissions.add(fpOwner);
-		}
-		if(fpAllUsr!=null){
-			fpAllUsr.setGroup(allUsers);
-			permissions.add(fpAllUsr);
-		}
-		if(fpList!=null){
-			fpList.setGroup(list);
-			permissions.add(fpList);
-		}
-		return permissions;
+		return new FormPermissions(form,group,formAccessLv,answAccessLv);		
 	}
 }

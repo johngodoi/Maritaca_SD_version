@@ -85,48 +85,48 @@ public class AuthorizationTestsSetUp {
 		publicFormUser1.setPolicy(publicPolicy);
 		em.persist(publicFormUser1);
 			
-		for(FormPermissions fp : publicPolicy.buildPermissions(grpUser1, grpAllUsers, grp1)){
-			fp.setForm(publicFormUser1);
-			em.persist(fp);
-		}
-		
-		
+		FormPermissions fp;
+		fp = publicPolicy.buildPublicFormPermission(publicFormUser1, grpAllUsers);
+		em.persist(fp);
+		fp = publicPolicy.buildOwnerFormPermission(publicFormUser1, grpUser1);
+		em.persist(fp);
+				
 		privateFormUser1.setUser(user1grp1);
 		
 		Policy privatePolicy = Policy.PRIVATE;		
 		privateFormUser1.setPolicy(privatePolicy);
 		em.persist(privateFormUser1);
 			
-		for(FormPermissions fp : privatePolicy.buildPermissions(grpUser1, grpAllUsers, grp1)){
-			fp.setForm(privateFormUser1);
-			em.persist(fp);
-		}
-		
+		fp = privatePolicy.buildPublicFormPermission(privateFormUser1, grpAllUsers);
+		em.persist(fp);
+		fp = privatePolicy.buildOwnerFormPermission(privateFormUser1, grpUser1);
+		em.persist(fp);
 		
 		sharedHierFormUser1.setUser(user1grp1);
 		
 		Policy sharedHierPolicy = Policy.SHARED_HIERARCHICAL;		
 		sharedHierFormUser1.setPolicy(sharedHierPolicy);
-		sharedHierFormUser1.setSharedlist(grp1);
 		em.persist(sharedHierFormUser1);
 			
-		for(FormPermissions fp : sharedHierPolicy.buildPermissions(grpUser1, grpAllUsers, grp1)){
-			fp.setForm(sharedHierFormUser1);
-			em.persist(fp);
-		}
-		
+		fp = sharedHierPolicy.buildPublicFormPermission(sharedHierFormUser1, grpAllUsers);
+		em.persist(fp);
+		fp = sharedHierPolicy.buildOwnerFormPermission(sharedHierFormUser1, grpUser1);
+		em.persist(fp);
+		fp = sharedHierPolicy.buildListFormPermission(sharedHierFormUser1, grp1);
+		em.persist(fp);
 		
 		sharedSocialFormUser1.setUser(user1grp1);
 		
 		Policy sharedSocialPolicy = Policy.SHARED_SOCIAL;		
 		sharedSocialFormUser1.setPolicy(sharedSocialPolicy);
-		sharedSocialFormUser1.setSharedlist(grp1);
 		em.persist(sharedSocialFormUser1);
 			
-		for(FormPermissions fp : sharedSocialPolicy.buildPermissions(grpUser1, grpAllUsers, grp1)){
-			fp.setForm(sharedSocialFormUser1);
-			em.persist(fp);
-		}
+		fp = sharedSocialPolicy.buildPublicFormPermission(sharedSocialFormUser1, grpAllUsers);
+		em.persist(fp);
+		fp = sharedSocialPolicy.buildOwnerFormPermission(sharedSocialFormUser1, grpUser1);
+		em.persist(fp);
+		fp = sharedSocialPolicy.buildListFormPermission(sharedSocialFormUser1, grp1);
+		em.persist(fp);
 				
 		formAnswModel = ModelFactory.getInstance().createFormResponseModel();
 		formAnswModel.setEntityManager(em);

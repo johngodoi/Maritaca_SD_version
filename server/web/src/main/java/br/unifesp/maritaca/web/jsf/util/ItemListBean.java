@@ -15,9 +15,10 @@ public abstract class ItemListBean extends AbstractBean{
 	
 	private static final long serialVersionUID        = 1L;
 	
-	private static final String ITEM_LIST_EMPTY_FIELD = "item_list_add_empty_field";
-	private static final String ITEM_LIST_ADD_SUCESS  = "item_list_add_sucess";
-	private static final String ITEM_LIST_ADD_FAILURE = "item_list_add_failure";
+	private static final String ITEM_LIST_EMPTY_FIELD   = "item_list_add_empty_field";
+	private static final String ITEM_LIST_REPEATED_ITEM = "item_list_repeated_item";
+	private static final String ITEM_LIST_ADD_SUCESS    = "item_list_add_sucess";
+	private static final String ITEM_LIST_ADD_FAILURE   = "item_list_add_failure";
 	
 	private static final Log log = LogFactory.getLog(ItemListBean.class);
 
@@ -58,9 +59,17 @@ public abstract class ItemListBean extends AbstractBean{
 	}
 	
 	public void addSelectedItem(){
+		clearAddItemError();
+		
 		if(getSelectedItem()==null||getSelectedItem().equals("")){
 			setAddItemError(Utils
 					.getMessageFromResourceProperties(ITEM_LIST_EMPTY_FIELD));
+			return;
+		}
+		
+		if(getUsedItens().contains(getSelectedItem())){
+			setAddItemError(Utils
+					.getMessageFromResourceProperties(ITEM_LIST_REPEATED_ITEM));
 			return;
 		}
 		
@@ -103,6 +112,10 @@ public abstract class ItemListBean extends AbstractBean{
 	private void clearItens() {
 		getUsedItens().clear();
 		setSelectedItem(null);
+	}
+	
+	protected void clearAddItemError(){
+		setAddItemError("");
 	}
 
 	public String cancel(){
