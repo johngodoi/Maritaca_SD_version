@@ -16,7 +16,7 @@
 		<div id="divFormTitle">
 			<label>#{msgs.form_title} : </label>
 			<h:inputText value="#{editFormBean.form.title}" id="titleForm"
-				readonly="#{!editFormBean.editForm}" onkeyup="updateTitle(value);" />
+				readonly="#{!editFormBean.editableForm}" onkeyup="updateTitle(value);" />
 		</div>
 		<h:panelGrid id="formRenderTable" columns="3" >
 
@@ -49,10 +49,6 @@
 				<!-- table of field properties -->
 			</fieldset>
 		</h:panelGrid>
-				
-		<h:inputHidden styleClass="formXmlValue"
-			value="#{editFormBean.form.xml}"
-			readonly="#{!editFormBean.editForm}" />
 
 		<c:if test="#{importFormBean.successful}">
 			<h:outputScript>
@@ -61,11 +57,11 @@
 		</c:if>
 
 		<h:outputScript>
-			initFormEditor('#{(editFormBean.form.title!=null)?editFormBean.form.title:msgs.form_new}');
+			initFormEditor('#{(editFormBean.form.title!=null) ? editFormBean.form.title : msgs.form_new}');
 			if(#{!editFormBean.newForm} || #{importFormBean.successful}){
 				try{
 					loadFormFromXML('#{editFormBean.xml}');
-				} catch(err) {
+				} catch( err ) {
 					alert('#{msgs.form_edit_error_loading}, ' + err )
 				}
 			}

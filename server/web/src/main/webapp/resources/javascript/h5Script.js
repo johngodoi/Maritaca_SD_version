@@ -18,10 +18,11 @@ function initFormEditor(formtitle) {
 
 	form = new FormClass();
 	warning = false;
-	// It used to be use to localStorage
 	// This will be maintained a little more
 	currentForm = localStorage['currentForm'];
 	if (currentForm) {
+		// It used to be use to localStorage
+		// This were buttons. Actually they weren't in xhtml.
 		$('#loadFormLocal').show();
 		$('#deleteFormLocal').show();
 	}
@@ -68,7 +69,9 @@ function initFormEditor(formtitle) {
 		if (e.preventDefault) {
 			e.preventDefault();
 		}
+		
 		type = e.dataTransfer.getData('Text');
+		
 		// fieldFactory Method, located in h5FieldClasses.js
 		var elem = fieldFactory(type);
 		if (elem == null) {
@@ -78,7 +81,6 @@ function initFormEditor(formtitle) {
 		form.renderForm();
 
 		$('li#field_' + (form.elements.length - 1)).click();
-
 		return true;
 	});
 
@@ -121,6 +123,9 @@ function initForm() {
 }
 
 function newFormDialog() {
+	var message = createMessageDialog(jQuery.i18n.prop('msg_form_messageDialogNewForm')); 
+	$('#dialog-confirm p').append(message);
+	
 	$( "#dialog-confirm" ).dialog({
 		autoOpen: false,
 		modal: true,
@@ -138,9 +143,14 @@ function newFormDialog() {
 		}
 	});
 	$("#dialog-confirm").dialog('open');
+	
+	$('#messageDialogConfirm').remove();
 }
 
 function clearForm() {
+	var message = createMessageDialog(jQuery.i18n.prop('msg_form_messageDialogClean')); 
+	$('#dialog-confirm p').append(message);
+	
 	if(form.elements.length > 0) {
 		$( "#dialog-confirm" ).dialog({
 			autoOpen: false,
@@ -167,6 +177,8 @@ function clearForm() {
 	} else {
 		addMessage(jQuery.i18n.prop('msg_form_clearMessageInfo'), 'info');
 	}
+	
+	$('#messageDialogConfirm').remove();
 }
 
 function sendFormToServer(){
@@ -190,6 +202,8 @@ function saveFormAsDialog(thetitle) {
 		width: 600,
 		buttons: {
 			Save : function() {
+				$('input[id$=":titleForm"]').removeAttr("readonly"); 
+				
 				if(form.elements.length == 0) {
 					$( this ).dialog( "close" );
 					addMessage(jQuery.i18n.prop('msg_error_emptyForm'), 'error');
@@ -200,7 +214,7 @@ function saveFormAsDialog(thetitle) {
 				$('#' + form.container + ' legend').html(newTitle);
 				form.title = newTitle;
 				var xml = form.toXML();
-				saveFormAsAjax(xml);	
+				saveFormAsAjax(xml, newTitle);	
 				warning = false;
 				$( this ).dialog( "close" );
 			},
@@ -210,6 +224,62 @@ function saveFormAsDialog(thetitle) {
 		}
 	});
 	$("#dialogSaveFormAs").dialog('open');
+}
+
+function deleteFormDialog() {
+	var message = createMessageDialog(jQuery.i18n.prop('msg_form_messageDialogDeleteForm')); 
+	$('#dialog-confirm p').append(message);
+	
+	$( "#dialog-confirm" ).dialog({
+		autoOpen: false,
+		modal: true,
+		title: jQuery.i18n.prop('msg_form_deleteDialogTitle'),
+		width: 500,
+		buttons: {
+			"Delete Form" : function() {
+				deleteFormAjax();
+				$( this ).dialog( "close" );
+			},
+			Cancel: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	});
+	$("#dialog-confirm").dialog('open');
+	
+	$('#messageDialogConfirm').remove();
+}
+
+function collectFormDialog() {
+	var message = createMessageDialog(jQuery.i18n.prop('msg_form_messageDialogCollect')); 
+	$('#dialog-confirm p').append(message);
+	
+	$( "#dialog-confirm" ).dialog({
+		autoOpen: false,
+		modal: true,
+		title: jQuery.i18n.prop('msg_form_collectDialogTitle'),
+		width: 500,
+		buttons: {
+			"Set to Collect" : function() {
+				setFormAsCollectableAjax();
+				$( this ).dialog( "close" );
+			},
+			Cancel: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	});
+	$("#dialog-confirm").dialog('open');
+	
+	$('#messageDialogConfirm').remove();
+}
+
+function createMessageDialog(messageDialog){
+	var message = '<span id="messageDialogConfirm">';
+	message += messageDialog; 
+	message += '</span>';
+	
+	return message;
 }
 
 function updateTitle(value){
@@ -272,7 +342,7 @@ function saveField() {
 	
 	form.renderForm();
 	$('li#field_' + editElement).click();
-	addMessage(jQuery.i18n.prop('msg_saveautomatic'), 'info');
+	//addMessage(jQuery.i18n.prop('msg_saveautomatic'), 'info');
 }
 ///////////////////////////////////////////////////////////
 

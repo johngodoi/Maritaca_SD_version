@@ -15,45 +15,90 @@ import br.unifesp.maritaca.web.jsf.AbstractBean;
 @ViewScoped
 public class EditFormBean extends AbstractBean {
 	private static final long serialVersionUID = 1L;
+	
 	@ManagedProperty("#{currentUserBean.user}")
-	private User user;
+	private User currentUserBean;
+
 	@ManagedProperty("#{manager}")
 	private Manager manager;
+	
 	private Form form;
-	private String saveStatus;
 	private String xml;
-
+	private String saveFormAsTitle;
+	
 	private boolean newForm;
-	private boolean editForm;
+	private boolean editableForm;
 
 	public EditFormBean() {
 		super(true, false);
 		clean();
 	}
 
-	public User getUser() {
-		return user;
+	public void clean() {
+		setForm(new Form());
+		setXml("");
+		setNewForm(true);
+		setEditableForm(true);
 	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public boolean isNewForm() {
-		return newForm;
-	}
-
-	public void setNewForm(boolean newForm) {
-		this.newForm = newForm;
-		if (newForm) {
-			setEditForm(newForm);
+	
+	public void saveForm() {
+		if (form.getXml() != null && form.getXml().length() > 0) {
+			if (form.getUser() == null) {
+				form.setUser(currentUserBean);
+			}
+			if(form.getTitle()==null||form.getTitle().length()==0){
+				addMessage("form_edit_missing_title", FacesMessage.SEVERITY_ERROR);				
+				return;
+			}
+			if (formAnswCtrl.saveForm(form)) {
+				setNewForm(false);
+				addMessage("form_edit_save_success", FacesMessage.SEVERITY_INFO);
+				return;
+			}
 		}
+		addMessage("form_edit_save_error", FacesMessage.SEVERITY_ERROR);
+	}
+	
+	public void saveFormAs() {
+		setForm(new Form());
+		setNewForm(true);
+		setEditableForm(true);
+		form.setXml(getXml());
+		form.setTitle(getSaveFormAsTitle());
+		saveForm();
+	}
+
+	public String deleteForm() {
+		if (getForm().getKey() != null) {
+			formAnswCtrl.deleteForm(getForm());
+			clean();
+		}
+		return null;
+	}
+	
+	public void setFormAsCollectable(){
+		System.out.println("set as collectable: " + form.getTitle());
+	}
+
+	////// Getters and Setters //////
+	public String getXml() {
+		if (form != null && form.getXml() != null) {
+			return form.getXml();
+		}
+		return xml;
+	}
+
+	public void setXml(String xml) {
+		if (getForm() != null) {
+			getForm().setXml(xml);
+		}
+		this.xml = xml;
 	}
 
 	public Form getForm() {
 		return form;
 	}
-
+	
 	public void setForm(Form form) {
 		if (form == null)
 			return;
@@ -69,92 +114,51 @@ public class EditFormBean extends AbstractBean {
 		}
 	}
 
-	public void saveForm() {
-		if (form.getXml() != null && form.getXml().length() > 0) {
-			if (form.getUser() == null) {
-				form.setUser(user);
-			}
-			if(form.getTitle()==null||form.getTitle().length()==0){
-				addMessage("form_edit_missing_title", FacesMessage.SEVERITY_ERROR);				
-				return;
-			}
-			if (formAnswCtrl.saveForm(form)) {
-				setSaveStatus("success");
-				addMessage("form_edit_save_success", FacesMessage.SEVERITY_INFO);
-				return;
-			}
-		}
-
-		addMessage("form_edit_save_error", FacesMessage.SEVERITY_ERROR);
+	public boolean isNewForm() {
+		return newForm;
 	}
 	
-	public void saveFormAs() {
-		String title = form.getTitle();
-		setForm(new Form());
-		setSaveStatus("");
-		setNewForm(true);
-		setEditForm(true);
-		form.setXml(getXml());
-		form.setTitle(title);
-		saveForm();
-	}
-
-	public String getSaveStatus() {
-		return saveStatus;
-	}
-
-	public void setSaveStatus(String saveStatus) {
-		this.saveStatus = saveStatus;
-	}
-
-	public boolean isEditForm() {
+	public void setNewForm(boolean newForm) {
+		this.newForm = newForm;
+		if (newForm) {
+			setEditableForm(newForm);
+		}
+	}	
+		
+	public boolean isEditableForm() {
 		if (isNewForm()) {
 			return true;
 		} else if (form != null && form.getKey() != null) {
 			return manager.isOperationEnabled(form, Operation.UPDATE);
 		} else {
-			return editForm;
+			return editableForm;
 		}
 	}
-
-	public void setEditForm(boolean editForm) {
-		this.editForm = editForm;
+	
+	public void setEditableForm(boolean editableForm) {
+		this.editableForm = editableForm;
+	}
+	
+	public String getSaveFormAsTitle() {
+		return saveFormAsTitle;
 	}
 
-	public String deleteForm() {
-		if (getForm().getKey() != null) {
-			formAnswCtrl.deleteForm(getForm());
-			clean();
-		}
-		return null;
+	public void setSaveFormAsTitle(String saveFormAsTitle) {
+		this.saveFormAsTitle = saveFormAsTitle;
+	}
+	
+	public User getCurrentUserBean() {
+		return currentUserBean;
 	}
 
-	public String getXml() {
-		if (form != null && form.getXml() != null) {
-			return form.getXml();
-		}
-		return xml;
+	public void setCurrentUserBean(User currentUserBean) {
+		this.currentUserBean = currentUserBean;
 	}
-
-	public void setXml(String xml) {
-		if (getForm() != null) {
-			getForm().setXml(xml);
-		}
-		this.xml = xml;
-	}
-
-	public void clean() {
-		setForm(new Form());
-		setSaveStatus("");
-		setXml("");
-		setNewForm(true);
-		setEditForm(true);
-	}
-
+	
 	public Manager getManager() {
 		return manager;
 	}
-
+	
 	public void setManager(Manager manager) {
 		this.manager = manager;
 	}

@@ -3,8 +3,6 @@ package br.unifesp.maritaca.model;
 import java.util.HashMap;
 import java.util.UUID;
 
-import me.prettyprint.cassandra.utils.TimeUUIDUtils;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -23,8 +21,6 @@ public class ModelFactory {
 	private HashMap<UUID, UserModel> userModelList;
 	private HashMap<UUID, ManagerModel> managerModelList;
 	private HashMap<UUID, FormAnswerModel> formAnswModelList;
-	private UUID uidForNull = TimeUUIDUtils.getUniqueTimeUUIDinMillis();// uuid for user null, temporary, while restful
-							// services has authentication
 
 	public static ModelFactory getInstance() {
 		if (instance == null) {
@@ -47,7 +43,8 @@ public class ModelFactory {
 	public FormAnswerModel createFormResponseModel(User currentUser){
 		FormAnswerModel formAnsModel = null;
 		synchronized (formAnswModelList) {
-			formAnsModel = formAnswModelList.get(currentUser.getKey());
+			if(currentUser != null)
+				formAnsModel = formAnswModelList.get(currentUser.getKey());
 			if (formAnsModel == null) {
 
 				formAnsModel = new FormAnswerModelImpl();
@@ -57,7 +54,8 @@ public class ModelFactory {
 								EntityManagerFactory.HECTOR_MARITACA_EM);
 				formAnsModel.setEntityManager(em);
 				formAnsModel.setUserModel(createUserModel(currentUser));
-				formAnswModelList.put(currentUser.getKey(), formAnsModel);
+				if(currentUser != null)
+					formAnswModelList.put(currentUser.getKey(), formAnsModel);
 			}
 		}
 		return formAnsModel;
@@ -66,7 +64,9 @@ public class ModelFactory {
 	public UserModel createUserModel(User currentUser) {
 		UserModel userModel = null;
 		synchronized (userModelList) {
-			userModel = userModelList.get(currentUser.getKey());
+			if(currentUser != null)
+				userModel = userModelList.get(currentUser.getKey());
+			
 			if (userModel == null) {
 				userModel = new UserModelImpl();
 				userModel.setCurrentUser(currentUser);
@@ -75,7 +75,8 @@ public class ModelFactory {
 								EntityManagerFactory.HECTOR_MARITACA_EM);
 				userModel.setEntityManager(em);
 				userModel.setManagerModel(createManagerModel(currentUser));
-				userModelList.put(currentUser.getKey(), userModel);
+				if(currentUser != null)
+					userModelList.put(currentUser.getKey(), userModel);
 			}
 		}
 		return userModel;
@@ -88,7 +89,9 @@ public class ModelFactory {
 	public ManagerModel createManagerModel(User currentUser) {
 		ManagerModel managerModel = null;
 		synchronized (managerModelList) {
-			managerModel = managerModelList.get(currentUser.getKey());
+			if(currentUser != null)
+				managerModel = managerModelList.get(currentUser.getKey());
+			
 			if (managerModel == null) {
 				managerModel = new ManagerModelImpl();
 				managerModel.setCurrentUser(currentUser);
@@ -96,7 +99,8 @@ public class ModelFactory {
 						.createEntityManager(
 								EntityManagerFactory.HECTOR_MARITACA_EM);
 				managerModel.setEntityManager(em);
-				managerModelList.put(currentUser.getKey(), managerModel);
+				if(currentUser != null)
+					managerModelList.put(currentUser.getKey(), managerModel);
 			}
 		}
 
@@ -155,11 +159,6 @@ public class ModelFactory {
 	}
 
 	private User getCurrentUser() {
-		User currUser = UserLocator.getCurrentUser();
-		if (currUser == null) {
-			currUser = new User();
-			currUser.setKey(uidForNull);// SET FOR NULL USER, MUST BE CHANGED
-		}
-		return currUser;
+		return UserLocator.getCurrentUser();
 	}
 }
