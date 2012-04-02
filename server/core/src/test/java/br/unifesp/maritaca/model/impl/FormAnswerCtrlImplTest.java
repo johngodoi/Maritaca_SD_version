@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.mock;
@@ -30,10 +31,12 @@ public class FormAnswerCtrlImplTest {
 	private static final String uuid =  "637dea60-146e-11e1-a7c0-d2b70b6d4d67";
 	private static final String uuid2 = "537dea60-146e-11e1-a7c0-d2b70b6d4d67";
 	private static final String uuid3 = "437dea60-146e-11e1-a7c0-d2b70b6d4d67";
+	private static final String uuid4 = "437dea60-146e-11e1-a7c0-d2b70b6d4444";
 
 	private EntityManager em;
 	private FormAnswerModelImpl frControl;
 	private UserModel userModel;
+	private ManagerModel managerModel;
 	
 	private User      root;
 
@@ -42,68 +45,37 @@ public class FormAnswerCtrlImplTest {
 		em = mock(EntityManager.class);
 		frControl = new FormAnswerModelImpl();
 		frControl.setEntityManager(em);
-		userModel = mock(UserModel.class);
+		userModel = new UserModelImpl();
 		frControl.setUserModel(userModel);
 		
-		ManagerModel mm = mock(ManagerModelImpl.class);
+		managerModel = mock(ManagerModelImpl.class);
 		
 		root = new User();
 		root.setKey(uuid3);
-		when(mm.getRootUser()).thenAnswer(new Answer<User>() {
+		when(managerModel.getRootUser()).thenAnswer(new Answer<User>() {
 			@Override
 			public User answer(InvocationOnMock invocation) throws Throwable {
 				return root;
 			}			
 		});		
-		userModel.setManagerModel(mm);
+		userModel.setManagerModel(managerModel);
 	}
 
 	@After
 	public void tearDown() throws Exception {
 	}
 
-	@SuppressWarnings("unchecked")
-	@Test
-	public void testSaveForm() {
-		Form form = new Form();
-		form.setUser(uuid2);
-		form.setTitle("title");
-		form.setXml("xml");
-
-		when(em.persist(any())).thenAnswer(new Answer<Boolean>() {
-
-			@Override
-			public Boolean answer(InvocationOnMock invocation) throws Throwable {
-				if (invocation.getArguments()[0] instanceof Form) {
-					Form form = (Form) invocation.getArguments()[0];
-					form.setKey(uuid);
-				}
-				return true;
-			}
-		});
-
-		when(em.rowDataExists((Class<User>) notNull(), any(UUID.class)))
-				.thenReturn(true);
-		
-		when(userModel.getAllUsersList()).thenAnswer(new Answer<MaritacaList>() {
-
-			@Override
-			public MaritacaList answer(InvocationOnMock invocation) throws Throwable {
-				MaritacaList g = new MaritacaList();
-				g.setKey(uuid2);
-				g.setName(ManagerModelImpl.ALL_USERS);
-				return g;
-			}
-		});
-
-		assertNull(form.getKey());
-		assertTrue(frControl.saveForm(form));
-		assertEquals(uuid, form.getKey().toString());
-	}
-
 	@Test
 	public void testGetForm() {
-		assertNull(frControl.getForm(null, false));
+		frControl.setCurrentUser(root);
+		
+		try{
+			frControl.getForm(null, false);
+			fail();
+		}catch(IllegalArgumentException e){			
+		}catch(Exception e){
+			fail();
+		}
 
 		UUID uid = UUID.fromString(uuid);
 		Form form = new Form();

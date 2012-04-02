@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -45,6 +46,9 @@ public class UserModelImplTest {
 	public void testSaveUser() {
 		User user = new User();
 		user.setEmail("user@email.com");
+		
+		MaritacaList userList = new MaritacaList();
+		user.setMaritacaList(userList);				
 
 		when(em.persist(any())).thenAnswer(new Answer<Boolean>() {
 
@@ -133,21 +137,26 @@ public class UserModelImplTest {
 	
 	
 	@Test
-	public void testOwnerIsInGroup() {		
-		MaritacaList grp1 = new MaritacaList();
-		grp1.setName("grp1");
-		grp1.setKey(uuid);
+	public void testOwnerIsInList() {		
+		final MaritacaList list1 = new MaritacaList();
+		list1.setName("list1");
+		list1.setKey(uuid);
 		
-		User  ownerGrp1 = new User();
-		ownerGrp1.setKey(uuid2);
+		final User  ownerList1 = new User();
+		ownerList1.setKey(uuid2);
 		
-		grp1.setOwner(ownerGrp1);
+		list1.setOwner(ownerList1);
 		
-		when(em.cQuery(MaritacaListUser.class, "maritacaList", uuid)).thenAnswer(new Answer<List<MaritacaListUser>>(){
+		when(em.cQuery(MaritacaListUser.class, "maritacaListUser", uuid)).thenAnswer(new Answer<List<MaritacaListUser>>(){
 			@Override
 			public List<MaritacaListUser> answer(InvocationOnMock invocation)
 					throws Throwable {
-				return new ArrayList<MaritacaListUser>();
+				
+				List<MaritacaListUser> lists = new ArrayList<MaritacaListUser>();
+				MaritacaListUser list = new MaritacaListUser(list1, ownerList1);
+				lists.add(list);
+				
+				return lists;
 			}			
 		});
 		
@@ -160,6 +169,13 @@ public class UserModelImplTest {
 				
 				return rootUsr;
 			}						
+		});
+		
+		when(em.find(User.class, UUID.fromString(uuid2))).thenAnswer(new Answer<User>(){
+			@Override
+			public User answer(InvocationOnMock invocation) throws Throwable {
+				return ownerList1;
+			}			
 		});
 		
 		when(em.cQuery(MaritacaList.class, "owner", uuid)).thenAnswer(new Answer<List<MaritacaList>>(){
@@ -176,8 +192,8 @@ public class UserModelImplTest {
 		});
 
 		
-		Collection<User> usersFromGrp = userModel.searchUsersByMaritacaList(grp1);		
-		assertTrue(usersFromGrp.contains(ownerGrp1));
+		Collection<User> usersFromGrp = userModel.searchUsersByMaritacaList(list1);		
+		assertTrue(usersFromGrp.contains(ownerList1));
 		assertEquals(usersFromGrp.size(),1);	
 	}	
 }

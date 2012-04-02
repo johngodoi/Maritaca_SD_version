@@ -96,6 +96,9 @@ public class User implements Serializable, Cloneable{
 	
 	@Override
 	public boolean equals(Object obj) {
+		if(obj == null){
+			return false;
+		}
 		if(obj instanceof User){
 			User user = (User)obj;
 			return user.getKey().equals(getKey());

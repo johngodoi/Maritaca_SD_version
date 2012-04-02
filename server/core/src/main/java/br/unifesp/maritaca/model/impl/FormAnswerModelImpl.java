@@ -131,6 +131,9 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 
 	@Override
 	public Form getForm(UUID uid, boolean minimal) {
+		if (uid == null ) {
+			throw new IllegalArgumentException("Incomplete parameters");
+		}
 		Form form = entityManager.find(Form.class, uid, minimal);
 		if(userHasPermission(getCurrentUser(), form, Operation.READ)){
 			return form;	
@@ -344,9 +347,11 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 	 */
 	@Override
 	public <T> boolean userHasPermission(User user, T entity, Operation op) {
-		if (user == null && op == null)
+		if (user == null || op == null)
 			return false;
-		if(user.equals(userModel.getManagerModel().getRootUser())){
+		
+		User root = userModel.getManagerModel().getRootUser();
+		if(user.equals(root)){
 			return true;
 		}
 		// check type
@@ -516,7 +521,7 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 		}		
 		deleteOldFormPermissions(form);
 		
-		User   owner       = userModel.getUser(form.getUser().getKey());
+		User          owner       = userModel.getUser(form.getUser().getKey());
 		MaritacaList  ownerGrp    = owner.getMaritacaList();
 		MaritacaList  allUsersGrp = userModel.getAllUsersList();		
 
