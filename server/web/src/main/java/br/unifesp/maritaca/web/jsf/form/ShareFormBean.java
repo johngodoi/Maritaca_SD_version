@@ -35,7 +35,7 @@ public class ShareFormBean extends ItemListBean {
 	
 	private Form form;
 	
-	private static final String GROUP_REMOVE_OWNER_ERROR = "group_remove_owner_error";
+	private static final String GROUP_REMOVE_OWNER_ERROR = "list_remove_owner_error";
 
 	public ShareFormBean() {
 		super(true, true);

@@ -8,7 +8,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:forms="http://java.sun.com/jsf/composite/components/forms"
 	xmlns:answ="http://java.sun.com/jsf/composite/components/answers"
-	xmlns:groups="http://java.sun.com/jsf/composite/components/groups"
+	xmlns:lists="http://java.sun.com/jsf/composite/components/lists"
 	xmlns:settings="http://java.sun.com/jsf/composite/components/settings">
 <head>
 <title>Not present in rendered output</title>
@@ -31,12 +31,12 @@
 				<answ:listAnswers submodule="#{cc.attrs.submodule}" />
 			</c:when>
 			
-			<c:when test="#{cc.attrs.submodule.component eq 'groupEditor'}">
-				<groups:groupEditor submodule="#{cc.attrs.submodule}"/>
+			<c:when test="#{cc.attrs.submodule.component eq 'listEditor'}">
+				<lists:listEditor submodule="#{cc.attrs.submodule}"/>
 			</c:when>
 			
-			<c:when test="#{cc.attrs.submodule.component eq 'listGroups'}">
-				<groups:listGroups submodule="#{cc.attrs.submodule}" />
+			<c:when test="#{cc.attrs.submodule.component eq 'myLists'}">
+				<lists:myLists submodule="#{cc.attrs.submodule}" />
 			</c:when>						
 			
 			<c:when test="#{cc.attrs.submodule.component eq 'accountEditor'}">

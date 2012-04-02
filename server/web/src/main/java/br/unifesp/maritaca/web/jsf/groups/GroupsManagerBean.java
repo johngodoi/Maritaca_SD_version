@@ -37,12 +37,12 @@ public class GroupsManagerBean extends AbstractBean implements Serializable {
 	private static final Log log = LogFactory.getLog(GroupsManagerBean.class);
 	
 	/* Error messages resources */
-	private static final String GROUP_ADD_ERROR_USER_NOT_FOUND = "group_add_error_user_not_found";
-	private static final String GROUP_ADD_ERROR_USER_ADDED     = "group_add_error_user_added";
-	private static final String GROUP_REMOVE_OWNER_ERROR       = "group_remove_owner_error";
+	private static final String GROUP_ADD_ERROR_USER_NOT_FOUND = "list_add_error_user_not_found";
+	private static final String GROUP_ADD_ERROR_USER_ADDED     = "list_add_error_user_added";
+	private static final String GROUP_REMOVE_OWNER_ERROR       = "list_remove_owner_error";
 	private static final String GROUP_ADD_EMPTY_EMAIL          = "item_list_add_empty_field";
-	private static final String GROUP_ADD_SUCESS               = "group_add_sucess";
-	private static final String GROUP_ADD_FAILURE              = "group_add_fail";
+	private static final String GROUP_ADD_SUCESS               = "list_add_sucess";
+	private static final String GROUP_ADD_FAILURE              = "list_add_fail";
 	
 	private static final long serialVersionUID = 1L;
 
@@ -70,18 +70,13 @@ public class GroupsManagerBean extends AbstractBean implements Serializable {
 
 	public GroupsManagerBean() {
 		super(false, true);
-		clearGroup();
 	}
 	
-	@PostConstruct
-	public void updateGroupUsers(){
-		getAddedUsers().add(getCurrentUserBean().getUser());
-	}
-
 	/**
 	 * Method used to clear the group information.<br>
 	 * It must be called when the createGroup sub module is invoked.
 	 */
+	@PostConstruct
 	public void clearGroup() {
 		setAutoCompleteEmails(new ArrayList<String>());
 		setAllowUserJoin(true);
@@ -91,6 +86,9 @@ public class GroupsManagerBean extends AbstractBean implements Serializable {
 		setGroupDescription(null);
 		setSelectedEmail(null);
 		setAddEmailError(null);
+		if(getCurrentUserBean()!=null){
+			getAddedUsers().add(getCurrentUserBean().getUser());
+		}
 	}
 
 	/**
@@ -125,7 +123,7 @@ public class GroupsManagerBean extends AbstractBean implements Serializable {
 	public String editGroup(Group group) {
 		fillGroupInfo(group);
 		setIgnoreGroupName(group.getName());
-		getManager().activeModAndSub("groups", "groupEditor");
+		getManager().activeModAndSub("lists", "listEditor");
 		return null;
 	}
 
@@ -259,8 +257,8 @@ public class GroupsManagerBean extends AbstractBean implements Serializable {
 		Group group = createGroupObj();
 		if (userModel.saveGroup(group) && saveGroupUsers(group)) {
 			addMessage(GROUP_ADD_SUCESS, FacesMessage.SEVERITY_INFO);
-			getManager().setActiveModuleByString("Groups");
-			getManager().setActiveSubModuleInActiveMod("listGroups");
+			getManager().setActiveModuleByString("Lists");
+			getManager().setActiveSubModuleInActiveMod("myLists");
 		} else {
 			addMessage(GROUP_ADD_FAILURE, FacesMessage.SEVERITY_ERROR);
 			log.error("Error saving group: " + group.toString());			

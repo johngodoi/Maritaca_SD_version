@@ -17,39 +17,34 @@
 		<h:panelGrid columns="1" width="100%">
 		<rich:dataTable value="#{listGroupsBean.myGroups}" var="aGroup"
 			id="myGroupTable" styleClass="maritacaTable">
-			<f:facet name="header">#{msgs.group_list_header}</f:facet>
+			<f:facet name="header">#{msgs.list_header}</f:facet>
 
 			<rich:column>
-				<f:facet name="header">#{msgs.group_list_name}</f:facet>				
+				<f:facet name="header">#{msgs.list_name}</f:facet>				
 					
 				<rich:dropDownMenu mode="ajax">
 					<f:facet name="label"><a href="">#{aGroup.name}</a><h:graphicImage value="#{resource['img:down.png']}" />
 					</f:facet>
-					<!-- Leave Group -->
-					<rich:menuItem icon="#{resource['img:down.png']}"
-						label="#{msgs.group_list_options_leave}"
-						action="#{listGroupsBean.leaveGroup(aGroup)}"
-						render="myGroupTable"/>
 					<!-- Edit Group --> 
 					<rich:menuItem icon="#{resource['img:edit_form.png']}"
 						action="#{groupsManagerBean.editGroup(aGroup)}"
 						render="menuAndContent" execute="@form"
-						label="#{msgs.group_list_options_edit}"/>
+						label="#{msgs.list_options_edit}"/>
 					<!-- Remove Group -->
 					<rich:menuItem icon="#{resource['img:remove.png']}"
-						label="#{msgs.group_list_options_remove}"
+						label="#{msgs.list_options_remove}"
 						action="#{listGroupsBean.removeGroup(aGroup)}"
 						render="myGroupTable"/>
 				</rich:dropDownMenu>
 			</rich:column>
 
 			<rich:column>
-				<f:facet name="header">#{msgs.group_list_description}</f:facet>				
+				<f:facet name="header">#{msgs.list_description}</f:facet>				
 					#{aGroup.description}
 			</rich:column>
 
 			<rich:column>
-				<f:facet name="header">#{msgs.group_list_owner}</f:facet>				
+				<f:facet name="header">#{msgs.list_owner}</f:facet>				
 					#{aGroup.owner.email}
 			</rich:column>
 		</rich:dataTable>

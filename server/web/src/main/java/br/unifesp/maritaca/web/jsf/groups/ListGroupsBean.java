@@ -52,18 +52,12 @@ public class ListGroupsBean extends AbstractBean{
 		this.currentUser = currentUser;
 	}
 	
-	public void leaveGroup(Group group){
-		if(super.userCtrl.removeCurrentUserFromGroup(group)){
-			getMyGroups().remove(group);
-		}				
-	}
-	
 	public void removeGroup(Group group){
 		if(super.userCtrl.removeGroup(group)){
 			getMyGroups().remove(group);
 		} else {
 			throw new RuntimeException(
-					Utils.getMessageFromResourceProperties("group_remove_error"));
+					Utils.getMessageFromResourceProperties("list_remove_error"));
 		}		
 	}
 
