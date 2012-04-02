@@ -15,37 +15,37 @@
 	<composite:implementation>
 	
 		<h:panelGrid columns="1" width="100%">
-		<rich:dataTable value="#{listGroupsBean.myGroups}" var="aGroup"
-			id="myGroupTable" styleClass="maritacaTable">
+		<rich:dataTable value="#{listMaritacaListBean.myLists}" var="aList"
+			id="myListTable" styleClass="maritacaTable">
 			<f:facet name="header">#{msgs.list_header}</f:facet>
 
 			<rich:column>
 				<f:facet name="header">#{msgs.list_name}</f:facet>				
 					
 				<rich:dropDownMenu mode="ajax">
-					<f:facet name="label"><a href="">#{aGroup.name}</a><h:graphicImage value="#{resource['img:down.png']}" />
+					<f:facet name="label"><a href="">#{aList.name}</a><h:graphicImage value="#{resource['img:down.png']}" />
 					</f:facet>
-					<!-- Edit Group --> 
+					<!-- Edit List --> 
 					<rich:menuItem icon="#{resource['img:edit_form.png']}"
-						action="#{groupsManagerBean.editGroup(aGroup)}"
+						action="#{maritacaListEditorBean.editList(aList)}"
 						render="menuAndContent" execute="@form"
 						label="#{msgs.list_options_edit}"/>
-					<!-- Remove Group -->
+					<!-- Remove List -->
 					<rich:menuItem icon="#{resource['img:remove.png']}"
 						label="#{msgs.list_options_remove}"
-						action="#{listGroupsBean.removeGroup(aGroup)}"
-						render="myGroupTable"/>
+						action="#{listMaritacaListBean.removeList(aList)}"
+						render="myListTable"/>
 				</rich:dropDownMenu>
 			</rich:column>
 
 			<rich:column>
 				<f:facet name="header">#{msgs.list_description}</f:facet>				
-					#{aGroup.description}
+					#{aList.description}
 			</rich:column>
 
 			<rich:column>
 				<f:facet name="header">#{msgs.list_owner}</f:facet>				
-					#{aGroup.owner.email}
+					#{aList.owner.email}
 			</rich:column>
 		</rich:dataTable>
 		</h:panelGrid>

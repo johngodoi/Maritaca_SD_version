@@ -9,8 +9,8 @@ import org.mockito.stubbing.Answer;
 import br.unifesp.maritaca.access.Policy;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
-import br.unifesp.maritaca.core.Group;
-import br.unifesp.maritaca.core.GroupUser;
+import br.unifesp.maritaca.core.MaritacaList;
+import br.unifesp.maritaca.core.MaritacaListUser;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.model.FormAnswerModel;
 import br.unifesp.maritaca.model.ManagerModel;
@@ -31,11 +31,11 @@ public class AuthorizationTestsSetUp {
 	User  userNoGrp             = new User();
 	User  root                  = new User();
 	
-	Group grp1                  = new Group();		
-	Group grpUser1              = new Group();				
-	Group grpUser2              = new Group();
-	Group grpUserNoGrp          = new Group();
-	Group grpAllUsers           = new Group();
+	MaritacaList grp1                  = new MaritacaList();		
+	MaritacaList grpUser1              = new MaritacaList();				
+	MaritacaList grpUser2              = new MaritacaList();
+	MaritacaList grpUserNoGrp          = new MaritacaList();
+	MaritacaList grpAllUsers           = new MaritacaList();
 	
 	Form  publicFormUser1       = new Form();
 	Form  privateFormUser1      = new Form();
@@ -66,15 +66,15 @@ public class AuthorizationTestsSetUp {
 		em.persist(grpUserNoGrp);
 		em.persist(grpAllUsers);
 		
-		user1grp1.setUserGroup(grpUser1);
-		user2grp1.setUserGroup(grpUser2);
-		userNoGrp.setUserGroup(grpUserNoGrp);
+		user1grp1.setMaritacaList(grpUser1);
+		user2grp1.setMaritacaList(grpUser2);
+		userNoGrp.setMaritacaList(grpUserNoGrp);
 		em.persist(user1grp1);
 		em.persist(user2grp1);
 		em.persist(userNoGrp);
 		
-		GroupUser gp1 = new GroupUser(grp1,user1grp1);
-		GroupUser gp2 = new GroupUser(grp1,user2grp1);
+		MaritacaListUser gp1 = new MaritacaListUser(grp1,user1grp1);
+		MaritacaListUser gp2 = new MaritacaListUser(grp1,user2grp1);
 		
 		em.persist(gp1);
 		em.persist(gp2);

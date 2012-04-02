@@ -20,7 +20,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import br.unifesp.maritaca.core.Form;
-import br.unifesp.maritaca.core.Group;
+import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.model.ManagerModel;
 import br.unifesp.maritaca.model.UserModel;
@@ -85,11 +85,11 @@ public class FormAnswerCtrlImplTest {
 		when(em.rowDataExists((Class<User>) notNull(), any(UUID.class)))
 				.thenReturn(true);
 		
-		when(userModel.getAllUsersGroup()).thenAnswer(new Answer<Group>() {
+		when(userModel.getAllUsersList()).thenAnswer(new Answer<MaritacaList>() {
 
 			@Override
-			public Group answer(InvocationOnMock invocation) throws Throwable {
-				Group g = new Group();
+			public MaritacaList answer(InvocationOnMock invocation) throws Throwable {
+				MaritacaList g = new MaritacaList();
 				g.setKey(uuid2);
 				g.setName(ManagerModelImpl.ALL_USERS);
 				return g;

@@ -18,8 +18,8 @@ import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Configuration;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
-import br.unifesp.maritaca.core.Group;
-import br.unifesp.maritaca.core.GroupUser;
+import br.unifesp.maritaca.core.MaritacaList;
+import br.unifesp.maritaca.core.MaritacaListUser;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.EntityManager;
 import br.unifesp.maritaca.persistence.EntityManagerHectorImpl;
@@ -34,7 +34,7 @@ public class ManagerModelImplTest extends BaseEmbededServerSetupTest {
 	private ManagerModelImpl manModel;
 	@SuppressWarnings("rawtypes")
 	private Class[] classes = { Answer.class, Form.class, Configuration.class,
-			FormPermissions.class, Group.class, GroupUser.class, User.class };
+			FormPermissions.class, MaritacaList.class, MaritacaListUser.class, User.class };
 
 	@Before
 	public void setUp() throws Exception {

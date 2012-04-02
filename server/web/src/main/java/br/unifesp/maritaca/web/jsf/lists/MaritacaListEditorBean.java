@@ -1,4 +1,4 @@
-package br.unifesp.maritaca.web.jsf.groups;
+package br.unifesp.maritaca.web.jsf.lists;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,8 +16,8 @@ import javax.validation.constraints.Size;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import br.unifesp.maritaca.core.Group;
-import br.unifesp.maritaca.core.GroupUser;
+import br.unifesp.maritaca.core.MaritacaList;
+import br.unifesp.maritaca.core.MaritacaListUser;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.model.UserModel;
 import br.unifesp.maritaca.web.Manager;
@@ -32,17 +32,17 @@ import br.unifesp.maritaca.web.utils.Utils;
  */
 @ManagedBean
 @ViewScoped
-public class GroupsManagerBean extends AbstractBean implements Serializable {
+public class MaritacaListEditorBean extends AbstractBean implements Serializable {
 
-	private static final Log log = LogFactory.getLog(GroupsManagerBean.class);
+	private static final Log log = LogFactory.getLog(MaritacaListEditorBean.class);
 	
 	/* Error messages resources */
-	private static final String GROUP_ADD_ERROR_USER_NOT_FOUND = "list_add_error_user_not_found";
-	private static final String GROUP_ADD_ERROR_USER_ADDED     = "list_add_error_user_added";
-	private static final String GROUP_REMOVE_OWNER_ERROR       = "list_remove_owner_error";
-	private static final String GROUP_ADD_EMPTY_EMAIL          = "item_list_add_empty_field";
-	private static final String GROUP_ADD_SUCESS               = "list_add_sucess";
-	private static final String GROUP_ADD_FAILURE              = "list_add_fail";
+	private static final String LIST_ADD_ERROR_USER_NOT_FOUND = "list_add_error_user_not_found";
+	private static final String LIST_ADD_ERROR_USER_ADDED     = "list_add_error_user_added";	
+	private static final String LIST_REMOVE_OWNER_ERROR       = "list_remove_owner_error";
+	private static final String LIST_ADD_EMPTY_EMAIL          = "item_list_add_empty_field";
+	private static final String LIST_ADD_SUCESS               = "list_add_sucess";
+	private static final String LIST_ADD_FAILURE              = "list_add_fail";
 	
 	private static final long serialVersionUID = 1L;
 
@@ -52,12 +52,12 @@ public class GroupsManagerBean extends AbstractBean implements Serializable {
 	private Manager manager;
 
 	@Size(min = 4, max = 20)
-	private String groupName;
-	private String groupDescription;
+	private String listName;
+	private String listDescription;
 
-	private String ignoreGroupName;
+	private String ignoreListName;
 
-	private UUID groupId;
+	private UUID listId;
 
 	private Boolean allowUserJoin;
 	private List<String> autoCompleteEmails;
@@ -68,7 +68,7 @@ public class GroupsManagerBean extends AbstractBean implements Serializable {
 	private String selectedEmail;
 	private String addEmailError;
 
-	public GroupsManagerBean() {
+	public MaritacaListEditorBean() {
 		super(false, true);
 	}
 	
@@ -77,13 +77,13 @@ public class GroupsManagerBean extends AbstractBean implements Serializable {
 	 * It must be called when the createGroup sub module is invoked.
 	 */
 	@PostConstruct
-	public void clearGroup() {
+	public void clearList() {
 		setAutoCompleteEmails(new ArrayList<String>());
 		setAllowUserJoin(true);
 		setAddedUsers(new ArrayList<User>());
-		setIgnoreGroupName(null);
-		setGroupName(null);
-		setGroupDescription(null);
+		setIgnoreListName(null);
+		setListName(null);
+		setListDescription(null);
 		setSelectedEmail(null);
 		setAddEmailError(null);
 		if(getCurrentUserBean()!=null){
@@ -99,55 +99,55 @@ public class GroupsManagerBean extends AbstractBean implements Serializable {
 	 * 
 	 * @return true if there is, false otherwise
 	 */
-	public boolean registeredGroupName() {
+	public boolean registeredListName() {
 		UserModel userModel = super.userCtrl;
-		Group group = userModel.searchGroupByName(getGroupName());
+		MaritacaList list = userModel.searchMaritacaListByName(getListName());
 
-		if (!groupNameUsed(group) || !groupOwnerIsCurrentUser(group)
-				|| groupNameIgnored(group)) {
+		if (!listNameUsed(list) || !listOwnerIsCurrentUser(list)
+				|| listNameIgnored(list)) {
 			return false;
 		} else {
 			return true;
 		}
 	}
 
-	private boolean groupNameIgnored(Group group) {
-		if (getIgnoreGroupName() != null
-				&& group.getName().equals(getIgnoreGroupName())) {
+	private boolean listNameIgnored(MaritacaList list) {
+		if (getIgnoreListName() != null
+				&& list.getName().equals(getIgnoreListName())) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	public String editGroup(Group group) {
-		fillGroupInfo(group);
-		setIgnoreGroupName(group.getName());
+	public String editList(MaritacaList list) {
+		fillListInfo(list);
+		setIgnoreListName(list.getName());
 		getManager().activeModAndSub("lists", "listEditor");
 		return null;
 	}
 
-	private void fillGroupInfo(Group group) {
-		setGroupName(group.getName());
-		setGroupDescription(group.getDescription());
-		setAllowUserJoin(group.getAllowUsersToJoin());
-		setGroupId(group.getKey());
+	private void fillListInfo(MaritacaList list) {
+		setListName(list.getName());
+		setListDescription(list.getDescription());
+		setAllowUserJoin(list.getAllowUsersToJoin());
+		setListId(list.getKey());
 
 		List<User> users = new ArrayList<User>(
-				super.userCtrl.searchUsersByGroup(group));
+				super.userCtrl.searchUsersByMaritacaList(list));
 		setAddedUsers(users);
 	}
 
-	private boolean groupNameUsed(Group group) {
-		if (group == null) {
+	private boolean listNameUsed(MaritacaList list) {
+		if (list == null) {
 			return false;
 		} else {
 			return true;
 		}
 	}
 
-	private boolean groupOwnerIsCurrentUser(Group group) {
-		UUID ownerKey = group.getOwner().getKey();
+	private boolean listOwnerIsCurrentUser(MaritacaList list) {
+		UUID ownerKey = list.getOwner().getKey();
 		UUID userKey = getCurrentUserBean().getUser().getKey();
 		if (ownerKey.equals(userKey)) {
 			return true;
@@ -159,14 +159,14 @@ public class GroupsManagerBean extends AbstractBean implements Serializable {
 	public void addEmail() {
 		if (getSelectedEmail() == null || getSelectedEmail().equals("")) {
 			setAddEmailError(Utils
-					.getMessageFromResourceProperties(GROUP_ADD_EMPTY_EMAIL));
+					.getMessageFromResourceProperties(LIST_ADD_EMPTY_EMAIL));
 			return;
 		}
 
 		if (emailAdded(getSelectedEmail())) {
 			// Email already added
 			setAddEmailError(Utils
-					.getMessageFromResourceProperties(GROUP_ADD_ERROR_USER_ADDED));
+					.getMessageFromResourceProperties(LIST_ADD_ERROR_USER_ADDED));
 			return;
 		}
 
@@ -177,7 +177,7 @@ public class GroupsManagerBean extends AbstractBean implements Serializable {
 			getAddedUsers().add(selectedUser);
 		} else {
 			setAddEmailError(Utils
-					.getMessageFromResourceProperties(GROUP_ADD_ERROR_USER_NOT_FOUND));
+					.getMessageFromResourceProperties(LIST_ADD_ERROR_USER_NOT_FOUND));
 		}
 	}
 
@@ -214,7 +214,7 @@ public class GroupsManagerBean extends AbstractBean implements Serializable {
 		String ownerUsrEmail = getCurrentUserBean().getUser().getEmail();				
 		if(email.equals(ownerUsrEmail)){
 			setAddEmailError(Utils
-					.getMessageFromResourceProperties(GROUP_REMOVE_OWNER_ERROR));
+					.getMessageFromResourceProperties(LIST_REMOVE_OWNER_ERROR));
 			return;
 		}
 		if (emailAdded(email)) {
@@ -254,57 +254,57 @@ public class GroupsManagerBean extends AbstractBean implements Serializable {
 		String    returnString = null;
 		UserModel userModel    = super.userCtrl;
 
-		Group group = createGroupObj();
-		if (userModel.saveGroup(group) && saveGroupUsers(group)) {
-			addMessage(GROUP_ADD_SUCESS, FacesMessage.SEVERITY_INFO);
+		MaritacaList list = createListObj();
+		if (userModel.saveMaritacaList(list) && saveListUsers(list)) {
+			addMessage(LIST_ADD_SUCESS, FacesMessage.SEVERITY_INFO);
 			getManager().setActiveModuleByString("Lists");
 			getManager().setActiveSubModuleInActiveMod("myLists");
 		} else {
-			addMessage(GROUP_ADD_FAILURE, FacesMessage.SEVERITY_ERROR);
-			log.error("Error saving group: " + group.toString());			
+			addMessage(LIST_ADD_FAILURE, FacesMessage.SEVERITY_ERROR);
+			log.error("Error saving list: " + list.toString());			
 		}
 
-		clearGroup();
+		clearList();
 		return returnString;
 	}
 
-	private boolean saveGroupUsers(Group group) {
+	private boolean saveListUsers(MaritacaList list) {
 		List<User> users = new ArrayList<User>(
-				super.userCtrl.searchUsersByGroup(group));
+				super.userCtrl.searchUsersByMaritacaList(list));
 		
 		for(User usr : getAddedUsers()){
 			if(!users.contains(usr)){
-				super.userCtrl.saveGroupUser(newGroupUser(usr,group));
+				super.userCtrl.saveMaritacaListUser(newListUser(usr,list));
 			}
 		}
 
 		for(User usr : users){
 			if(!getAddedUsers().contains(usr)){
-				super.userCtrl.removeUserFromGroup(group,usr);
+				super.userCtrl.removeUserFromMaritacaList(list,usr);
 			}
 		}
 		
 		return true;
 	}
 	
-	private GroupUser newGroupUser(User usr, Group grp){
-		GroupUser groupUser = new GroupUser();
-		groupUser.setUser(usr);
-		groupUser.setGroup(grp);
+	private MaritacaListUser newListUser(User usr, MaritacaList list){
+		MaritacaListUser listUser = new MaritacaListUser();
+		listUser.setUser(usr);
+		listUser.setMaritacaList(list);
 		
-		return groupUser;
+		return listUser;
 	}
 
-	private Group createGroupObj() {
-		Group newGroup = new Group();
-		if(getGroupId()!=null){
-			newGroup.setKey(getGroupId());
+	private MaritacaList createListObj() {
+		MaritacaList newList = new MaritacaList();
+		if(getListId()!=null){
+			newList.setKey(getListId());
 		}
-		newGroup.setName(getGroupName());
-		newGroup.setDescription(getGroupDescription());
-		newGroup.setOwner(getCurrentUserBean().getUser());
+		newList.setName(getListName());
+		newList.setDescription(getListDescription());
+		newList.setOwner(getCurrentUserBean().getUser());
 
-		return newGroup;
+		return newList;
 	}
 
 	public String cancel() {
@@ -359,20 +359,20 @@ public class GroupsManagerBean extends AbstractBean implements Serializable {
 		this.addEmailError = addEmailError;
 	}
 
-	public String getGroupName() {
-		return groupName;
+	public String getListName() {
+		return listName;
 	}
 
-	public void setGroupName(String groupName) {
-		this.groupName = groupName;
+	public void setListName(String groupName) {
+		this.listName = groupName;
 	}
 
-	public String getGroupDescription() {
-		return groupDescription;
+	public String getListDescription() {
+		return listDescription;
 	}
 
-	public void setGroupDescription(String groupDescription) {
-		this.groupDescription = groupDescription;
+	public void setListDescription(String groupDescription) {
+		this.listDescription = groupDescription;
 	}
 
 	public Manager getManager() {
@@ -383,19 +383,19 @@ public class GroupsManagerBean extends AbstractBean implements Serializable {
 		this.manager = manager;
 	}
 
-	public String getIgnoreGroupName() {
-		return ignoreGroupName;
+	public String getIgnoreListName() {
+		return ignoreListName;
 	}
 
-	public void setIgnoreGroupName(String ignoreGroupName) {
-		this.ignoreGroupName = ignoreGroupName;
+	public void setIgnoreListName(String ignoreGroupName) {
+		this.ignoreListName = ignoreGroupName;
 	}
 
-	public UUID getGroupId() {
-		return groupId;
+	public UUID getListId() {
+		return listId;
 	}
 
-	public void setGroupId(UUID groupId) {
-		this.groupId = groupId;
+	public void setListId(UUID listId) {
+		this.listId = listId;
 	}
 }

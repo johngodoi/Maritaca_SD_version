@@ -8,7 +8,7 @@ import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
-import br.unifesp.maritaca.core.Group;
+import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.EntityManager;
 
@@ -32,9 +32,9 @@ public interface FormAnswerModel extends GenericModel{
 	
 	Collection<Form> listSharedFormsFromCurrentUser(boolean minimal);
 	
-	Collection<FormPermissions> getFormPermissionsByGroup(Group group);
+	Collection<FormPermissions> getFormPermissionsByList(MaritacaList list);
 	
-	void saveFormSharedList(Form form, Group list);
+	void saveFormSharedList(Form form, MaritacaList list);
 	
 	/************* ANSWER ***********/
 	boolean saveAnswer(Answer answer);

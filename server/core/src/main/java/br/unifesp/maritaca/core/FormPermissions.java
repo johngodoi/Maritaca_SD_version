@@ -19,7 +19,7 @@ public class FormPermissions {
 	private Form form;
 	@Column(indexed = true)
 	@Minimal
-	private Group group = new Group();
+	private MaritacaList maritacaList = new MaritacaList();
 	@Column
 	@Minimal
 	private Long expDate;
@@ -33,9 +33,9 @@ public class FormPermissions {
 	public FormPermissions() {
 	}
 	
-	public FormPermissions(Form form, Group group, AccessLevel formAccess, AccessLevel answAccess){
+	public FormPermissions(Form form, MaritacaList list, AccessLevel formAccess, AccessLevel answAccess){
 		setForm(form);
-		setGroup(group);
+		setMaritacaList(list);
 		setFormAccess(formAccess);
 		setAnswAccess(answAccess);		
 	}
@@ -103,18 +103,18 @@ public class FormPermissions {
 		return d;
 	}
 
-	public Group getGroup() {
-		return group;
+	public MaritacaList getMaritacaList() {
+		return maritacaList;
 	}
 
-	public void setGroup(Group group) {
-		this.group = group;
+	public void setMaritacaList(MaritacaList list) {
+		this.maritacaList = list;
 	}
 
-	public void setGroup(String uid) {
-		Group g = new Group();
+	public void setMaritacaList(String uid) {
+		MaritacaList g = new MaritacaList();
 		g.setKey(uid);
-		setGroup(g);
+		setMaritacaList(g);
 	}
 
 	public AccessLevel getFormAccess() {

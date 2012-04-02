@@ -8,8 +8,8 @@ import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Configuration;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
-import br.unifesp.maritaca.core.Group;
-import br.unifesp.maritaca.core.GroupUser;
+import br.unifesp.maritaca.core.MaritacaList;
+import br.unifesp.maritaca.core.MaritacaListUser;
 import br.unifesp.maritaca.core.OAuthClient;
 import br.unifesp.maritaca.core.OAuthCode;
 import br.unifesp.maritaca.core.OAuthToken;
@@ -73,21 +73,21 @@ public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel,
 		entityManager.createTable(Form.class);
 		entityManager.createTable(Answer.class);
 
-		if (!entityManager.tableExists(Group.class)) {
-			entityManager.createTable(Group.class);						
+		if (!entityManager.tableExists(MaritacaList.class)) {
+			entityManager.createTable(MaritacaList.class);						
 
-			// create ALL_USERS group
-			Group gr = new Group();
+			// create ALL_USERS list
+			MaritacaList gr = new MaritacaList();
 			gr.setName(ALL_USERS);
 			gr.setOwner(rootUser);
 			entityManager.persist(gr);
 			
 			if(rootUser!=null){
-				createRootUserGroup(rootUser);
+				createRootMaritacaList(rootUser);
 			}
 		}
 
-		entityManager.createTable(GroupUser.class);
+		entityManager.createTable(MaritacaListUser.class);
 		entityManager.createTable(FormPermissions.class);
 		entityManager.createTable(OpenId.class);
 		entityManager.createTable(OAuthToken.class);
@@ -104,13 +104,13 @@ public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel,
 
 	}
 
-	private void createRootUserGroup(User rootUser) {
-		Group groupUser = new Group();
-		groupUser.setOwner(rootUser);
-		groupUser.setName(rootUser.getEmail());
-		entityManager.persist(groupUser);
+	private void createRootMaritacaList(User rootUser) {
+		MaritacaList list = new MaritacaList();
+		list.setOwner(rootUser);
+		list.setName(rootUser.getEmail());
+		entityManager.persist(list);
 		
-		rootUser.setUserGroup(groupUser);
+		rootUser.setMaritacaList(list);
 		entityManager.persist(rootUser);
 	}
 

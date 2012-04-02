@@ -2,7 +2,7 @@ package br.unifesp.maritaca.access;
 
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
-import br.unifesp.maritaca.core.Group;
+import br.unifesp.maritaca.core.MaritacaList;
 
 public enum Policy {
 	PUBLIC(	new FormPermissions(AccessLevel.READ_AND_LIST,   AccessLevel.FULL_ACCESS),
@@ -89,22 +89,22 @@ public enum Policy {
 		}
 	}
 	
-	public FormPermissions buildPublicFormPermission(Form form, Group group ){
-		return buildFormPermission(form, group, getAllUsersPermissions());		
+	public FormPermissions buildPublicFormPermission(Form form, MaritacaList list ){
+		return buildFormPermission(form, list, getAllUsersPermissions());		
 	}
 	
-	public FormPermissions buildListFormPermission(Form form, Group group ){
-		return buildFormPermission(form, group, getListPermissions());
+	public FormPermissions buildListFormPermission(Form form, MaritacaList list ){
+		return buildFormPermission(form, list, getListPermissions());
 	}
 	
-	public FormPermissions buildOwnerFormPermission(Form form, Group group ){
-		return buildFormPermission(form, group, getOwnerPermissions());
+	public FormPermissions buildOwnerFormPermission(Form form, MaritacaList list ){
+		return buildFormPermission(form, list, getOwnerPermissions());
 	}
 	
-	private FormPermissions buildFormPermission(Form form, Group group, FormPermissions fp ){
+	private FormPermissions buildFormPermission(Form form, MaritacaList list, FormPermissions fp ){
 		AccessLevel answAccessLv = fp.getAnswAccess();
 		AccessLevel formAccessLv = fp.getFormAccess();
 		
-		return new FormPermissions(form,group,formAccessLv,answAccessLv);		
+		return new FormPermissions(form,list,formAccessLv,answAccessLv);		
 	}
 }

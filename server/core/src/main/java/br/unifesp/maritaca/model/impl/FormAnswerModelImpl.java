@@ -20,8 +20,8 @@ import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
-import br.unifesp.maritaca.core.Group;
-import br.unifesp.maritaca.core.GroupUser;
+import br.unifesp.maritaca.core.MaritacaList;
+import br.unifesp.maritaca.core.MaritacaListUser;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.exception.AuthorizationDenied;
 import br.unifesp.maritaca.model.FormAnswerModel;
@@ -272,12 +272,12 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 		List<FormPermissions> result = entityManager.cQuery(
 				FormPermissions.class, "form", form.getKey().toString());
 		for (FormPermissions fp : result) {
-			Group grp = userModel.getGroup(fp.getGroup().getKey());
+			MaritacaList grp = userModel.getMaritacaList(fp.getMaritacaList().getKey());
 			if(grp == null){
 				throw new RuntimeException(
-						"Can't find group listed in FormPermissions: " + fp.getKey());
+						"Can't find MaritacaList listed in FormPermissions: " + fp.getKey());
 			}
-			fp.setGroup(grp);
+			fp.setMaritacaList(grp);
 		}
 		return result;
 	}
@@ -292,7 +292,7 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 
 	private boolean saveFormPermission(FormPermissions fp) {
 		// verify parameters
-		if (fp == null || fp.getForm() == null || fp.getGroup() == null) {
+		if (fp == null || fp.getForm() == null || fp.getMaritacaList() == null) {
 			throw new IllegalArgumentException(
 					"Incomplete parameters, form permission not saved");
 		}
@@ -304,21 +304,21 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 			return false;
 		}
 
-		// verify if form and group exists
+		// verify if form and list exists
 		if (entityManager.find(Form.class, fp.getForm().getKey(), true) == null) {
 			throw new IllegalArgumentException(
 					"Form not exists, form permission not saved");
 		}
-		if (entityManager.find(Group.class, fp.getGroup().getKey(), true) == null) {
+		if (entityManager.find(MaritacaList.class, fp.getMaritacaList().getKey(), true) == null) {
 			throw new IllegalArgumentException(
 					"Form not exists, form permission not saved");
 		}
 
-		// verify if group-form pair exists in form permissions for new
+		// verify if list-form pair exists in form permissions for new
 		// permission
 		if (fp.getKey() == null) {
 			for (FormPermissions formperm : getFormPermissions(fp.getForm())) {
-				if (formperm.getGroup().getKey().equals(fp.getGroup().getKey())) {
+				if (formperm.getMaritacaList().getKey().equals(fp.getMaritacaList().getKey())) {
 					// update the formpermissions, set old key to update the
 					// data
 					fp.setKey(formperm.getKey());
@@ -373,9 +373,9 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 		List<FormPermissions> listFP = getFormPermissions(form);
 		for (FormPermissions fp : listFP) {
 			if (fp.getFormAccess().isOperationEnabled(op)
-					&& userModel.userIsMemberOfGroup(user, fp.getGroup())) {
+					&& userModel.userIsMemberOfMaritacaList(user, fp.getMaritacaList())) {
 				// if operation OP is enable in FormAccess and current user
-				// is member of group fp.getGroup, so he/she has permission
+				// is member of list fp.getlist, so he/she has permission
 				return true;
 			}
 		}
@@ -384,15 +384,15 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 
 	private boolean userHasPermissionInFormPermissions(User user,
 			FormPermissions formPerm, Operation op) {
-		Group allUsers = userModel.getAllUsersGroup();
-		// verify if the permission is for the AllUsers group
-		if (allUsers.getKey().equals(formPerm.getGroup().getKey())) {
+		MaritacaList allUsers = userModel.getAllUsersList();
+		// verify if the permission is for the AllUsers list
+		if (allUsers.getKey().equals(formPerm.getMaritacaList().getKey())) {
 			if (Operation.DELETE.equals(op)) {
-				// allusers group permissions CANNOT be deleted
+				// allusers list permissions CANNOT be deleted
 				return false;
 			}
 		}
-		// since operation is no deleted or group is not AllUsers, verify form
+		// since operation is no deleted or list is not AllUsers, verify form
 		// permissions
 		return userHasPermission(user, formPerm.getForm(), op);
 	}
@@ -411,7 +411,7 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 	 *            : true to get just minimal information, false to get all
 	 *            information
 	 * @return all Forms that the user has access but is not the owner (Forms
-	 *         that are shared through Groups)
+	 *         that are shared through lists)
 	 */
 	@Override
 	public Collection<Form> listSharedFormsFromCurrentUser(boolean minimal) {
@@ -421,12 +421,12 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 		User currentUser = getCurrentUser();
 
 		Set<Form> forms = new HashSet<Form>();
-		// get groups where user is member
-		Collection<GroupUser> groups = userModel.getGroupsByMember(user);
-		for (GroupUser gu : groups) {
-			// get all formpermissions in each group
-			Collection<FormPermissions> l1Forms = getFormPermissionsByGroup(gu
-					.getGroup());
+		// get lists where user is member
+		Collection<MaritacaListUser> lists = userModel.getMaritacaListByMember(user);
+		for (MaritacaListUser gu : lists) {
+			// get all formpermissions in each list
+			Collection<FormPermissions> l1Forms = getFormPermissionsByList(gu
+					.getMaritacaList());
 			for (FormPermissions fp : l1Forms) {
 				// get the form and add it if expdate > now
 				Form form = getFormWithPermission(fp, true);
@@ -441,17 +441,17 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 
 	/**
 	 * 
-	 * @param group
-	 * @return Return the permissions list of a form in a group
+	 * @param list
+	 * @return Return the permissions list of a form in a list
 	 */
 	@Override
-	public Collection<FormPermissions> getFormPermissionsByGroup(Group group) {
-		verifyEntity(group);
+	public Collection<FormPermissions> getFormPermissionsByList(MaritacaList list) {
+		verifyEntity(list);
 
 		List<FormPermissions> result = entityManager.cQuery(
-				FormPermissions.class, "group", group.getKey().toString());
+				FormPermissions.class, "maritacaList", list.getKey().toString());
 		for (FormPermissions fp : result) {
-			fp.setGroup(group);
+			fp.setMaritacaList(list);
 		}
 		return result;
 	}
@@ -497,13 +497,13 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 	}
 	
 	@Override
-	public void saveFormSharedList(Form form, Group group){
+	public void saveFormSharedList(Form form, MaritacaList list){
 		verifyEntity(form);
-		verifyEntity(group);
+		verifyEntity(list);
 		
 		Policy p = form.getPolicy();
 		
-		FormPermissions listPermissions = p.buildListFormPermission(form, group);
+		FormPermissions listPermissions = p.buildListFormPermission(form, list);
 		if(!saveFormPermission(listPermissions)){
 			throw new RuntimeException("Error saving form permissions");
 		}
@@ -517,8 +517,8 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 		deleteOldFormPermissions(form);
 		
 		User   owner       = userModel.getUser(form.getUser().getKey());
-		Group  ownerGrp    = owner.getUserGroup();
-		Group  allUsersGrp = userModel.getAllUsersGroup();		
+		MaritacaList  ownerGrp    = owner.getMaritacaList();
+		MaritacaList  allUsersGrp = userModel.getAllUsersList();		
 
 		Policy p           = form.getPolicy();
 		

@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-import br.unifesp.maritaca.core.Group;
-import br.unifesp.maritaca.core.GroupUser;
+import br.unifesp.maritaca.core.MaritacaList;
+import br.unifesp.maritaca.core.MaritacaListUser;
 import br.unifesp.maritaca.core.OAuthClient;
 import br.unifesp.maritaca.core.OAuthCode;
 import br.unifesp.maritaca.core.OAuthToken;
@@ -15,7 +15,7 @@ import br.unifesp.maritaca.persistence.EntityManager;
 /**
  * Interface responsible for specifying user administration operations used by the
  * web module to interact with the persistence layer. <br>
- * This interface contains methods related to both users and groups.
+ * This interface contains methods related to both users and lists.
  * @author tiagobarabasz
  */
 public interface UserModel extends GenericModel{
@@ -39,17 +39,17 @@ public interface UserModel extends GenericModel{
 
 	Collection<User> listAllUsersMinimal();
 	
-	Group getGroup(UUID uuid);
+	MaritacaList getMaritacaList(UUID uuid);
 	
-	boolean saveGroup(Group group);
+	boolean saveMaritacaList(MaritacaList maritacaList);
 	
 	/**
-	 * Search for the group with the given name. Returns null
+	 * Search for the list with the given name. Returns null
 	 * if there is none that matches.
-	 * @param group
+	 * @param list
 	 * @return 
 	 */
-	Group searchGroupByName(String groupName);
+	MaritacaList searchMaritacaListByName(String maritacaListName);
 	
 	/**
 	 * Returns a list of users whose emails starts with
@@ -68,66 +68,66 @@ public interface UserModel extends GenericModel{
 	 */
 	User findUserByEmail(String email);	
 
-	Collection<Group> getGroupsByOwner(User owner);
+	Collection<MaritacaList> getMaritacaListsByOwner(User owner);
 
-	boolean addUserToGroup(User user, Group group);
+	boolean addUserToMaritacaList(User user, MaritacaList list);
 
-	Group getAllUsersGroup();
+	MaritacaList getAllUsersList();
 
 	void setManagerModel(ManagerModel managerModel);
 
 	ManagerModel getManagerModel();
 
-	boolean userIsMemberOfGroup(User user, Group group);
+	boolean userIsMemberOfMaritacaList(User user, MaritacaList list);
 
-	Collection<GroupUser> getGroupsByMember(User user);
+	Collection<MaritacaListUser> getMaritacaListByMember(User user);
 
 	/**
-	 * Returns all users that are in the given group.
-	 * @param group
+	 * Returns all users that are in the given list.
+	 * @param maritacaList
 	 * @return A collection containing the users found.
 	 */
-	Collection<User> searchUsersByGroup(Group group);
+	Collection<User> searchUsersByMaritacaList(MaritacaList maritacaList);
 	
-	boolean saveGroupUser(GroupUser groupUser);
+	boolean saveMaritacaListUser(MaritacaListUser maritacaListUser);
 	
 	/**
-	 * Returns a list<Group> with the group that match the string*
+	 * Returns a list<MaritacaList> with the list that match the string*
 	 * @param startingString
 	 * @return
 	 */
-	List<Group> groupsStartingWith(String startingString);
+	List<MaritacaList> maritacaListsStartingWith(String startingString);
 
 	/**
-	 * Gets the owner's group
-	 * @param group
+	 * Gets the owner's list
+	 * @param list
 	 * @return
 	 */
-	User getOwnerOfGroup(Group gr);
+	User getOwnerOfMaritacaList(MaritacaList list);
 	
 	 /**  
-	 * Removes the current user from the given group.
-	 * @param group
+	 * Removes the current user from the given list.
+	 * @param maritacaList
 	 * @return true if successful, false otherwise 
 	 */
-	boolean removeCurrentUserFromGroup(Group group);
+	boolean removeCurrentUserFromMaritacaList(MaritacaList maritacaList);
 	
 	/**
-	 * Removes the given user from the given group.
-	 * @param group
+	 * Removes the given user from the given list.
+	 * @param list
 	 * @param user
 	 * @return
 	 */
-	boolean removeUserFromGroup(Group group, User user);
+	boolean removeUserFromMaritacaList(MaritacaList list, User user);
 
 	/**
-	 * Removes the current user from the given group in the database. 
-	 * This method cascades the deletion to the GroupUser table, removing
-	 * any entries that belongs to the given group.
-	 * @param group
+	 * Removes the current user from the given list in the database. 
+	 * This method cascades the deletion to the MaritacaListUser table, removing
+	 * any entries that belongs to the given list.
+	 * @param list
 	 * @return true if successful, false otherwise
 	 */
-	boolean removeGroup(Group group);
+	boolean removeMaritacaList(MaritacaList list);
 
 	void close();
 

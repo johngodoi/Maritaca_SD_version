@@ -15,8 +15,8 @@ import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import br.unifesp.maritaca.core.Group;
-import br.unifesp.maritaca.core.GroupUser;
+import br.unifesp.maritaca.core.MaritacaList;
+import br.unifesp.maritaca.core.MaritacaListUser;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.model.ManagerModel;
 import br.unifesp.maritaca.model.UserModel;
@@ -55,23 +55,23 @@ public class UserModelImplTest {
 					User u = (User) ob;
 					u.setKey(uuid);
 				} else {
-					GroupUser gu = new GroupUser();
+					MaritacaListUser gu = new MaritacaListUser();
 					gu.setKey(uuid3);
 				}
 				return true;
 			}
 		});
 
-		when(em.cQuery(Group.class, "owner", uuid)).thenAnswer(
-				new Answer<List<Group>>() {
+		when(em.cQuery(MaritacaList.class, "owner", uuid)).thenAnswer(
+				new Answer<List<MaritacaList>>() {
 
 					@Override
-					public List<Group> answer(InvocationOnMock invocation)
+					public List<MaritacaList> answer(InvocationOnMock invocation)
 							throws Throwable {
-						Group g = new Group();
+						MaritacaList g = new MaritacaList();
 						g.setName(ManagerModel.ALL_USERS);
 						g.setKey(uuid2);
-						ArrayList<Group> l = new ArrayList<Group>();
+						ArrayList<MaritacaList> l = new ArrayList<MaritacaList>();
 						l.add(g);
 						return l;
 					}
@@ -94,22 +94,22 @@ public class UserModelImplTest {
 
 	@Test(expected=IllegalArgumentException.class)
 	public void testSaveEmptyGroup(){
-		Group emptyGroup = new Group();
-		userModel.saveGroup(emptyGroup);
+		MaritacaList emptyGroup = new MaritacaList();
+		userModel.saveMaritacaList(emptyGroup);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testSaveGroupWithoutName(){
-		Group noNameGrp = new Group();
+		MaritacaList noNameGrp = new MaritacaList();
 		User  owner     = new User();
 		owner.setKey(uuid);
 		noNameGrp.setOwner(owner);
-		userModel.saveGroup(noNameGrp);
+		userModel.saveMaritacaList(noNameGrp);
 	}
 	
 	@Test
 	public void testSaveValidGroup(){
-		Group validGrp = new Group();
+		MaritacaList validGrp = new MaritacaList();
 		validGrp.setName("grpTest");
 		
 		User  owner     = new User();
@@ -120,21 +120,21 @@ public class UserModelImplTest {
 			@Override
 			public Boolean answer(InvocationOnMock invocation) throws Throwable {
 				Object ob = invocation.getArguments()[0];
-				if (ob instanceof Group) {
-					Group grp = new Group();
+				if (ob instanceof MaritacaList) {
+					MaritacaList grp = new MaritacaList();
 					grp.setKey(uuid3);
 				}
 				return true;
 			}
 		});
 		
-		assertTrue(userModel.saveGroup(validGrp));
+		assertTrue(userModel.saveMaritacaList(validGrp));
 	}
 	
 	
 	@Test
 	public void testOwnerIsInGroup() {		
-		Group grp1 = new Group();
+		MaritacaList grp1 = new MaritacaList();
 		grp1.setName("grp1");
 		grp1.setKey(uuid);
 		
@@ -143,11 +143,11 @@ public class UserModelImplTest {
 		
 		grp1.setOwner(ownerGrp1);
 		
-		when(em.cQuery(GroupUser.class, "group", uuid)).thenAnswer(new Answer<List<GroupUser>>(){
+		when(em.cQuery(MaritacaListUser.class, "maritacaList", uuid)).thenAnswer(new Answer<List<MaritacaListUser>>(){
 			@Override
-			public List<GroupUser> answer(InvocationOnMock invocation)
+			public List<MaritacaListUser> answer(InvocationOnMock invocation)
 					throws Throwable {
-				return new ArrayList<GroupUser>();
+				return new ArrayList<MaritacaListUser>();
 			}			
 		});
 		
@@ -162,12 +162,12 @@ public class UserModelImplTest {
 			}						
 		});
 		
-		when(em.cQuery(Group.class, "owner", uuid)).thenAnswer(new Answer<List<Group>>(){
+		when(em.cQuery(MaritacaList.class, "owner", uuid)).thenAnswer(new Answer<List<MaritacaList>>(){
 			@Override
-			public List<Group> answer(InvocationOnMock invocation)
+			public List<MaritacaList> answer(InvocationOnMock invocation)
 					throws Throwable {
-				List<Group> rootGrps = new ArrayList<Group>();
-				Group       rootGrp  = new Group();
+				List<MaritacaList> rootGrps = new ArrayList<MaritacaList>();
+				MaritacaList       rootGrp  = new MaritacaList();
 				rootGrp.setKey(uuid4);
 				rootGrp.setName(ManagerModel.ALL_USERS);
 				rootGrps.add(rootGrp);
@@ -176,7 +176,7 @@ public class UserModelImplTest {
 		});
 
 		
-		Collection<User> usersFromGrp = userModel.searchUsersByGroup(grp1);		
+		Collection<User> usersFromGrp = userModel.searchUsersByMaritacaList(grp1);		
 		assertTrue(usersFromGrp.contains(ownerGrp1));
 		assertEquals(usersFromGrp.size(),1);	
 	}	

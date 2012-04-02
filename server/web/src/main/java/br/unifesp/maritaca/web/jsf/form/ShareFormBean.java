@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
-import br.unifesp.maritaca.core.Group;
+import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.web.jsf.account.CurrentUserBean;
 import br.unifesp.maritaca.web.jsf.util.ItemListBean;
 import br.unifesp.maritaca.web.utils.Utils;
@@ -35,7 +35,7 @@ public class ShareFormBean extends ItemListBean {
 	
 	private Form form;
 	
-	private static final String GROUP_REMOVE_OWNER_ERROR = "list_remove_owner_error";
+	private static final String LIST_REMOVE_OWNER_ERROR = "list_remove_owner_error";
 
 	public ShareFormBean() {
 		super(true, true);
@@ -56,9 +56,9 @@ public class ShareFormBean extends ItemListBean {
 	private void populateFormSharedList(Form form) {
 		super.getUsedItens().clear();
 		for(FormPermissions fp : formAnswCtrl.getFormPermissions(form)){
-			Group group = super.userCtrl.getGroup(fp.getGroup().getKey());
-			if(!group.equals(super.userCtrl.getAllUsersGroup())){
-				super.getUsedItens().add(group.getName());
+			MaritacaList list = super.userCtrl.getMaritacaList(fp.getMaritacaList().getKey());
+			if(!list.equals(super.userCtrl.getAllUsersList())){
+				super.getUsedItens().add(list.getName());
 			}			
 		}
 	}
@@ -112,8 +112,8 @@ public class ShareFormBean extends ItemListBean {
 		
 		if(form.getPolicy().isUseList()){
 			for(String listName : getUsedItens()){
-				Group listGroup = super.userCtrl.searchGroupByName(listName);
-				super.formAnswCtrl.saveFormSharedList(form, listGroup);
+				MaritacaList list = super.userCtrl.searchMaritacaListByName(listName);
+				super.formAnswCtrl.saveFormSharedList(form, list);
 			}
 		}
 				
@@ -127,26 +127,26 @@ public class ShareFormBean extends ItemListBean {
 
 	@Override
 	protected String searchItemInDatabase(String selectedItem) {
-		Group group = super.userCtrl.searchGroupByName(getSelectedItem());
+		MaritacaList list = super.userCtrl.searchMaritacaListByName(getSelectedItem());
 		
-		if(group==null){
+		if(list==null){
 			return null;
 		} else {
-			return group.getName();
+			return list.getName();
 		}
 	}
 
 	@Override
 	public List<String> autoComplete(String prefix) {
-		Collection<Group> groups       = userCtrl.groupsStartingWith(prefix);
-		List<String>      groupsNames  = new ArrayList<String>();
+		Collection<MaritacaList> lists = userCtrl.maritacaListsStartingWith(prefix);
+		List<String>      listsNames  = new ArrayList<String>();
 			
-		for(Group gr : groups){
+		for(MaritacaList gr : lists){
 			//set data of the owner
-			gr.setOwner(userCtrl.getOwnerOfGroup(gr));
-			groupsNames.add(gr.getName());
+			gr.setOwner(userCtrl.getOwnerOfMaritacaList(gr));
+			listsNames.add(gr.getName());
 		}
-		return groupsNames;
+		return listsNames;
 	}
 
 	@Override
@@ -162,7 +162,7 @@ public class ShareFormBean extends ItemListBean {
 		String currentUsrEmail = getCurrentUserBean().getUser().getEmail();		
 		if(item.equals(currentUsrEmail)){
 			setAddItemError(Utils
-					.getMessageFromResourceProperties(GROUP_REMOVE_OWNER_ERROR));
+					.getMessageFromResourceProperties(LIST_REMOVE_OWNER_ERROR));
 			return;
 		}
 		getUsedItens().remove(item);

@@ -9,22 +9,22 @@ import br.unifesp.maritaca.persistence.annotations.Column;
 import br.unifesp.maritaca.persistence.annotations.Minimal;
 
 @Entity
-public class GroupUser {
+public class MaritacaListUser {
 	@Id
 	private UUID key;
 	@Column(indexed = true)
 	@Minimal
-	private Group group;
+	private MaritacaList maritacaList;
 	@Column(indexed = true)
 	@Minimal
 	private User user;
 
-	public GroupUser(){
+	public MaritacaListUser(){
 		
 	}
 	
-	public GroupUser(Group group, User user){
-		setGroup(group);
+	public MaritacaListUser(MaritacaList list, User user){
+		setMaritacaList(list);
 		setUser(user);
 	}
 	
@@ -40,18 +40,18 @@ public class GroupUser {
 		this.key = UUID.fromString(ks);
 	}
 
-	public Group getGroup() {
-		return group;
+	public MaritacaList getMaritacaList() {
+		return maritacaList;
 	}
 
-	public void setGroup(Group group) {
-		this.group = group;
+	public void setMaritacaList(MaritacaList maritacaList) {
+		this.maritacaList = maritacaList;
 	}
 
-	public void setGroup(String uid) {
-		Group group = new Group();
-		group.setKey(uid);
-		setGroup(group);
+	public void setMaritacaList(String uid) {
+		MaritacaList list = new MaritacaList();
+		list.setKey(uid);
+		setMaritacaList(list);
 	}
 
 	public User getUser() {

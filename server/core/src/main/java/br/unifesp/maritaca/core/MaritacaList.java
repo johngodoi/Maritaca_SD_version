@@ -9,7 +9,7 @@ import br.unifesp.maritaca.persistence.annotations.Column;
 import br.unifesp.maritaca.persistence.annotations.Minimal;
 
 @Entity
-public class Group {
+public class MaritacaList {
 	@Id
 	private UUID key;
 	@Column(indexed = true)
@@ -90,8 +90,8 @@ public class Group {
 	
 	@Override
 	public boolean equals(Object obj) {
-		if(obj instanceof Group){
-			Group grp = (Group)obj;
+		if(obj instanceof MaritacaList){
+			MaritacaList grp = (MaritacaList)obj;
 			return grp.getKey().equals(getKey());
 		} else {
 			return false;
