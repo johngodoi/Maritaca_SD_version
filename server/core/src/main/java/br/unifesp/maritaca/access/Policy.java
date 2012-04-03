@@ -1,5 +1,8 @@
 package br.unifesp.maritaca.access;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
 import br.unifesp.maritaca.core.MaritacaList;
@@ -26,6 +29,7 @@ public enum Policy {
 	private FormPermissions publicPermissions;
 	private FormPermissions ownerPermissions;
 	private FormPermissions listPermissions;
+	private static final Log log = LogFactory.getLog(Policy.class);
 	
 	Policy(FormPermissions publicPermissions, FormPermissions ownerPermissions, FormPermissions listPermissions){
 		setAllUsersPermissions(publicPermissions);
@@ -49,12 +53,14 @@ public enum Policy {
 	
 	public static Policy getPolicyFromString(String str){
 		for(Policy p : Policy.values()){
-			String policyName = p.name().replace(" ", "_").toLowerCase();
+			String policyName = p.toString();
 			if(policyName.equals(str)){
 				return p;
 			}
-		}		
-		return null;
+		}
+		String error = "Can't convert string: "+str+" to Policy enum";
+		log.error(error);
+		throw new IllegalArgumentException(error);
 	}
 
 	public FormPermissions getAllUsersPermissions() {
