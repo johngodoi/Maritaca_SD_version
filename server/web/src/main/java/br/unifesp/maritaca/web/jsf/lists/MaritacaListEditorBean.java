@@ -130,7 +130,6 @@ public class MaritacaListEditorBean extends AbstractBean implements Serializable
 	private void fillListInfo(MaritacaList list) {
 		setListName(list.getName());
 		setListDescription(list.getDescription());
-		setAllowUserJoin(list.getAllowUsersToJoin());
 		setListId(list.getKey());
 
 		List<User> users = new ArrayList<User>(

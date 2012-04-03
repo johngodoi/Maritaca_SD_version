@@ -406,7 +406,7 @@ public class UserModelImpl implements UserModel, Serializable, UseEntityManager 
 		}
 		
 		String           groupKey        = group.getKey().toString();
-		List<MaritacaListUser>  grpsUsrFromUser = entityManager.cQuery(MaritacaListUser.class, "maritacaListUser", groupKey);
+		List<MaritacaListUser>  grpsUsrFromUser = entityManager.cQuery(MaritacaListUser.class, "maritacaList", groupKey);
 		Collection<User> foundUsers      = new ArrayList<User>();
 
 		if(group.equals(getAllUsersList())){

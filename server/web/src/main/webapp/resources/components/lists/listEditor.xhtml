@@ -38,15 +38,6 @@
 					id="listDescription">
 				</h:inputText>
 
-				<!-- List Policy -->
-				<h:outputText value="#{msgs.list_admission_policy}:" />
-				<h:selectOneRadio value="#{maritacaListEditorBean.allowUserJoin}">
-					<f:selectItem itemLabel="#{msgs.list_admission_policy_public}"
-						itemValue="true" />
-					<f:selectItem itemLabel="#{msgs.list_admission_policy_private}"
-						itemValue="false" />
-				</h:selectOneRadio>
-
 				<!-- List Users -->
 				<h:outputText value="#{msgs.list_users}:" />
 				<h:panelGrid columns="2">

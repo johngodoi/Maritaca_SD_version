@@ -147,7 +147,7 @@ public class UserModelImplTest {
 		
 		list1.setOwner(ownerList1);
 		
-		when(em.cQuery(MaritacaListUser.class, "maritacaListUser", uuid)).thenAnswer(new Answer<List<MaritacaListUser>>(){
+		when(em.cQuery(MaritacaListUser.class, "maritacaList", uuid)).thenAnswer(new Answer<List<MaritacaListUser>>(){
 			@Override
 			public List<MaritacaListUser> answer(InvocationOnMock invocation)
 					throws Throwable {

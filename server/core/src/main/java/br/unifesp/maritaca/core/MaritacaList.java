@@ -22,10 +22,6 @@ public class MaritacaList {
 
 	@Column
 	@Minimal
-	private Boolean allowUsersToJoin;
-
-	@Column
-	@Minimal
 	private String description;
 
 	public UUID getKey() {
@@ -78,14 +74,6 @@ public class MaritacaList {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public Boolean getAllowUsersToJoin() {
-		return allowUsersToJoin;
-	}
-
-	public void setAllowUsersToJoin(Boolean allowUsersToJoin) {
-		this.allowUsersToJoin = allowUsersToJoin;
 	}
 	
 	@Override
