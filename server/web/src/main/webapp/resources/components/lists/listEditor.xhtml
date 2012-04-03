@@ -18,55 +18,63 @@
 	</composite:interface>
 	<composite:implementation>
 		<rich:panel>
-			<h:panelGrid columns="2" columnClasses="editorC1,editorC2">
+			<h:panelGrid columns="3" columnClasses="editorC1,editorC2">
 
 				<!-- List Name -->
-				<h:outputText value="#{msgs.list_name}:" />
+				<h:outputText value="#{msgs.list_name}:" />				
 				<h:inputText value="#{maritacaListEditorBean.listName}" id="listName">
 					<f:ajax event="blur" render="listExistsError" />
 					<rich:validator />
 				</h:inputText>
 				
-				<h:inputHidden/>
-				<h:outputText
-					value="#{maritacaListEditorBean.registeredListName() ? msgs.list_name_already_used : ''}"
-					id="listExistsError" styleClass="error" />
+				<h:panelGrid column="1">			
+					<rich:message for="listName" />											
+				
+					<h:outputText
+						value="#{maritacaListEditorBean.registeredListName() ? msgs.list_name_already_used : ''}"
+						id="listExistsError" styleClass="error" />
+				</h:panelGrid>
 
 				<!-- List Description -->
 				<h:outputText value="#{msgs.list_description}:" />
 				<h:inputText value="#{maritacaListEditorBean.listDescription}"
 					id="listDescription">
 				</h:inputText>
+				<h:inputHidden/>
 
 				<!-- List Users -->
 				<h:outputText value="#{msgs.list_users}:" />
-				<h:panelGrid columns="2">
-					<rich:autocomplete
+				<rich:autocomplete
 						autocompleteMethod="#{maritacaListEditorBean.usersStartingWith}"
 						mode="cachedAjax" value="#{maritacaListEditorBean.selectedEmail}"
 						minChars="4" id="selectedEmail">
-					</rich:autocomplete>
-					<a4j:commandButton value="#{msgs.list_add_user_button}"
+				</rich:autocomplete>
+				<a4j:commandButton value="#{msgs.list_add_user_button}"
 						action="#{maritacaListEditorBean.addEmail}" execute="selectedEmail"
 						render="emailList addEmailError"/>
-				</h:panelGrid>
+
+
 
 				<!-- Error Msg -->
 				<h:inputHidden/>
 				<h:outputText styleClass="error" id="addEmailError"
 					value="#{maritacaListEditorBean.addEmailError}" />
+				<h:inputHidden/>
 
 				<!-- Added users -->
 				<h:inputHidden/>
-				<rich:panel>
-					<rich:list value="#{maritacaListEditorBean.addedEmailsList}" var="email"
-						id="emailList">
-						#{email}
-						<a4j:commandButton value="-" type="button"
-							action="#{maritacaListEditorBean.removeEmail(email)}"
-							render="emailList addEmailError" immediate="true" />
-					</rich:list>
-				</rich:panel>			
+				<rich:panel>					
+						<rich:list value="#{maritacaListEditorBean.addedEmailsList}" var="email"
+							id="emailList">
+							<h:panelGrid columns="2">
+								#{email}
+								<a4j:commandButton value="-" type="button"
+									action="#{maritacaListEditorBean.removeEmail(email)}"
+									render="emailList addEmailError" immediate="true" />
+							</h:panelGrid>
+						</rich:list>
+				</rich:panel>
+				<h:inputHidden/>			
 			</h:panelGrid>			
 
 			<!-- Save & Cancel -->
