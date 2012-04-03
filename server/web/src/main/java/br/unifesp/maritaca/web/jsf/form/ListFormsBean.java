@@ -37,6 +37,10 @@ public class ListFormsBean extends AbstractBean {
 		}
 		return forms;
 	}
+	
+	public boolean hasPermission(Form form, String operation){		
+		return super.formAnswCtrl.currentUserHasPermission(form, Operation.fromString(operation));
+	}
 
 	public void sortByName() {
 		forms = formAnswCtrl.listAllFormsSortedbyName(currentUser.getUser());

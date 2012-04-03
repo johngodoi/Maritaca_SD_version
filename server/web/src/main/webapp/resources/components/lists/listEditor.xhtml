@@ -66,12 +66,10 @@
 				<rich:panel>					
 						<rich:list value="#{maritacaListEditorBean.addedEmailsList}" var="email"
 							id="emailList">
-							<h:panelGrid columns="2">
 								#{email}
 								<a4j:commandButton value="-" type="button"
 									action="#{maritacaListEditorBean.removeEmail(email)}"
 									render="emailList addEmailError" immediate="true" />
-							</h:panelGrid>
 						</rich:list>
 				</rich:panel>
 				<h:inputHidden/>			

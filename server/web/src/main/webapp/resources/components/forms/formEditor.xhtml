@@ -36,33 +36,28 @@
 			<rich:menuItem label="#{msgs.commons_save}" 
 				onclick="sendFormToServer();"
 				mode="client"
-				icon="#{resource['img:save.png']}" status="formEditor_status" />
+				icon="#{resource['img:save.png']}" status="formEditor_status"
+				rendered="#{!editFormBean.newForm and editFormBean.hasPermission('UPDATE')}"/>
 
 			<!-- Save as option -->
 			<rich:menuItem label="#{msgs.commons_saveas}" 
 				onclick="saveFormAsDialog('#{msgs.commons_saveas}');" 
 				mode="client"
-				icon="#{resource['img:save.png']}" status="formEditor_status" />
+				icon="#{resource['img:save.png']}" status="formEditor_status"/>
 
 			<!-- Clear option -->
 			<rich:menuItem label="#{msgs.commons_clear}" 
 				onclick="clearForm()"
 				mode="client" id="clearForm" 
-				icon="#{resource['img:clear.png']}"/>
+				icon="#{resource['img:clear.png']}"
+				rendered="#{!editFormBean.newForm and editFormBean.hasPermission('UPDATE')}"/>
 
 			<!-- Delete option -->
 			<rich:menuItem label="#{msgs.commons_delete}" 
-				rendered="#{!editFormBean.newForm}"
 				onclick="deleteFormDialog()"			
 				mode="ajax"
-				icon="#{resource['img:remove.png']}"/>
-
-			<!-- Ready to collect option -->
-			<rich:menuItem label="#{msgs.form_edit_collectButton}" 
-				onclick="collectFormDialog()"
-				rendered="#{!editFormBean.newForm}"
-				mode="client" id="collectForm" 
-				icon="#{resource['img:project_logo_icon.png']}"/>
+				icon="#{resource['img:remove.png']}"
+				rendered="#{!editFormBean.newForm and editFormBean.hasPermission('DELETE')}"/>
 
 			<!-- rich:toolbarGroup>
 				<rich:dropDownMenu mode="ajax" styleClass="listItemOption">

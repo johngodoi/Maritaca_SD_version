@@ -36,7 +36,8 @@
 					<rich:menuItem render="menuAndContent"
 						icon="#{resource['img:view_form.png']}"
 						label="#{msgs.commons_view}"
-						action="#{manager.activeModAndSub('Forms', 'formEditor')}">
+						action="#{manager.activeModAndSub('Forms', 'formEditor')}"
+						rendered="#{listFormsBean.hasPermission(aForm, 'READ')}">
 						<f:setPropertyActionListener target="#{editFormBean.form}"
 							value="#{aForm}" />
 						<f:setPropertyActionListener target="#{editFormBean.newForm}"
@@ -47,7 +48,8 @@
 					<rich:menuItem render="menuAndContent"
 						icon="#{resource['img:edit_form.png']}"
 						label="#{msgs.commons_edit}"
-						action="#{manager.activeModAndSub('Forms', 'formEditor')}">
+						action="#{manager.activeModAndSub('Forms', 'formEditor')}"
+						rendered="#{listFormsBean.hasPermission(aForm, 'UPDATE')}">
 						<f:setPropertyActionListener target="#{editFormBean.form}"
 							value="#{aForm}" />
 						<f:setPropertyActionListener target="#{editFormBean.newForm}"
@@ -59,21 +61,15 @@
 					<rich:menuItem icon="#{resource['img:share.png']}"
 						render="shareForm:shareFormId" label="#{msgs.form_share}"
 						action="#{shareFormBean.setForm(aForm)}"
-						onclick="showShareForm('#{msgs.form_share_settings}');">
-					</rich:menuItem>
-
-					<rich:menuItem icon="#{resource['img:project_logo_icon.png']}"
-						render="panelContent" label="#{msgs.form_edit_collectButton}"
-						action="#{editFormBean.setFormAsCollectable()}"
-						actionListener="#{listFormsBean.listOwnFormsChanged}">
-						<f:setPropertyActionListener target="#{editFormBean.form}"
-							value="#{aForm}" />
+						onclick="showShareForm('#{msgs.form_share_settings}');"
+						rendered="#{listFormsBean.hasPermission(aForm, 'SHARE')}">
 					</rich:menuItem>
 
 					<rich:menuItem icon="#{resource['img:remove.png']}"
 						render="panelContent" label="#{msgs.commons_delete}"
 						action="#{editFormBean.deleteForm}"
-						actionListener="#{listFormsBean.listOwnFormsChanged}">
+						actionListener="#{listFormsBean.listOwnFormsChanged}"
+						rendered="#{listFormsBean.hasPermission(aForm, 'DELETE')}">
 						<f:setPropertyActionListener target="#{editFormBean.form}"
 							value="#{aForm}" />
 					</rich:menuItem>
