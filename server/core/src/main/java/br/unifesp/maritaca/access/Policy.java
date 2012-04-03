@@ -14,16 +14,16 @@ public enum Policy {
 			
 	SHARED_HIERARCHICAL(
 			new FormPermissions(AccessLevel.NO_ACCESS,     AccessLevel.NO_ACCESS),
-			new FormPermissions(AccessLevel.FULL_ACCESS,   AccessLevel.FULL_ACCESS),
+			new FormPermissions(AccessLevel.FULL_NO_SHARE, AccessLevel.FULL_ACCESS),
 			new FormPermissions(AccessLevel.READ_AND_LIST, AccessLevel.CREATE_ONLY)),
 			
 	SHARED_SOCIAL(
 			new FormPermissions(AccessLevel.NO_ACCESS,     AccessLevel.NO_ACCESS),
-			new FormPermissions(AccessLevel.FULL_ACCESS,   AccessLevel.FULL_ACCESS),
+			new FormPermissions(AccessLevel.FULL_NO_SHARE, AccessLevel.FULL_ACCESS),
 			new FormPermissions(AccessLevel.READ_AND_LIST, AccessLevel.FULL_ACCESS)),
 			
-	PUBLIC(	new FormPermissions(AccessLevel.READ_AND_LIST,   AccessLevel.FULL_ACCESS),
-			new FormPermissions(AccessLevel.FULL_ACCESS,     AccessLevel.FULL_ACCESS),
+	PUBLIC(	new FormPermissions(AccessLevel.READ_AND_LIST, AccessLevel.FULL_ACCESS),
+			new FormPermissions(AccessLevel.FULL_NO_SHARE, AccessLevel.FULL_ACCESS),
 			null);
 	
 	private FormPermissions publicPermissions;

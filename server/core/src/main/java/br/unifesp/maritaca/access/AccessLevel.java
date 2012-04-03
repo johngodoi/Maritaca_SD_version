@@ -11,6 +11,7 @@ public enum AccessLevel {
 	READ_AND_LIST(Operation.LIST, Operation.READ),
 	CREATE_ONLY(Operation.CREATE),
 	CREATE_AND_UPDATE(Operation.CREATE, Operation.UPDATE),
+	FULL_NO_SHARE(Operation.allExceptShare()),
 	FULL_ACCESS(Operation.values());
 
 	AccessLevel(Operation... ops) {

@@ -59,7 +59,10 @@ public class EditFormBean extends AbstractBean {
 		addMessage("form_edit_save_error", FacesMessage.SEVERITY_ERROR);
 	}
 	
-	public boolean hasPermission(String operation){		
+	public boolean hasPermission(String operation){
+		if(isNewForm()){
+			return true;
+		}
 		return super.formAnswCtrl.currentUserHasPermission(form, Operation.fromString(operation));
 	}
 	

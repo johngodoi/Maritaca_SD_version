@@ -300,10 +300,8 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 					"Incomplete parameters, form permission not saved");
 		}
 
-		if (fp.getKey() == null	&& !currentUserHasPermission(fp.getForm(), Operation.CREATE)) {
-			// user does not have permission to update
-			return false;
-		} else if(!currentUserHasPermission(fp.getForm(),Operation.UPDATE)){
+		if(fp.getKey()!=null && !currentUserHasPermission(fp.getForm(),Operation.UPDATE)){
+		// Form exists and user does not have permission to update
 			return false;
 		}
 
@@ -368,13 +366,9 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 	private boolean userHasPermissionInForm(User user, Form form, Operation op) {
 		if (form.getUser() == null) {
 			form = getForm(form.getKey(), true);
-		}
-		// if form.user equals current user, user is owner and has all
-		// permissions
-		if (user.equals(form.getUser())) {
-			return true;
-		}
-		// not a owner, get permission of form
+		}		
+		
+		// Get permissions of form
 		List<FormPermissions> listFP = getFormPermissions(form);
 		for (FormPermissions fp : listFP) {
 			if (fp.getFormAccess().isOperationEnabled(op)
@@ -525,11 +519,13 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 		MaritacaList  ownerGrp    = owner.getMaritacaList();
 		MaritacaList  allUsersGrp = userModel.getAllUsersList();		
 
-		Policy p           = form.getPolicy();
+		Policy p = form.getPolicy();
 		
 		FormPermissions ownerPermissions  = p.buildOwnerFormPermission(form, ownerGrp);
 		FormPermissions publicPermissions = p.buildPublicFormPermission(form, allUsersGrp);
 		
+		// List permissions dosen't need to be saved right now.
+		// The form is created private and does not have a list in this moment.
 		return saveFormPermission(ownerPermissions)&& saveFormPermission(publicPermissions);
 	}
 }
