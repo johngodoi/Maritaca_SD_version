@@ -1,0 +1,44 @@
+<form>
+<questions> 
+	<text id="0" next="1" required="true" max="100">
+            <help>Enter with name of user.</help>
+            <label>Name:</label>
+	    <default>ZZzzZZ</default>
+    </text>
+    <number id="1" next="2" required="false" min="0" max="100">
+            <help>How old are the user?</help>
+            <label>Age:</label>
+            <default>0</default>
+            <if comparison="equal" val="24" goto="2" />
+            <!-- special tag end, that sends the user to the end of the data gathering 
+                (a screen asking if he/she wants to quit, continue, save, or upload data...) -->
+            <if comparison="greater" val="100" goto="end" /> <!-- sorry, you should be dead -->
+            <if comparison="less" val="18" goto="end" /> <!-- forbidden for under 18 -->
+            <if comparison="greaterequal" val="10" goto="2" />
+            <if comparison="lessequal" val="10" goto="2" />
+    </number>
+    <text id="2" next="3" required="false" max="2800">
+            <help>Segunda question, sem help</help>
+            <label>Nome do autor:</label>
+	    <default>Sir Bruno</default>
+    </text>
+   <text id="3" next="4" required="true" max="100">
+            <help>Enter with name of user.</help>
+            <label>Name:</label>
+            <default>Fulano</default>
+            <if comparison="equal" val="Ciclano" goto="3" />
+   </text>
+   <number id="4" next="" required="false" min="0" max="100">
+            <help>How old are the user?</help>
+            <label>Age:</label>
+            <default>0</default>
+            <if comparison="equal" val="24" goto="2" />
+            <!-- special tag end, that sends the user to the end of the data gathering 
+                (a screen asking if he/she wants to quit, continue, save, or upload data...) -->
+            <if comparison="greater" val="100" goto="end" /> <!-- sorry, you should be dead -->
+            <if comparison="less" val="18" goto="end" /> <!-- forbidden for under 18 -->
+            <if comparison="greaterequal" val="10" goto="2" />
+            <if comparison="lessequal" val="10" goto="2" />
+    </number>
+</questions>    
+</form>
