@@ -8,9 +8,9 @@ import br.unifesp.maritaca.core.FormPermissions;
 import br.unifesp.maritaca.core.MaritacaList;
 
 public enum Policy {
-	PUBLIC(	new FormPermissions(AccessLevel.READ_AND_LIST,   AccessLevel.FULL_ACCESS),
-			new FormPermissions(AccessLevel.FULL_ACCESS,     AccessLevel.FULL_ACCESS),
-			null),
+	PRIVATE(new FormPermissions(AccessLevel.NO_ACCESS,     AccessLevel.NO_ACCESS),
+			new FormPermissions(AccessLevel.FULL_ACCESS,   AccessLevel.FULL_ACCESS),
+			null),	
 			
 	SHARED_HIERARCHICAL(
 			new FormPermissions(AccessLevel.NO_ACCESS,     AccessLevel.NO_ACCESS),
@@ -22,8 +22,8 @@ public enum Policy {
 			new FormPermissions(AccessLevel.FULL_ACCESS,   AccessLevel.FULL_ACCESS),
 			new FormPermissions(AccessLevel.READ_AND_LIST, AccessLevel.FULL_ACCESS)),
 			
-	PRIVATE(new FormPermissions(AccessLevel.NO_ACCESS,     AccessLevel.NO_ACCESS),
-			new FormPermissions(AccessLevel.FULL_ACCESS,   AccessLevel.FULL_ACCESS),
+	PUBLIC(	new FormPermissions(AccessLevel.READ_AND_LIST,   AccessLevel.FULL_ACCESS),
+			new FormPermissions(AccessLevel.FULL_ACCESS,     AccessLevel.FULL_ACCESS),
 			null);
 	
 	private FormPermissions publicPermissions;

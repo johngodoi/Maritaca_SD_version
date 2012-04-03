@@ -1,7 +1,7 @@
 package br.unifesp.maritaca.core;
 
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -154,7 +154,7 @@ public class Form implements Comparable<Form> {
 	}
 	
 	public Map<String,Policy> getPolicyItens(){
-		Map<String,Policy> policyItens = new HashMap<String,Policy>(); 
+		Map<String,Policy> policyItens = new LinkedHashMap<String,Policy>(); 
 		for(Policy p : Policy.values()){
 			policyItens.put(p.toString(), p);
 		}		

@@ -15,7 +15,10 @@
 		<div id="#{cc.clientId}">
 			<rich:panel id="shareFormPanel" >
 				<h:panelGrid columns="2" width="100%">
-					<h:outputText value="#{msgs.form_share_url}" />
+					<h:outputText value="#{msgs.form_title}:"/>
+					<h:outputText value="#{shareFormBean.form.title}"/>
+				
+					<h:outputText value="#{msgs.form_share_url}:" />
 					<h:inputText
 						value="#{shareFormBean.rootForSharing}#{shareFormBean.url}"
 						readonly="true" style="width:100%;" />
