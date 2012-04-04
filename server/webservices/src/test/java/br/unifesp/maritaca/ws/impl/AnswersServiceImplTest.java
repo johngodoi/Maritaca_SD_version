@@ -119,7 +119,7 @@ public class AnswersServiceImplTest {
 			when(frControl.saveForm(any(Form.class))).thenReturn(false);
 
 			try {
-				MaritacaResponse resp = answService.saveAnswer(xmlResp, uuid, uuid3);
+				answService.saveAnswer(xmlResp, uuid, uuid3);
 			} catch (Exception e) {
 				assertTrue(e instanceof MaritacaWSException);
 				MaritacaWSException me = (MaritacaWSException) e;
@@ -153,7 +153,8 @@ public class AnswersServiceImplTest {
 			when(frControl.listAllAnswersMinimal(any(UUID.class))).thenReturn(list);
 			MaritacaResponse resp = answService.listAnswersMinimal(uuid3);
 			assertTrue(resp instanceof ResultSetResponse);
-			ResultSetResponse<Answer> okresp = (ResultSetResponse<Answer>) resp;
+			@SuppressWarnings("unchecked")
+			ResultSetResponse<Answer> okresp = ((ResultSetResponse<Answer>) resp);
 			assertEquals(list.size(), okresp.getSize());
 			int i = 0;
 			for (Answer r : okresp.getList()) {

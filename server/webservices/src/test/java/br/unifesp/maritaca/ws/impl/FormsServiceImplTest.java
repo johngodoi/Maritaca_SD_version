@@ -107,7 +107,7 @@ public class FormsServiceImplTest {
 			when(frControl.saveForm(any(Form.class))).thenReturn(false);
 
 			try {
-				MaritacaResponse resp = formService.saveForm(xmlForm, uuid2);
+				formService.saveForm(xmlForm, uuid2);
 			} catch (Exception e) {
 				assertTrue(e instanceof MaritacaWSException);
 				MaritacaWSException me = (MaritacaWSException) e;
@@ -142,6 +142,7 @@ public class FormsServiceImplTest {
 			when(frControl.listAllFormsMinimal()).thenReturn(list);
 			MaritacaResponse resp = formService.listFormsMinimal();
 			assertTrue(resp instanceof ResultSetResponse);
+			@SuppressWarnings("unchecked")
 			ResultSetResponse<Form> okresp = (ResultSetResponse<Form>) resp;
 			assertEquals(list.size(), okresp.getSize());
 			int i = 0;
