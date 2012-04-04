@@ -106,18 +106,21 @@ public class ShareFormBean extends ItemListBean {
 		
 		Form form = (Form) formObj;
 		
-		if(!super.formAnswCtrl.saveForm(form)){
+		List<MaritacaList> lists = formLists();		
+		if(!super.formAnswCtrl.saveForm(form,lists)){
 			return false;
-		}
-		
-		if(form.getPolicy().isUseList()){
-			for(String listName : getUsedItens()){
-				MaritacaList list = super.userCtrl.searchMaritacaListByName(listName);
-				super.formAnswCtrl.saveFormSharedList(form, list);
-			}
 		}
 				
 		return true;
+	}
+	
+	private List<MaritacaList> formLists(){
+		List<MaritacaList> lists = new ArrayList<MaritacaList>();
+		for(String listName : getUsedItens()){
+			MaritacaList list = super.userCtrl.searchMaritacaListByName(listName);
+			lists.add(list);
+		}
+		return lists;
 	}
 
 	@Override

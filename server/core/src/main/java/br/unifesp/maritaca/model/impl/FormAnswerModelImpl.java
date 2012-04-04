@@ -62,11 +62,8 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 		this.currentUser = currentUser;
 	}
 
-	/**
-	 * Save/Update a form if the User has permissions
-	 */
 	@Override
-	public boolean saveForm(Form form) {
+	public boolean saveForm(Form form, List<MaritacaList> lists) {
 		verifyEntity(form.getUser());
 		
 		if(form.getTitle() == null || form.getTitle().length()==0){
@@ -92,26 +89,21 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 				}
 			}
 			if (entityManager.persist(form)) {
-					// save permissions of a form
-					if (saveFormPermissionsByPolicy(form)) {
-						// all saved correctly
-						return true;
-					} else {
-						// default permissions don't save
-						// delete form
-						deleteForm(form);
-						log.error("Not possible to establish default permissions, form not saved");
-						throw new RuntimeException(
-								"Not possible to establish default permissions, form not saved");
-					}
-			} else {
-				// form not saved
-				return false;
-			}
+				// save permissions of a form
+				saveFormPermissionsByPolicy(form,lists);
+			} 
+			return true;
 		} else {
-			throw new IllegalArgumentException(
-					"User does not exist in database");
-		}
+			throw new IllegalArgumentException("User does not exist in database");
+		}		
+	}
+	
+	/**
+	 * Save/Update a form if the User has permissions
+	 */
+	@Override
+	public boolean saveForm(Form form) {
+		return saveForm(form, new ArrayList<MaritacaList>());
 	}
 
 	/**
@@ -293,7 +285,7 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 				UUID.fromString(formPermId));
 	}
 
-	private boolean saveFormPermission(FormPermissions fp) {
+	private void saveFormPermission(FormPermissions fp) {
 		// verify parameters
 		if (fp == null || fp.getForm() == null || fp.getMaritacaList() == null) {
 			throw new IllegalArgumentException(
@@ -302,7 +294,7 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 
 		if(fp.getKey()!=null && !currentUserHasPermission(fp.getForm(),Operation.UPDATE)){
 		// Form exists and user does not have permission to update
-			return false;
+			throw new AuthorizationDenied(Form.class, fp.getForm().getKey(), getCurrentUser().getKey(), Operation.UPDATE);
 		}
 
 		// verify if form and list exists
@@ -328,7 +320,9 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 		}
 
 		// persist fp
-		return entityManager.persist(fp);
+		if(!entityManager.persist(fp)){
+			throw new RuntimeException("Error persisting FormPermission");
+		}
 	}
 
 	/**
@@ -495,37 +489,37 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 		}		
 	}
 	
-	@Override
-	public void saveFormSharedList(Form form, MaritacaList list){
-		verifyEntity(form);
-		verifyEntity(list);
-		
-		Policy p = form.getPolicy();
-		
-		FormPermissions listPermissions = p.buildListFormPermission(form, list);
-		if(!saveFormPermission(listPermissions)){
-			throw new RuntimeException("Error saving form permissions");
-		}
-	}
-	
-	private boolean saveFormPermissionsByPolicy(Form form) {
-		if (form == null || form.getUser() == null) {
+	/**
+	 * Updates the form permissions to the owner, public and form lists.
+	 * This methods requires UPDATE permission on target form which
+	 * should be checked before calling it.
+	 * @param form
+	 * @param formLists
+	 */
+	private void saveFormPermissionsByPolicy(Form form, List<MaritacaList> formLists) {
+		if (form == null || form.getUser() == null || formLists == null) {
 			throw new IllegalArgumentException(
 					"Incomplete parameters, form permission not saved");
 		}		
 		deleteOldFormPermissions(form);
 		
-		User          owner       = userModel.getUser(form.getUser().getKey());
-		MaritacaList  ownerGrp    = owner.getMaritacaList();
-		MaritacaList  allUsersGrp = userModel.getAllUsersList();		
+		User          owner        = userModel.getUser(form.getUser().getKey());
+		MaritacaList  ownerList    = owner.getMaritacaList();
+		MaritacaList  allUsersList = userModel.getAllUsersList();		
 
 		Policy p = form.getPolicy();
 		
-		FormPermissions ownerPermissions  = p.buildOwnerFormPermission(form, ownerGrp);
-		FormPermissions publicPermissions = p.buildPublicFormPermission(form, allUsersGrp);
+		FormPermissions ownerPermissions  = p.buildOwnerFormPermission(form, ownerList);
+		FormPermissions publicPermissions = p.buildPublicFormPermission(form, allUsersList);
 		
-		// List permissions dosen't need to be saved right now.
-		// The form is created private and does not have a list in this moment.
-		return saveFormPermission(ownerPermissions)&& saveFormPermission(publicPermissions);
+		saveFormPermission(ownerPermissions);
+		saveFormPermission(publicPermissions);
+		
+		for(MaritacaList list : formLists){
+			if(! list.equals(ownerList)){
+				FormPermissions listPermissions = p.buildListFormPermission(form, list);			
+				saveFormPermission(listPermissions);
+			}
+		}
 	}
 }

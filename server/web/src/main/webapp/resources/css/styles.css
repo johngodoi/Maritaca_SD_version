@@ -355,15 +355,19 @@ tr > td > span.error{
 }
 
 .listFormColumnTitle {
-	width: 45%;
+	width: 35%;
 }
 
 .listFormColumnCreationDate {
-	width: 25%;
+	width: 20%;
 }
 
 .listFormColumnOwner {
-	width: 30%;
+	width: 25%;
+}
+
+.listFormColumnPolicy {
+	width: 20%;
 }
 
 /******************************** Modifications to the Skin ********************************/

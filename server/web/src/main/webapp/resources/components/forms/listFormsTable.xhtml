@@ -17,7 +17,7 @@
 	<composite:implementation>
 
 		<h:dataTable value="#{cc.attrs.formList}" id="#{cc.attrs.idem}" 
-			columnClasses="listFormColumnTitle, listFormColumnOwner, listFormColumnCreationDate"   
+			columnClasses="listFormColumnTitle, listFormColumnOwner, listFormColumnCreationDate, listFormColumnPolicy"   
 			var="aForm" width="100%" styleClass="maritacaTable">
 			<f:facet name="header">
 				<h:outputText value="#{cc.attrs.title}"/>
@@ -110,11 +110,16 @@
 
 			<h:column rendered="#{!cc.attrs.formList.isEmpty()}">
 				<f:facet name="header">
-					<a4j:commandLink value="#{msgs.form_list_creationDateHeader}"
-						render="listforms, sorted" action="#{listFormsBean.sortByDate}">
-					</a4j:commandLink>
+					<a4j:commandLink value="#{msgs.form_list_creationDateHeader}"/>
 				</f:facet>
 				<h:outputText value="#{aForm.creationDate}" styleClass="listItemOption"/>
+			</h:column>
+
+			<h:column rendered="#{!cc.attrs.formList.isEmpty()}">
+				<f:facet name="header">
+					<a4j:commandLink value="#{msgs.form_policy}"/>
+				</f:facet>
+				<h:outputText value="#{aForm.policy.toString()}" styleClass="listItemOption"/>
 			</h:column>
 			
 			<h:column rendered="#{cc.attrs.formList.isEmpty()}" headerClass="columnEmptyListClass">

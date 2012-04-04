@@ -16,6 +16,8 @@ public interface FormAnswerModel extends GenericModel{
 		
 	boolean saveForm(Form form);
 	
+	boolean saveForm(Form form, List<MaritacaList> lists);
+	
 	Form getForm(UUID uid, boolean minimal);
 
 	void setEntityManager(EntityManager em);
@@ -33,8 +35,6 @@ public interface FormAnswerModel extends GenericModel{
 	Collection<Form> listSharedFormsFromCurrentUser(boolean minimal);
 	
 	Collection<FormPermissions> getFormPermissionsByList(MaritacaList list);
-	
-	void saveFormSharedList(Form form, MaritacaList list);
 	
 	/************* ANSWER ***********/
 	boolean saveAnswer(Answer answer);

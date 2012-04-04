@@ -66,7 +66,6 @@ public class ListFormsBean extends AbstractBean {
 		this.currentUser = currentUser;
 	}
 	
-	@PostConstruct
 	public void updateFormsList(){
 		updateListOwnForms();
 		updateListSharedForms();	
