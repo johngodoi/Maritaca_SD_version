@@ -11,6 +11,14 @@
 	<name>maritaca-core</name>
 	<url>https://sourceforge.net/p/maritaca</url>
 	<dependencies>
+		<!-- JEE6 -->
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>6.0</version>
+			<scope>provided</scope>
+		</dependency>
+		
 		<dependency>
 			<groupId>me.prettyprint</groupId>
 			<artifactId>hector-core</artifactId>

@@ -10,12 +10,12 @@ import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.model.ModelFactory;
 import br.unifesp.maritaca.model.UserModel;
 
-import com.sun.jersey.spi.container.ContainerRequest;
+/*import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
 import com.sun.jersey.spi.container.ContainerResponse;
-import com.sun.jersey.spi.container.ContainerResponseFilter;
+import com.sun.jersey.spi.container.ContainerResponseFilter;*/
 
-public class RestfulFilter implements ContainerRequestFilter,
+public class RestfulFilter {/*implements ContainerRequestFilter,
 		ContainerResponseFilter {
 	private static final Log log = LogFactory.getLog(RestfulFilter.class);
 	private UserModel userModel;
@@ -49,6 +49,6 @@ public class RestfulFilter implements ContainerRequestFilter,
 					UUID.fromString(userkey.get(0)));
 		}
 		return arg1;
-	}
+	}*/
 
 }

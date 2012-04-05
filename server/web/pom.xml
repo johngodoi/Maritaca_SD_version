@@ -60,9 +60,23 @@
 		</dependency>
 		<dependency>
 			<groupId>br.unifesp.maritaca</groupId>
+			<artifactId>maritaca-business</artifactId>
+			<version>${maritaca.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>br.unifesp.maritaca</groupId>
 			<artifactId>maritaca-webservices</artifactId>
 			<version>${maritaca.version}</version>
 		</dependency>
+		
+		<!-- JEE6 -->
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>6.0</version>
+			<scope>provided</scope>
+		</dependency>
+	
 		<!-- JSF & SERVLET -->
 		<dependency>
 			<groupId>com.sun.faces</groupId>
@@ -108,26 +122,10 @@
 			<version>4.1.0.Final</version>
 			<scope>provided</scope>
 		</dependency>
-		<!-- Allows to use the a httpclient -->
 		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-client</artifactId>
-			<version>1.11</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>jersey-core</artifactId>
-					<groupId>com.sun.jersey</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>jersey-json</artifactId>
-					<groupId>com.sun.jersey</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>jersey-server</artifactId>
-					<groupId>com.sun.jersey</groupId>
-				</exclusion>
-
-			</exclusions>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-oauth</artifactId>
+			<version>2.3.2.Final</version>
 		</dependency>
 		<!-- Allows to use Commons Validators -->
 		<dependency>
