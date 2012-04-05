@@ -13,9 +13,9 @@ import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.model.FormAnswerModel;
 import br.unifesp.maritaca.model.ModelFactory;
 import br.unifesp.maritaca.ws.api.AnswersService;
+import br.unifesp.maritaca.ws.api.resp.AnswerListResponse;
 import br.unifesp.maritaca.ws.api.resp.ErrorResponse;
 import br.unifesp.maritaca.ws.api.resp.MaritacaResponse;
-import br.unifesp.maritaca.ws.api.resp.ResultSetResponse;
 import br.unifesp.maritaca.ws.api.resp.XmlSavedResponse;
 import br.unifesp.maritaca.ws.exceptions.MaritacaWSException;
 
@@ -25,6 +25,8 @@ public class AnswersServiceImpl implements AnswersService {
 
 	private FormAnswerModel formRespModel;
 	private User currentUser;
+	
+	public AnswersServiceImpl() { }
 
 	public AnswersServiceImpl(@HeaderParam("curruserkey") String userkey) {
 		// get the user
@@ -92,9 +94,16 @@ public class AnswersServiceImpl implements AnswersService {
 		if (formId != null) {
 			uuid = UUID.fromString(formId);
 		}
-		ResultSetResponse<Answer> resp = new ResultSetResponse<Answer>();
-		resp.setList(formRespModel.listAllAnswersMinimal(uuid));
+		AnswerListResponse resp = new AnswerListResponse();
+		resp.setList(getFormRespModel().listAllAnswersMinimal(uuid));
 		return resp;
+	}
+	
+	private FormAnswerModel getFormRespModel() {
+		if(formRespModel == null){
+			formRespModel = ModelFactory.getInstance().createFormResponseModel();
+		}
+		return formRespModel;
 	}
 
 	@Override

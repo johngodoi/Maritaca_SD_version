@@ -12,19 +12,9 @@ import javax.faces.bean.SessionScoped;
 @SessionScoped
 public class OAuthParametersBean {
 
-	private final String REDIRECT_URI  = "redirect_uri";
-	private final String CLIENT_ID     = "client_id";
-	private final String RESPONSE_TYPE = "response_type";
-	
-	public String getRedirectUri() {
-		return REDIRECT_URI;
-	}
+	private final String OAUTH_TOKEN   = "oauth_token";
 
-	public String getResponseType() {
-		return RESPONSE_TYPE;
-	}
-
-	public String getClientId() {
-		return CLIENT_ID;
+	public String getOAuth_Token() {
+		return OAUTH_TOKEN;
 	}
 }

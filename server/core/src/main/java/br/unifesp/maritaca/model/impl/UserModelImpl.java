@@ -1,6 +1,5 @@
 package br.unifesp.maritaca.model.impl;
 
-import static br.unifesp.maritaca.util.UtilsCore.verifyEM;
 import static br.unifesp.maritaca.util.UtilsCore.verifyEntity;
 
 import java.io.Serializable;
@@ -13,19 +12,21 @@ import java.util.UUID;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import br.unifesp.maritaca.core.Group;
-import br.unifesp.maritaca.core.GroupUser;
+import br.unifesp.maritaca.core.MaritacaList;
+import br.unifesp.maritaca.core.MaritacaListUser;
 import br.unifesp.maritaca.core.OAuthClient;
 import br.unifesp.maritaca.core.OAuthCode;
 import br.unifesp.maritaca.core.OAuthToken;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.exception.InvalidNumberOfEntries;
 import br.unifesp.maritaca.model.ManagerModel;
+import br.unifesp.maritaca.model.UseEntityManager;
 import br.unifesp.maritaca.model.UserModel;
 import br.unifesp.maritaca.persistence.EntityManager;
 import br.unifesp.maritaca.util.UserLocator;
 
-public class UserModelImpl implements UserModel, Serializable {
+//TODO Ticket: 113 - Use exceptions instead of returning false
+public class UserModelImpl implements UserModel, Serializable, UseEntityManager {
 	private static final Log log = LogFactory.getLog(UserModelImpl.class);
 	private static final long serialVersionUID = 1L;
 
@@ -42,37 +43,58 @@ public class UserModelImpl implements UserModel, Serializable {
 
 	@Override
 	public boolean saveUser(User user) {
-		verifyEM(entityManager);
-		if (user == null)
-			return false;
-		if (entityManager.persist(user)) {
-			if(user.getUserGroup()==null){
-				if(!createUserGroup(user)){
-					return false;
-				}
-			}
-			return addUserToGroup(user, getAllUsersGroup());
-		}
-		return false;
-	}
-
-	private boolean createUserGroup(User owner) {		
-		Group group = new Group();
-		group.setOwner(owner);
-		group.setName(owner.getEmail());
-		if(!saveGroup(group)){
+		if (user == null){
 			return false;
 		}
 		
-		owner.setUserGroup(group);
+		if(!updateUserGroup(user)){
+			return false;
+		}
+		
+		if (!entityManager.persist(user)) {
+			return false;
+		}		
+		if(user.getMaritacaList()==null && !createUserGroup(user)){
+			return false;
+		}		
+		return true;
+	}
+
+	/*
+	 * Update the user group name if the user changed its email
+	 */
+	private boolean updateUserGroup(User user) {
+		if(user.getKey()==null){
+			return true;
+		}		
+		User dbUser = getUser(user.getKey());
+		if(dbUser.getEmail().equals(user.getEmail())){
+			return true;
+		} else {
+			MaritacaList userGroup = searchMaritacaListByName(dbUser.getEmail());
+			userGroup.setName(user.getEmail());
+			
+			return entityManager.persist(userGroup);
+		}		
+	}
+
+
+	private boolean createUserGroup(User owner) {		
+		MaritacaList list = new MaritacaList();
+		list.setOwner(owner);
+		list.setName(owner.getEmail());
+		
+		if(!saveMaritacaList(list)){
+			return false;
+		}				
+		
+		owner.setMaritacaList(list);
 		
 		return saveUser(owner);
 	}
 
 	@Override
 	public User getUser(UUID uuid) {
-		verifyEM(entityManager);
-
 		return entityManager.find(User.class, uuid);
 	}
 
@@ -83,74 +105,61 @@ public class UserModelImpl implements UserModel, Serializable {
 
 	@Override
 	public Collection<User> listAllUsers() {
-		verifyEM(entityManager);
-
 		return entityManager.listAll(User.class);
 	}
 
 	@Override
 	public Collection<User> listAllUsersMinimal() {
-		verifyEM(entityManager);
-
 		return entityManager.listAll(User.class, true);
 	}
 
 	public User getUser(String email) {
-		verifyEM(entityManager);
 		List<User> users = entityManager.cQuery(User.class, "email", email);
 		if (users == null || users.size() == 0) {
 			return null;
-		} else {
+		} else if ( users.size() == 1 ){
 			return users.get(0);
+		} else {
+			throw new InvalidNumberOfEntries(email, User.class);
 		}
 	}
 
 	@Override
-	public Group getGroup(UUID uuid) {
-		verifyEM(entityManager);
-		return entityManager.find(Group.class, uuid);
+	public MaritacaList getMaritacaList(UUID uuid) {
+		return entityManager.find(MaritacaList.class, uuid);
 	}
 
 	@Override
-	public boolean saveGroup(Group group) {
-		verifyEM(entityManager);
-		if (group == null) {
+	public boolean saveMaritacaList(MaritacaList list) {
+		if (list == null) {
 			throw new IllegalArgumentException("Invalid group");
 		}
-		verifyEntity(group.getOwner());
-		if (group.getName().length() == 0) {
+		verifyEntity(list.getOwner());
+		if (list.getName()==null || list.getName().length() == 0) {
 			throw new IllegalArgumentException("Incomplete parameters");
 		}
 
-		if (group.getKey() == null) {
+		if (list.getKey() == null) {
 			// new group
-			if (searchGroupByName(group.getName()) != null) {
+			if (searchMaritacaListByName(list.getName()) != null) {
 				return false;
 			}
-			if (entityManager.persist(group)) {
+			if (entityManager.persist(list)) {
 				// add owner to group
-				GroupUser grUser = new GroupUser();
-				grUser.setGroup(group);
-				grUser.setUser(group.getOwner());
-				if (saveGroupUser(grUser))
+				MaritacaListUser listUser = new MaritacaListUser();
+				listUser.setMaritacaList(list);
+				listUser.setUser(list.getOwner());
+				if (saveMaritacaListUser(listUser))
 					return true;
 				else {
 					// not able to add user to group
-					entityManager.delete(group);
+					entityManager.delete(list);
 					return false;
 				}
 			} else
 				return false; // group not saved
 		} else {
-			// look for group
-			Group g = getGroup(group.getKey());
-			if (g == null) {
-				// new group
-				group.setKey("");
-				return saveGroup(group);
-			} else
-				// update name
-				return entityManager.persist(group);
+			return entityManager.persist(list);
 		}
 	}
 
@@ -158,10 +167,9 @@ public class UserModelImpl implements UserModel, Serializable {
 	 * @return List of group which the user is owner
 	 */
 	@Override
-	public Collection<Group> getGroupsByOwner(User owner) {
-		verifyEM(entityManager);
+	public Collection<MaritacaList> getMaritacaListsByOwner(User owner) {
 		verifyEntity(owner);
-		return entityManager.cQuery(Group.class, "owner", owner.toString());
+		return entityManager.cQuery(MaritacaList.class, "owner", owner.toString());
 	}
 
 	/**
@@ -172,13 +180,12 @@ public class UserModelImpl implements UserModel, Serializable {
 	 * @return true if was successful
 	 */
 	@Override
-	public boolean addUserToGroup(User user, Group group) {
-		verifyEM(entityManager);
+	public boolean addUserToMaritacaList(User user, MaritacaList group) {
 		verifyEntity(user);
 		verifyEntity(group);
 
-		GroupUser grUser = new GroupUser();
-		grUser.setGroup(group);
+		MaritacaListUser grUser = new MaritacaListUser();
+		grUser.setMaritacaList(group);
 		grUser.setUser(user);
 		return entityManager.persist(grUser);
 	}
@@ -192,8 +199,7 @@ public class UserModelImpl implements UserModel, Serializable {
 	 * @return
 	 */
 	@Override
-	public boolean userIsMemberOfGroup(User user, Group group) {
-		verifyEM(entityManager);
+	public boolean userIsMemberOfMaritacaList(User user, MaritacaList group) {
 		verifyEntity(user);
 		verifyEntity(group);
 
@@ -201,11 +207,16 @@ public class UserModelImpl implements UserModel, Serializable {
 			// owner is default member of group
 			return true;
 		}
+		
+		if( group.equals(getAllUsersList()) ){
+			// all users are in the public group
+			return true;
+		}
 
 		// is not a owner, get members
-		List<GroupUser> list = entityManager.cQuery(GroupUser.class, "group",
+		List<MaritacaListUser> list = entityManager.cQuery(MaritacaListUser.class, "maritacaList",
 				group.getKey().toString(), true);
-		for (GroupUser gu : list) {
+		for (MaritacaListUser gu : list) {
 			if (gu.getUser().equals(user))
 				return true;// user is member
 		}
@@ -217,9 +228,9 @@ public class UserModelImpl implements UserModel, Serializable {
 	 * Get default users group (ALL_USERS)
 	 */
 	@Override
-	public Group getAllUsersGroup() {
+	public MaritacaList getAllUsersList() {
 		User root = managerModel.getRootUser();
-		for (Group g : getGroupsByOwner(root)) {
+		for (MaritacaList g : getMaritacaListsByOwner(root)) {
 			if (g.getName().equals(ManagerModel.ALL_USERS)) {
 				return g;
 			}
@@ -249,19 +260,26 @@ public class UserModelImpl implements UserModel, Serializable {
 	}
 
 	@Override
-	public Collection<GroupUser> getGroupsByMember(User user) {
-		verifyEM(entityManager);
+	public Collection<MaritacaListUser> getMaritacaListByMember(User user) {
 		verifyEntity(user);
 
-		return entityManager.cQuery(GroupUser.class, "user", user.getKey()
-				.toString(), true);
+		MaritacaListUser allGroupUser = new MaritacaListUser();
+		allGroupUser.setUser(user);
+		allGroupUser.setMaritacaList(getAllUsersList());
+		
+		Collection<MaritacaListUser> groupsByMember;
+		groupsByMember =  entityManager.cQuery(MaritacaListUser.class, "user", user.getKey()
+												.toString(), true);
+		groupsByMember.add(allGroupUser);
+		
+		return groupsByMember;
 	}
 
-	public Group searchGroupByName(String groupName) {
+	public MaritacaList searchMaritacaListByName(String groupName) {
 		if (entityManager == null || groupName == null)
 			return null;
 
-		List<Group> foundGroups = entityManager.cQuery(Group.class, "name",
+		List<MaritacaList> foundGroups = entityManager.cQuery(MaritacaList.class, "name",
 				groupName);
 
 		if (foundGroups.size() == 0) {
@@ -269,7 +287,7 @@ public class UserModelImpl implements UserModel, Serializable {
 		} else if (foundGroups.size() == 1) {
 			return foundGroups.get(0);
 		} else {
-			throw new InvalidNumberOfEntries(groupName, Group.class);
+			throw new InvalidNumberOfEntries(groupName, MaritacaList.class);
 		}
 	}
 
@@ -279,8 +297,8 @@ public class UserModelImpl implements UserModel, Serializable {
 	}
 
 	@Override
-	public List<Group> groupsStartingWith(String startingString) {
-		return objectsStartingWith(Group.class, startingString, "getName");
+	public List<MaritacaList> maritacaListsStartingWith(String startingString) {
+		return objectsStartingWith(MaritacaList.class, startingString, "getName");
 	}
 
 	/**
@@ -334,7 +352,7 @@ public class UserModelImpl implements UserModel, Serializable {
 	}
 
 	@Override
-	public boolean saveGroupUser(GroupUser groupUser) {
+	public boolean saveMaritacaListUser(MaritacaListUser groupUser) {
 		if (entityManager == null || groupUser == null)
 			return false;
 
@@ -342,13 +360,12 @@ public class UserModelImpl implements UserModel, Serializable {
 	}
 
 	@Override
-	public boolean removeCurrentUserFromGroup(Group group) {
-		return removeUserFromGroup(group, getCurrentUser());
+	public boolean removeCurrentUserFromMaritacaList(MaritacaList group) {
+		return removeUserFromMaritacaList(group, getCurrentUser());
 	}
 
 	@Override
-	public boolean removeGroup(Group group) {
-		verifyEM(entityManager);
+	public boolean removeMaritacaList(MaritacaList group) {
 		verifyEntity(group);
 
 		if (!removeGroupUserFromGroup(group)) {
@@ -365,15 +382,14 @@ public class UserModelImpl implements UserModel, Serializable {
 	 * @param group
 	 * @return true if successful, false otherwise
 	 */
-	private boolean removeGroupUserFromGroup(Group group) {
-		verifyEM(entityManager);
+	private boolean removeGroupUserFromGroup(MaritacaList group) {
 		verifyEntity(group);
-		List<GroupUser> groupsUserFromUser;
-		groupsUserFromUser = entityManager.cQuery(GroupUser.class, "group",
+		List<MaritacaListUser> groupsUserFromUser;
+		groupsUserFromUser = entityManager.cQuery(MaritacaListUser.class, "maritacaList",
 				group.getKey().toString());
 
-		for (GroupUser groupUser : groupsUserFromUser) {
-			if (groupUser.getGroup().equals(group.getKey())) {
+		for (MaritacaListUser groupUser : groupsUserFromUser) {
+			if (groupUser.getMaritacaList().equals(group.getKey())) {
 				if (!entityManager.delete(groupUser)) {
 					return false;
 				}
@@ -384,31 +400,42 @@ public class UserModelImpl implements UserModel, Serializable {
 	}
 
 	@Override
-	public Collection<User> searchUsersByGroup(Group group) {
-		String groupKey = group.getKey().toString();
-		List<GroupUser> groupsUserFromUser = entityManager.cQuery(
-				GroupUser.class, "group", groupKey);
-		Collection<User> foundUsers = new ArrayList<User>();
+	public Collection<User> searchUsersByMaritacaList(MaritacaList group) {
+		if(group.getOwner()==null){
+			throw new IllegalArgumentException("Invalid group");
+		}
+		
+		String           groupKey        = group.getKey().toString();
+		List<MaritacaListUser>  grpsUsrFromUser = entityManager.cQuery(MaritacaListUser.class, "maritacaList", groupKey);
+		Collection<User> foundUsers      = new ArrayList<User>();
 
-		for (GroupUser groupUser : groupsUserFromUser) {
-			User user = entityManager.find(User.class, groupUser.getUser()
-					.getKey());
+		if(group.equals(getAllUsersList())){
+			return listAllUsers();
+		}
+		
+		for (MaritacaListUser groupUser : grpsUsrFromUser) {
+			User user = entityManager.find(User.class, groupUser.getUser().getKey());
 			foundUsers.add(user);
 		}
+				
+		if(!foundUsers.contains(group.getOwner())){
+			log.error("Group: " + group + " does not contain its owner");
+			throw new RuntimeException("Group owner not in group");			
+		}
+		
 		return foundUsers;
 	}
 
 	@Override
-	public boolean removeUserFromGroup(Group group, User user) {
-		verifyEM(entityManager);
+	public boolean removeUserFromMaritacaList(MaritacaList group, User user) {
 		verifyEntity(group);
 
-		List<GroupUser> groupsUserFromUser = new ArrayList<GroupUser>();
-		groupsUserFromUser = entityManager.cQuery(GroupUser.class, "user", user
+		List<MaritacaListUser> groupsUserFromUser = new ArrayList<MaritacaListUser>();
+		groupsUserFromUser = entityManager.cQuery(MaritacaListUser.class, "user", user
 				.getKey().toString());
 
-		for (GroupUser groupUser : groupsUserFromUser) {
-			if (groupUser.getGroup().getKey().equals(group.getKey())) {
+		for (MaritacaListUser groupUser : groupsUserFromUser) {
+			if (groupUser.getMaritacaList().getKey().equals(group.getKey())) {
 				if (!entityManager.delete(groupUser)) {
 					log.warn("Couldn't delete groupUser: "
 							+ groupUser.toString());
@@ -433,14 +460,13 @@ public class UserModelImpl implements UserModel, Serializable {
 	 * Returns the full data of a group's owner
 	 */
 	@Override
-	public User getOwnerOfGroup(Group gr) {
-		verifyEM(entityManager);
+	public User getOwnerOfMaritacaList(MaritacaList gr) {
 		if (gr.getOwner() != null) {
 			return getUser(gr.getOwner().getKey());
 		} else {
-			Group group = entityManager.find(Group.class, gr.getKey(), true);
+			MaritacaList group = entityManager.find(MaritacaList.class, gr.getKey(), true);
 			if (group != null) {
-				return getOwnerOfGroup(group);
+				return getOwnerOfMaritacaList(group);
 			} else {
 				return null;
 			}
@@ -449,7 +475,6 @@ public class UserModelImpl implements UserModel, Serializable {
 
 	@Override
 	public boolean saveAuthorizationCode(OAuthCode oAuthCode) {
-		verifyEM(entityManager);
 		if (oAuthCode == null)
 			return false;
 
@@ -470,13 +495,11 @@ public class UserModelImpl implements UserModel, Serializable {
 
 	@Override
 	public boolean saveAuthToken(OAuthToken token) {
-		verifyEM(entityManager);
 		return entityManager.persist(token);
 	}
 
 	@Override
 	public OAuthClient findOauthClient(String clientId) {
-		verifyEM(entityManager);
 		List<OAuthClient> list = entityManager.cQuery(OAuthClient.class,
 				"clientId", clientId);
 		for (OAuthClient client : list) {
@@ -487,7 +510,6 @@ public class UserModelImpl implements UserModel, Serializable {
 
 	@Override
 	public OAuthCode findOauthCode(String authCode) {
-		verifyEM(entityManager);
 		if (authCode == null) {
 			return null;
 		}
@@ -499,6 +521,16 @@ public class UserModelImpl implements UserModel, Serializable {
 			return code; //return first
 		}
 		
+		return null;
+	}
+
+	@Override
+	public OAuthToken getOAuthTokenByAccessToken(String accessToken) {
+		List<OAuthToken> list = entityManager.cQuery(OAuthToken.class,
+				"accessToken", accessToken);
+		for (OAuthToken token : list) {
+			return token;// always returns the first
+		}
 		return null;
 	}
 }
