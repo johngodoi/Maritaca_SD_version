@@ -19,6 +19,13 @@ import br.unifesp.maritaca.persistence.EntityManager;
  * @author tiagobarabasz
  */
 public interface UserModel extends GenericModel{
+	public static String ROOT      = "root";
+	public static String PASSROOT  = "dc76e9f0c0006e8f919e0c515c66dbba3982f785"; //sha1 for 'root'
+	public static String ROOTEMAIL = "root@maritaca.com";
+	public static String CFG_ROOT  = "root";
+	public static String ALL_USERS = "all_users";
+	
+	
 	boolean saveUser(User user);
 
 	User getUser(UUID uuid);
@@ -34,6 +41,8 @@ public interface UserModel extends GenericModel{
 	User getUser(String email);
 
 	void setEntityManager(EntityManager em);
+	
+	EntityManager getEntityManager();
 
 	Collection<User> listAllUsers();
 
@@ -42,6 +51,8 @@ public interface UserModel extends GenericModel{
 	MaritacaList getMaritacaList(UUID uuid);
 	
 	boolean saveMaritacaList(MaritacaList maritacaList);
+	
+	User getRootUser();
 	
 	/**
 	 * Search for the list with the given name. Returns null
@@ -73,10 +84,6 @@ public interface UserModel extends GenericModel{
 	boolean addUserToMaritacaList(User user, MaritacaList list);
 
 	MaritacaList getAllUsersList();
-
-	void setManagerModel(ManagerModel managerModel);
-
-	ManagerModel getManagerModel();
 
 	boolean userIsMemberOfMaritacaList(User user, MaritacaList list);
 
@@ -164,4 +171,6 @@ public interface UserModel extends GenericModel{
 	 */
 	OAuthCode findOauthCode(String code);
 
+	
+	User createRootUser();
 }

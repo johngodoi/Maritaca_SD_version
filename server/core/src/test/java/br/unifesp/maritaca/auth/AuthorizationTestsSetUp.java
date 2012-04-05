@@ -1,14 +1,10 @@
 package br.unifesp.maritaca.auth;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
+import java.util.ArrayList;
+import java.util.List;
 
 import br.unifesp.maritaca.access.Policy;
 import br.unifesp.maritaca.core.Form;
-import br.unifesp.maritaca.core.FormPermissions;
 import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.core.MaritacaListUser;
 import br.unifesp.maritaca.core.User;
@@ -16,7 +12,6 @@ import br.unifesp.maritaca.model.FormAnswerModel;
 import br.unifesp.maritaca.model.ManagerModel;
 import br.unifesp.maritaca.model.ModelFactory;
 import br.unifesp.maritaca.model.UserModel;
-import br.unifesp.maritaca.model.impl.ManagerModelImpl;
 import br.unifesp.maritaca.persistence.EntityManager;
 
 public class AuthorizationTestsSetUp {
@@ -24,124 +19,79 @@ public class AuthorizationTestsSetUp {
 	/* The default visibility is used here because all these
 	 * variables are accessed by the testing classes.
 	 */
+	EntityManager   em;
+	
 	FormAnswerModel formAnswModel;
+	UserModel       userModel;
 	
 	User  user1grp1             = new User();
 	User  user2grp1             = new User();
 	User  userNoGrp             = new User();
-	User  root                  = new User();
 	
-	MaritacaList grp1                  = new MaritacaList();		
-	MaritacaList grpUser1              = new MaritacaList();				
-	MaritacaList grpUser2              = new MaritacaList();
-	MaritacaList grpUserNoGrp          = new MaritacaList();
-	MaritacaList grpAllUsers           = new MaritacaList();
+	MaritacaList grp1           = new MaritacaList();		
 	
 	Form  publicFormUser1       = new Form();
 	Form  privateFormUser1      = new Form();
 	Form  sharedHierFormUser1   = new Form();
 	Form  sharedSocialFormUser1 = new Form();
 	
-	public AuthorizationTestsSetUp(EntityManager em){				
+	public AuthorizationTestsSetUp(EntityManager em){
+		this.em = em;
+		
+		initModels(em);
+		
+		publicFormUser1.setTitle("publicFormUser1");
+		privateFormUser1.setTitle("privateFormUser1");
+		sharedHierFormUser1.setTitle("sharedHierFormUser1");
+		sharedSocialFormUser1.setTitle("sharedSocialFormUser1");
+		
 		user1grp1.setEmail("usr1");
 		user2grp1.setEmail("usr2");
 		userNoGrp.setEmail("usrNoGrp");
-		root.setEmail(ManagerModel.CFG_ROOT);
 		
-		em.persist(user1grp1);
-		em.persist(user2grp1);
-		em.persist(userNoGrp);
-		em.persist(root);
-		
+		userModel.saveUser(user1grp1);
+		userModel.saveUser(user2grp1);
+		userModel.saveUser(userNoGrp);
+				
 		grp1.setOwner(user1grp1);
-		grpUser1.setOwner(user1grp1);
-		grpUser2.setOwner(user2grp1);
-		grpUserNoGrp.setOwner(userNoGrp);
-		grpAllUsers.setOwner(root);
-		grpAllUsers.setName(ManagerModel.ALL_USERS);
-		
-		em.persist(grp1);
-		em.persist(grpUser1);
-		em.persist(grpUser2);
-		em.persist(grpUserNoGrp);
-		em.persist(grpAllUsers);
-		
-		user1grp1.setMaritacaList(grpUser1);
-		user2grp1.setMaritacaList(grpUser2);
-		userNoGrp.setMaritacaList(grpUserNoGrp);
-		em.persist(user1grp1);
-		em.persist(user2grp1);
-		em.persist(userNoGrp);
-		
-		MaritacaListUser gp1 = new MaritacaListUser(grp1,user1grp1);
-		MaritacaListUser gp2 = new MaritacaListUser(grp1,user2grp1);
-		
-		em.persist(gp1);
-		em.persist(gp2);
-		
-		publicFormUser1.setUser(user1grp1);
-		
-		Policy publicPolicy = Policy.PUBLIC;		
-		publicFormUser1.setPolicy(publicPolicy);
-		em.persist(publicFormUser1);
+		grp1.setName("grp1");
+		userModel.saveMaritacaList(grp1);
 			
-		FormPermissions fp;
-		fp = publicPolicy.buildPublicFormPermission(publicFormUser1, grpAllUsers);
-		em.persist(fp);
-		fp = publicPolicy.buildOwnerFormPermission(publicFormUser1, grpUser1);
-		em.persist(fp);
+		MaritacaListUser listUser = new MaritacaListUser(grp1,user2grp1);
+		userModel.saveMaritacaListUser(listUser);
+						
+		publicFormUser1.setUser(user1grp1);		
+		publicFormUser1.setPolicy(Policy.PUBLIC);
+		formAnswModel.saveForm(publicFormUser1);
 				
-		privateFormUser1.setUser(user1grp1);
+		privateFormUser1.setUser(user1grp1);		
+		privateFormUser1.setPolicy(Policy.PRIVATE);
+		formAnswModel.saveForm(privateFormUser1);
 		
-		Policy privatePolicy = Policy.PRIVATE;		
-		privateFormUser1.setPolicy(privatePolicy);
-		em.persist(privateFormUser1);
-			
-		fp = privatePolicy.buildPublicFormPermission(privateFormUser1, grpAllUsers);
-		em.persist(fp);
-		fp = privatePolicy.buildOwnerFormPermission(privateFormUser1, grpUser1);
-		em.persist(fp);
+		List<MaritacaList> formLists = new ArrayList<MaritacaList>();
+		formLists.add(grp1);
 		
-		sharedHierFormUser1.setUser(user1grp1);
+		sharedHierFormUser1.setUser(user1grp1);				
+		sharedHierFormUser1.setPolicy(Policy.SHARED_HIERARCHICAL);
+		formAnswModel.saveForm(sharedHierFormUser1,formLists);
 		
-		Policy sharedHierPolicy = Policy.SHARED_HIERARCHICAL;		
-		sharedHierFormUser1.setPolicy(sharedHierPolicy);
-		em.persist(sharedHierFormUser1);
-			
-		fp = sharedHierPolicy.buildPublicFormPermission(sharedHierFormUser1, grpAllUsers);
-		em.persist(fp);
-		fp = sharedHierPolicy.buildOwnerFormPermission(sharedHierFormUser1, grpUser1);
-		em.persist(fp);
-		fp = sharedHierPolicy.buildListFormPermission(sharedHierFormUser1, grp1);
-		em.persist(fp);
-		
-		sharedSocialFormUser1.setUser(user1grp1);
-		
-		Policy sharedSocialPolicy = Policy.SHARED_SOCIAL;		
-		sharedSocialFormUser1.setPolicy(sharedSocialPolicy);
-		em.persist(sharedSocialFormUser1);
-			
-		fp = sharedSocialPolicy.buildPublicFormPermission(sharedSocialFormUser1, grpAllUsers);
-		em.persist(fp);
-		fp = sharedSocialPolicy.buildOwnerFormPermission(sharedSocialFormUser1, grpUser1);
-		em.persist(fp);
-		fp = sharedSocialPolicy.buildListFormPermission(sharedSocialFormUser1, grp1);
-		em.persist(fp);
-				
+		sharedSocialFormUser1.setUser(user1grp1);				
+		sharedSocialFormUser1.setPolicy(Policy.SHARED_SOCIAL);
+		formAnswModel.saveForm(sharedSocialFormUser1,formLists);
+	}
+	
+	private void initModels(EntityManager em){		
 		formAnswModel = ModelFactory.getInstance().createFormResponseModel();
 		formAnswModel.setEntityManager(em);
-
-		ManagerModel mm = mock(ManagerModelImpl.class);
-		when(mm.getRootUser()).thenAnswer(new Answer<User>() {
-			@Override
-			public User answer(InvocationOnMock invocation) throws Throwable {
-				return root;
-			}			
-		});
 		
-		UserModel um =  ModelFactory.getInstance().createUserModel();
-		um.setEntityManager(em);
-		um.setManagerModel(mm);
-		formAnswModel.setUserModel(um);
+		userModel     =  ModelFactory.getInstance().createUserModel();
+		userModel.setEntityManager(em);
+		
+		ManagerModel managerModel =  ModelFactory.getInstance().createManagerModel();
+		managerModel.setEntityManager(em);
+		managerModel.setUserModel(userModel);
+		managerModel.initMaritaca(null);
+		
+		formAnswModel.setUserModel(userModel);
 	}
 }

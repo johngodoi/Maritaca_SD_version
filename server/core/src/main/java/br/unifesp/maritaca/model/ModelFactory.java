@@ -74,7 +74,6 @@ public class ModelFactory {
 						.createEntityManager(
 								EntityManagerFactory.HECTOR_MARITACA_EM);
 				userModel.setEntityManager(em);
-				userModel.setManagerModel(createManagerModel(currentUser));
 				if(currentUser != null)
 					userModelList.put(currentUser.getKey(), userModel);
 			}
@@ -99,6 +98,7 @@ public class ModelFactory {
 						.createEntityManager(
 								EntityManagerFactory.HECTOR_MARITACA_EM);
 				managerModel.setEntityManager(em);
+				managerModel.setUserModel(createUserModel(currentUser));
 				if(currentUser != null)
 					managerModelList.put(currentUser.getKey(), managerModel);
 			}

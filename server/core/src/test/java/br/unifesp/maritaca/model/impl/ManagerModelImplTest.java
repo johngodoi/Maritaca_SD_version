@@ -2,8 +2,6 @@ package br.unifesp.maritaca.model.impl;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.HashMap;
-
 import javax.annotation.Resource;
 
 import me.prettyprint.cassandra.BaseEmbededServerSetupTest;
@@ -21,6 +19,8 @@ import br.unifesp.maritaca.core.FormPermissions;
 import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.core.MaritacaListUser;
 import br.unifesp.maritaca.core.User;
+import br.unifesp.maritaca.model.ManagerModel;
+import br.unifesp.maritaca.model.ModelFactory;
 import br.unifesp.maritaca.persistence.EntityManager;
 import br.unifesp.maritaca.persistence.EntityManagerHectorImpl;
 
@@ -31,7 +31,7 @@ public class ManagerModelImplTest extends BaseEmbededServerSetupTest {
 	@Resource
 	private EntityManagerHectorImpl emHectorImpl;
 	private EntityManager em;
-	private ManagerModelImpl manModel;
+	private ManagerModel manModel;
 	@SuppressWarnings("rawtypes")
 	private Class[] classes = { Answer.class, Form.class, Configuration.class,
 			FormPermissions.class, MaritacaList.class, MaritacaListUser.class, User.class };
@@ -39,14 +39,14 @@ public class ManagerModelImplTest extends BaseEmbededServerSetupTest {
 	@Before
 	public void setUp() throws Exception {
 		em = emHectorImpl;
-		manModel = new ManagerModelImpl();
+		manModel = ModelFactory.getInstance().createManagerModel();
 		manModel.setEntityManager(em);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
 	public void initMaritaca() {
-		manModel.initMaritaca(new HashMap<String, String>());
+		manModel.initMaritaca(null);
 		for (@SuppressWarnings("rawtypes")
 		Class cl : classes) {
 			assertTrue(em.tableExists(cl));

@@ -2,7 +2,6 @@ package br.unifesp.maritaca.web.jsf.form;
 
 import java.util.Collection;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;

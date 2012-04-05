@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 
 import me.prettyprint.cassandra.BaseEmbededServerSetupTest;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,6 +37,11 @@ public class FormAuthorizationTests extends BaseEmbededServerSetupTest {
 		env = new AuthorizationTestsSetUp(emHectorImpl);
 	}
 	
+	@After
+	public void clear(){
+		super.cleanUp();
+	}
+	
 	private void setCurrentUser(User usr){
 		env.formAnswModel.setCurrentUser(usr);
 		env.formAnswModel.getUserModel().setCurrentUser(usr);
@@ -49,7 +55,7 @@ public class FormAuthorizationTests extends BaseEmbededServerSetupTest {
 		Form formRetrieved;
 		try{
 			formRetrieved = env.formAnswModel.getForm(env.publicFormUser1.getKey(), false);
-		} catch(AuthorizationDenied e){
+		} catch(Exception e){
 			fail();
 			return;
 		}
@@ -57,7 +63,7 @@ public class FormAuthorizationTests extends BaseEmbededServerSetupTest {
 		/* Can't update the form */
 		formRetrieved.setUser(env.userNoGrp);
 		try{
-			env.formAnswModel.saveForm(formRetrieved);
+			assertTrue(env.formAnswModel.saveForm(formRetrieved));
 			fail();
 		} catch(AuthorizationDenied e){
 		}
@@ -67,6 +73,8 @@ public class FormAuthorizationTests extends BaseEmbededServerSetupTest {
 			env.formAnswModel.deleteForm(env.publicFormUser1);
 			fail();
 		} catch(AuthorizationDenied e){
+		} catch(Exception e){
+			fail();
 		}
 	}
 
@@ -87,14 +95,14 @@ public class FormAuthorizationTests extends BaseEmbededServerSetupTest {
 		formRetrieved.setTitle("nice form");
 		try{
 			assertTrue(env.formAnswModel.saveForm(formRetrieved));
-		} catch(AuthorizationDenied e){
+		} catch(Exception e){
 			fail();
 		}
 				
 		/* Can delete the form */
 		try{
 			env.formAnswModel.deleteForm(env.publicFormUser1);
-		} catch(AuthorizationDenied e){
+		} catch(Exception e){
 			fail();
 		}		
 	}
@@ -114,7 +122,7 @@ public class FormAuthorizationTests extends BaseEmbededServerSetupTest {
 		env.privateFormUser1.setTitle("nice form");
 		try{
 			assertTrue(env.formAnswModel.saveForm(env.privateFormUser1));			
-		} catch(AuthorizationDenied e){
+		} catch(Exception e){
 			fail();
 		}
 				
@@ -143,6 +151,8 @@ public class FormAuthorizationTests extends BaseEmbededServerSetupTest {
 			assertTrue(env.formAnswModel.saveForm(env.privateFormUser1));
 			fail();
 		} catch(AuthorizationDenied e){
+		} catch(Exception e){
+			fail();
 		}
 				
 		/* Can't delete the form */
@@ -150,7 +160,9 @@ public class FormAuthorizationTests extends BaseEmbededServerSetupTest {
 			env.formAnswModel.deleteForm(env.privateFormUser1);
 			fail();
 		} catch(AuthorizationDenied e){
-		}				
+		} catch(Exception e){
+			fail();
+		}	
 	}
 	
 	@Test
@@ -170,6 +182,8 @@ public class FormAuthorizationTests extends BaseEmbededServerSetupTest {
 			assertTrue(env.formAnswModel.saveForm(env.sharedHierFormUser1));
 			fail();
 		} catch(AuthorizationDenied e){
+		} catch(Exception e){
+			fail();
 		}
 				
 		/* Can't delete the form */
@@ -177,6 +191,8 @@ public class FormAuthorizationTests extends BaseEmbededServerSetupTest {
 			env.formAnswModel.deleteForm(env.sharedHierFormUser1);
 			fail();
 		} catch(AuthorizationDenied e){
+		} catch(Exception e){
+			fail();
 		}			
 	}
 	

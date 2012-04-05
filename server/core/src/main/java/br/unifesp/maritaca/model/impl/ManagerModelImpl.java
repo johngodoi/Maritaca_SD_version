@@ -2,7 +2,6 @@ package br.unifesp.maritaca.model.impl;
 
 
 import java.util.Map;
-import java.util.UUID;
 
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Configuration;
@@ -16,6 +15,7 @@ import br.unifesp.maritaca.core.OAuthToken;
 import br.unifesp.maritaca.core.OpenId;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.model.UseEntityManager;
+import br.unifesp.maritaca.model.UserModel;
 import br.unifesp.maritaca.persistence.EntityManager;
 import br.unifesp.maritaca.persistence.EntityManagerFactory;
 
@@ -23,6 +23,7 @@ public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel,
 
 	private EntityManager entityManager;
 	private User currentUser;
+	private UserModel userModel;
 
 	public ManagerModelImpl() {
 	}
@@ -30,28 +31,28 @@ public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel,
 	@Override
 	public void setEntityManager(EntityManager em) {
 		this.entityManager = em;
+		if(userModel!=null&&userModel.getEntityManager()==null){
+			userModel.setEntityManager(em);
+		}
 	}
 
 	@Override
 	public void initMaritaca(Map<String, String> params) {
 		if (entityManager == null) {
 			EntityManagerFactory.getInstance().setHectorParams(params);
-			this.entityManager = EntityManagerFactory.getInstance()
+			EntityManager em = EntityManagerFactory.getInstance()
 					.createEntityManager(
 							EntityManagerFactory.HECTOR_MARITACA_EM);
-
+			setEntityManager(em);
 		}
 		User rootUser = null;
 		if (!entityManager.tableExists(User.class)) {
 			// create main user
-			rootUser = new User();
-			rootUser.setFirstname(ROOT);
-			rootUser.setPassword(PASSROOT);
-			rootUser.setEmail(ROOTEMAIL);
+			rootUser = userModel.createRootUser();
 			if (entityManager.persist(rootUser)) {				
 				// save id of main user in Configuration table
 				Configuration cf = new Configuration();
-				cf.setName(CFG_ROOT);
+				cf.setName(UserModel.CFG_ROOT);
 				cf.setValue(rootUser.getKey().toString());
 				if (!entityManager.persist(cf)) {
 					entityManager.delete(rootUser);
@@ -62,7 +63,7 @@ public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel,
 			}
 		} else {
 			// get main user
-			rootUser = getRootUser();
+			rootUser = userModel.getRootUser();
 		}
 
 		if (rootUser == null) {
@@ -78,7 +79,7 @@ public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel,
 
 			// create ALL_USERS list
 			MaritacaList gr = new MaritacaList();
-			gr.setName(ALL_USERS);
+			gr.setName(UserModel.ALL_USERS);
 			gr.setOwner(rootUser);
 			entityManager.persist(gr);
 			
@@ -121,18 +122,6 @@ public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel,
 		}
 	}
 
-	@Override
-	public User getRootUser() {
-		User rootUser = null;
-		for (Configuration cfUser : entityManager.cQuery(Configuration.class,
-				"name", CFG_ROOT)) {
-			rootUser = entityManager.find(User.class,
-					UUID.fromString(cfUser.getValue()));
-			break;
-		}
-		return rootUser;
-	}
-
 	public User getCurrentUser() {
 		return currentUser;
 	}
@@ -149,5 +138,13 @@ public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel,
 	public void close() {
 		entityManager = null;
 		currentUser = null;
+	}
+
+	public UserModel getUserModel() {
+		return userModel;
+	}
+
+	public void setUserModel(UserModel userModel) {
+		this.userModel = userModel;
 	}
 }

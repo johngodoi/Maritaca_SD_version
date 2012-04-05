@@ -1,12 +1,8 @@
 package br.unifesp.maritaca.model.impl;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -21,9 +17,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import br.unifesp.maritaca.core.Form;
-import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.core.User;
-import br.unifesp.maritaca.model.ManagerModel;
 import br.unifesp.maritaca.model.UserModel;
 import br.unifesp.maritaca.persistence.EntityManager;
 
@@ -31,12 +25,10 @@ public class FormAnswerCtrlImplTest {
 	private static final String uuid =  "637dea60-146e-11e1-a7c0-d2b70b6d4d67";
 	private static final String uuid2 = "537dea60-146e-11e1-a7c0-d2b70b6d4d67";
 	private static final String uuid3 = "437dea60-146e-11e1-a7c0-d2b70b6d4d67";
-	private static final String uuid4 = "437dea60-146e-11e1-a7c0-d2b70b6d4444";
 
 	private EntityManager em;
 	private FormAnswerModelImpl frControl;
 	private UserModel userModel;
-	private ManagerModel managerModel;
 	
 	private User      root;
 
@@ -45,20 +37,17 @@ public class FormAnswerCtrlImplTest {
 		em = mock(EntityManager.class);
 		frControl = new FormAnswerModelImpl();
 		frControl.setEntityManager(em);
-		userModel = new UserModelImpl();
+		userModel = mock(UserModelImpl.class);
 		frControl.setUserModel(userModel);
-		
-		managerModel = mock(ManagerModelImpl.class);
-		
+			
 		root = new User();
 		root.setKey(uuid3);
-		when(managerModel.getRootUser()).thenAnswer(new Answer<User>() {
+		when(userModel.getRootUser()).thenAnswer(new Answer<User>() {
 			@Override
 			public User answer(InvocationOnMock invocation) throws Throwable {
 				return root;
 			}			
 		});		
-		userModel.setManagerModel(managerModel);
 	}
 
 	@After

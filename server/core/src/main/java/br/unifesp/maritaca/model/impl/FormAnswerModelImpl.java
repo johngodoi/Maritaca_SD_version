@@ -11,9 +11,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import br.unifesp.maritaca.access.AccessLevel;
 import br.unifesp.maritaca.access.Policy;
 import br.unifesp.maritaca.access.operation.Operation;
@@ -34,7 +31,6 @@ import br.unifesp.maritaca.util.UtilsCore;
 public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, Serializable{
 
 	private static final long serialVersionUID = 1L;
-	private static final Log log = LogFactory.getLog(FormAnswerModelImpl.class);
 	
 	private EntityManager entityManager;
 	private UserModel userModel;
@@ -67,7 +63,7 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 		verifyEntity(form.getUser());
 		
 		if(form.getTitle() == null || form.getTitle().length()==0){
-			return false;//with out title...
+			throw new IllegalArgumentException("Form does not have a title");
 		}
 		
 		if (entityManager.rowDataExists(User.class, form.getUser().getKey())) {
@@ -91,7 +87,9 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 			if (entityManager.persist(form)) {
 				// save permissions of a form
 				saveFormPermissionsByPolicy(form,lists);
-			} 
+			} else {
+				return false;
+			}
 			return true;
 		} else {
 			throw new IllegalArgumentException("User does not exist in database");
@@ -342,7 +340,7 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 		if (user == null || op == null)
 			return false;
 		
-		User root = userModel.getManagerModel().getRootUser();
+		User root = userModel.getRootUser();
 		if(user.equals(root)){
 			return true;
 		}

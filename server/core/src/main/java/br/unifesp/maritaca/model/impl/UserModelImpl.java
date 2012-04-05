@@ -12,6 +12,7 @@ import java.util.UUID;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import br.unifesp.maritaca.core.Configuration;
 import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.core.MaritacaListUser;
 import br.unifesp.maritaca.core.OAuthClient;
@@ -19,43 +20,32 @@ import br.unifesp.maritaca.core.OAuthCode;
 import br.unifesp.maritaca.core.OAuthToken;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.exception.InvalidNumberOfEntries;
-import br.unifesp.maritaca.model.ManagerModel;
 import br.unifesp.maritaca.model.UseEntityManager;
 import br.unifesp.maritaca.model.UserModel;
 import br.unifesp.maritaca.persistence.EntityManager;
 import br.unifesp.maritaca.util.UserLocator;
 
 //TODO Ticket: 113 - Use exceptions instead of returning false
-public class UserModelImpl implements UserModel, Serializable, UseEntityManager {
+public class UserModelImpl implements UserModel, Serializable, UseEntityManager {	
 	private static final Log log = LogFactory.getLog(UserModelImpl.class);
 	private static final long serialVersionUID = 1L;
 
 	private EntityManager entityManager;
-	private ManagerModel managerModel;
 	private User currentUser;
 
 	public UserModelImpl() {
 	}
 
-	public EntityManager getEntityManager() {
-		return entityManager;
-	}
-
 	@Override
 	public boolean saveUser(User user) {
-		if (user == null){
-			return false;
-		}
-		
-		if(!updateUserGroup(user)){
-			return false;
-		}
-		
-		if (!entityManager.persist(user)) {
-			return false;
+		if (user == null || user.getEmail() == null){
+			throw new IllegalArgumentException("User is null");
 		}		
+		if(!updateUserGroup(user) || !entityManager.persist(user)){
+			throw new RuntimeException("Could not create user");
+		}	
 		if(user.getMaritacaList()==null && !createUserGroup(user)){
-			return false;
+			throw new RuntimeException("Could not create user group");
 		}		
 		return true;
 	}
@@ -65,6 +55,7 @@ public class UserModelImpl implements UserModel, Serializable, UseEntityManager 
 	 */
 	private boolean updateUserGroup(User user) {
 		if(user.getKey()==null){
+		//New user: Dosen't need to update
 			return true;
 		}		
 		User dbUser = getUser(user.getKey());
@@ -98,6 +89,11 @@ public class UserModelImpl implements UserModel, Serializable, UseEntityManager 
 		return entityManager.find(User.class, uuid);
 	}
 
+	@Override
+	public EntityManager getEntityManager() {
+		return entityManager;
+	}
+	
 	@Override
 	public void setEntityManager(EntityManager em) {
 		this.entityManager = em;
@@ -229,23 +225,13 @@ public class UserModelImpl implements UserModel, Serializable, UseEntityManager 
 	 */
 	@Override
 	public MaritacaList getAllUsersList() {
-		User root = managerModel.getRootUser();
+		User root = getRootUser();
 		for (MaritacaList g : getMaritacaListsByOwner(root)) {
-			if (g.getName().equals(ManagerModel.ALL_USERS)) {
+			if (g.getName().equals(ALL_USERS)) {
 				return g;
 			}
 		}
-		return null;
-	}
-
-	@Override
-	public ManagerModel getManagerModel() {
-		return managerModel;
-	}
-
-	@Override
-	public void setManagerModel(ManagerModel managerModel) {
-		this.managerModel = managerModel;
+		throw new RuntimeException("Root user not found");
 	}
 
 	public User getCurrentUser() {
@@ -352,11 +338,11 @@ public class UserModelImpl implements UserModel, Serializable, UseEntityManager 
 	}
 
 	@Override
-	public boolean saveMaritacaListUser(MaritacaListUser groupUser) {
-		if (entityManager == null || groupUser == null)
+	public boolean saveMaritacaListUser(MaritacaListUser listUser) {
+		if (entityManager == null || listUser == null)
 			return false;
 
-		return entityManager.persist(groupUser);
+		return entityManager.persist(listUser);
 	}
 
 	@Override
@@ -453,7 +439,6 @@ public class UserModelImpl implements UserModel, Serializable, UseEntityManager 
 	public void close() {
 		entityManager = null;
 		currentUser = null;
-		managerModel = null;
 	}
 
 	/**
@@ -522,5 +507,26 @@ public class UserModelImpl implements UserModel, Serializable, UseEntityManager 
 		}
 		
 		return null;
+	}
+
+	@Override
+	public User getRootUser() {
+		User rootUser = null;
+		for (Configuration cfUser : entityManager.cQuery(Configuration.class,
+				"name", CFG_ROOT)) {
+			rootUser = entityManager.find(User.class,
+					UUID.fromString(cfUser.getValue()));
+			break;
+		}
+		return rootUser;
+	}
+
+	@Override
+	public User createRootUser() {
+		User rootUser = new User();
+		rootUser.setFirstname(UserModel.ROOT);
+		rootUser.setPassword(UserModel.PASSROOT);
+		rootUser.setEmail(UserModel.ROOTEMAIL);
+		return rootUser;
 	}
 }
