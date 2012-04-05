@@ -523,4 +523,14 @@ public class UserModelImpl implements UserModel, Serializable, UseEntityManager 
 		
 		return null;
 	}
+
+	@Override
+	public OAuthToken getOAuthTokenByAccessToken(String accessToken) {
+		List<OAuthToken> list = entityManager.cQuery(OAuthToken.class,
+				"accessToken", accessToken);
+		for (OAuthToken token : list) {
+			return token;// always returns the first
+		}
+		return null;
+	}
 }

@@ -21,15 +21,22 @@ public class OAuthToken {
 	@Column(indexed=true)
 	@Minimal
 	private String refreshToken;
+	
 	@Column(indexed=true, ttl=3600)
 	@Minimal
 	private String accessToken;
+	
 	@Column(indexed=true)
 	@Minimal
 	private User user;
+	
 	@Column(indexed=true, ttl=3600)
 	@Minimal
 	private Date expirationDate;
+	
+	@Column
+	@Minimal
+	private String clientId;
 	
 	@XmlElement(name="refresh_token")
 	public String getRefreshToken() {
@@ -79,6 +86,12 @@ public class OAuthToken {
 	}
 	public void setKey(UUID key) {
 		this.key = key;
+	}
+	public String getClientId() {
+		return clientId;
+	}
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
 	}
 	
 }

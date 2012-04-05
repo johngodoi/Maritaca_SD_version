@@ -164,4 +164,11 @@ public interface UserModel extends GenericModel{
 	 */
 	OAuthCode findOauthCode(String code);
 
+	/**
+	 * Returns the Access Token object
+	 * @param accessToken 
+	 * @return {@link OAuthToken}
+	 */
+	OAuthToken getOAuthTokenByAccessToken(String accessToken);
+
 }

@@ -13,10 +13,9 @@ import br.unifesp.maritaca.web.utils.Utils;
 @ManagedBean
 @SessionScoped
 public class LoginManagerBean {
-
-	private String redirectUri;
-	private String clientId;
-	private String responseType;
+	
+	private String oauth_token;
+	
 	@ManagedProperty("#{currentUserBean}")
 	private CurrentUserBean currentUser;
 	
@@ -28,8 +27,9 @@ public class LoginManagerBean {
 		try {
 			String successfulLoginUrl;
 			
-			if (getRedirectUri()!= null && getResponseType()!=null && getClientId()!=null) {
-				successfulLoginUrl = Utils.buildServletUrl("/oauth/oauth/generatecode") + buildQueryString();
+			if (getOauth_token()!=null) {	
+				// TODO implement the query to ask to the user if allows access to its resources
+				successfulLoginUrl = Utils.buildServletUrl("/oauth/authorization/confirm") + buildQueryString();
 			} else {
 				successfulLoginUrl = Utils.buildViewUrl("/views/home.xhtml");
 			}
@@ -42,38 +42,9 @@ public class LoginManagerBean {
 	}
 
 	private String buildQueryString() {
-		return  "client_id=" + getClientId() + "&" +
-				"redirect_uri=" + getRedirectUri() +  "&" +
-				"response_type=" + getResponseType() + "&" +
+		return  "oauth_token=" + getOauth_token() + "&" +
+				"xoauth_end_user_decision=" + "yes" + "&" +  
 				"userid=" + getCurrentUser().getUser().getKey();
-		
-	}
-
-	public String getRedirectUri() {
-		return redirectUri;
-	}
-
-	public void setRedirectUri(String redirectUri) {
-		if(!"".equals(redirectUri))
-			this.redirectUri = redirectUri;
-	}
-
-	public String getResponseType() {
-		return responseType;
-	}
-
-	public void setResponseType(String responseType) {
-		if(!"".equals(responseType))
-			this.responseType = responseType;
-	}
-
-	public String getClientId() {
-		return clientId;
-	}
-
-	public void setClientId(String clientId) {
-		if(!"".equals(clientId))
-			this.clientId = clientId;
 	}
 
 	public CurrentUserBean getCurrentUser() {
@@ -82,5 +53,14 @@ public class LoginManagerBean {
 
 	public void setCurrentUser(CurrentUserBean currentUser) {
 		this.currentUser = currentUser;
+	}
+
+	public String getOauth_token() {
+		return oauth_token;
+	}
+
+	public void setOauth_token(String oauth_token) {
+		if(!"".equals(oauth_token))
+			this.oauth_token = oauth_token;
 	}
 }
