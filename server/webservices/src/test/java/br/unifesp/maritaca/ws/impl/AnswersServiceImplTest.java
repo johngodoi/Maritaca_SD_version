@@ -18,6 +18,7 @@ import org.mockito.invocation.InvocationOnMock;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.model.FormAnswerModel;
+import br.unifesp.maritaca.ws.api.resp.AnswerListResponse;
 import br.unifesp.maritaca.ws.api.resp.MaritacaResponse;
 import br.unifesp.maritaca.ws.api.resp.ResultSetResponse;
 import br.unifesp.maritaca.ws.api.resp.XmlSavedResponse;
@@ -119,6 +120,8 @@ public class AnswersServiceImplTest {
 			when(frControl.saveForm(any(Form.class))).thenReturn(false);
 
 			try {
+				@SuppressWarnings("unused")
+				// TODO Test this function
 				MaritacaResponse resp = answService.saveAnswer(xmlResp, uuid, uuid3);
 			} catch (Exception e) {
 				assertTrue(e instanceof MaritacaWSException);
@@ -153,7 +156,7 @@ public class AnswersServiceImplTest {
 			when(frControl.listAllAnswersMinimal(any(UUID.class))).thenReturn(list);
 			MaritacaResponse resp = answService.listAnswersMinimal(uuid3);
 			assertTrue(resp instanceof ResultSetResponse);
-			ResultSetResponse<Answer> okresp = (ResultSetResponse<Answer>) resp;
+			AnswerListResponse okresp = (AnswerListResponse) resp;
 			assertEquals(list.size(), okresp.getSize());
 			int i = 0;
 			for (Answer r : okresp.getList()) {

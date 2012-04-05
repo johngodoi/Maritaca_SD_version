@@ -68,7 +68,7 @@ public class ImportFormBean extends AbstractBean {
 			setForm(getUrl(), xml);
 			setResult(value);
 			setSuccessful(true);*/
-			addMessage("form_import_successful", FacesMessage.SEVERITY_INFO);*/
+			addMessage("form_import_successful", FacesMessage.SEVERITY_INFO);
 		} catch (Exception e) {
 			log.error("Invalid URL", e);
 		}

@@ -13,7 +13,7 @@
 		<composite:attribute name="submodule" required="true" />
 	</composite:interface>
 	<composite:implementation>
-		<h:inputHidden value="#{listFormsBean.updateFormsList()}" />
+		<h:inputHidden value="#{listFormsBean.updateFormsList}" />
 	
 		<h:panelGrid columns="1" width="100%">
 			<forms:listFormsTable	submodule="#{cc.attrs.submodule}"

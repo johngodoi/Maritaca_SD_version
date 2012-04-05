@@ -20,6 +20,7 @@ import org.mockito.stubbing.Answer;
 
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.model.FormAnswerModel;
+import br.unifesp.maritaca.ws.api.resp.FormListResponse;
 import br.unifesp.maritaca.ws.api.resp.MaritacaResponse;
 import br.unifesp.maritaca.ws.api.resp.ResultSetResponse;
 import br.unifesp.maritaca.ws.api.resp.XmlSavedResponse;
@@ -107,6 +108,8 @@ public class FormsServiceImplTest {
 			when(frControl.saveForm(any(Form.class))).thenReturn(false);
 
 			try {
+				@SuppressWarnings("unused")
+				// TODO Test this function
 				MaritacaResponse resp = formService.saveForm(xmlForm, uuid2);
 			} catch (Exception e) {
 				assertTrue(e instanceof MaritacaWSException);
@@ -142,7 +145,7 @@ public class FormsServiceImplTest {
 			when(frControl.listAllFormsMinimal()).thenReturn(list);
 			MaritacaResponse resp = formService.listFormsMinimal();
 			assertTrue(resp instanceof ResultSetResponse);
-			ResultSetResponse<Form> okresp = (ResultSetResponse<Form>) resp;
+			FormListResponse okresp = (FormListResponse) resp;
 			assertEquals(list.size(), okresp.getSize());
 			int i = 0;
 			for (Form f : okresp.getList()) {
