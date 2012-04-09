@@ -1,29 +1,44 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:composite="http://java.sun.com/jsf/composite"
 	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:rich="http://richfaces.org/rich"
-	xmlns:a4j="http://richfaces.org/a4j"
-	xmlns:forms="http://java.sun.com/jsf/composite/components/forms">
-<head>
-<title>Not present in rendered output</title>
-</head>
-<body>
+	xmlns:a4j="http://richfaces.org/a4j">
 	<composite:interface>
-		<composite:attribute name="submodule" required="true" />
 	</composite:interface>
 	<composite:implementation>
-		<h:dataTable value="#{listAnswersBean.answers}" var="anAnswer" width="100%"
-			columnClasses="columnClass1, columnClass1" cellspacing="0">
-			<h:column>
-				<a4j:commandLink>
-					<h:outputText value="#{anAnswer.key}" styleClass="listItem" />
-				</a4j:commandLink>
-			</h:column>
-		</h:dataTable>
+		<rich:dataTable value="#{listAnswersBean.listAnswersDTO.answersDTO}"
+			id="answersTable" var="aAnswer" styleClass="maritacaTable">
+			<f:facet name="header">
+				<h:outputText value="#{listAnswersBean.listAnswersDTO.formTitle}" />
+			</f:facet>
+
+			<rich:column>
+				<f:facet name="header">
+					<h:outputText value="#{msgs.answer_list_author}" />
+				</f:facet>
+				<h:outputText value="#{aAnswer.author}" />
+			</rich:column>
+
+			<rich:column>
+				<f:facet name="header">
+					<h:outputText value="#{msgs.answer_list_date}" />
+				</f:facet>
+				<h:outputText value="#{aAnswer.collectionDate}" />
+			</rich:column>
+
+			<c:forEach items="#{listAnswersBean.listAnswersDTO.questionLabels}" var="aQuestion">
+				<rich:column>
+					<f:facet name="header">
+						<h:outputText value="#{aQuestion}" />
+  					</f:facet>
+  					<h:outputText value="#{listAnswersBean.listAnswersDTO.searchAnswer(aQuestion,aAnswer)}"/>
+				</rich:column>
+			</c:forEach>
+		</rich:dataTable>
 	</composite:implementation>
-</body>
-</html>
+</ui:composition>

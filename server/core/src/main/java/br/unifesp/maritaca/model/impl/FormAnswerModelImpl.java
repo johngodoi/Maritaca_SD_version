@@ -8,8 +8,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
+
+import org.mortbay.log.Log;
 
 import br.unifesp.maritaca.access.AccessLevel;
 import br.unifesp.maritaca.access.Policy;
@@ -17,6 +20,7 @@ import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
+import br.unifesp.maritaca.core.MaritacaDate;
 import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.core.MaritacaListUser;
 import br.unifesp.maritaca.core.User;
@@ -27,6 +31,8 @@ import br.unifesp.maritaca.model.UserModel;
 import br.unifesp.maritaca.persistence.EntityManager;
 import br.unifesp.maritaca.util.UserLocator;
 import br.unifesp.maritaca.util.UtilsCore;
+import br.unifesp.maritaca.web.dto.listanswers.AnswerDTO;
+import br.unifesp.maritaca.web.dto.listanswers.ListAnswersDTO;
 
 public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, Serializable{
 
@@ -90,12 +96,25 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 			} else {
 				return false;
 			}
+			createFormFakeAnswers(form); //TODO Remove this
 			return true;
 		} else {
 			throw new IllegalArgumentException("User does not exist in database");
 		}		
 	}
 	
+	private void createFormFakeAnswers(Form form) {
+		//Temporary method! It creates answers for the form
+		for(int i=0; i<3; i++){
+			Answer answer = new Answer();
+			answer.setForm(form);
+			answer.setUser(getCurrentUser());
+						
+			answer.setCollectionDate(new MaritacaDate());		
+			entityManager.persist(answer);
+		}
+	}
+
 	/**
 	 * Save/Update a form if the User has permissions
 	 */
@@ -519,5 +538,84 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 				saveFormPermission(listPermissions);
 			}
 		}
+	}
+
+	@Override
+	public ListAnswersDTO findAnswersFromForm(String formId) {
+		Form           form        = getForm(UUID.fromString(formId), false);		
+		ListAnswersDTO listAnswers = new ListAnswersDTO();		
+		listAnswers.setFormTitle(form.getTitle());
+		
+		List<Answer> formAnswers = entityManager.cQuery(Answer.class,
+													    "form",
+													    formId.toString());
+		
+		List<String>    questions      = parseQuestionsFromXml(form.getXml());
+		listAnswers.setQuestionLabels(questions);
+		
+		List<AnswerDTO> answersDtoList = new ArrayList<AnswerDTO>();
+		for(Answer answer : formAnswers){
+			User      answAuthor = getUserModel().getUser(answer.getUser().getKey());			
+			AnswerDTO answerDTO  = new AnswerDTO();
+			answerDTO.setAuthor(answAuthor.getEmail());
+			
+			List<String> answers = parseAnswersFromXml(answer.getXml());
+			if(questions.size()!=answers.size()){
+				Log.warn("Invalid number of answers in answer: " + answer.getKey());
+			} else {
+				answerDTO.setQuestionAnswers(answers);
+				answerDTO.setCollectionDate(answer.getCollectionDate());
+				answersDtoList.add(answerDTO);
+			}			
+		}
+		
+		listAnswers.setAnswersDTO(answersDtoList);		
+		return listAnswers;
+	}
+
+	private List<String> parseAnswersFromXml(String xml) {
+		List<String> names = new ArrayList<String>();
+		names.add("José");
+		names.add("Maria");
+		names.add("Ricardo");
+		names.add("Mariana");
+		names.add("Silvia");
+		
+		List<String> lastNames = new ArrayList<String>();
+		lastNames.add("Souza");
+		lastNames.add("Pereira");
+		lastNames.add("Aparecida");
+		lastNames.add("Antônio");
+		
+		List<String> colors = new ArrayList<String>();
+		colors.add("Azul");
+		colors.add("Vermelho");
+		colors.add("Amarelo");
+		colors.add("Laranja");
+		colors.add("Branco");
+		
+		List<String> answers = new ArrayList<String>();
+		
+		Random rand = new Random();
+		
+		String name     = names.get(rand.nextInt(names.size()));
+		String lastName = lastNames.get(rand.nextInt(lastNames.size()));
+		
+		answers.add(name + " " + lastName);
+		Integer age = rand.nextInt(20)+20;
+		answers.add(age.toString());
+		answers.add(colors.get(rand.nextInt(colors.size())));
+		
+		return answers;
+	}
+
+	private List<String> parseQuestionsFromXml(String xml) {
+		List<String> questionLabels = new ArrayList<String>();
+		
+		questionLabels.add("What is your name?");		
+		questionLabels.add("What is your age?");		
+		questionLabels.add("What is your favorite color?");
+		
+		return questionLabels;
 	}
 }

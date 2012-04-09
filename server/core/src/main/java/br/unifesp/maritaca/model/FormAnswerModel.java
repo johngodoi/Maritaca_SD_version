@@ -11,6 +11,7 @@ import br.unifesp.maritaca.core.FormPermissions;
 import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.EntityManager;
+import br.unifesp.maritaca.web.dto.listanswers.ListAnswersDTO;
 
 public interface FormAnswerModel extends GenericModel{
 		
@@ -39,6 +40,8 @@ public interface FormAnswerModel extends GenericModel{
 	/************* ANSWER ***********/
 	boolean saveAnswer(Answer answer);
 
+	ListAnswersDTO findAnswersFromForm(String formId);
+	
 	Answer getAnswer(UUID uuid);
 
 	Collection<Answer> listAllAnswers(UUID formId);

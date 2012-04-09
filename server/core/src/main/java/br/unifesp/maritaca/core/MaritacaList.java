@@ -1,5 +1,6 @@
 package br.unifesp.maritaca.core;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import javax.persistence.Entity;
@@ -9,7 +10,10 @@ import br.unifesp.maritaca.persistence.annotations.Column;
 import br.unifesp.maritaca.persistence.annotations.Minimal;
 
 @Entity
-public class MaritacaList {
+public class MaritacaList implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	private UUID key;
 	@Column(indexed = true)

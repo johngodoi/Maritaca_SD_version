@@ -9,7 +9,6 @@ import br.unifesp.maritaca.web.jsf.AbstractBean;
 @ManagedBean
 public class ViewAnswerBean extends AbstractBean{
 	private static final long serialVersionUID = 1L;
-	private Answer answer;
 	
 	@ManagedProperty("#{param.answerid}")
 	private String answerId;
@@ -18,22 +17,16 @@ public class ViewAnswerBean extends AbstractBean{
 		super(true,false);
 	}
 
-	public Answer getAnswer() {
-		if (answer!=null && answer.getXml() == null) {
-			this.answer = formAnswCtrl.getAnswer(answer.getKey());
-		}return answer;
+	public Answer getAnswer() {		
+		return null; //TODO Not implemented yet
 	}
 
 	public void setAnswer(Answer ans) {
-		this.answer = ans;
+
 	}
 	
 	public void setAnswerId(String id){
-		if(id!= null && !id.equals("new")){
-			answerId = id;
-			answer = new Answer();
-			answer.setKey(id);
-		}
+		
 	}
 	
 	public String getAnswerId(){
