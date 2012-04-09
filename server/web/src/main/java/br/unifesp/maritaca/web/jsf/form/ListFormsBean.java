@@ -64,15 +64,15 @@ public class ListFormsBean extends AbstractBean {
 	public void setCurrentUser(CurrentUserBean currentUser) {
 		this.currentUser = currentUser;
 	}
-	
-	public void setUpdateFormsList(String s){}
-	
+		
 	public String getUpdateFormsList(){
 		updateListOwnForms();
 		updateListSharedForms();	
 		updateFormsOwners();
 		return "";
 	}
+	
+	public void setUpdateFormsList(String s){};
 
 	//TODO Temporary method. It fills the user emails in the forms list.
 	private void updateFormsOwners() {

@@ -31,5 +31,4 @@
         <constructor-arg ref="keyspaceOperator"/>
     </bean>
 
-
 </beans>

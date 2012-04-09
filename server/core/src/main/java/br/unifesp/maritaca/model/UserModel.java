@@ -173,4 +173,10 @@ public interface UserModel extends GenericModel{
 
 	
 	User createRootUser();
+	/**
+	 * Returns the Access Token object
+	 * @param accessToken 
+	 * @return {@link OAuthToken}
+	 */
+	OAuthToken getOAuthTokenByAccessToken(String accessToken);
 }

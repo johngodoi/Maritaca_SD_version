@@ -15,8 +15,8 @@ import br.unifesp.maritaca.model.FormAnswerModel;
 import br.unifesp.maritaca.model.ModelFactory;
 import br.unifesp.maritaca.ws.api.FormsService;
 import br.unifesp.maritaca.ws.api.resp.ErrorResponse;
+import br.unifesp.maritaca.ws.api.resp.FormListResponse;
 import br.unifesp.maritaca.ws.api.resp.MaritacaResponse;
-import br.unifesp.maritaca.ws.api.resp.ResultSetResponse;
 import br.unifesp.maritaca.ws.api.resp.XmlSavedResponse;
 import br.unifesp.maritaca.ws.exceptions.MaritacaWSException;
 
@@ -26,6 +26,8 @@ public class FormsServiceImpl implements FormsService {
 	private static final Log log = LogFactory.getLog(FormsServiceImpl.class);
 	private FormAnswerModel formRespModel;
 	private User currentUser;
+
+	public FormsServiceImpl() {	}
 
 	public FormsServiceImpl(@HeaderParam("curruserkey") String userkey) {
 		//get the user
@@ -84,7 +86,7 @@ public class FormsServiceImpl implements FormsService {
 
 	@Override
 	public MaritacaResponse listFormsMinimal() {
-		ResultSetResponse<Form> resp = new ResultSetResponse<Form>();
+		FormListResponse resp = new FormListResponse();
 		resp.setList(getFormRespModel().listAllFormsMinimal());
 		return resp;
 	}

@@ -34,9 +34,7 @@
 			</h:panelGrid>
 			<h:commandButton	value="#{msgs.login}" action="#{maritacaLoginBean.submit}"
   				        		onclick="encryptPassword()">
-				<f:param name="#{oAuthParametersBean.redirectUri}"  value="#{loginManagerBean.redirectUri}"/>
-				<f:param name="#{oAuthParametersBean.clientId}"     value="#{loginManagerBean.clientId}"/>
-				<f:param name="#{oAuthParametersBean.responseType}" value="#{loginManagerBean.responseType}"/>
+				<f:param name="#{oAuthParametersBean.OAuth_Token}" value="#{loginManagerBean.oauth_token}"/>
 			</h:commandButton>
 			<h:commandLink value="#{msgs.login_create_account_link}"
 				styleClass="createAccountLink"

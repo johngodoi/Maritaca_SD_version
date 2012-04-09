@@ -11,7 +11,6 @@ import br.unifesp.maritaca.core.OAuthToken;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.ws.api.resp.ErrorResponse;
 import br.unifesp.maritaca.ws.api.resp.MaritacaResponse;
-import br.unifesp.maritaca.ws.api.resp.ResultSetResponse;
 import br.unifesp.maritaca.ws.api.resp.XmlSavedResponse;
 
 /**
@@ -32,7 +31,6 @@ public class JAXBContextResolver implements ContextResolver<JAXBContext> {
 			MaritacaResponse.class, 
 			XmlSavedResponse.class,
 			ErrorResponse.class,
-			ResultSetResponse.class,
 			OAuthToken.class};
 
 	public JAXBContextResolver() {

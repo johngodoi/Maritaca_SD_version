@@ -20,8 +20,8 @@ import org.mockito.stubbing.Answer;
 
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.model.FormAnswerModel;
+import br.unifesp.maritaca.ws.api.resp.FormListResponse;
 import br.unifesp.maritaca.ws.api.resp.MaritacaResponse;
-import br.unifesp.maritaca.ws.api.resp.ResultSetResponse;
 import br.unifesp.maritaca.ws.api.resp.XmlSavedResponse;
 import br.unifesp.maritaca.ws.exceptions.MaritacaWSException;
 
@@ -141,9 +141,9 @@ public class FormsServiceImplTest {
 		try {
 			when(frControl.listAllFormsMinimal()).thenReturn(list);
 			MaritacaResponse resp = formService.listFormsMinimal();
-			assertTrue(resp instanceof ResultSetResponse);
-			@SuppressWarnings("unchecked")
-			ResultSetResponse<Form> okresp = (ResultSetResponse<Form>) resp;
+			assertTrue(resp instanceof FormListResponse);
+			
+			FormListResponse okresp = (FormListResponse) resp;
 			assertEquals(list.size(), okresp.getSize());
 			int i = 0;
 			for (Form f : okresp.getList()) {

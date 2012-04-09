@@ -2,13 +2,19 @@
 <web-app id="WebApp_ID" version="2.5"
 	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
 	<display-name>Maritaca Web</display-name>
+
+	<!-- Maritaca logos -->
 	<icon>
 		<small-icon>/resources/img/maritaca.gif</small-icon>
 	</icon>
+
 	<icon>
 		<large-icon>/resources/img/maritaca.gif</large-icon>
 	</icon>
+
+	<!-- JSF's context-param -->
 	<context-param>
 		<param-name>com.prime.facestrace.DISABLE_TRACE</param-name>
 		<param-value>true</param-value>
@@ -41,7 +47,15 @@
 		<param-name>org.richfaces.skin</param-name>
 		<param-value>emeraldTown</param-value>
 	</context-param>
-
+	<context-param>
+		<param-name>oauth.provider.provider-class</param-name>
+		<param-value>br.unifesp.maritaca.web.servlet.MaritacaOAuthProvider</param-value>
+	</context-param>
+	<context-param>
+		<param-name>resteasy.servlet.mapping.prefix</param-name>
+		<param-value>/ws</param-value>
+	</context-param>
+	
 	<!-- SERVLETS -->
 	<servlet>
 		<servlet-name>MaritacaInitServlet</servlet-name>
@@ -60,32 +74,6 @@
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-	<servlet>
-		<servlet-name>OAuth Service</servlet-name>
-		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
-		<init-param>
-			<param-name>com.sun.jersey.config.property.packages</param-name>
-			<param-value>br.unifesp.maritaca.oauth, br.unifesp.maritaca.ws.util</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet>
-		<servlet-name>Jersey REST Service</servlet-name>
-		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
-		<init-param>
-			<param-name>com.sun.jersey.config.property.packages</param-name>
-			<param-value>br.unifesp.maritaca.ws</param-value>
-		</init-param>
-		<init-param>
-			<param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
-			<param-value>br.unifesp.maritaca.web.servlet.RestfulFilter</param-value>
-		</init-param>
-		<init-param>
-			<param-name>com.sun.jersey.spi.container.ContainerResponseFilters</param-name>
-			<param-value>br.unifesp.maritaca.web.servlet.RestfulFilter</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
 
 	<servlet>
 		<servlet-name>Faces Servlet</servlet-name>
@@ -98,6 +86,25 @@
 		<servlet-class>br.unifesp.maritaca.web.servlet.LogoutServlet</servlet-class>
 	</servlet>
 
+	<servlet>
+		<servlet-name>OAuth</servlet-name>
+		<servlet-class>br.unifesp.maritaca.web.servlet.MaritacaOAuthServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>Resteasy</servlet-name>
+		<servlet-class>
+			org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
+		</servlet-class>
+		<init-param> 
+			<param-name>javax.ws.rs.Application</param-name> 
+			<param-value>br.unifesp.maritaca.ws.RestServicesApp</param-value> 
+		</init-param>
+	</servlet>
+
+	<listener>
+        <listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
+    </listener>
+
 	<!-- FILTERS -->
 	<filter>
 		<filter-name>homeFilter</filter-name>
@@ -107,19 +114,23 @@
 		<filter-name>loginFilter</filter-name>
 		<filter-class>br.unifesp.maritaca.web.servlet.LoginFilter</filter-class>
 	</filter>
+    <filter>
+		<filter-name>OAuth Filter</filter-name>
+        <filter-class>br.unifesp.maritaca.web.servlet.MaritacaOAuthFilter</filter-class>
+	</filter>
+	
 
 	<!-- MAPPING -->
 	<servlet-mapping>
 		<servlet-name>Faces Servlet</servlet-name>
 		<url-pattern>/faces/*</url-pattern>
 	</servlet-mapping>
-
 	<servlet-mapping>
-		<servlet-name>OAuth Service</servlet-name>
+		<servlet-name>OAuth</servlet-name>
 		<url-pattern>/oauth/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>Jersey REST Service</servlet-name>
+		<servlet-name>Resteasy</servlet-name>
 		<url-pattern>/ws/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
@@ -139,6 +150,10 @@
 		<filter-name>loginFilter</filter-name>
 		<url-pattern>/faces/views/login.xhtml</url-pattern>
 	</filter-mapping>
+	<filter-mapping>
+        <filter-name>OAuth Filter</filter-name>
+        <url-pattern>/ws/*</url-pattern>
+    </filter-mapping>
 
 	<welcome-file-list>
 		<welcome-file>faces/views/login.xhtml</welcome-file>
