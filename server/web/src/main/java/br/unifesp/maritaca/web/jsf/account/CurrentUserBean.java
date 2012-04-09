@@ -7,26 +7,26 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
-import br.unifesp.maritaca.core.User;
-import br.unifesp.maritaca.model.ModelFactory;
+import br.unifesp.maritaca.persistence.dto.MaritacaUserDTO;
 
 @ManagedBean
 @SessionScoped
 public class CurrentUserBean implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private User user;
+	//private User user;
+	private MaritacaUserDTO user;
 	private boolean authenticated;
 
-	public User getUser() {
+	public MaritacaUserDTO getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(MaritacaUserDTO user) {
 		this.user = user;
 		if (user != null) {
 			HttpSession hs = getSession(false);
 			hs.setAttribute("currentuser", user);
-			ModelFactory.getInstance().registryUser(user);
+//			ModelFactory.getInstance().registryUser(user); now into LoginEJB
 		}
 	}
 

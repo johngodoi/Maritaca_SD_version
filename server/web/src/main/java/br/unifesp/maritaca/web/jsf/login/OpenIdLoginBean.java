@@ -18,6 +18,7 @@ import org.expressme.openid.Endpoint;
 import org.expressme.openid.OpenIdManager;
 
 import br.unifesp.maritaca.core.User;
+import br.unifesp.maritaca.persistence.dto.MaritacaUserDTO;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
 import br.unifesp.maritaca.web.jsf.account.AccountEditorBean;
 import br.unifesp.maritaca.web.utils.Utils;
@@ -83,7 +84,7 @@ public class OpenIdLoginBean extends AbstractBean implements Serializable{
     	String email = getAccountEditorBean().getEmail();
     	User   user  = super.userCtrl.findUserByEmail(email);
     	
-    	getAccountEditorBean().getCurrentUserBean().setUser(user);		
+    	getAccountEditorBean().getCurrentUserBean().setUser(new MaritacaUserDTO());//(user);		
 	}
 
 	private void facesRedirect(String url){

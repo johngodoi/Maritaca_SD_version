@@ -17,7 +17,7 @@ public class LogoutBean {
 			fc.getExternalContext().getSessionMap().clear();
 			fc.getExternalContext().invalidateSession();
 		}
-		ModelFactory.getInstance().invalidateModelsForUser(getCurrentUser().getUser());
+		//ModelFactory.getInstance().invalidateModelsForUser(getCurrentUser().getUser());
 		return "home.xhtml?faces-redirect=true";
 
 	}

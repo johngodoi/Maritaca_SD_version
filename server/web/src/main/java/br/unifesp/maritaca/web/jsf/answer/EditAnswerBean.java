@@ -7,7 +7,7 @@ import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
 
-@ManagedBean
+//@ManagedBean
 public class EditAnswerBean extends AbstractBean {
 	private static final long serialVersionUID = 1L;
 	private User user;

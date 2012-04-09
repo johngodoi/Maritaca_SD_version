@@ -11,6 +11,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import br.unifesp.maritaca.core.User;
+import br.unifesp.maritaca.persistence.dto.MaritacaUserDTO;
 import br.unifesp.maritaca.web.Manager;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
 import br.unifesp.maritaca.web.utils.Utils;
@@ -58,7 +59,7 @@ public class AccountEditorBean extends AbstractBean implements Serializable{
 	@PostConstruct
 	public void updateUserInformation(){
 		if(getCurrentUserBean()!=null && getCurrentUserBean().getUser()!=null){
-			fillInformationFromUser(getCurrentUserBean().getUser());
+			//fillInformationFromUser(getCurrentUserBean().getUser());
 		}
 	}
 			
@@ -136,7 +137,7 @@ public class AccountEditorBean extends AbstractBean implements Serializable{
 			return null;
 		} else {
 			addMessage("account_create_success", FacesMessage.SEVERITY_INFO);
-			getCurrentUserBean().setUser(savedUser);
+			getCurrentUserBean().setUser(new MaritacaUserDTO());//(savedUser);
 			clearUserInformation();
 			return "/faces/views/home";
 

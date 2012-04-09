@@ -2,33 +2,47 @@ package br.unifesp.maritaca.web.jsf.form;
 
 import java.util.Collection;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
+import javax.inject.Inject;
 
-import br.unifesp.maritaca.access.operation.Operation;
+import br.unifesp.maritaca.business.manage_forms.ListFormsEJB;
 import br.unifesp.maritaca.core.Form;
-import br.unifesp.maritaca.core.User;
-import br.unifesp.maritaca.web.jsf.AbstractBean;
-import br.unifesp.maritaca.web.jsf.account.CurrentUserBean;
+import br.unifesp.maritaca.web.base.MaritacaJSFBean;
 
 @ManagedBean
 @ViewScoped
-public class ListFormsBean extends AbstractBean {
-	private static final long serialVersionUID = 1L;
+public class ListFormsBean extends MaritacaJSFBean {
+	
+	@Inject private ListFormsEJB listFormsEJB;
+		
 	private Collection<Form> forms;
 	private Collection<Form> sharedForms;
 	private boolean updateList;
 
-	@ManagedProperty("#{currentUserBean}")
-	private CurrentUserBean currentUser;
+	//@ManagedProperty("#{currentUserBean}")
+	//private CurrentUserBean currentUser;
 
 	public ListFormsBean() {
-		super(true, true);
-		setUpdateList(false);
+		//setUpdateList(false);		
 	}
+	
+	public void showForms() {
+		System.out.println("showForms");
+		showListOwnForms();
+		showListSharedForms();
+	}
+	
+	private void showListSharedForms() {
+		setSharedForms(listFormsEJB.updateListOwnForms());
+	}
+
+	private void showListOwnForms() {
+		setForms(listFormsEJB.updateListOwnForms());		
+	}
+
+	///
 
 	public Collection<Form> getForms() {
 		if (isUpdateList()) {
@@ -38,16 +52,19 @@ public class ListFormsBean extends AbstractBean {
 		return forms;
 	}
 	
-	public boolean hasPermission(Form form, String operation){		
-		return super.formAnswCtrl.currentUserHasPermission(form, Operation.fromString(operation));
+	public boolean hasPermission(Form form, String operation) {
+		return true;//super.formAnswCtrl.currentUserHasPermission(form, Operation.fromString(operation));
 	}
 
 	public void sortByName() {
-		forms = formAnswCtrl.listAllFormsSortedbyName(currentUser.getUser());
+		/*User dbUser = new User();
+			dbUser.setEmail(currentUser.getUser().getEmail());
+			//dbUser.setKey(currentUser.getUser().getKey());
+		forms = formAnswCtrl.listAllFormsSortedbyName(dbUser);//(currentUser.getUser());*/
 	}
 
 	public void sortByDate() {
-		forms = formAnswCtrl.listAllFormsSortedbyDate(currentUser.getUser());
+		//forms = formAnswCtrl.listAllFormsSortedbyDate(currentUser.getUser());
 	}
 
 	public void setForms(Collection<Form> forms) {
@@ -58,13 +75,13 @@ public class ListFormsBean extends AbstractBean {
 		return "viewForm";
 	}
 
-	public CurrentUserBean getCurrentUser() {
+	/*public CurrentUserBean getCurrentUser() {
 		return currentUser;
 	}
 
 	public void setCurrentUser(CurrentUserBean currentUser) {
 		this.currentUser = currentUser;
-	}
+	}*/
 	
 	public String getUpdateFormsList(){
 		updateListOwnForms();
@@ -77,14 +94,14 @@ public class ListFormsBean extends AbstractBean {
 
 	//TODO Temporary method. It fills the user emails in the forms list.
 	private void updateFormsOwners() {
-		for(Form f : getForms()){
+		/*for(Form f : getForms()){
 			User owner = super.userCtrl.getUser(f.getUser().getKey());
 			f.setUser(owner);
 		}
 		for(Form f : getSharedForms()){
 			User owner = super.userCtrl.getUser(f.getUser().getKey());
 			f.setUser(owner);
-		}
+		}*/
 	}
 
 	/**
@@ -102,12 +119,12 @@ public class ListFormsBean extends AbstractBean {
 		setUpdateList(true);
 	}
 
-	private void updateListOwnForms() {
-		setForms(formAnswCtrl.listFormsFromCurrentUser(true));
+	private void updateListOwnForms() {		
+		setForms(listFormsEJB.updateListOwnForms());
 	}
 
 	private void updateListSharedForms() {
-		setSharedForms(formAnswCtrl.listSharedFormsFromCurrentUser(true));
+		setSharedForms(listFormsEJB.updateListOwnForms());
 	}
 
 	public boolean isUpdateList() {
@@ -124,7 +141,6 @@ public class ListFormsBean extends AbstractBean {
 	 * @return
 	 */
 	public boolean canDelete(Form form){
-		return formAnswCtrl.currentUserHasPermission(form, Operation.DELETE);
+		return true;//formAnswCtrl.currentUserHasPermission(form, Operation.DELETE);
 	}
-
 }

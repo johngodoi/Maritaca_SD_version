@@ -30,7 +30,7 @@ import br.unifesp.maritaca.web.utils.Utils;
  * 
  * @author tiagobarabasz
  */
-@ManagedBean
+//@ManagedBean
 @ViewScoped
 public class MaritacaListEditorBean extends AbstractBean implements Serializable {
 
@@ -86,9 +86,9 @@ public class MaritacaListEditorBean extends AbstractBean implements Serializable
 		setListDescription(null);
 		setSelectedEmail(null);
 		setAddEmailError(null);
-		if(getCurrentUserBean()!=null){
+		/*if(getCurrentUserBean()!=null){
 			getAddedUsers().add(getCurrentUserBean().getUser());
-		}
+		}*/
 	}
 
 	/**
@@ -147,12 +147,12 @@ public class MaritacaListEditorBean extends AbstractBean implements Serializable
 
 	private boolean listOwnerIsCurrentUser(MaritacaList list) {
 		UUID ownerKey = list.getOwner().getKey();
-		UUID userKey = getCurrentUserBean().getUser().getKey();
+		/*UUID userKey = getCurrentUserBean().getUser().getKey();
 		if (ownerKey.equals(userKey)) {
 			return true;
 		} else {
 			return false;
-		}
+		}*/return false;
 	}
 
 	public void addEmail() {
@@ -301,7 +301,7 @@ public class MaritacaListEditorBean extends AbstractBean implements Serializable
 		}
 		newList.setName(getListName());
 		newList.setDescription(getListDescription());
-		newList.setOwner(getCurrentUserBean().getUser());
+		//newList.setOwner(getCurrentUserBean().getUser());
 
 		return newList;
 	}

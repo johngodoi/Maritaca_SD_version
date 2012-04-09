@@ -6,7 +6,7 @@ import javax.faces.bean.ManagedProperty;
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
 
-@ManagedBean
+//@ManagedBean
 public class ViewAnswerBean extends AbstractBean{
 	private static final long serialVersionUID = 1L;
 	private Answer answer;

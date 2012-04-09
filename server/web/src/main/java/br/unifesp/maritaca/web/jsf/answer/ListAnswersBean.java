@@ -10,7 +10,7 @@ import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
 
-@ManagedBean
+//@ManagedBean
 @ViewScoped
 public class ListAnswersBean extends AbstractBean {
 	private static final long serialVersionUID = 1L;

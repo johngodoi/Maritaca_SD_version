@@ -6,7 +6,7 @@ import java.util.List;
 
 public class MessageDTO implements Serializable {
 	
-	public static enum MessageType { SUCCESS, WARNING, ERROR }
+	public static enum MessageType { SUCCESS, WARNING, ERROR };
 	private MessageType messageType;
 	private List<String> messages;
 	private String message;

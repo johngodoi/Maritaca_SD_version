@@ -26,6 +26,7 @@ public class LoginFilter implements Filter {
 			HttpServletRequest hreq = (HttpServletRequest) request;
 			HttpSession session = hreq.getSession(true);
 			if (session.getAttribute("currentuser") != null) {
+				System.out.println("class: " + session.getAttribute("currentuser").getClass());
 				((HttpServletResponse) response).sendRedirect(hreq.getContextPath() + "/faces/views/home.xhtml");
 			} else {
 				chain.doFilter(request, response);

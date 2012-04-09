@@ -11,8 +11,8 @@ import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.web.Manager;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
 
-@ManagedBean
-@ViewScoped
+//@ManagedBean
+//@ViewScoped
 public class EditFormBean extends AbstractBean {
 	private static final long serialVersionUID = 1L;
 	

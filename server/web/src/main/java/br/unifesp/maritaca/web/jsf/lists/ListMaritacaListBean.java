@@ -20,7 +20,7 @@ import br.unifesp.maritaca.web.utils.Utils;
  * Bean used to present lists to the user.
  * @author tiagobarabasz
  */
-@ManagedBean
+//@ManagedBean
 @RequestScoped
 public class ListMaritacaListBean extends AbstractBean{
 	
@@ -63,7 +63,7 @@ public class ListMaritacaListBean extends AbstractBean{
 
 	@PostConstruct
 	public void updateMyLists() {
-		User              currentUsr  = getCurrentUser().getUser();				
+		User              currentUsr  = null;//getCurrentUser().getUser();				
 		Collection<MaritacaList> ownedLists = super.userCtrl.getMaritacaListsByOwner(currentUsr);
 		
 		removeAllUsersLists(ownedLists);
@@ -82,10 +82,10 @@ public class ListMaritacaListBean extends AbstractBean{
 	}
 
 	private void removeUserList(Collection<MaritacaList> ownedLists) {
-		MaritacaList userList = getCurrentUser().getUser().getMaritacaList();
+		/*MaritacaList userList = getCurrentUser().getUser().getMaritacaList();
 		if(!ownedLists.remove(userList)){
 			log.error("User list for user "+getCurrentUser().getUser()+" not found");
-		}
+		}*/
 	}
 
 	private void removeAllUsersLists(Collection<MaritacaList> ownedLists) {

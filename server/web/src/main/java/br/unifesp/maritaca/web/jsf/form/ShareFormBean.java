@@ -24,7 +24,7 @@ import br.unifesp.maritaca.web.utils.Utils;
  * @author emiguel, tiagobarabasz
  * 
  */
-@ManagedBean
+//@ManagedBean
 @ViewScoped
 public class ShareFormBean extends ItemListBean {
 	@ManagedProperty("#{currentUserBean}")

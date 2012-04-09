@@ -27,7 +27,7 @@ import br.unifesp.maritaca.web.utils.Utils;
  * 
  * @author alvaro 
  */
-@ManagedBean
+//@ManagedBean
 @RequestScoped
 public class ImportFormBean extends AbstractBean {
 
