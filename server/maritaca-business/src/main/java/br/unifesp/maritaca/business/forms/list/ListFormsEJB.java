@@ -4,11 +4,11 @@ import java.util.Collection;
 
 import javax.ejb.Stateless;
 
-import br.unifesp.maritaca.business.base.AbstractEJB;
+import br.unifesp.maritaca.business.base.BaseDAO;
 import br.unifesp.maritaca.core.Form;
 
 @Stateless
-public class ListFormsEJB extends AbstractEJB {
+public class ListFormsEJB extends BaseDAO {
 
 	public Collection<Form> updateListOwnForms() {
 		return null;

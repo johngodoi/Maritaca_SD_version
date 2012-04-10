@@ -6,6 +6,8 @@ import java.util.List;
 
 public class MessageDTO implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	public static enum MessageType { SUCCESS, WARNING, ERROR };
 	private MessageType messageType;
 	private List<String> messages;
