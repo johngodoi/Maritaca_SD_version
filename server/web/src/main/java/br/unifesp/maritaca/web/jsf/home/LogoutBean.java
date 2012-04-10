@@ -4,7 +4,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.context.FacesContext;
 
-import br.unifesp.maritaca.model.ModelFactory;
 import br.unifesp.maritaca.web.jsf.account.CurrentUserBean;
 
 @ManagedBean

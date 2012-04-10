@@ -1,6 +1,5 @@
 package br.unifesp.maritaca.web.jsf.answer;
 
-import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 
 import br.unifesp.maritaca.core.Answer;

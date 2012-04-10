@@ -15,13 +15,13 @@ import javax.faces.el.EvaluationException;
 import javax.faces.event.ExceptionQueuedEvent;
 import javax.faces.event.ExceptionQueuedEventContext;
 
+import me.prettyprint.hector.api.exceptions.HectorException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import br.unifesp.maritaca.exception.AuthorizationDenied;
 import br.unifesp.maritaca.exception.InvalidNumberOfEntries;
-
-import me.prettyprint.hector.api.exceptions.HectorException;
 
 /**
  * Class to handle all exception and create human-readable messages

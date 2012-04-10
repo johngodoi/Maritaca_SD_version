@@ -36,7 +36,7 @@ public abstract class MaritacaJSFBean implements Serializable {
         return context.getExternalContext().getSessionMap().get(JSFBeanName);
     }
 	
-	protected Map getSession() {
+	protected Map<String,Object> getSession() {
         return FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
     }
 	

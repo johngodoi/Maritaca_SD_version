@@ -1,7 +1,5 @@
 package br.unifesp.maritaca.web.jsf.answer;
 
-import javax.faces.bean.ManagedBean;
-
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.User;

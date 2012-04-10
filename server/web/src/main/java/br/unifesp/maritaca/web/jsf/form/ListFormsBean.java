@@ -15,6 +15,8 @@ import br.unifesp.maritaca.web.base.MaritacaJSFBean;
 @ViewScoped
 public class ListFormsBean extends MaritacaJSFBean {
 	
+	private static final long serialVersionUID = 1L;
+
 	@Inject private ListFormsEJB listFormsEJB;
 		
 	private Collection<Form> forms;
