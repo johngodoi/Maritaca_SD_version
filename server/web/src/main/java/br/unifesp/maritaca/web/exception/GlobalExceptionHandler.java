@@ -91,6 +91,7 @@ public class GlobalExceptionHandler extends ExceptionHandlerWrapper {
 			} else{
 				addMessage("error_unexpected", FacesMessage.SEVERITY_ERROR);
 				log.error("Error not identified", thr);
+				thr.printStackTrace();
 			}
 			i.remove();
 		}

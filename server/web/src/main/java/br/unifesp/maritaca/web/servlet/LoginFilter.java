@@ -29,6 +29,7 @@ public class LoginFilter implements Filter {
 				System.out.println("class: " + session.getAttribute("currentuser").getClass());
 				((HttpServletResponse) response).sendRedirect(hreq.getContextPath() + "/faces/views/home.xhtml");
 			} else {
+				// TODO In the first time it returns a null exception. Fix me!!!
 				chain.doFilter(request, response);
 			}
 		} else {
