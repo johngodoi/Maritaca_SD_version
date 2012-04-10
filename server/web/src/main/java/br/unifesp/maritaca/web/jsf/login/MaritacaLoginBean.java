@@ -8,7 +8,7 @@ import javax.inject.Inject;
 import br.unifesp.maritaca.business.base.MaritacaConstants;
 import br.unifesp.maritaca.business.login.LoginEJB;
 import br.unifesp.maritaca.business.login.dto.LoginDTO;
-import br.unifesp.maritaca.persistence.dto.MaritacaUserDTO;
+import br.unifesp.maritaca.persistence.dto.UserDTO;
 import br.unifesp.maritaca.web.base.MaritacaJSFBean;
 import br.unifesp.maritaca.web.jsf.account.CurrentUserBean;
 import br.unifesp.maritaca.web.utils.Utils;
@@ -36,7 +36,7 @@ public class MaritacaLoginBean extends MaritacaJSFBean {
 	}
 	
 	public String submit() {
-		MaritacaUserDTO maritacaUser = loginEJB.doLogin(loginDTO);		
+		UserDTO maritacaUser = loginEJB.doLogin(loginDTO);		
 		if(maritacaUser != null) {
 			//Set the data of the current user in session
 			getRequest().getSession().setAttribute(MaritacaConstants.CURRENT_USER, maritacaUser);

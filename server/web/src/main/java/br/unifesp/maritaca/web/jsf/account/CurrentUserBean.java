@@ -7,7 +7,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
-import br.unifesp.maritaca.persistence.dto.MaritacaUserDTO;
+import br.unifesp.maritaca.persistence.dto.UserDTO;
 
 @ManagedBean
 @SessionScoped
@@ -15,14 +15,14 @@ import br.unifesp.maritaca.persistence.dto.MaritacaUserDTO;
 public class CurrentUserBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	//private User user;
-	private MaritacaUserDTO user;
+	private UserDTO user;
 	private boolean authenticated;
 
-	public MaritacaUserDTO getUser() {
+	public UserDTO getUser() {
 		return user;
 	}
 
-	public void setUser(MaritacaUserDTO user) {
+	public void setUser(UserDTO user) {
 		this.user = user;
 		if (user != null) {
 			HttpSession hs = getSession(false);

@@ -2,7 +2,7 @@ package br.unifesp.maritaca.persistence.dto;
 
 import java.util.UUID;
 
-public class MaritacaUserDTO {
+public class UserDTO {
 	
 	private UUID key;
 	private String email;
