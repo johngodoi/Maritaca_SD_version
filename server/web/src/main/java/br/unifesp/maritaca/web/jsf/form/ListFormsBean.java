@@ -7,7 +7,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 
-import br.unifesp.maritaca.business.forms.list.ListFormsEJB;
+import br.unifesp.maritaca.business.form.list.ListFormsEJB;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.web.base.MaritacaJSFBean;
 
