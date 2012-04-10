@@ -38,6 +38,9 @@ public class MaritacaLoginBean extends MaritacaJSFBean {
 	public String submit() {
 		MaritacaUserDTO maritacaUser = loginEJB.doLogin(loginDTO);		
 		if(maritacaUser != null) {
+			//Set the data of the current user in session
+			getRequest().getSession().setAttribute(MaritacaConstants.CURRENT_USER, maritacaUser);
+			//TODO: Next step: delete CurrentUserBean
 			getCurrentUserBean().setUser(maritacaUser);			
 			getLoginManagerBean().login();
 			return "";
@@ -46,32 +49,10 @@ public class MaritacaLoginBean extends MaritacaJSFBean {
 			setStatus(Utils.getMessageFromResourceProperties("login_failed"));
 			return MaritacaConstants.FACES_LOGIN;
 		}
-	}
-	
+	}	
 
 	/*public Collection<User> getUserList() {
 		return userCtrl.listAllUsersMinimal();
-	}*/
-
-	//public String submitpre() {
-//		System.out.println("submit");
-//		String toma = loginEJB.sayHi("=)");
-//		System.out.println(toma);
-		
-		/*User dbUser = super.userCtrl.getUser(getUser().getEmail());
-		if(loginSuccessful(dbUser)){
-			getCurrentUserBean().setUser(dbUser);			
-			getLoginManagerBean().login();
-			return "";			
-		} else {
-			setStatus(Utils.getMessageFromResourceProperties("login_failed"));
-			return "/faces/views/login";
-		}*/
-	//}
-
-	/*private boolean loginSuccessful(User dbUser) {
-		return (dbUser!=null &&
-				getUser().getPassword().equals(dbUser.getPassword()));
 	}*/
 
 	public String getStatus() {
