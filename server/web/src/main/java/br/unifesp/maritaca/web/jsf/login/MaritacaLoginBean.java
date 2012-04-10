@@ -5,12 +5,12 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.inject.Inject;
 
-import br.unifesp.maritaca.business.base.MaritacaConstants;
 import br.unifesp.maritaca.business.login.LoginEJB;
 import br.unifesp.maritaca.business.login.dto.LoginDTO;
 import br.unifesp.maritaca.persistence.dto.UserDTO;
 import br.unifesp.maritaca.web.base.MaritacaJSFBean;
 import br.unifesp.maritaca.web.jsf.account.CurrentUserBean;
+import br.unifesp.maritaca.web.jsf.util.MaritacaConstants;
 import br.unifesp.maritaca.web.utils.Utils;
 
 @ManagedBean

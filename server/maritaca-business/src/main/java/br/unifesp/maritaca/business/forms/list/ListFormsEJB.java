@@ -10,6 +10,8 @@ import br.unifesp.maritaca.core.Form;
 @Stateless
 public class ListFormsEJB extends AbstractEJB {
 
+	private static final long serialVersionUID = 1L;
+
 	public Collection<Form> updateListOwnForms() {
 		return null;
 	}

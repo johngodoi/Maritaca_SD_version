@@ -25,7 +25,6 @@ import br.unifesp.maritaca.model.UserModel;
 import br.unifesp.maritaca.persistence.EntityManager;
 import br.unifesp.maritaca.util.UserLocator;
 
-//TODO Ticket: 113 - Use exceptions instead of returning false
 public class UserModelImpl implements UserModel, Serializable, UseEntityManager {
 	private static final Log log = LogFactory.getLog(UserModelImpl.class);
 	private static final long serialVersionUID = 1L;
@@ -40,59 +39,7 @@ public class UserModelImpl implements UserModel, Serializable, UseEntityManager 
 	public EntityManager getEntityManager() {
 		return entityManager;
 	}
-
-	@Override
-	public boolean saveUser(User user) {
-		if (user == null){
-			return false;
-		}
-		
-		if(!updateUserGroup(user)){
-			return false;
-		}
-		
-		if (!entityManager.persist(user)) {
-			return false;
-		}		
-		if(user.getMaritacaList()==null && !createUserGroup(user)){
-			return false;
-		}		
-		return true;
-	}
-
-	/*
-	 * Update the user group name if the user changed its email
-	 */
-	private boolean updateUserGroup(User user) {
-		if(user.getKey()==null){
-			return true;
-		}		
-		User dbUser = getUser(user.getKey());
-		if(dbUser.getEmail().equals(user.getEmail())){
-			return true;
-		} else {
-			MaritacaList userGroup = searchMaritacaListByName(dbUser.getEmail());
-			userGroup.setName(user.getEmail());
-			
-			return entityManager.persist(userGroup);
-		}		
-	}
-
-
-	private boolean createUserGroup(User owner) {		
-		MaritacaList list = new MaritacaList();
-		list.setOwner(owner);
-		list.setName(owner.getEmail());
-		
-		if(!saveMaritacaList(list)){
-			return false;
-		}				
-		
-		owner.setMaritacaList(list);
-		
-		return saveUser(owner);
-	}
-
+	
 	@Override
 	public User getUser(UUID uuid) {
 		return entityManager.find(User.class, uuid);
@@ -127,40 +74,6 @@ public class UserModelImpl implements UserModel, Serializable, UseEntityManager 
 	@Override
 	public MaritacaList getMaritacaList(UUID uuid) {
 		return entityManager.find(MaritacaList.class, uuid);
-	}
-
-	@Override
-	public boolean saveMaritacaList(MaritacaList list) {
-		if (list == null) {
-			throw new IllegalArgumentException("Invalid group");
-		}
-		verifyEntity(list.getOwner());
-		if (list.getName()==null || list.getName().length() == 0) {
-			throw new IllegalArgumentException("Incomplete parameters");
-		}
-
-		if (list.getKey() == null) {
-			// new group
-			if (searchMaritacaListByName(list.getName()) != null) {
-				return false;
-			}
-			if (entityManager.persist(list)) {
-				// add owner to group
-				MaritacaListUser listUser = new MaritacaListUser();
-				listUser.setMaritacaList(list);
-				listUser.setUser(list.getOwner());
-				if (saveMaritacaListUser(listUser))
-					return true;
-				else {
-					// not able to add user to group
-					entityManager.delete(list);
-					return false;
-				}
-			} else
-				return false; // group not saved
-		} else {
-			return entityManager.persist(list);
-		}
 	}
 
 	/**
@@ -349,14 +262,6 @@ public class UserModelImpl implements UserModel, Serializable, UseEntityManager 
 			throw new RuntimeException("Invalid number of users for the email:"
 					+ email);
 		}
-	}
-
-	@Override
-	public boolean saveMaritacaListUser(MaritacaListUser groupUser) {
-		if (entityManager == null || groupUser == null)
-			return false;
-
-		return entityManager.persist(groupUser);
 	}
 
 	@Override
