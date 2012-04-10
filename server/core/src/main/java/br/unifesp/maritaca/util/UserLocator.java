@@ -6,7 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import br.unifesp.maritaca.core.User;
-import br.unifesp.maritaca.persistence.dto.MaritacaUserDTO;
+import br.unifesp.maritaca.persistence.dto.UserDTO;
 
 /**
  * Temporary class to get the current user in the session in both JSF and REST
@@ -23,7 +23,7 @@ public class UserLocator {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		if (fc != null) {
 			// jsf request
-			MaritacaUserDTO maritacaUser = (MaritacaUserDTO) fc.getExternalContext().getSessionMap().get("currentuser");
+			UserDTO maritacaUser = (UserDTO) fc.getExternalContext().getSessionMap().get("currentuser");
 			if(maritacaUser != null) {
 				user = new User();
 				user.setKey(maritacaUser.getKey());

@@ -9,7 +9,6 @@ public class MessageDTO implements Serializable {
 	public static enum MessageType { SUCCESS, WARNING, ERROR };
 	private MessageType messageType;
 	private List<String> messages;
-	private String message;
 	private Boolean success;
 	
 	public MessageDTO() {
@@ -45,12 +44,4 @@ public class MessageDTO implements Serializable {
     public void addMessages(String message) {
         this.messages.add(message);
     }
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
 }

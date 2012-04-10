@@ -12,14 +12,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import br.unifesp.maritaca.business.base.MaritacaConstants;
-import br.unifesp.maritaca.persistence.dto.MaritacaUserDTO;
+import br.unifesp.maritaca.persistence.dto.UserDTO;
 
 public abstract class MaritacaJSFBean implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	protected MaritacaUserDTO getCurrentUser() {
-		MaritacaUserDTO maritacaUser = (MaritacaUserDTO)getRequest().getSession().getAttribute(MaritacaConstants.CURRENT_USER);
+	protected UserDTO getCurrentUser() {
+		UserDTO maritacaUser = (UserDTO)getRequest().getSession().getAttribute(MaritacaConstants.CURRENT_USER);
 		//MaritacaUserDTO maritacaUser = (MaritacaUserDTO) getFacesContext().getExternalContext().getSessionMap().get("currentuser");
 		if(maritacaUser != null)
 			return maritacaUser;
