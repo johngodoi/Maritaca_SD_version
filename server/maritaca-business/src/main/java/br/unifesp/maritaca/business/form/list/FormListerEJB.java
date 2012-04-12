@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -12,7 +13,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import br.unifesp.maritaca.access.operation.Operation;
-import br.unifesp.maritaca.business.base.BaseDAO;
 import br.unifesp.maritaca.business.base.MaritacaConstants;
 import br.unifesp.maritaca.business.base.PermissionDTO;
 import br.unifesp.maritaca.business.base.UserDAO;
@@ -27,26 +27,23 @@ public class FormListerEJB {
 	
 	private static final Log log = LogFactory.getLog(FormListerEJB.class);
 	
-	@Inject FormListerDAO listFormsDAO;
+	@Inject FormListerDAO formListerDAO;
 	@Inject UserDAO userDAO;
 
-	//TODO: Check why f.getUser.getEmail() is null, althought when the user is the onwer isn't neccessary show the column "owner"
 	public Collection<FormListerDTO> getListOwnForms(UserDTO userDTO) {
-		log.info("FormListerEJB - getListOwnForms");
 		List<FormListerDTO> formsDTO = null;
 		SimpleDateFormat newFormat = new SimpleDateFormat(MaritacaConstants.SHORT_DATE_FORMAT_ISO8601);
-		List<Form> forms = listFormsDAO.getListOwnFormsByUserKey(userDTO.getKey().toString());
+		List<Form> forms = formListerDAO.getListOwnFormsByUserKey(userDTO.getKey().toString());
 		if(!forms.isEmpty()) {
 			formsDTO = new ArrayList<FormListerDTO>();
 			//
 			User user = userDAO.findUserByEmail(userDTO.getEmail());
-			//
 			for(Form f : forms) {
 				PermissionDTO permission = new PermissionDTO(
-						listFormsDAO.currentUserHasPermission(user, f, Operation.READ), 
-						listFormsDAO.currentUserHasPermission(user, f, Operation.UPDATE), 
-						listFormsDAO.currentUserHasPermission(user, f, Operation.SHARE), 
-						listFormsDAO.currentUserHasPermission(user, f, Operation.DELETE));
+						formListerDAO.currentUserHasPermission(user, f, Operation.READ), 
+						formListerDAO.currentUserHasPermission(user, f, Operation.UPDATE), 
+						formListerDAO.currentUserHasPermission(user, f, Operation.SHARE), 
+						formListerDAO.currentUserHasPermission(user, f, Operation.DELETE));
 				FormListerDTO formDTO = new FormListerDTO(
 						f.getKey(),
 						f.getTitle(), 
@@ -60,24 +57,37 @@ public class FormListerEJB {
 		return formsDTO;
 	}
 	
+	public User getUserByKey(UUID uuid) {
+		return userDAO.findUserByKey(uuid);
+	}
+	
+	private String getUserEmailByKey(UUID uuid) {
+		User user = userDAO.findUserByKey(uuid);
+		if(user != null)
+			return user.getEmail();
+		else {
+			log.error(uuid + " User doesn't exist");
+			return "";
+		}
+	}
+	
 	public Collection<FormListerDTO> getListSharedForms(UserDTO userDTO) {
-		log.info("FormListerEJB - getListSharedForms");
 		List<FormListerDTO> formsDTO = null;
 		SimpleDateFormat newFormat = new SimpleDateFormat(MaritacaConstants.SHORT_DATE_FORMAT_ISO8601);
 		User user = userDAO.findUserByEmail(userDTO.getEmail());
-		List<Form> forms = listFormsDAO.getListSharedFormsByUserKey(user);
+		List<Form> forms = formListerDAO.getListSharedFormsByUserKey(user);
 		if(!forms.isEmpty()) {
 			formsDTO = new ArrayList<FormListerDTO>();			
 			for(Form f : forms) {
 				PermissionDTO permission = new PermissionDTO(
-						listFormsDAO.currentUserHasPermission(user, f, Operation.READ), 
-						listFormsDAO.currentUserHasPermission(user, f, Operation.UPDATE), 
-						listFormsDAO.currentUserHasPermission(user, f, Operation.SHARE), 
-						listFormsDAO.currentUserHasPermission(user, f, Operation.DELETE));
+						formListerDAO.currentUserHasPermission(user, f, Operation.READ), 
+						formListerDAO.currentUserHasPermission(user, f, Operation.UPDATE), 
+						formListerDAO.currentUserHasPermission(user, f, Operation.SHARE), 
+						formListerDAO.currentUserHasPermission(user, f, Operation.DELETE));
 				FormListerDTO formDTO = new FormListerDTO(
 						f.getKey(),
 						f.getTitle(), 
-						f.getUser().getEmail(), 
+						getUserEmailByKey(f.getUser().getKey()),  
 						newFormat.format(f.getCreationDate()), 
 						f.getPolicy().toString(),
 						permission);

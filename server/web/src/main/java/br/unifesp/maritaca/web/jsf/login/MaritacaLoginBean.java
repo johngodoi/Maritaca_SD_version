@@ -49,11 +49,7 @@ public class MaritacaLoginBean extends MaritacaJSFBean {
 			setStatus(Utils.getMessageFromResourceProperties("login_failed"));
 			return MaritacaConstants.FACES_LOGIN;
 		}
-	}	
-
-	/*public Collection<User> getUserList() {
-		return userCtrl.listAllUsersMinimal();
-	}*/
+	}
 
 	public String getStatus() {
 		return status;
