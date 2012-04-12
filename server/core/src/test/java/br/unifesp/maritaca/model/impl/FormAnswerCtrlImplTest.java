@@ -124,5 +124,11 @@ public class FormAnswerCtrlImplTest {
 	//
 	// @Test
 	// public void testlistAllAnswerMinimal(){}
+	
+	@Test
+	public void getSharedFormsByUser() {
+		
+		
+	}
 
 }

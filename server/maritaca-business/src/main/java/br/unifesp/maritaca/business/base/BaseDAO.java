@@ -5,15 +5,11 @@ import br.unifesp.maritaca.persistence.EntityManagerFactory;
 
 public class BaseDAO {
 
-	private EntityManager entityManager;
+	protected EntityManager entityManager;
 
 	public BaseDAO() {
 		setEntityManager(EntityManagerFactory.getInstance().createEntityManager(
 				EntityManagerFactory.HECTOR_MARITACA_EM));
-	}
-
-	public EntityManager getEntityManager() {
-		return entityManager;
 	}
 
 	public void setEntityManager(EntityManager entityManager) {

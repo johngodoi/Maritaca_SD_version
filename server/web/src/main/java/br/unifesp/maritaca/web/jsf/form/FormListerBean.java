@@ -7,50 +7,77 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 
-import br.unifesp.maritaca.business.form.list.ListFormsEJB;
+import br.unifesp.maritaca.business.form.list.FormListerEJB;
+import br.unifesp.maritaca.business.form.list.dto.FormListerDTO;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.web.base.MaritacaJSFBean;
 
 @ManagedBean
 @ViewScoped
-public class ListFormsBean extends MaritacaJSFBean {
+public class FormListerBean extends MaritacaJSFBean {
 	
-	@Inject private ListFormsEJB listFormsEJB;
+	@Inject private FormListerEJB listFormsEJB;
 		
-	private Collection<Form> forms;
-	private Collection<Form> sharedForms;
+	private Collection<FormListerDTO> ownForms;
+	private Collection<FormListerDTO> sharedForms;
+	
+	public String getAllForms() {
+		setOwnForms(listFormsEJB.getListOwnForms(getCurrentUser()));
+		setSharedForms(listFormsEJB.getListSharedForms(getCurrentUser()));
+		return "";
+	}
+	
+	public Collection<FormListerDTO> getOwnForms() {
+		return ownForms;
+	}
+
+	public void setOwnForms(Collection<FormListerDTO> ownForms) {
+		this.ownForms = ownForms;
+	}
+
+	public Collection<FormListerDTO> getSharedForms() {
+		return sharedForms;
+	}
+
+	public void setSharedForms(Collection<FormListerDTO> sharedForms) {
+		this.sharedForms = sharedForms;
+	}
+
+
+
+
+
+
+	//////////////////////////////////////////////////////////////////
 	private boolean updateList;
 
 	//@ManagedProperty("#{currentUserBean}")
 	//private CurrentUserBean currentUser;
 
-	public ListFormsBean() {
+	/*public ListFormsBean() {
 		//setUpdateList(false);		
-	}
+	}*/
 	
-	public void showForms() {
-		System.out.println("showForms");
-		showListOwnForms();
-		showListSharedForms();
-	}
+	
 	
 	private void showListSharedForms() {
-		setSharedForms(listFormsEJB.updateListOwnForms());
+		//setSharedForms(listFormsEJB.updateListOwnForms());
 	}
 
 	private void showListOwnForms() {
-		setForms(listFormsEJB.updateListOwnForms());		
+		//setForms(listFormsEJB.updateListOwnForms());		
 	}
 
 	///
 
+	/*
 	public Collection<Form> getForms() {
 		if (isUpdateList()) {
 			updateListOwnForms();
 			setUpdateList(false);
 		}
 		return forms;
-	}
+	}*/
 	
 	public boolean hasPermission(Form form, String operation) {
 		return true;//super.formAnswCtrl.currentUserHasPermission(form, Operation.fromString(operation));
@@ -66,10 +93,10 @@ public class ListFormsBean extends MaritacaJSFBean {
 	public void sortByDate() {
 		//forms = formAnswCtrl.listAllFormsSortedbyDate(currentUser.getUser());
 	}
-
+	/*
 	public void setForms(Collection<Form> forms) {
 		this.forms = forms;
-	}
+	}*/
 
 	public String viewForm() {
 		return "viewForm";
@@ -84,8 +111,8 @@ public class ListFormsBean extends MaritacaJSFBean {
 	}*/
 	
 	public String getUpdateFormsList(){
-		updateListOwnForms();
-		updateListSharedForms();	
+		//updateListOwnForms();
+		//updateListSharedForms();	
 		updateFormsOwners();
 		System.out.println("currentUserX: " + getCurrentUser());
 		return "";
@@ -108,25 +135,25 @@ public class ListFormsBean extends MaritacaJSFBean {
 	/**
 	 * @return all forms that the user has access but is not the owner
 	 */
-	public Collection<Form> getSharedForms() {
+	/*public Collection<Form> getSharedForms() {
 		return sharedForms;
 	}
 
 	public void setSharedForms(Collection<Form> sharedForms) {
 		this.sharedForms = sharedForms;
-	}
+	}*/
 
 	public void listOwnFormsChanged(ActionEvent evt) {
 		setUpdateList(true);
 	}
 
-	private void updateListOwnForms() {		
+	/*private void updateListOwnForms() {		
 		setForms(listFormsEJB.updateListOwnForms());
 	}
 
 	private void updateListSharedForms() {
 		setSharedForms(listFormsEJB.updateListOwnForms());
-	}
+	}*/
 
 	public boolean isUpdateList() {
 		return updateList;

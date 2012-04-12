@@ -25,7 +25,7 @@
 			<h:column rendered="#{!cc.attrs.formList.isEmpty()}">
 				<f:facet name="header">
 					<a4j:commandLink value="#{msgs.form_list_titleHeader}" 
-						action="#{listFormsBean.sortByName}" render="listforms">
+						action="#{formListerBean.sortByName}" render="listforms">
 					</a4j:commandLink>
 				</f:facet>
 				
@@ -36,8 +36,8 @@
 					<rich:menuItem render="menuAndContent"
 						icon="#{resource['img:view_form.png']}"
 						label="#{msgs.commons_view}"
-						action="#{manager.activeModAndSub('Forms', 'formEditor')}"
-						rendered="#{listFormsBean.hasPermission(aForm, 'READ')}">
+						action="#{manager.activeModAndSub('Forms', 'formEditor')}" 
+						rendered="#{aForm.permission.read}">
 						<f:setPropertyActionListener target="#{editFormBean.form}"
 							value="#{aForm}" />
 						<f:setPropertyActionListener target="#{editFormBean.newForm}"
@@ -48,8 +48,8 @@
 					<rich:menuItem render="menuAndContent"
 						icon="#{resource['img:edit_form.png']}"
 						label="#{msgs.commons_edit}"
-						action="#{manager.activeModAndSub('Forms', 'formEditor')}"
-						rendered="#{listFormsBean.hasPermission(aForm, 'UPDATE')}">
+						action="#{manager.activeModAndSub('Forms', 'formEditor')}" 
+						rendered="#{aForm.permission.update}">
 						<f:setPropertyActionListener target="#{editFormBean.form}"
 							value="#{aForm}" />
 						<f:setPropertyActionListener target="#{editFormBean.newForm}"
@@ -61,15 +61,15 @@
 					<rich:menuItem icon="#{resource['img:share.png']}"
 						render="shareForm:shareFormId" label="#{msgs.form_share}"
 						action="#{shareFormBean.setForm(aForm)}"
-						onclick="showShareForm('#{msgs.form_share_settings}');"
-						rendered="#{listFormsBean.hasPermission(aForm, 'SHARE')}">
+						onclick="showShareForm('#{msgs.form_share_settings}');" 
+						rendered="#{aForm.permission.share}">
 					</rich:menuItem>
 
 					<rich:menuItem icon="#{resource['img:remove.png']}"
 						render="panelContent" label="#{msgs.commons_delete}"
 						action="#{editFormBean.deleteForm}"
-						actionListener="#{listFormsBean.listOwnFormsChanged}"
-						rendered="#{listFormsBean.hasPermission(aForm, 'DELETE')}">
+						actionListener="#{formListerBean.listOwnFormsChanged}" 
+						rendered="#{aForm.permission.delete}">
 						<f:setPropertyActionListener target="#{editFormBean.form}"
 							value="#{aForm}" />
 					</rich:menuItem>
@@ -102,10 +102,10 @@
 			<h:column rendered="#{!cc.attrs.formList.isEmpty()}">
 				<f:facet name="header">
 					<a4j:commandLink value="#{msgs.form_list_ownerHeader}"
-						render="listforms, sorted" action="#{listFormsBean.sortByDate}">
+						render="listforms, sorted" action="#{formListerBean.sortByDate}">
 					</a4j:commandLink>
 				</f:facet>
-				<h:outputText value="#{aForm.user.email}" styleClass="listItemOption"/>
+				<h:outputText value="#{aForm.owner}" styleClass="listItemOption"/>
 			</h:column>
 
 			<h:column rendered="#{!cc.attrs.formList.isEmpty()}">
