@@ -27,6 +27,7 @@ public class UtilsCore {
 	 * @throws IllegalArgumentException
 	 *             is false
 	 */
+	@Deprecated
 	public static <T> void verifyEntity(T obj) {
 		boolean verify = false;
 		if (obj != null) {
