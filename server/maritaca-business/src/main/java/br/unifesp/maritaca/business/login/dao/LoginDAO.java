@@ -9,7 +9,7 @@ import br.unifesp.maritaca.exception.InvalidNumberOfEntries;
 public class LoginDAO extends BaseDAO {
 	
 	public User findUserByEmail(String email){
-		List<User> users = getEntityManager().cQuery(User.class, "email", email);
+		List<User> users = entityManager.cQuery(User.class, "email", email);
 		if (users == null || users.size() == 0) {
 			return null;
 		} else if ( users.size() == 1 ){
@@ -18,5 +18,4 @@ public class LoginDAO extends BaseDAO {
 			throw new InvalidNumberOfEntries(email, User.class);
 		}
 	}
-
 }

@@ -85,7 +85,6 @@ public class EntityManagerHectorImpl implements EntityManager, Serializable {
 		return persist(obj, true);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public <T> boolean persist(T obj, boolean createTable) {
 
@@ -145,7 +144,6 @@ public class EntityManagerHectorImpl implements EntityManager, Serializable {
 		return true;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private HColumn getHColumn(String columnname, Object obj) {
 		// TODO select serializer by object type
 		// Serializer serializer = getObjectSerializer(obj);
@@ -173,7 +171,6 @@ public class EntityManagerHectorImpl implements EntityManager, Serializable {
 
 	@Override
 	public <T> T find(Class<T> cl, UUID uuid, boolean justMinimal) {
-
 		if (cl == null || !isEntity(cl)) {
 			throw new IllegalArgumentException("object null or not an entity");
 		}

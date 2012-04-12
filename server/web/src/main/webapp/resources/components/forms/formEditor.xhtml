@@ -37,7 +37,7 @@
 				onclick="sendFormToServer();"
 				mode="client"
 				icon="#{resource['img:save.png']}" status="formEditor_status"
-				rendered="#{editFormBean.hasPermission('UPDATE')}"/>
+				rendered="#{formEditorBean.hasPermission('UPDATE')}"/>
 
 			<!-- Save as option -->
 			<rich:menuItem label="#{msgs.commons_saveas}" 
@@ -50,14 +50,14 @@
 				onclick="clearForm()"
 				mode="client" id="clearForm" 
 				icon="#{resource['img:clear.png']}"
-				rendered="#{editFormBean.hasPermission('UPDATE')}"/>
+				rendered="#{formEditorBean.hasPermission('UPDATE')}"/>
 
 			<!-- Delete option -->
 			<rich:menuItem label="#{msgs.commons_delete}" 
 				onclick="deleteFormDialog()"			
 				mode="ajax"
 				icon="#{resource['img:remove.png']}"
-				rendered="#{editFormBean.hasPermission('DELETE')}"/>
+				rendered="#{formEditorBean.hasPermission('DELETE')}"/>
 
 			<!-- rich:toolbarGroup>
 				<rich:dropDownMenu mode="ajax" styleClass="listItemOption">
@@ -79,33 +79,33 @@
 		</rich:toolbar>
 		
 		<!-- New Form -->
-		<a4j:jsFunction name="newForm" action="#{editFormBean.clean}" 
+		<a4j:jsFunction name="newForm" action="#{formEditorBean.clean}" 
 				render="panelContent"/>
 		
 		<!-- Save Method -->
-		<a4j:jsFunction name="sendFormAjax" action="#{editFormBean.saveForm}"
+		<a4j:jsFunction name="sendFormAjax" action="#{formEditorBean.saveForm}"
 			execute="@form" status="formEditor_status"
 			render="menuAndContent">
-			<a4j:param name="xml" assignTo="#{editFormBean.xml}" />
+			<a4j:param name="xml" assignTo="#{formEditorBean.xml}" />
 			<f:setPropertyActionListener target="#{listFormsBean.updateList}"
 				value="true" />
 		</a4j:jsFunction>
 
 		<!-- SaveAs Method -->
-		<a4j:jsFunction name="saveFormAsAjax" action="#{editFormBean.saveFormAs}"
+		<a4j:jsFunction name="saveFormAsAjax" action="#{formEditorBean.saveFormAs}"
 			execute="@form" status="formEditor_status">
-			<a4j:param name="xml" assignTo="#{editFormBean.xml}" />
-			<a4j:param name="newTitle" assignTo="#{editFormBean.saveFormAsTitle}" />
+			<a4j:param name="xml" assignTo="#{formEditorBean.xml}" />
+			<a4j:param name="newTitle" assignTo="#{formEditorBean.saveFormAsTitle}" />
 			<f:setPropertyActionListener target="#{listFormsBean.updateList}"
 				value="true" />
 		</a4j:jsFunction>
 
 		<!-- Delete Method -->
-		<a4j:jsFunction name="deleteFormAjax" action="#{editFormBean.deleteForm}"
+		<a4j:jsFunction name="deleteFormAjax" action="#{formEditorBean.deleteForm}"
 			status="formEditor_status"
 			render="menuAndContent"
 			actionListener="#{listFormsBean.listOwnFormsChanged}">
-			<f:setPropertyActionListener target="#{editFormBean.form}"
+			<f:setPropertyActionListener target="#{formEditorBean.formDTO}"
 				value="#{aForm}" />
 			<f:setPropertyActionListener
 				target="#{manager.activeSubModuleInActiveMod}"
@@ -114,11 +114,11 @@
 		
 		<!-- Collect Method -->
 		<a4j:jsFunction name="setFormAsCollectableAjax" 
-			action="#{editFormBean.setFormAsCollectable()}"
+			action="#{formEditorBean.setFormAsCollectable()}"
 			status="formEditor_status"
 			render="menuAndContent"
 			actionListener="#{listFormsBean.listOwnFormsChanged}">
-			<f:setPropertyActionListener target="#{editFormBean.form}"
+			<f:setPropertyActionListener target="#{formEditorBean.formDTO}"
 				value="#{aForm}" />
 			<f:setPropertyActionListener
 				target="#{manager.activeSubModuleInActiveMod}"
