@@ -18,7 +18,6 @@ import br.unifesp.maritaca.core.OAuthClient;
 import br.unifesp.maritaca.core.OAuthCode;
 import br.unifesp.maritaca.core.OAuthToken;
 import br.unifesp.maritaca.core.User;
-import br.unifesp.maritaca.exception.InvalidNumberOfEntries;
 import br.unifesp.maritaca.model.ManagerModel;
 import br.unifesp.maritaca.model.UseEntityManager;
 import br.unifesp.maritaca.model.UserModel;
@@ -39,7 +38,59 @@ public class UserModelImpl implements UserModel, Serializable, UseEntityManager 
 	public EntityManager getEntityManager() {
 		return entityManager;
 	}
-	
+
+	@Override
+	public boolean saveUser(User user) {
+		if (user == null){
+			return false;
+		}
+		
+		if(!updateUserGroup(user)){
+			return false;
+		}
+		
+		if (!entityManager.persist(user)) {
+			return false;
+		}		
+		if(user.getMaritacaList()==null && !createUserGroup(user)){
+			return false;
+		}		
+		return true;
+	}
+
+	/*
+	 * Update the user group name if the user changed its email
+	 */
+	private boolean updateUserGroup(User user) {
+		if(user.getKey()==null){
+			return true;
+		}		
+		User dbUser = getUser(user.getKey());
+		if(dbUser.getEmail().equals(user.getEmail())){
+			return true;
+		} else {
+			MaritacaList userGroup = searchMaritacaListByName(dbUser.getEmail());
+			userGroup.setName(user.getEmail());
+			
+			return entityManager.persist(userGroup);
+		}		
+	}
+
+
+	private boolean createUserGroup(User owner) {		
+		MaritacaList list = new MaritacaList();
+		list.setOwner(owner);
+		list.setName(owner.getEmail());
+		
+		if(!saveMaritacaList(list)){
+			return false;
+		}				
+		
+		owner.setMaritacaList(list);
+		
+		return saveUser(owner);
+	}
+
 	@Override
 	public User getUser(UUID uuid) {
 		return entityManager.find(User.class, uuid);
@@ -67,13 +118,48 @@ public class UserModelImpl implements UserModel, Serializable, UseEntityManager 
 		} else if ( users.size() == 1 ){
 			return users.get(0);
 		} else {
-			throw new InvalidNumberOfEntries(email, User.class);
+//			throw new InvalidNumberOfEntries(email, User.class);
+			return null;
 		}
 	}
 
 	@Override
 	public MaritacaList getMaritacaList(UUID uuid) {
 		return entityManager.find(MaritacaList.class, uuid);
+	}
+
+	@Override
+	public boolean saveMaritacaList(MaritacaList list) {
+		if (list == null) {
+			throw new IllegalArgumentException("Invalid group");
+		}
+		verifyEntity(list.getOwner());
+		if (list.getName()==null || list.getName().length() == 0) {
+			throw new IllegalArgumentException("Incomplete parameters");
+		}
+
+		if (list.getKey() == null) {
+			// new group
+			if (searchMaritacaListByName(list.getName()) != null) {
+				return false;
+			}
+			if (entityManager.persist(list)) {
+				// add owner to group
+				MaritacaListUser listUser = new MaritacaListUser();
+				listUser.setMaritacaList(list);
+				listUser.setUser(list.getOwner());
+				if (saveMaritacaListUser(listUser))
+					return true;
+				else {
+					// not able to add user to group
+					entityManager.delete(list);
+					return false;
+				}
+			} else
+				return false; // group not saved
+		} else {
+			return entityManager.persist(list);
+		}
 	}
 
 	/**
@@ -200,7 +286,8 @@ public class UserModelImpl implements UserModel, Serializable, UseEntityManager 
 		} else if (foundGroups.size() == 1) {
 			return foundGroups.get(0);
 		} else {
-			throw new InvalidNumberOfEntries(groupName, MaritacaList.class);
+//			throw new InvalidNumberOfEntries(groupName, MaritacaList.class);
+			return null;
 		}
 	}
 
@@ -262,6 +349,14 @@ public class UserModelImpl implements UserModel, Serializable, UseEntityManager 
 			throw new RuntimeException("Invalid number of users for the email:"
 					+ email);
 		}
+	}
+
+	@Override
+	public boolean saveMaritacaListUser(MaritacaListUser groupUser) {
+		if (entityManager == null || groupUser == null)
+			return false;
+
+		return entityManager.persist(groupUser);
 	}
 
 	@Override

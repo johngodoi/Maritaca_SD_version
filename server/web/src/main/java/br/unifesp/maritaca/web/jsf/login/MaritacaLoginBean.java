@@ -19,7 +19,7 @@ public class MaritacaLoginBean extends MaritacaJSFBean {
 	
 	private static final long serialVersionUID = 1L;
 	
-	@Inject private LoginEJB loginEJB;
+	@Inject private LoginEJB loginEJB2;
 	
 	private LoginDTO loginDTO;
 	private String status;

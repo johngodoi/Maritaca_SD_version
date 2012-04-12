@@ -6,7 +6,7 @@ import javax.inject.Inject;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import br.unifesp.maritaca.business.account.edit.EditAccountEJB;
+import br.unifesp.maritaca.business.account.edit.AccountEditorEJB;
 import br.unifesp.maritaca.persistence.dto.UserDTO;
 import br.unifesp.maritaca.web.base.MaritacaJSFBean;
 import br.unifesp.maritaca.web.jsf.util.MaritacaConstants;
@@ -21,9 +21,9 @@ import br.unifesp.maritaca.web.jsf.util.MaritacaConstants;
 public class AccountEditorBean extends MaritacaJSFBean{
 	
 	private static final long serialVersionUID = 1L;
+			
 	
-	@Inject
-	private EditAccountEJB editAccountEJB;
+	private AccountEditorEJB accountEditorEJB;
 	
 	@Pattern(regexp = MaritacaConstants.EMAIL_REG_EXP)
 	private String email;
@@ -64,7 +64,7 @@ public class AccountEditorBean extends MaritacaJSFBean{
 	
 	private String updateAccount(){
 		UserDTO userToUpdate = createUserFromInformation();		
-		editAccountEJB.saveAccount(userToUpdate);
+		getAccountEditorEJB().saveAccount(userToUpdate);
 		
 		return MaritacaConstants.FACES_HOME;
 	}
@@ -94,18 +94,10 @@ public class AccountEditorBean extends MaritacaJSFBean{
 	 */
 	public String saveNewAccount(){
 		UserDTO userToSave = createUserFromInformation();				
-		editAccountEJB.saveAccount(userToSave);		
+		getAccountEditorEJB().saveAccount(userToSave);		
 		return MaritacaConstants.FACES_HOME;
 	}
-	
-	private boolean validateAccount(){
-		if(editAccountEJB.registeredEmail(getEmail())){
-			super.addMessageError(MaritacaConstants.ACCOUNT_CREATE_USED_EMAIL);
-			return false;
-		} else {
-			return true;
-		}		
-	}
+
 	
 	/**
 	 * Returns the view that is presented to the user when the user creation
@@ -122,6 +114,10 @@ public class AccountEditorBean extends MaritacaJSFBean{
 		getModuleManager().setActiveModuleByString("Settings");
 		getModuleManager().setActiveSubModuleInActiveMod("accountEditor");
 		return null;
+	}
+	
+	public boolean registeredEmail(){
+		return getAccountEditorEJB().registeredEmail(getEmail());
 	}
 	
 	/**
@@ -176,11 +172,11 @@ public class AccountEditorBean extends MaritacaJSFBean{
 		this.creatingAccount = creatingAccount;
 	}
 
-	public EditAccountEJB getEditAccountEJB() {
-		return editAccountEJB;
+	public AccountEditorEJB getAccountEditorEJB() {
+		return accountEditorEJB;
 	}
 
-	public void setEditAccountEJB(EditAccountEJB editAccountEJB) {
-		this.editAccountEJB = editAccountEJB;
+	public void setAccountEditorEJB(AccountEditorEJB accountEditorEJB) {
+		this.accountEditorEJB = accountEditorEJB;
 	}
 }

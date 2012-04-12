@@ -2,6 +2,7 @@ package br.unifesp.maritaca.business.login;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -13,6 +14,7 @@ import br.unifesp.maritaca.model.ModelFactory;
 import br.unifesp.maritaca.persistence.dto.UserDTO;
 
 @Stateless
+@Named("loginEJB2")
 public class LoginEJB {
 	
 	private static final Log log = LogFactory.getLog(LoginEJB.class);

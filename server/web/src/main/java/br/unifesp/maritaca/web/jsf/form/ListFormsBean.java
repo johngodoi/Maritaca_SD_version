@@ -89,7 +89,7 @@ public class ListFormsBean extends MaritacaJSFBean {
 		updateListOwnForms();
 		updateListSharedForms();	
 		updateFormsOwners();
-		System.out.println("currentUserX: " + getCurrentUser());
+		System.out.println("currentUserY: " + getCurrentUser());
 		return "";
 	}
 	

@@ -20,8 +20,8 @@ import me.prettyprint.hector.api.exceptions.HectorException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import br.unifesp.maritaca.business.exception.InvalidNumberOfEntries;
 import br.unifesp.maritaca.exception.AuthorizationDenied;
-import br.unifesp.maritaca.exception.InvalidNumberOfEntries;
 
 /**
  * Class to handle all exception and create human-readable messages
@@ -80,7 +80,7 @@ public class GlobalExceptionHandler extends ExceptionHandlerWrapper {
 				InvalidNumberOfEntries invNumEnt = (InvalidNumberOfEntries) thr;
 				addMessage("error_invalid_number_of_entities", FacesMessage.SEVERITY_ERROR);
 				log.error("Entity: "+ invNumEnt.getEntity().getName()+
-						  " have multiple entries for value: "+invNumEnt.getEntry()
+						  " have multiple entries for value: "+invNumEnt.getValue()
 						  ,thr);
 			} else if(thr instanceof ELException){
 				continue;//this error are handle for JSF

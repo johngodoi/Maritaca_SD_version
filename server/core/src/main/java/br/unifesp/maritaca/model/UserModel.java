@@ -20,7 +20,8 @@ import br.unifesp.maritaca.persistence.EntityManager;
  */
 @Deprecated
 public interface UserModel extends GenericModel{
-	
+	boolean saveUser(User user);
+
 	User getUser(UUID uuid);
 	
 	/**
@@ -41,6 +42,7 @@ public interface UserModel extends GenericModel{
 	
 	MaritacaList getMaritacaList(UUID uuid);
 	
+	boolean saveMaritacaList(MaritacaList maritacaList);
 	
 	/**
 	 * Search for the list with the given name. Returns null
@@ -88,6 +90,7 @@ public interface UserModel extends GenericModel{
 	 */
 	Collection<User> searchUsersByMaritacaList(MaritacaList maritacaList);
 	
+	boolean saveMaritacaListUser(MaritacaListUser maritacaListUser);
 	
 	/**
 	 * Returns a list<MaritacaList> with the list that match the string*
