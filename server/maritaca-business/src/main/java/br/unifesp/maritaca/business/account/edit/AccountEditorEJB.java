@@ -7,10 +7,10 @@ import br.unifesp.maritaca.business.account.edit.dao.AccountEditorDAO;
 import br.unifesp.maritaca.business.annotations.VerifyObject;
 import br.unifesp.maritaca.persistence.dto.UserDTO;
 
-
+@Stateless
 public class AccountEditorEJB{
 
-
+	@Inject
 	private AccountEditorDAO accountEditorDAO;
 	
 	/**

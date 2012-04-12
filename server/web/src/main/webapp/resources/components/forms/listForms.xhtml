@@ -13,18 +13,18 @@
 		<composite:attribute name="submodule" required="true" />
 	</composite:interface>
 	<composite:implementation>
-		<h:inputHidden value="#{listFormsBean.updateFormsList}" />
+		<h:inputHidden value="#{formListerBean.allForms}" />
 	
 		<h:panelGrid columns="1" width="100%">
 			<forms:listFormsTable	submodule="#{cc.attrs.submodule}"
-								formList="#{listFormsBean.forms}"
+								formList="#{formListerBean.ownForms}"
 								title="#{msgs.form_list_my_forms}"
 								idem="listMyForms"/>
 		</h:panelGrid>							
 		
 		<h:panelGrid columns="1" width="100%">	
 			<forms:listFormsTable 	submodule="#{cc.attrs.submodule}"
-								formList="#{listFormsBean.sharedForms}"
+								formList="#{formListerBean.sharedForms}"
 								title="#{msgs.form_list_shared_forms}"
 								idem="listShadesForms"/>
 		</h:panelGrid>

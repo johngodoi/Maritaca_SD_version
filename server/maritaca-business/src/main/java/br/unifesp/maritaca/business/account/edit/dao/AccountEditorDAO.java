@@ -2,6 +2,8 @@ package br.unifesp.maritaca.business.account.edit.dao;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import br.unifesp.maritaca.business.base.dao.BaseDAO;
 import br.unifesp.maritaca.business.exception.InvalidNumberOfEntries;
 import br.unifesp.maritaca.business.list.edit.dao.ListEditorDAO;
@@ -11,7 +13,8 @@ import br.unifesp.maritaca.persistence.dto.UserDTO;
 
 public class AccountEditorDAO extends BaseDAO {
 
-	private ListEditorDAO listEditorDAO = new ListEditorDAO();
+	@Inject
+	private ListEditorDAO listEditorDAO;
 	
 	/**
 	 * Saves the user passed as parameter in the database.

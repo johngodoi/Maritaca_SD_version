@@ -22,7 +22,7 @@ public class AccountEditorBean extends MaritacaJSFBean{
 	
 	private static final long serialVersionUID = 1L;
 			
-	
+	@Inject
 	private AccountEditorEJB accountEditorEJB;
 	
 	@Pattern(regexp = MaritacaConstants.EMAIL_REG_EXP)

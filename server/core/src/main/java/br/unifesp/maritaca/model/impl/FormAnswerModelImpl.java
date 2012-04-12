@@ -338,10 +338,10 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 		if (user == null || op == null)
 			return false;
 		
-		User root = userModel.getManagerModel().getRootUser();
-		if(user.equals(root)){
-			return true;
-		}
+//		User root = userModel.getManagerModel().getRootUser();
+//		if(user.equals(root)){
+//			return true;
+//		}
 		// check type
 		if (entity instanceof Form) {
 			return userHasPermissionInForm(user, (Form) entity, op);
