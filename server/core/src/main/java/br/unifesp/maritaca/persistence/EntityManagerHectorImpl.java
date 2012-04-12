@@ -173,7 +173,6 @@ public class EntityManagerHectorImpl implements EntityManager, Serializable {
 
 	@Override
 	public <T> T find(Class<T> cl, UUID uuid, boolean justMinimal) {
-
 		if (cl == null || !isEntity(cl)) {
 			throw new IllegalArgumentException("object null or not an entity");
 		}
