@@ -37,24 +37,24 @@
 						icon="#{resource['img:view_form.png']}"
 						label="#{msgs.commons_view}"
 						action="#{manager.activeModAndSub('Forms', 'formEditor')}" 
-						rendered="#{aForm.permission.read}">
-						<f:setPropertyActionListener target="#{editFormBean.form}"
+						rendered="#{aForm.permissionDTO.read}">
+						<f:setPropertyActionListener target="#{formEditorBean.form}"
 							value="#{aForm}" />
-						<f:setPropertyActionListener target="#{editFormBean.newForm}"
+						<f:setPropertyActionListener target="#{formEditorBean.newForm}"
 							value="false" />
-						<f:setPropertyActionListener target="#{editFormBean.editableForm}"
+						<f:setPropertyActionListener target="#{formEditorBean.editableForm}"
 							value="false" />
 					</rich:menuItem>
 					<rich:menuItem render="menuAndContent"
 						icon="#{resource['img:edit_form.png']}"
 						label="#{msgs.commons_edit}"
 						action="#{manager.activeModAndSub('Forms', 'formEditor')}" 
-						rendered="#{aForm.permission.update}">
-						<f:setPropertyActionListener target="#{editFormBean.form}"
+						rendered="#{aForm.permissionDTO.update}">
+						<f:setPropertyActionListener target="#{formEditorBean.form}"
 							value="#{aForm}" />
-						<f:setPropertyActionListener target="#{editFormBean.newForm}"
+						<f:setPropertyActionListener target="#{formEditorBean.newForm}"
 							value="false" />
-						<f:setPropertyActionListener target="#{editFormBean.editableForm}"
+						<f:setPropertyActionListener target="#{formEditorBean.editableForm}"
 							value="true" />
 					</rich:menuItem>
 
@@ -62,15 +62,15 @@
 						render="shareForm:shareFormId" label="#{msgs.form_share}"
 						action="#{shareFormBean.setForm(aForm)}"
 						onclick="showShareForm('#{msgs.form_share_settings}');" 
-						rendered="#{aForm.permission.share}">
+						rendered="#{aForm.permissionDTO.share}">
 					</rich:menuItem>
 
 					<rich:menuItem icon="#{resource['img:remove.png']}"
 						render="panelContent" label="#{msgs.commons_delete}"
-						action="#{editFormBean.deleteForm}"
+						action="#{formEditorBean.deleteForm}"
 						actionListener="#{formListerBean.listOwnFormsChanged}" 
-						rendered="#{aForm.permission.delete}">
-						<f:setPropertyActionListener target="#{editFormBean.form}"
+						rendered="#{aForm.permissionDTO.delete}">
+						<f:setPropertyActionListener target="#{formEditorBean.form}"
 							value="#{aForm}" />
 					</rich:menuItem>
 					
@@ -89,11 +89,11 @@
 				<a4j:commandLink value="#{aForm.title}"
 					action="#{manager.activeModAndSub('Forms', 'formEditor')}"
 					render="menuAndContent" execute="@form">
-					<f:setPropertyActionListener target="#{editFormBean.form}"
+					<f:setPropertyActionListener target="#{formEditorBean.formFromLister}"
 						value="#{aForm}" />
-					<f:setPropertyActionListener target="#{editFormBean.newForm}"
+					<f:setPropertyActionListener target="#{formEditorBean.newForm}"
 						value="false" />
-					<f:setPropertyActionListener target="#{editFormBean.editableForm}"
+					<f:setPropertyActionListener target="#{formEditorBean.editableForm}"
 						value="false" />
 				</a4j:commandLink>
 			</h:column>
