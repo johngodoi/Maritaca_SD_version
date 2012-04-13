@@ -24,6 +24,7 @@ import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.web.Manager;
 import br.unifesp.maritaca.web.base.MaritacaJSFBean;
 import br.unifesp.maritaca.web.jsf.account.CurrentUserBean;
+import br.unifesp.maritaca.web.jsf.util.MaritacaConstants;
 import br.unifesp.maritaca.web.utils.Utils;
 
 /**
@@ -72,7 +73,7 @@ public class MaritacaListEditorBean extends MaritacaJSFBean {
 	private List<User> addedUsers;
 
 	//The email field can be empty
-	@Pattern(regexp = "("+Utils.EMAIL_REG_EXP+")|^$", message="{email.invalid}")
+	@Pattern(regexp="("+MaritacaConstants.EMAIL_REG_EXP+")|^$")
 	private String selectedEmail;
 	private String addEmailError;
 	

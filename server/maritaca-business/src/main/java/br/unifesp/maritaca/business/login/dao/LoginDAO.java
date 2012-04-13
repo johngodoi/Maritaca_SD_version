@@ -2,9 +2,9 @@ package br.unifesp.maritaca.business.login.dao;
 
 import java.util.List;
 
-import br.unifesp.maritaca.business.base.BaseDAO;
+import br.unifesp.maritaca.business.base.dao.BaseDAO;
+import br.unifesp.maritaca.business.exception.InvalidNumberOfEntries;
 import br.unifesp.maritaca.core.User;
-import br.unifesp.maritaca.exception.InvalidNumberOfEntries;
 
 public class LoginDAO extends BaseDAO {
 	

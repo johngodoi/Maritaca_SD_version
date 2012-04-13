@@ -3,6 +3,7 @@ package br.unifesp.maritaca.web.utils;
 import java.io.StringWriter;
 import java.util.ResourceBundle;
 
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBContext;
@@ -11,7 +12,6 @@ import javax.xml.bind.Marshaller;
 
 public class Utils {
 	public static final String SPACEWILDCARD="_";	
-	public static final String EMAIL_REG_EXP="^[\\w\\-]([\\.\\w])+[\\w]+@([\\w\\-]+\\.)+[a-zA-Z]{2,4}$";
 	
 	public static String getCompactedVersion(String str){
 		if(str == null) return null;
@@ -72,4 +72,11 @@ public class Utils {
         String contextPath = request.getContextPath();
 		return buildServerAddressUrl() + contextPath + string + "?";
 	}
+	
+	public static HttpServletRequest clientRequest() {
+        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+        HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
+        return request;
+    }
+
 }

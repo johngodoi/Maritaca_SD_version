@@ -16,8 +16,8 @@ import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.business.base.MaritacaConstants;
 import br.unifesp.maritaca.business.base.PermissionDTO;
 import br.unifesp.maritaca.business.base.UserDAO;
+import br.unifesp.maritaca.business.form.dto.FormDTO;
 import br.unifesp.maritaca.business.form.list.dao.FormListerDAO;
-import br.unifesp.maritaca.business.form.list.dto.FormListerDTO;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.dto.UserDTO;
@@ -27,15 +27,15 @@ public class FormListerEJB {
 	
 	private static final Log log = LogFactory.getLog(FormListerEJB.class);
 	
-	@Inject FormListerDAO formListerDAO;
-	@Inject UserDAO userDAO;
+	@Inject private FormListerDAO formListerDAO;
+	@Inject private UserDAO userDAO;
 
-	public Collection<FormListerDTO> getListOwnForms(UserDTO userDTO) {
-		List<FormListerDTO> formsDTO = null;
+	public Collection<FormDTO> getListOwnForms(UserDTO userDTO) {
+		List<FormDTO> formsDTO = null;
 		SimpleDateFormat newFormat = new SimpleDateFormat(MaritacaConstants.SHORT_DATE_FORMAT_ISO8601);
 		List<Form> forms = formListerDAO.getListOwnFormsByUserKey(userDTO.getKey().toString());
 		if(!forms.isEmpty()) {
-			formsDTO = new ArrayList<FormListerDTO>();
+			formsDTO = new ArrayList<FormDTO>();
 			//
 			User user = userDAO.findUserByEmail(userDTO.getEmail());
 			for(Form f : forms) {
@@ -44,10 +44,11 @@ public class FormListerEJB {
 						formListerDAO.currentUserHasPermission(user, f, Operation.UPDATE), 
 						formListerDAO.currentUserHasPermission(user, f, Operation.SHARE), 
 						formListerDAO.currentUserHasPermission(user, f, Operation.DELETE));
-				FormListerDTO formDTO = new FormListerDTO(
+				FormDTO formDTO = new FormDTO(
 						f.getKey(),
 						f.getTitle(), 
 						userDTO.getEmail(), 
+						f.getXml(),
 						newFormat.format(f.getCreationDate()), 
 						f.getPolicy().toString(),
 						permission);
@@ -71,23 +72,24 @@ public class FormListerEJB {
 		}
 	}
 	
-	public Collection<FormListerDTO> getListSharedForms(UserDTO userDTO) {
-		List<FormListerDTO> formsDTO = null;
+	public Collection<FormDTO> getListSharedForms(UserDTO userDTO) {
+		List<FormDTO> formsDTO = null;
 		SimpleDateFormat newFormat = new SimpleDateFormat(MaritacaConstants.SHORT_DATE_FORMAT_ISO8601);
 		User user = userDAO.findUserByEmail(userDTO.getEmail());
 		List<Form> forms = formListerDAO.getListSharedFormsByUserKey(user);
 		if(!forms.isEmpty()) {
-			formsDTO = new ArrayList<FormListerDTO>();			
+			formsDTO = new ArrayList<FormDTO>();			
 			for(Form f : forms) {
 				PermissionDTO permission = new PermissionDTO(
 						formListerDAO.currentUserHasPermission(user, f, Operation.READ), 
 						formListerDAO.currentUserHasPermission(user, f, Operation.UPDATE), 
 						formListerDAO.currentUserHasPermission(user, f, Operation.SHARE), 
 						formListerDAO.currentUserHasPermission(user, f, Operation.DELETE));
-				FormListerDTO formDTO = new FormListerDTO(
+				FormDTO formDTO = new FormDTO(
 						f.getKey(),
 						f.getTitle(), 
 						getUserEmailByKey(f.getUser().getKey()),  
+						f.getXml(),
 						newFormat.format(f.getCreationDate()), 
 						f.getPolicy().toString(),
 						permission);

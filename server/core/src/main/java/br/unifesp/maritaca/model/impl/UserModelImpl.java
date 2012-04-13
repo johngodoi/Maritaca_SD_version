@@ -18,14 +18,12 @@ import br.unifesp.maritaca.core.OAuthClient;
 import br.unifesp.maritaca.core.OAuthCode;
 import br.unifesp.maritaca.core.OAuthToken;
 import br.unifesp.maritaca.core.User;
-import br.unifesp.maritaca.exception.InvalidNumberOfEntries;
 import br.unifesp.maritaca.model.ManagerModel;
 import br.unifesp.maritaca.model.UseEntityManager;
 import br.unifesp.maritaca.model.UserModel;
 import br.unifesp.maritaca.persistence.EntityManager;
 import br.unifesp.maritaca.util.UserLocator;
 
-//TODO Ticket: 113 - Use exceptions instead of returning false
 public class UserModelImpl implements UserModel, Serializable, UseEntityManager {
 	private static final Log log = LogFactory.getLog(UserModelImpl.class);
 	private static final long serialVersionUID = 1L;
@@ -120,7 +118,8 @@ public class UserModelImpl implements UserModel, Serializable, UseEntityManager 
 		} else if ( users.size() == 1 ){
 			return users.get(0);
 		} else {
-			throw new InvalidNumberOfEntries(email, User.class);
+//			throw new InvalidNumberOfEntries(email, User.class);
+			return null;
 		}
 	}
 
@@ -287,7 +286,8 @@ public class UserModelImpl implements UserModel, Serializable, UseEntityManager 
 		} else if (foundGroups.size() == 1) {
 			return foundGroups.get(0);
 		} else {
-			throw new InvalidNumberOfEntries(groupName, MaritacaList.class);
+//			throw new InvalidNumberOfEntries(groupName, MaritacaList.class);
+			return null;
 		}
 	}
 

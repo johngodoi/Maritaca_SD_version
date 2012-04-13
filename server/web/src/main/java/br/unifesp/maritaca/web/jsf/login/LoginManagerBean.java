@@ -7,7 +7,9 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
+import br.unifesp.maritaca.persistence.dto.UserDTO;
 import br.unifesp.maritaca.web.jsf.account.CurrentUserBean;
+import br.unifesp.maritaca.web.jsf.util.MaritacaConstants;
 import br.unifesp.maritaca.web.utils.Utils;
 
 @ManagedBean
@@ -22,8 +24,9 @@ public class LoginManagerBean {
 	/**
 	 * Redirects the user to the successful login page, which can be: <li>The
 	 * home page</li> <li>localhost page (for mobile client)</li>
+	 * @param userDTO 
 	 */
-	public void login() {
+	public void login(UserDTO userDTO) {
 		try {
 			String successfulLoginUrl;
 			
@@ -33,7 +36,10 @@ public class LoginManagerBean {
 			} else {
 				successfulLoginUrl = Utils.buildViewUrl("/views/home.xhtml");
 			}
-			
+			//TODO: Next step: delete CurrentUserBean
+			Utils.clientRequest().getSession().setAttribute(MaritacaConstants.CURRENT_USER, userDTO);
+			currentUser.setUser(userDTO);			
+						
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.getExternalContext().redirect(successfulLoginUrl);
 		} catch (IOException e) {

@@ -3,8 +3,9 @@ package br.unifesp.maritaca.business.base;
 import java.util.List;
 import java.util.UUID;
 
+import br.unifesp.maritaca.business.base.dao.BaseDAO;
+import br.unifesp.maritaca.business.exception.InvalidNumberOfEntries;
 import br.unifesp.maritaca.core.User;
-import br.unifesp.maritaca.exception.InvalidNumberOfEntries;
 
 public class UserDAO extends BaseDAO {
 	
@@ -19,7 +20,7 @@ public class UserDAO extends BaseDAO {
 		}
 	}
 	
-	public User findUserByKey(UUID uuid) {
-		return entityManager.find(User.class, uuid);		
+	public User findUserByKey(UUID userKey) {
+		return entityManager.find(User.class, userKey);
 	}
 }

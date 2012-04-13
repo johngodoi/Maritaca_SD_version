@@ -23,13 +23,11 @@ import br.unifesp.maritaca.web.submodule.SubModuleImpl;
 
 @ManagedBean
 @SessionScoped
-public class Manager extends AbstractBean implements Serializable {
-	private static final long serialVersionUID = 1L;
+public class Manager {
 	private List<Module> enabledModules;
 	private Module activeModule;
 
 	public Manager() {
-		super(true, false);
 		setEnabledModules(new ArrayList<Module>());
 
 		Module mod = new ModuleImpl();
@@ -197,10 +195,6 @@ public class Manager extends AbstractBean implements Serializable {
 		}
 	}
 
-	public <T> boolean isOperationEnabled(T entity, Operation op) {
-		return formAnswCtrl.currentUserHasPermission(entity, op);
-	}
-
 	public String getTime() {
 		return Calendar.getInstance().getTimeInMillis() + "";
 	}
@@ -226,11 +220,4 @@ public class Manager extends AbstractBean implements Serializable {
 
 	}
 
-	public Operation getReadOperation() {
-		return Operation.READ;
-	}
-
-	public Operation getDeleteOperation() {
-		return Operation.DELETE;
-	}
 }

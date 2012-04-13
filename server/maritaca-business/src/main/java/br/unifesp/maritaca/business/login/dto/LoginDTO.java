@@ -25,7 +25,7 @@ public class LoginDTO extends BaseDTO {
 		super();
 		this.email = email;
 		this.password = password;
-		this.message = message;
+		this.setMessage(message);
 	}
 
 	public String getEmail() {
@@ -42,5 +42,13 @@ public class LoginDTO extends BaseDTO {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public MessageDTO getMessage() {
+		return message;
+	}
+
+	public void setMessage(MessageDTO message) {
+		this.message = message;
 	}
 }

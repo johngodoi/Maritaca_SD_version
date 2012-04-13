@@ -18,7 +18,7 @@
 			<h:panelGrid columns="2" columnClasses="editorC1, editorC2">
 				<!-- Row 1 -->
 				<h:outputText value="#{msgs.account_first_name}:" />
-				<h:inputText  value="#{accountEditorBean.firstName}"
+				<h:inputText  value="#{accountEditorBean.userDto.firstname}"
 					label="#{msgs.account_first_name}" id="firstName" required="true">
 					<rich:validator/>
 				</h:inputText>
@@ -28,7 +28,7 @@
 
 				<!-- Row 2 -->
 				<h:outputText value="#{msgs.account_last_name}:" />
-				<h:inputText value="#{accountEditorBean.lastName}"
+				<h:inputText value="#{accountEditorBean.userDto.lastname}"
 					label="#{msgs.account_last_name}" id="lastName">
 					<rich:validator/>
 				</h:inputText>
@@ -38,7 +38,7 @@
 
 				<!-- Row 3 -->
 				<h:outputText value="#{msgs.account_email}:" />
-				<h:inputText value="#{accountEditorBean.email}" id="email"
+				<h:inputText value="#{accountEditorBean.userDto.email}" id="email"
 					label="#{msgs.account_email}" required="true">
 					<rich:validator/>
 					<f:ajax event="blur" execute="@this" render="emailError"  />
@@ -86,9 +86,9 @@
 			</h:panelGrid>
 
 			<!-- Hidden fields: Contains the passwords sent to server(using SHA1) -->							
-			<h:inputHidden value="#{accountEditorBean.encryptedPassword}" 
+			<h:inputHidden value="#{accountEditorBean.userDto.encryptedPassword}" 
 						   id="passwordEncrypted"/>
 						   
-			<f:event type="preRenderView" listener="#{accountEditorBean.updateUserInformation()}"/>						   
+ 			<f:event type="preRenderView" listener="#{accountEditorBean.updateUserInformation()}"/>
 	</composite:implementation>	
 </ui:composition>

@@ -3,7 +3,6 @@ package br.unifesp.maritaca.web.jsf.answer;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import br.unifesp.maritaca.core.Answer;

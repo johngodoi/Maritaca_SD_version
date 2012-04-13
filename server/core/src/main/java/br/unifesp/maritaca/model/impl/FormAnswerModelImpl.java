@@ -11,9 +11,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import br.unifesp.maritaca.access.AccessLevel;
 import br.unifesp.maritaca.access.Policy;
 import br.unifesp.maritaca.access.operation.Operation;
@@ -34,7 +31,6 @@ import br.unifesp.maritaca.util.UtilsCore;
 public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, Serializable{
 
 	private static final long serialVersionUID = 1L;
-	private static final Log log = LogFactory.getLog(FormAnswerModelImpl.class);
 	
 	private EntityManager entityManager;
 	private UserModel userModel;
