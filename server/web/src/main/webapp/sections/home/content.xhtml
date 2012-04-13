@@ -58,7 +58,7 @@
 					<rich:panelMenuItem label="#{subModule.title}" id="#{subModule.id}"
 						actionListener="#{manager.activeModule.processAction}"
 						render="panelContent" mode="ajax"
-						styleClass="subModuleLabel">
+						styleClass="subModuleLabel #{subModule.id  == manager.activeModule.activeSubModule.id ? 'rf-pm-top-itm-sel':''}">
 					</rich:panelMenuItem>
 				</c:forEach>
 			</rich:panelMenu>

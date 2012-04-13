@@ -1,27 +1,28 @@
 package br.unifesp.maritaca.web.jsf.lists;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import br.unifesp.maritaca.business.base.MaritacaConstants;
+import br.unifesp.maritaca.business.list.ManagerListEJB;
+import br.unifesp.maritaca.business.list.dto.ListDTO;
+import br.unifesp.maritaca.business.list.dto.MaritacaListDTO;
 import br.unifesp.maritaca.core.MaritacaList;
-import br.unifesp.maritaca.core.MaritacaListUser;
 import br.unifesp.maritaca.core.User;
-import br.unifesp.maritaca.model.UserModel;
 import br.unifesp.maritaca.web.Manager;
-import br.unifesp.maritaca.web.jsf.AbstractBean;
+import br.unifesp.maritaca.web.base.MaritacaJSFBean;
 import br.unifesp.maritaca.web.jsf.account.CurrentUserBean;
 import br.unifesp.maritaca.web.utils.Utils;
 
@@ -30,11 +31,18 @@ import br.unifesp.maritaca.web.utils.Utils;
  * 
  * @author tiagobarabasz
  */
-//@ManagedBean
+@ManagedBean
 @ViewScoped
-public class MaritacaListEditorBean extends AbstractBean implements Serializable {
+public class MaritacaListEditorBean extends MaritacaJSFBean {
 
 	private static final Log log = LogFactory.getLog(MaritacaListEditorBean.class);
+	
+	@Inject ManagerListEJB managerListEJB;
+	
+	private ListDTO listDTO;
+	
+	public MaritacaListEditorBean() {
+	}
 	
 	/* Error messages resources */
 	private static final String LIST_ADD_ERROR_USER_NOT_FOUND = "list_add_error_user_not_found";
@@ -67,10 +75,6 @@ public class MaritacaListEditorBean extends AbstractBean implements Serializable
 	@Pattern(regexp = "("+Utils.EMAIL_REG_EXP+")|^$", message="{email.invalid}")
 	private String selectedEmail;
 	private String addEmailError;
-
-	public MaritacaListEditorBean() {
-		super(false, true);
-	}
 	
 	/**
 	 * Method used to clear the group information.<br>
@@ -86,9 +90,12 @@ public class MaritacaListEditorBean extends AbstractBean implements Serializable
 		setListDescription(null);
 		setSelectedEmail(null);
 		setAddEmailError(null);
-		/*if(getCurrentUserBean()!=null){
-			getAddedUsers().add(getCurrentUserBean().getUser());
-		}*/
+		if(getCurrentUserBean()!=null) {
+			User user = new User();
+			user.setKey(getCurrentUser().getKey());
+			user.setEmail(getCurrentUser().getEmail());
+			getAddedUsers().add(user);
+		}
 	}
 
 	/**
@@ -99,12 +106,11 @@ public class MaritacaListEditorBean extends AbstractBean implements Serializable
 	 * 
 	 * @return true if there is, false otherwise
 	 */
+	//TODO: Improve this method with the event(onchange)
 	public boolean registeredListName() {
-		UserModel userModel = super.userCtrl;
-		MaritacaList list = userModel.searchMaritacaListByName(getListName());
-
-		if (!listNameUsed(list) || !listOwnerIsCurrentUser(list)
-				|| listNameIgnored(list)) {
+		MaritacaList maritacaList = managerListEJB.searchMaritacaListByName(getListName());
+		if (!listNameUsed(maritacaList) || !listOwnerIsCurrentUser(maritacaList)
+				|| listNameIgnored(maritacaList)) {
 			return false;
 		} else {
 			return true;
@@ -120,20 +126,19 @@ public class MaritacaListEditorBean extends AbstractBean implements Serializable
 		}
 	}
 
-	public String editList(MaritacaList list) {
+	public String editList(MaritacaListDTO list) {
 		fillListInfo(list);
 		setIgnoreListName(list.getName());
 		getManager().activeModAndSub("lists", "listEditor");
 		return null;
 	}
 
-	private void fillListInfo(MaritacaList list) {
+	private void fillListInfo(MaritacaListDTO list) {
 		setListName(list.getName());
 		setListDescription(list.getDescription());
 		setListId(list.getKey());
 
-		List<User> users = new ArrayList<User>(
-				super.userCtrl.searchUsersByMaritacaList(list));
+		List<User> users = new ArrayList<User>(managerListEJB.searchUsersByMaritacaList(list));
 		setAddedUsers(users);
 	}
 
@@ -204,13 +209,13 @@ public class MaritacaListEditorBean extends AbstractBean implements Serializable
 	}
 
 	private User findUserByEmail(String selectedEmail) {
-		return super.userCtrl.findUserByEmail(selectedEmail);
+		return managerListEJB.findUserByEmail(selectedEmail);
 	}
 
 	public void removeEmail(String email) {
 		clearAddEmailError();
 		
-		String ownerUsrEmail = getCurrentUserBean().getUser().getEmail();				
+		String ownerUsrEmail = getCurrentUser().getEmail();				
 		if(email.equals(ownerUsrEmail)){
 			setAddEmailError(Utils
 					.getMessageFromResourceProperties(LIST_REMOVE_OWNER_ERROR));
@@ -231,15 +236,11 @@ public class MaritacaListEditorBean extends AbstractBean implements Serializable
 	}
 
 	public List<String> usersStartingWith(String startingString) {
-		UserModel userModel = super.userCtrl;
 		List<String> userEmails = new ArrayList<String>();
-
-		for (User u : userModel.usersStartingWith(startingString)) {
+		for (User u : managerListEJB.usersStartingWith(startingString)) {
 			userEmails.add(u.getEmail());
 		}
-
 		setAutoCompleteEmails(userEmails);
-
 		return userEmails;
 	}
 
@@ -251,47 +252,18 @@ public class MaritacaListEditorBean extends AbstractBean implements Serializable
 	 */
 	public String save() {
 		String    returnString = null;
-		UserModel userModel    = super.userCtrl;
-
 		MaritacaList list = createListObj();
-		if (userModel.saveMaritacaList(list) && saveListUsers(list)) {
-			addMessage(LIST_ADD_SUCESS, FacesMessage.SEVERITY_INFO);
+		if (managerListEJB.saveMaritacaList(list) && managerListEJB.saveListUsers(list, getAddedUsers())) {
+			addMessageInfo(LIST_ADD_SUCESS);
 			getManager().setActiveModuleByString("Lists");
 			getManager().setActiveSubModuleInActiveMod("myLists");
 		} else {
-			addMessage(LIST_ADD_FAILURE, FacesMessage.SEVERITY_ERROR);
+			addMessageError(LIST_ADD_FAILURE);
 			log.error("Error saving list: " + list.toString());			
 		}
 
 		clearList();
 		return returnString;
-	}
-
-	private boolean saveListUsers(MaritacaList list) {
-		List<User> users = new ArrayList<User>(
-				super.userCtrl.searchUsersByMaritacaList(list));
-		
-		for(User usr : getAddedUsers()){
-			if(!users.contains(usr)){
-				super.userCtrl.saveMaritacaListUser(newListUser(usr,list));
-			}
-		}
-
-		for(User usr : users){
-			if(!getAddedUsers().contains(usr)){
-				super.userCtrl.removeUserFromMaritacaList(list,usr);
-			}
-		}
-		
-		return true;
-	}
-	
-	private MaritacaListUser newListUser(User usr, MaritacaList list){
-		MaritacaListUser listUser = new MaritacaListUser();
-		listUser.setUser(usr);
-		listUser.setMaritacaList(list);
-		
-		return listUser;
 	}
 
 	private MaritacaList createListObj() {
@@ -301,13 +273,13 @@ public class MaritacaListEditorBean extends AbstractBean implements Serializable
 		}
 		newList.setName(getListName());
 		newList.setDescription(getListDescription());
-		//newList.setOwner(getCurrentUserBean().getUser());
+		newList.setOwner(managerListEJB.findUserByEmail(getCurrentUser().getEmail()));
 
 		return newList;
 	}
 
 	public String cancel() {
-		return "/faces/views/home";
+		return MaritacaConstants.FACES_HOME;
 	}
 
 	public CurrentUserBean getCurrentUserBean() {
