@@ -1,7 +1,5 @@
 package br.unifesp.maritaca.business.list.dao;
 
-import static br.unifesp.maritaca.util.UtilsCore.verifyEntity;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,13 +11,13 @@ import javax.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import br.unifesp.maritaca.business.base.BaseDAO;
 import br.unifesp.maritaca.business.base.UserDAO;
+import br.unifesp.maritaca.business.base.dao.BaseDAO;
+import br.unifesp.maritaca.business.exception.InvalidNumberOfEntries;
 import br.unifesp.maritaca.business.form.list.dao.FormListerDAO;
 import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.core.MaritacaListUser;
 import br.unifesp.maritaca.core.User;
-import br.unifesp.maritaca.exception.InvalidNumberOfEntries;
 
 public class ManagerListDAO extends BaseDAO {
 	
