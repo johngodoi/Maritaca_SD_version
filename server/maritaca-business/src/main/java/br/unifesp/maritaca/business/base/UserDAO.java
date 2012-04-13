@@ -20,7 +20,7 @@ public class UserDAO extends BaseDAO {
 		}
 	}
 	
-	public User findUserByKey(UUID uuid) {
-		return entityManager.find(User.class, uuid);		
+	public User findUserByKey(UUID userKey) {
+		return entityManager.find(User.class, userKey);
 	}
 }

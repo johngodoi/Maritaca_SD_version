@@ -15,8 +15,8 @@
 	<composite:implementation>
 		<div id="divFormTitle">
 			<label>#{msgs.form_title} : </label>
-			<h:inputText value="#{editFormBean.form.title}" id="titleForm"
-				readonly="#{!editFormBean.editableForm}" onkeyup="updateTitle(value);" />
+			<h:inputText value="#{formEditorBean.formDTO.title}" id="titleForm"
+				readonly="#{!formEditorBean.editableForm}" onkeyup="updateTitle(value);" />
 		</div>
 		<h:panelGrid id="formRenderTable" columns="3" >
 
@@ -57,10 +57,10 @@
 		</c:if>
 
 		<h:outputScript>
-			initFormEditor('#{(editFormBean.form.title!=null) ? editFormBean.form.title : msgs.form_new}');
-			if(#{!editFormBean.newForm} || #{importFormBean.successful}){
+			initFormEditor('#{(formEditorBean.formDTO.title!=null) ? formEditorBean.formDTO.title : msgs.form_new}');
+			if(#{!formEditorBean.newForm} || #{importFormBean.successful}){
 				try{
-					loadFormFromXML('#{editFormBean.xml}');
+					loadFormFromXML('#{formEditorBean.xml}');
 				} catch( err ) {
 					alert('#{msgs.form_edit_error_loading}, ' + err )
 				}

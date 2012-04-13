@@ -3,6 +3,7 @@ package br.unifesp.maritaca.web.jsf.form;
 import java.net.URI;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.component.UIComponent;
@@ -26,7 +27,7 @@ import br.unifesp.maritaca.web.utils.Utils;
  * 
  * @author alvaro 
  */
-//@ManagedBean
+@ManagedBean
 @RequestScoped
 public class ImportFormBean extends AbstractBean {
 
@@ -35,8 +36,8 @@ public class ImportFormBean extends AbstractBean {
 
 	private String url;
 	private boolean successful;
-	@ManagedProperty("#{editFormBean}")
-	private EditFormBean editFormBean;
+	@ManagedProperty("#{formEditorBean}")
+	private FormEditorBean formEditorBean;
 
 	private String result;
 
@@ -78,7 +79,8 @@ public class ImportFormBean extends AbstractBean {
 		Form form = new Form();
 		form.setTitle(title);
 		form.setXml(xml);
-		getEditFormBean().setForm(form);
+		// TODO
+		//getEditFormBean().setForm(form);
 	}
 
 	public URI getBaseURI(String url) {
@@ -99,14 +101,6 @@ public class ImportFormBean extends AbstractBean {
 			setSuccessful(false);
 		}
 		setSuccessful(true);
-	}
-
-	public EditFormBean getEditFormBean() {
-		return editFormBean;
-	}
-
-	public void setEditFormBean(EditFormBean editFormBean) {
-		this.editFormBean = editFormBean;
 	}
 
 	public void setUrl(String url) {
@@ -131,5 +125,13 @@ public class ImportFormBean extends AbstractBean {
 
 	public void setSuccessful(boolean successful) {
 		this.successful = successful;
+	}
+
+	public FormEditorBean getFormEditorBean() {
+		return formEditorBean;
+	}
+
+	public void setFormEditorBean(FormEditorBean formEditorBean) {
+		this.formEditorBean = formEditorBean;
 	}
 }
