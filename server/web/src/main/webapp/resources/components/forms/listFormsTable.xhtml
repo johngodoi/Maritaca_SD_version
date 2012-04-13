@@ -37,7 +37,7 @@
 						icon="#{resource['img:view_form.png']}"
 						label="#{msgs.commons_view}"
 						action="#{manager.activeModAndSub('Forms', 'formEditor')}" 
-						rendered="#{aForm.permission.read}">
+						rendered="#{aForm.permissionDTO.read}">
 						<f:setPropertyActionListener target="#{formEditorBean.form}"
 							value="#{aForm}" />
 						<f:setPropertyActionListener target="#{formEditorBean.newForm}"
@@ -49,7 +49,7 @@
 						icon="#{resource['img:edit_form.png']}"
 						label="#{msgs.commons_edit}"
 						action="#{manager.activeModAndSub('Forms', 'formEditor')}" 
-						rendered="#{aForm.permission.update}">
+						rendered="#{aForm.permissionDTO.update}">
 						<f:setPropertyActionListener target="#{formEditorBean.form}"
 							value="#{aForm}" />
 						<f:setPropertyActionListener target="#{formEditorBean.newForm}"
@@ -62,14 +62,14 @@
 						render="shareForm:shareFormId" label="#{msgs.form_share}"
 						action="#{shareFormBean.setForm(aForm)}"
 						onclick="showShareForm('#{msgs.form_share_settings}');" 
-						rendered="#{aForm.permission.share}">
+						rendered="#{aForm.permissionDTO.share}">
 					</rich:menuItem>
 
 					<rich:menuItem icon="#{resource['img:remove.png']}"
 						render="panelContent" label="#{msgs.commons_delete}"
 						action="#{formEditorBean.deleteForm}"
 						actionListener="#{formListerBean.listOwnFormsChanged}" 
-						rendered="#{aForm.permission.delete}">
+						rendered="#{aForm.permissionDTO.delete}">
 						<f:setPropertyActionListener target="#{formEditorBean.form}"
 							value="#{aForm}" />
 					</rich:menuItem>
@@ -89,7 +89,7 @@
 				<a4j:commandLink value="#{aForm.title}"
 					action="#{manager.activeModAndSub('Forms', 'formEditor')}"
 					render="menuAndContent" execute="@form">
-					<f:setPropertyActionListener target="#{formEditorBean.form}"
+					<f:setPropertyActionListener target="#{formEditorBean.formFromLister}"
 						value="#{aForm}" />
 					<f:setPropertyActionListener target="#{formEditorBean.newForm}"
 						value="false" />

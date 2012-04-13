@@ -3,19 +3,20 @@ package br.unifesp.maritaca.web.jsf.form;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import br.unifesp.maritaca.business.form.dto.FormDTO;
 import br.unifesp.maritaca.business.form.edit.FormEditorEJB;
-import br.unifesp.maritaca.business.form.edit.dao.NewFormDTO;
-import br.unifesp.maritaca.business.form.edit.dto.FormDTO;
+import br.unifesp.maritaca.business.form.edit.dto.NewFormDTO;
 import br.unifesp.maritaca.web.Manager;
 import br.unifesp.maritaca.web.base.MaritacaJSFBean;
 
 @ManagedBean
-@RequestScoped
+@ViewScoped
 public class FormEditorBean extends MaritacaJSFBean {
 	
 	private static final long serialVersionUID = 1L;
@@ -45,13 +46,19 @@ public class FormEditorBean extends MaritacaJSFBean {
 		setEditableForm(true);
 	}
 	
+	public void setFormFromLister(FormDTO formDTO){
+		setFormDTO(formEditorEJB.
+				getFormWithPermissions(formDTO, getCurrentUser()));
+	}
+	
 	public void saveForm() {
-		NewFormDTO newFormDTO = new NewFormDTO();
-		newFormDTO.setUserKey(getCurrentUser().getKey());
-		newFormDTO.setTitle(formDTO.getTitle());
-		newFormDTO.setXml(formDTO.getXml());
+		formDTO.setUserKey(getCurrentUser().getKey());
 		
-		formEditorEJB.saveForm(newFormDTO);
+		if (formDTO.getKey() == null) {
+			formEditorEJB.saveNewForm(formDTO);
+		} else {
+			formEditorEJB.updateForm(formDTO, getCurrentUser());
+		}
 		
 		setNewForm(false);
 		addMessageInfo("form_edit_save_success");
@@ -74,13 +81,13 @@ public class FormEditorBean extends MaritacaJSFBean {
 		saveForm();
 	}
 
-	public String deleteForm() {
-		if (getForm().getKey() != null) {
-			// TODO
-//			formAnswCtrl.deleteForm(getForm());
+	public void deleteForm() {
+		if (getFormDTO().getKey() != null) {
+			formEditorEJB.deleteForm(getFormDTO(), getCurrentUser());
 			clean();
+			setNewForm(true);
+			addMessageInfo("form_edit_delete_success");
 		}
-		return null;
 	}
 	
 	public void setFormAsCollectable(){
@@ -106,21 +113,20 @@ public class FormEditorBean extends MaritacaJSFBean {
 		return formDTO;
 	}
 	
-	public void setForm(FormDTO formDTO) {
-		if (formDTO == null)
-			return;
-		this.formDTO = formDTO;
-		// if form has key, it is not a new form
-		if (this.formDTO.getKey() == null) {
-			setNewForm(true);
-		} else {
-			// TODO
-//			if (this.formDTO.getXml() == null) {
-//				this.formDTO = formAnswCtrl.getForm(formDTO.getKey(), false);
-//			}
-			xml = this.formDTO.getXml();
-		}
-	}
+//	public void setForm(FormDTO formDTO) {
+//		if (formDTO == null)
+//			return;
+//		this.formDTO = formDTO;
+//		// if form has key, it is not a new form
+//		if (this.formDTO.getKey() == null) {
+//			setNewForm(true);
+//		} else {
+////			if (this.formDTO.getXml() == null) {
+////				this.formDTO = formAnswCtrl.getForm(formDTO.getKey(), false);
+////			}
+//			xml = this.formDTO.getXml();
+//		}
+//	}
 
 	public boolean isNewForm() {
 		return newForm;
@@ -137,7 +143,6 @@ public class FormEditorBean extends MaritacaJSFBean {
 		if (isNewForm()) {
 			return true;
 		} else if (formDTO != null && formDTO.getKey() != null) {
-			// TODO
 			return true;//manager.isOperationEnabled(formDTO, Operation.UPDATE);
 		} else {
 			return editableForm;

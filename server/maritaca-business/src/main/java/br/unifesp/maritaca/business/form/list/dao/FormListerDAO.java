@@ -7,12 +7,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.inject.Inject;
-
 import br.unifesp.maritaca.access.AccessLevel;
 import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.business.base.BaseDAO;
-import br.unifesp.maritaca.business.base.UserDAO;
 import br.unifesp.maritaca.core.Configuration;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
@@ -20,20 +17,18 @@ import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.core.MaritacaListUser;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.exception.AuthorizationDenied;
-import br.unifesp.maritaca.exception.InvalidNumberOfEntries;
 import br.unifesp.maritaca.model.ManagerModel;
 
 public class FormListerDAO extends BaseDAO {
 	
 	public List<Form> getListOwnFormsByUserKey(String key) {
-		return entityManager.cQuery(Form.class, "user", key, true);		
+		return entityManager.cQuery(Form.class, "user", key, false);		
 	}
 	
 	public List<Form> getListSharedFormsByUserKey(User user) {
 		
 		Set<Form> forms = new HashSet<Form>();
 		// get lists where user is member
-		//User user = userDAO.findUserByEmail(email);
 		Collection<MaritacaListUser> lists = this.getMaritacaListByMember(user);		
 		for (MaritacaListUser gu : lists) {
 			// get all formpermissions in each list
@@ -41,14 +36,14 @@ public class FormListerDAO extends BaseDAO {
 			for (FormPermissions fp : l1Forms) {
 				// get the form and add it if expdate > now
 				Form form = getFormWithPermission(fp, true, user);
-				if (form != null) {
-					if (!form.getUser().equals(user))
+				if (form != null) {					
+					if (!form.getUser().equals(user)) {
 						forms.add(form);
+					}
 				}
 			}
 		}
 		return new ArrayList<Form>(forms);
-		//return new ArrayList<Form>();
 	}
 	
 	public Collection<MaritacaListUser> getMaritacaListByMember(User user) {
@@ -201,17 +196,6 @@ public class FormListerDAO extends BaseDAO {
 	public Collection<MaritacaList> getMaritacaListsByOwner(User owner) {
 		return entityManager.cQuery(MaritacaList.class, "owner", owner.toString());
 	}
-	
-//	public User findUserByEmail(String email) {
-//		List<User> users = entityManager.cQuery(User.class, "email", email);
-//		if (users == null || users.size() == 0) {
-//			return null;
-//		} else if ( users.size() == 1 ) {
-//			return users.get(0);
-//		} else {
-//			throw new InvalidNumberOfEntries(email, User.class);
-//		}
-//	}
 
 	public <T> boolean currentUserHasPermission(User user, T entity, Operation op) {
 		return userHasPermission(user, entity, op);

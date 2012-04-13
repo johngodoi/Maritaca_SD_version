@@ -160,4 +160,8 @@ public class FormPermissionsDAO extends BaseDAO {
 //		User user = getCurrentUser();
 		return true; // userHasPermission(user, entity, op);
 	}
+
+	public void delete(FormPermissions fp) {
+		entityManager.delete(fp);
+	}
 }

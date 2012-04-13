@@ -87,7 +87,7 @@
 			execute="@form" status="formEditor_status"
 			render="menuAndContent">
 			<a4j:param name="xml" assignTo="#{formEditorBean.xml}" />
-			<f:setPropertyActionListener target="#{listFormsBean.updateList}"
+			<f:setPropertyActionListener target="#{formListerBean.updateList}"
 				value="true" />
 		</a4j:jsFunction>
 
@@ -96,7 +96,7 @@
 			execute="@form" status="formEditor_status">
 			<a4j:param name="xml" assignTo="#{formEditorBean.xml}" />
 			<a4j:param name="newTitle" assignTo="#{formEditorBean.saveFormAsTitle}" />
-			<f:setPropertyActionListener target="#{listFormsBean.updateList}"
+			<f:setPropertyActionListener target="#{formListerBean.updateList}"
 				value="true" />
 		</a4j:jsFunction>
 
@@ -104,9 +104,7 @@
 		<a4j:jsFunction name="deleteFormAjax" action="#{formEditorBean.deleteForm}"
 			status="formEditor_status"
 			render="menuAndContent"
-			actionListener="#{listFormsBean.listOwnFormsChanged}">
-			<f:setPropertyActionListener target="#{formEditorBean.formDTO}"
-				value="#{aForm}" />
+			actionListener="#{formListerBean.listOwnFormsChanged}">
 			<f:setPropertyActionListener
 				target="#{manager.activeSubModuleInActiveMod}"
 				value="listForms" />
@@ -117,7 +115,7 @@
 			action="#{formEditorBean.setFormAsCollectable()}"
 			status="formEditor_status"
 			render="menuAndContent"
-			actionListener="#{listFormsBean.listOwnFormsChanged}">
+			actionListener="#{formListerBean.listOwnFormsChanged}">
 			<f:setPropertyActionListener target="#{formEditorBean.formDTO}"
 				value="#{aForm}" />
 			<f:setPropertyActionListener
