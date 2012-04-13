@@ -69,11 +69,11 @@ public class OpenIdLoginBean extends AbstractBean implements Serializable{
         
         fillCurrentUser(authentication);
         
-        if(getAccountEditorBean().registeredEmail()){
-        	loadUserInfoFromDatabase();        	
-        } else {
-        	getAccountEditorBean().saveNewAccount();
-        }
+//        if(getAccountEditorBean().registeredEmail()){
+//        	loadUserInfoFromDatabase();        	
+//        } else {
+//        	getAccountEditorBean().saveNewAccount();
+//        }
     	getLoginManagerBean().login();
     }
     
@@ -84,7 +84,7 @@ public class OpenIdLoginBean extends AbstractBean implements Serializable{
     	String email = getAccountEditorBean().getEmail();
     	User   user  = super.userCtrl.findUserByEmail(email);
     	
-    	getAccountEditorBean().getCurrentUserBean().setUser(new UserDTO());//(user);		
+//    	getAccountEditorBean().getCurrentUserBean().setUser(new UserDTO());//(user);		
 	}
 
 	private void facesRedirect(String url){
@@ -117,7 +117,7 @@ public class OpenIdLoginBean extends AbstractBean implements Serializable{
 		currentUser.setFirstname(authentication.getFirstname());
 		currentUser.setLastname(authentication.getLastname());
 		
-		getAccountEditorBean().fillInformationFromUser(currentUser);
+//		getAccountEditorBean().fillInformationFromUser(currentUser);
 	}
 
 	public OpenIdManager getManager() {

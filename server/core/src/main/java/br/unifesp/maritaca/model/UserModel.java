@@ -18,6 +18,7 @@ import br.unifesp.maritaca.persistence.EntityManager;
  * This interface contains methods related to both users and lists.
  * @author tiagobarabasz
  */
+@Deprecated
 public interface UserModel extends GenericModel{
 	boolean saveUser(User user);
 

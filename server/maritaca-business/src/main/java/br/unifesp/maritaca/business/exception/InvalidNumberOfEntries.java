@@ -1,23 +1,23 @@
-package br.unifesp.maritaca.exception;
+package br.unifesp.maritaca.business.exception;
 
 public class InvalidNumberOfEntries extends RuntimeException {
 
-	private String                   entry;
+	private String                   value;
 	private Class<? extends Object>  entity;
 		
 	private static final long serialVersionUID = 1L;
 
-	public InvalidNumberOfEntries(String entity, Class<? extends Object>entityType){
-		setEntry(entity);
+	public InvalidNumberOfEntries(String value, Class<? extends Object>entityType){
+		setValue(value);
 		setEntity(entityType);
 	}
 
-	public String getEntry() {
-		return entry;
+	public String getValue() {
+		return value;
 	}
 
-	public void setEntry(String entry) {
-		this.entry = entry;
+	public void setValue(String value) {
+		this.value = value;
 	}
 
 	public Class<? extends Object> getEntity() {

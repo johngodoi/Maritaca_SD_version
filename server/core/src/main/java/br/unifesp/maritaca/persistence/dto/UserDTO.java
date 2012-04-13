@@ -4,8 +4,11 @@ import java.util.UUID;
 
 public class UserDTO {
 	
-	private UUID key;
-	private String email;
+	private UUID   key;
+	private String email;	
+	private String firstname;
+	private String lastname;
+	private String encryptedPassword;
 
 	public UUID getKey() {
 		return key;
@@ -26,5 +29,29 @@ public class UserDTO {
 	@Override
 	public String toString() {
 		return "MaritacaUserDTO [key=" + key + ", email=" + email + "]";
+	}
+
+	public String getFirstname() {
+		return firstname;
+	}
+
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+
+	public String getEncryptedPassword() {
+		return encryptedPassword;
+	}
+
+	public void setEncryptedPassword(String encryptedPassword) {
+		this.encryptedPassword = encryptedPassword;
 	}
 }

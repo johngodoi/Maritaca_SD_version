@@ -3,7 +3,6 @@ package br.unifesp.maritaca.web.jsf.form;
 import java.net.URI;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.component.UIComponent;

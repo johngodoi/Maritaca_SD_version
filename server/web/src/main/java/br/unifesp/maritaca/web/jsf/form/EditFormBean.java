@@ -1,9 +1,7 @@
 package br.unifesp.maritaca.web.jsf.form;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
 
 import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.core.Form;

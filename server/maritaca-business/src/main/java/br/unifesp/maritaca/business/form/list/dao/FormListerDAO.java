@@ -9,7 +9,7 @@ import java.util.UUID;
 
 import br.unifesp.maritaca.access.AccessLevel;
 import br.unifesp.maritaca.access.operation.Operation;
-import br.unifesp.maritaca.business.base.BaseDAO;
+import br.unifesp.maritaca.business.base.dao.BaseDAO;
 import br.unifesp.maritaca.core.Configuration;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;

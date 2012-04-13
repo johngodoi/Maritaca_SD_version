@@ -1,4 +1,4 @@
-package br.unifesp.maritaca.business.base;
+package br.unifesp.maritaca.business.base.dao;
 
 import br.unifesp.maritaca.persistence.EntityManager;
 import br.unifesp.maritaca.persistence.EntityManagerFactory;
@@ -14,5 +14,9 @@ public class BaseDAO {
 
 	public void setEntityManager(EntityManager entityManager) {
 		this.entityManager = entityManager;
+	}
+	
+	public EntityManager getEntityManager() {
+		return entityManager;
 	}
 }
