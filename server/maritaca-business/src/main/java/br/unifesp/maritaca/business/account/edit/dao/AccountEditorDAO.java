@@ -26,6 +26,8 @@ public class AccountEditorDAO extends BaseDAO {
 	public void saveUser(UserDTO userDto) {
 		User user = createUserFromDto(userDto);
 		saveUser(user);
+		userDto.setKey(user.getKey());
+		userDto.setMaritacaListKey(user.getMaritacaList().getKey());
 	}
 	
 	/**
@@ -47,19 +49,23 @@ public class AccountEditorDAO extends BaseDAO {
 	
 	private void saveUser(User user){
 		getEntityManager().persist(user);
+		
 		if(user.getMaritacaList()==null){
 			createUserList(user);			
-		} else {			
+		} else {
 			updateUserListName(user);
 		}		
-	}	
+	}
+	
+	private MaritacaList findUserList(MaritacaList maritacaList){
+		return getEntityManager().find(MaritacaList.class,maritacaList.getKey());
+	}
 	
 	/**
 	 * Update the user list name if the user changed its email.
 	 */
-	private void updateUserListName(User user) {				
-		MaritacaList userList;
-		userList = getEntityManager().find(MaritacaList.class, user.getMaritacaList().getKey());			
+	private void updateUserListName(User user) {
+		MaritacaList userList = findUserList(user.getMaritacaList());
 		if (!userList.getName().equals(user.getEmail())) {						
 			userList.setName(user.getEmail());
 			listEditorDAO.saveMaritacaList(userList);
@@ -72,6 +78,12 @@ public class AccountEditorDAO extends BaseDAO {
 		user.setFirstname(userToSave.getFirstname());
 		user.setLastname(userToSave.getLastname());
 		user.setPassword(userToSave.getEncryptedPassword());
+		user.setKey(userToSave.getKey());
+		if(userToSave.getMaritacaListKey()!=null){
+			MaritacaList userList = new MaritacaList();
+			userList.setKey(userToSave.getMaritacaListKey());
+			user.setMaritacaList(userList);	
+		}
 		return user;
 	}
 	
@@ -82,5 +94,6 @@ public class AccountEditorDAO extends BaseDAO {
 
 		listEditorDAO.saveMaritacaList(list);
 		getEntityManager().persist(owner);
+		owner.setMaritacaList(list);
 	}
 }

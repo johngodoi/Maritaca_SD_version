@@ -17,9 +17,16 @@ public class AccountEditorEJB{
 	 * Checks if the email from the user is already registered
 	 * in the database. If the email belongs to the email from the logged
 	 * user, this function also returns false.
+	 * @param currentUser 
 	 * @return true if the email is already taken, false otherwise.
 	 */
-	public boolean registeredEmail(@VerifyObject(UserDTO.class) String email){				
+	public boolean registeredEmail(String email, UserDTO currentUser){
+		if(email==null){
+			return false;
+		}
+		if(currentUser!=null && email.equals(currentUser.getEmail())){
+			return false;
+		}
 		return accountEditorDAO.findUserByEmail(email)!=null;
 	}
 	
@@ -37,7 +44,7 @@ public class AccountEditorEJB{
 
 	private boolean validateAccount(UserDTO user){
 		String email = user.getEmail();
-		if(registeredEmail(email)){
+		if(registeredEmail(email,user)){
 			return false;
 		} else {
 			return true;

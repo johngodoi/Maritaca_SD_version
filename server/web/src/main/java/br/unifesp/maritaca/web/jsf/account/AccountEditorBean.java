@@ -1,14 +1,14 @@
 package br.unifesp.maritaca.web.jsf.account;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.inject.Inject;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 import br.unifesp.maritaca.business.account.edit.AccountEditorEJB;
 import br.unifesp.maritaca.persistence.dto.UserDTO;
 import br.unifesp.maritaca.web.base.MaritacaJSFBean;
+import br.unifesp.maritaca.web.jsf.login.LoginManagerBean;
 import br.unifesp.maritaca.web.jsf.util.MaritacaConstants;
 
 /**
@@ -21,34 +21,22 @@ import br.unifesp.maritaca.web.jsf.util.MaritacaConstants;
 public class AccountEditorBean extends MaritacaJSFBean{
 	
 	private static final long serialVersionUID = 1L;
-			
+	
+	private UserDTO userDto;
+	
 	@Inject
 	private AccountEditorEJB accountEditorEJB;
 	
-	@Pattern(regexp = MaritacaConstants.EMAIL_REG_EXP)
-	private String email;
-	
-	@Size(min = 3, max = 20)
-	private String firstName;
-	
-	@Size(max = 20)
-	private String lastName;
-	
-	private String encryptedPassword;	
-		
+	@ManagedProperty("#{loginManagerBean}") 
+	private LoginManagerBean loginManagerBean;
+			
 	private boolean creatingAccount;
 			
 	public AccountEditorBean() {
 		clearUserInformation();
 		setCreatingAccount(false);
 	}
-				
-	private void clearUserInformation(){
-		setEmail("");
-		setFirstName("");
-		setLastName("");
-	}
-	
+					
 	public String saveButtonPressed(){
 		if(super.getCurrentUser()!=null){
 			return updateAccount();
@@ -62,29 +50,17 @@ public class AccountEditorBean extends MaritacaJSFBean{
 		return null;
 	}
 	
-	private String updateAccount(){
-		UserDTO userToUpdate = createUserFromInformation();		
-		getAccountEditorEJB().saveAccount(userToUpdate);
-		
+	public void updateUserInformation(){
+		if(getCurrentUser()!=null){
+			setUserDto(getCurrentUser());
+		}
+	}
+	
+	private String updateAccount(){	
+		getAccountEditorEJB().saveAccount(userDto);
+		getModuleManager().setActiveModuleByString("Forms");
+		getModuleManager().setActiveSubModuleInActiveMod("listForms");
 		return MaritacaConstants.FACES_HOME;
-	}
-	
-	public UserDTO createUserFromInformation(){
-		UserDTO user = new UserDTO();
-		
-		user.setEmail(getEmail());
-		user.setFirstname(getFirstName());
-		user.setLastname(getLastName());
-		setEncryptedPassword(getEncryptedPassword());
-		
-		return user;
-	}
-	
-	public void fillInformationFromUser(UserDTO user){
-		setEmail(user.getEmail());
-		setFirstName(user.getFirstname());
-		setLastName(user.getLastname());
-		setEncryptedPassword(user.getEncryptedPassword());
 	}
 	
 	/**
@@ -92,9 +68,9 @@ public class AccountEditorBean extends MaritacaJSFBean{
 	 * @return null if not successful (refresh current view)
 	 * or the navigation string to the home page if successful. 
 	 */
-	public String saveNewAccount(){
-		UserDTO userToSave = createUserFromInformation();				
-		getAccountEditorEJB().saveAccount(userToSave);		
+	private String saveNewAccount(){					
+		getAccountEditorEJB().saveAccount(userDto);
+		getLoginManagerBean().login(userDto);
 		return MaritacaConstants.FACES_HOME;
 	}
 
@@ -116,8 +92,8 @@ public class AccountEditorBean extends MaritacaJSFBean{
 		return null;
 	}
 	
-	public boolean registeredEmail(){
-		return getAccountEditorEJB().registeredEmail(getEmail());
+	public boolean registeredEmail(){		
+		return getAccountEditorEJB().registeredEmail(userDto.getEmail(), getCurrentUser());
 	}
 	
 	/**
@@ -131,37 +107,9 @@ public class AccountEditorBean extends MaritacaJSFBean{
 		getModuleManager().setActiveSubModuleInActiveMod("listForms");
 		return null;
 	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getEncryptedPassword() {
-		return encryptedPassword;
-	}
-
-	public void setEncryptedPassword(String encryptedPassword) {
-		this.encryptedPassword = encryptedPassword;
+	
+	private void clearUserInformation(){
+		userDto = new UserDTO();
 	}
 
 	public boolean isCreatingAccount() {
@@ -178,5 +126,21 @@ public class AccountEditorBean extends MaritacaJSFBean{
 
 	public void setAccountEditorEJB(AccountEditorEJB accountEditorEJB) {
 		this.accountEditorEJB = accountEditorEJB;
+	}
+
+	public UserDTO getUserDto() {
+		return userDto;
+	}
+
+	public void setUserDto(UserDTO userDto) {
+		this.userDto = userDto;
+	}
+
+	public LoginManagerBean getLoginManagerBean() {
+		return loginManagerBean;
+	}
+
+	public void setLoginManagerBean(LoginManagerBean loginManagerBean) {
+		this.loginManagerBean = loginManagerBean;
 	}
 }

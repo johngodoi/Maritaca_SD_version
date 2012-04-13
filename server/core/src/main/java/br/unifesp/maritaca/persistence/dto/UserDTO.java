@@ -2,13 +2,28 @@ package br.unifesp.maritaca.persistence.dto;
 
 import java.util.UUID;
 
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+
 public class UserDTO {
+
+	private UUID key;
 	
-	private UUID   key;
-	private String email;	
+	private UUID maritacaListKey;
+	
+	//TODO The email reg exp should be read from MaritacaConstants
+	//TODO This can be done when UserDTO goes back to maritaca-business
+	@Pattern(regexp = "^[\\w\\-]([\\.\\w])+[\\w]+@([\\w\\-]+\\.)+[a-zA-Z]{2,4}$")
+	private String email;
+	
+	@Size(min = 3, max = 20)
 	private String firstname;
+	
+	@Size(max = 20)
 	private String lastname;
-	private String encryptedPassword;
+	
+	private String encryptedPassword;	
 
 	public UUID getKey() {
 		return key;
@@ -53,5 +68,13 @@ public class UserDTO {
 
 	public void setEncryptedPassword(String encryptedPassword) {
 		this.encryptedPassword = encryptedPassword;
+	}
+
+	public UUID getMaritacaListKey() {
+		return maritacaListKey;
+	}
+
+	public void setMaritacaListKey(UUID maritacaListKey) {
+		this.maritacaListKey = maritacaListKey;
 	}
 }

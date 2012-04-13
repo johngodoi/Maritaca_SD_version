@@ -21,6 +21,9 @@ public class LoginEJB {
 			userDTO = new UserDTO();
 			userDTO.setEmail(loginDTO.getEmail());
 			userDTO.setKey(dbUser.getKey());
+			userDTO.setFirstname(dbUser.getFirstname());
+			userDTO.setLastname(dbUser.getLastname());
+			userDTO.setMaritacaListKey(dbUser.getMaritacaList().getKey());
 			
 			ModelFactory.getInstance().registryUser(dbUser);
 		}

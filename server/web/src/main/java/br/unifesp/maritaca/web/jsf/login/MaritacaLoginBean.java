@@ -39,10 +39,7 @@ public class MaritacaLoginBean extends MaritacaJSFBean {
 		UserDTO maritacaUser = loginEJB.doLogin(loginDTO);		
 		if(maritacaUser != null) {
 			//Set the data of the current user in session
-			getRequest().getSession().setAttribute(MaritacaConstants.CURRENT_USER, maritacaUser);
-			//TODO: Next step: delete CurrentUserBean
-			getCurrentUserBean().setUser(maritacaUser);			
-			getLoginManagerBean().login();
+			getLoginManagerBean().login(maritacaUser);
 			return "";
 		}
 		else {

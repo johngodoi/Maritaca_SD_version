@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import br.unifesp.maritaca.persistence.dto.UserDTO;
 import br.unifesp.maritaca.web.Manager;
 import br.unifesp.maritaca.web.jsf.util.MaritacaConstants;
+import br.unifesp.maritaca.web.utils.Utils;
 
 public abstract class MaritacaJSFBean implements Serializable {
 	
@@ -24,7 +25,7 @@ public abstract class MaritacaJSFBean implements Serializable {
 	private Manager moduleManager;
 	
 	protected UserDTO getCurrentUser() {
-		UserDTO maritacaUser = (UserDTO)getRequest().getSession().getAttribute(MaritacaConstants.CURRENT_USER);
+		UserDTO maritacaUser = (UserDTO)Utils.clientRequest().getSession().getAttribute(MaritacaConstants.CURRENT_USER);
 		//MaritacaUserDTO maritacaUser = (MaritacaUserDTO) getFacesContext().getExternalContext().getSessionMap().get("currentuser");
 		if(maritacaUser != null)
 			return maritacaUser;
@@ -51,12 +52,6 @@ public abstract class MaritacaJSFBean implements Serializable {
         ServletContext servletContext = (ServletContext) context.getExternalContext().getContext();
         contextpath = servletContext.getContextPath();
         return contextpath;
-    }
-
-	protected HttpServletRequest getRequest() {
-        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
-        return request;
     }
 
 	protected HttpServletResponse getResponse() {

@@ -27,8 +27,8 @@ public class FormListerEJB {
 	
 	private static final Log log = LogFactory.getLog(FormListerEJB.class);
 	
-	@Inject FormListerDAO formListerDAO;
-	@Inject UserDAO userDAO;
+	@Inject private FormListerDAO formListerDAO;
+	@Inject private UserDAO userDAO;
 
 	public Collection<FormListerDTO> getListOwnForms(UserDTO userDTO) {
 		List<FormListerDTO> formsDTO = null;

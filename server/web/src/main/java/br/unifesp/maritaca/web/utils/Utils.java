@@ -3,6 +3,7 @@ package br.unifesp.maritaca.web.utils;
 import java.io.StringWriter;
 import java.util.ResourceBundle;
 
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBContext;
@@ -71,4 +72,11 @@ public class Utils {
         String contextPath = request.getContextPath();
 		return buildServerAddressUrl() + contextPath + string + "?";
 	}
+	
+	public static HttpServletRequest clientRequest() {
+        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+        HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
+        return request;
+    }
+
 }
