@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import br.unifesp.maritaca.business.base.dao.BaseDAO;
 import br.unifesp.maritaca.core.Form;
+import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.core.User;
 
 public class FormEditorDAO extends BaseDAO {
@@ -40,5 +41,21 @@ public class FormEditorDAO extends BaseDAO {
 	public void delete(Form form) {
 		entityManager.delete(form);
 	}
-
+	
+	public User getOwnerOfMaritacaList(MaritacaList gr) {
+		if (gr.getOwner() != null) {
+			return getUser(gr.getOwner().getKey());
+		} else {
+			MaritacaList group = entityManager.find(MaritacaList.class, gr.getKey(), true);
+			if (group != null) {
+				return getOwnerOfMaritacaList(group);
+			} else {
+				return null;
+			}
+		}
+	}
+	
+	public User getUser(UUID uuid) {
+		return entityManager.find(User.class, uuid);
+	}
 }

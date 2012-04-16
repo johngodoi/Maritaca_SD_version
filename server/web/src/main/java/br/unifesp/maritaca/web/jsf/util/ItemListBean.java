@@ -8,10 +8,11 @@ import javax.faces.application.FacesMessage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import br.unifesp.maritaca.web.base.MaritacaJSFBean;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
 import br.unifesp.maritaca.web.utils.Utils;
 
-public abstract class ItemListBean extends AbstractBean{
+public abstract class ItemListBean extends MaritacaJSFBean {
 	
 	private static final long serialVersionUID        = 1L;
 	
@@ -32,8 +33,7 @@ public abstract class ItemListBean extends AbstractBean{
 	protected abstract String  searchItemInDatabase(String selectedItem);
 	protected abstract boolean newItem(Object itemObject);
 	
-	public ItemListBean(boolean useFormAnsw, boolean useUser) {
-		super(useFormAnsw, useUser);
+	public ItemListBean() {
 		usedItens = new ArrayList<String>();
 	}
 
@@ -99,9 +99,9 @@ public abstract class ItemListBean extends AbstractBean{
 
 		Object itemObject = createObjectFromItem();
 		if (saveObject(itemObject)) {
-			addMessage(ITEM_LIST_ADD_SUCESS, FacesMessage.SEVERITY_INFO);
+			addMessageInfo(ITEM_LIST_ADD_SUCESS);
 		} else {
-			addMessage(ITEM_LIST_ADD_FAILURE, FacesMessage.SEVERITY_ERROR);
+			addMessageError(ITEM_LIST_ADD_FAILURE);
 			log.error("Error saving: " + itemObject.toString());			
 		}
 		

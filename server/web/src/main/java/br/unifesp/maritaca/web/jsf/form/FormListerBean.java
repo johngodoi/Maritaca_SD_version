@@ -30,8 +30,27 @@ public class FormListerBean extends MaritacaJSFBean {
 	
 	public void setAllForms(String nothing) {
 	}
+        
+        public void listOwnFormsChanged(ActionEvent evt) {
+		setOwnForms(formListerEJB.getListOwnForms(getCurrentUser()));
+		setSharedForms(formListerEJB.getListSharedForms(getCurrentUser()));
+	}
 	
-	public Collection<FormDTO> getOwnForms() {
+	//TODO: it's not working
+	public void sortByName() {
+		/*User dbUser = new User();
+			dbUser.setEmail(currentUser.getUser().getEmail());
+			//dbUser.setKey(currentUser.getUser().getKey());
+		forms = formAnswCtrl.listAllFormsSortedbyName(dbUser);//(currentUser.getUser());*/
+	}
+
+	//TODO: it's not working
+	public void sortByDate() {
+		//forms = formAnswCtrl.listAllFormsSortedbyDate(currentUser.getUser());
+	}
+        
+        /*** Setters y Getters ***/
+        public Collection<FormDTO> getOwnForms() {
 		return ownForms;
 	}
 
@@ -45,23 +64,5 @@ public class FormListerBean extends MaritacaJSFBean {
 
 	public void setSharedForms(Collection<FormDTO> sharedForms) {
 		this.sharedForms = sharedForms;
-	}
-
-	//TODO: it's not working
-	public void sortByName() {
-		/*User dbUser = new User();
-			dbUser.setEmail(currentUser.getUser().getEmail());
-			//dbUser.setKey(currentUser.getUser().getKey());
-		forms = formAnswCtrl.listAllFormsSortedbyName(dbUser);//(currentUser.getUser());*/
-	}
-
-	//TODO: it's not working
-	public void sortByDate() {
-		//forms = formAnswCtrl.listAllFormsSortedbyDate(currentUser.getUser());
-	}
-	
-	public void listOwnFormsChanged(ActionEvent evt) {
-		setOwnForms(formListerEJB.getListOwnForms(getCurrentUser()));
-		setSharedForms(formListerEJB.getListSharedForms(getCurrentUser()));
 	}
 }

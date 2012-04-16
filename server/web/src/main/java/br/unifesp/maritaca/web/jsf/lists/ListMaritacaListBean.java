@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import br.unifesp.maritaca.business.list.ManagerListEJB;
@@ -17,7 +17,7 @@ import br.unifesp.maritaca.web.utils.Utils;
  * @author tiagobarabasz
  */
 @ManagedBean
-@RequestScoped
+@ViewScoped
 public class ListMaritacaListBean extends MaritacaJSFBean {
 	
 	private static final long serialVersionUID = 1L;
@@ -25,14 +25,6 @@ public class ListMaritacaListBean extends MaritacaJSFBean {
 	@Inject ManagerListEJB managerListEJB;
 	
 	private Collection<MaritacaListDTO> myLists;
-	
-	public Collection<MaritacaListDTO> getMyLists() {
-		return myLists;
-	}
-
-	public void setMyLists(Collection<MaritacaListDTO> myLists) {
-		this.myLists = myLists;
-	}
 	
 	public void removeList(MaritacaListDTO list) {
 		if(managerListEJB.removeMaritacaList(list)) {
@@ -44,6 +36,16 @@ public class ListMaritacaListBean extends MaritacaJSFBean {
 
 	@PostConstruct
 	public void updateMyLists() {
+            System.out.println("PostConstruct  - updateMyLists");
 		setMyLists(managerListEJB.getMaritacaListsByOwner(getCurrentUser()));
-	}		
+	}
+        
+        /*** Setters y Getters ***/
+        public Collection<MaritacaListDTO> getMyLists() {
+		return myLists;
+	}
+
+	public void setMyLists(Collection<MaritacaListDTO> myLists) {
+		this.myLists = myLists;
+	}
 }

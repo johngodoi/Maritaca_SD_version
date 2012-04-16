@@ -36,30 +36,33 @@ public class FormListerEJB {
 		List<Form> forms = formListerDAO.getListOwnFormsByUserKey(userDTO.getKey().toString());
 		if(!forms.isEmpty()) {
 			formsDTO = new ArrayList<FormDTO>();
-			//
+			//TODO: Need I this query?
 			User user = userDAO.findUserByEmail(userDTO.getEmail());
-			for(Form f : forms) {
-				PermissionDTO permission = new PermissionDTO(
-						formListerDAO.currentUserHasPermission(user, f, Operation.READ), 
-						formListerDAO.currentUserHasPermission(user, f, Operation.UPDATE), 
-						formListerDAO.currentUserHasPermission(user, f, Operation.SHARE), 
-						formListerDAO.currentUserHasPermission(user, f, Operation.DELETE));
-				FormDTO formDTO = new FormDTO(
-						f.getKey(),
-						f.getTitle(), 
-						userDTO.getEmail(), 
-						f.getXml(),
-						newFormat.format(f.getCreationDate()), 
-						f.getPolicy().toString(),
-						permission);
-				formsDTO.add(formDTO);
-			}
+			if(user != null) {
+                for(Form f : forms) {
+                    //TODO: Improve
+                    PermissionDTO permission = new PermissionDTO(
+                                    formListerDAO.currentUserHasPermission(user, f, Operation.READ), 
+                                    formListerDAO.currentUserHasPermission(user, f, Operation.UPDATE), 
+                                    formListerDAO.currentUserHasPermission(user, f, Operation.SHARE), 
+                                    formListerDAO.currentUserHasPermission(user, f, Operation.DELETE));
+                    FormDTO formDTO = new FormDTO(
+                                    f.getKey(),
+                                    f.getTitle(), 
+                                    userDTO.getEmail(), 
+                                    f.getUrl(), 
+                                    f.getXml(),
+                                    newFormat.format(f.getCreationDate()), 
+                                    f.getPolicy(),
+                                    permission);
+                    formsDTO.add(formDTO);
+                }
+            }
+            else {
+                log.error(userDTO.getEmail() + " User doesn't exist");
+            }
 		}		
 		return formsDTO;
-	}
-	
-	public User getUserByKey(UUID uuid) {
-		return userDAO.findUserByKey(uuid);
 	}
 	
 	private String getUserEmailByKey(UUID uuid) {
@@ -75,27 +78,35 @@ public class FormListerEJB {
 	public Collection<FormDTO> getListSharedForms(UserDTO userDTO) {
 		List<FormDTO> formsDTO = null;
 		SimpleDateFormat newFormat = new SimpleDateFormat(MaritacaConstants.SHORT_DATE_FORMAT_ISO8601);
-		User user = userDAO.findUserByEmail(userDTO.getEmail());
-		List<Form> forms = formListerDAO.getListSharedFormsByUserKey(user);
-		if(!forms.isEmpty()) {
-			formsDTO = new ArrayList<FormDTO>();			
-			for(Form f : forms) {
-				PermissionDTO permission = new PermissionDTO(
-						formListerDAO.currentUserHasPermission(user, f, Operation.READ), 
-						formListerDAO.currentUserHasPermission(user, f, Operation.UPDATE), 
-						formListerDAO.currentUserHasPermission(user, f, Operation.SHARE), 
-						formListerDAO.currentUserHasPermission(user, f, Operation.DELETE));
-				FormDTO formDTO = new FormDTO(
-						f.getKey(),
-						f.getTitle(), 
-						getUserEmailByKey(f.getUser().getKey()),  
-						f.getXml(),
-						newFormat.format(f.getCreationDate()), 
-						f.getPolicy().toString(),
-						permission);
-				formsDTO.add(formDTO);
-			}
-		}		
+		//TODO: Need I this query?
+        User user = userDAO.findUserByEmail(userDTO.getEmail());
+        if(user != null) {
+            List<Form> forms = formListerDAO.getListSharedFormsByUserKey(user);
+            if(!forms.isEmpty()) {
+                formsDTO = new ArrayList<FormDTO>();			
+                for(Form f : forms) {
+                    //TODO: Improve
+                    PermissionDTO permission = new PermissionDTO(
+                                    formListerDAO.currentUserHasPermission(user, f, Operation.READ), 
+                                    formListerDAO.currentUserHasPermission(user, f, Operation.UPDATE), 
+                                    formListerDAO.currentUserHasPermission(user, f, Operation.SHARE), 
+                                    formListerDAO.currentUserHasPermission(user, f, Operation.DELETE));
+                    FormDTO formDTO = new FormDTO(
+                                    f.getKey(),
+                                    f.getTitle(), 
+                                    getUserEmailByKey(f.getUser().getKey()),  
+                                    f.getUrl(), 
+                                    f.getXml(),
+                                    newFormat.format(f.getCreationDate()), 
+                                    f.getPolicy(),
+                                    permission);
+                    formsDTO.add(formDTO);
+                }
+            }
+        }
+        else {
+            log.error(userDTO.getEmail() + " User doesn't exist");
+        }
 		return formsDTO;
 	}
 }

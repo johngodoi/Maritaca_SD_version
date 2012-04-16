@@ -1,6 +1,7 @@
 package br.unifesp.maritaca.business.form.edit;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -12,10 +13,13 @@ import org.apache.commons.logging.LogFactory;
 import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.business.base.PermissionDTO;
 import br.unifesp.maritaca.business.base.UserDAO;
+import br.unifesp.maritaca.business.base.dto.MessageDTO;
+import br.unifesp.maritaca.business.base.dto.MessageDTO.MessageType;
 import br.unifesp.maritaca.business.form.dto.FormDTO;
 import br.unifesp.maritaca.business.form.edit.dao.FormEditorDAO;
 import br.unifesp.maritaca.business.form.edit.dao.FormPermissionsDAO;
 import br.unifesp.maritaca.business.form.list.dao.FormListerDAO;
+import br.unifesp.maritaca.business.list.dao.ManagerListDAO;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
 import br.unifesp.maritaca.core.MaritacaList;
@@ -31,8 +35,92 @@ public class FormEditorEJB {
 	
 	@Inject private FormEditorDAO formEditorDAO;
 	@Inject private FormListerDAO formListerDAO;
+	@Inject private ManagerListDAO managerListDAO;
 	@Inject private FormPermissionsDAO formPermissionsDAO;
 	@Inject private UserDAO userDAO;
+	
+	public FormDTO getFormDTOByKey(FormDTO formDTO) {
+		Form form = formEditorDAO.getForm(formDTO.getKey(), true);
+		if(form != null) {
+			FormDTO newForDTO = new FormDTO();
+			newForDTO.setKey(form.getKey());
+			newForDTO.setTitle(form.getTitle());
+			newForDTO.setUrl(form.getUrl());
+			newForDTO.setPolicy(form.getPolicy());
+			return newForDTO;
+		}
+		return null;
+	}
+	
+	public List<String> populateFormSharedList(FormDTO formDTO) {		
+		List<String> lstItems = new ArrayList<String>();
+		Form form = new Form();
+		form.setKey(formDTO.getKey());
+		for(FormPermissions fp : formListerDAO.getFormPermissions(form)) {
+			MaritacaList list = formListerDAO.getMaritacaList(fp.getMaritacaList().getKey());
+			if(!list.equals(formListerDAO.getAllUsersList())) {
+				lstItems.add(list.getName());				
+			}
+		}
+		return lstItems;
+	}
+	
+	public String searchMaritacaListByName(String selectedItem) {
+		MaritacaList list = formListerDAO.searchMaritacaListByName(selectedItem);
+		if(list != null) {
+			return list.getName();
+		}		
+		return null;
+	}
+	
+	public Collection<MaritacaList> getMaritacaListsByPrefix(String prefix) {
+		return managerListDAO.maritacaListsStartingWith(prefix);
+	}
+	
+	public List<String> getOwnerOfMaritacaListByPrefix(String prefix) {
+		List<String> listsNames = new ArrayList<String>();
+		Collection<MaritacaList> lists = managerListDAO.maritacaListsStartingWith(prefix);
+		for(MaritacaList gr : lists) {
+			//set data of the owner
+			gr.setOwner(formEditorDAO.getOwnerOfMaritacaList(gr));
+			listsNames.add(gr.getName());
+		}	
+		return listsNames;
+	}
+	
+	public boolean updateFormFromPolicyEditor(FormDTO formDTO, UserDTO userDTO, List<String> usedItems) {		
+		Form form = new Form();
+		form.setKey(formDTO.getKey());
+		form.setTitle(formDTO.getTitle());
+		form.setXml(formDTO.getXml());
+		form.setUrl(getUniqueUrl());
+		form.setPolicy(formDTO.getPolicy());
+		// check permissions for updating
+		Form originalForm = formEditorDAO.getForm(form.getKey(), true);
+		if(!formPermissionsDAO.currentUserHasPermission(originalForm, Operation.UPDATE)){
+			throw new AuthorizationDenied(Form.class, formDTO.getKey(), userDTO.getKey(), Operation.UPDATE);
+		}
+		if( formEditorDAO.verifyIfUserExist(userDTO.getKey()) ){
+			form.setUser(userDAO.findUserByKey(userDTO.getKey()));
+			formEditorDAO.persistForm(form);
+			// save permissions of a form
+			formPermissionsDAO.saveFormPermissionsByPolicy(form, getFormLists(usedItems));
+			return true;
+		} else {			
+			throw new IllegalArgumentException("User does not exist in database");
+		}
+	}
+	
+	private List<MaritacaList> getFormLists(List<String> usedItems) {
+		List<MaritacaList> lists = new ArrayList<MaritacaList>();
+		for(String listName : usedItems) {
+			MaritacaList list = formListerDAO.searchMaritacaListByName(listName);
+			lists.add(list);
+		}
+		return lists;
+	}
+	
+	//
 
 	public void saveNewForm(FormDTO formDTO) {
 		log.info("in saveNewForm");
@@ -122,6 +210,5 @@ public class FormEditorEJB {
 		} else {
 			throw new AuthorizationDenied(Form.class, formDTO.getKey(), userDTO.getKey(), Operation.DELETE);
 		}	
-	}
-	
+	}		
 }

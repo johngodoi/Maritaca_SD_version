@@ -38,7 +38,7 @@
 						label="#{msgs.commons_view}"
 						action="#{manager.activeModAndSub('Forms', 'formEditor')}" 
 						rendered="#{aForm.permissionDTO.read}">
-						<f:setPropertyActionListener target="#{formEditorBean.form}"
+						<f:setPropertyActionListener target="#{formEditorBean.formFromLister}"
 							value="#{aForm}" />
 						<f:setPropertyActionListener target="#{formEditorBean.newForm}"
 							value="false" />
@@ -50,7 +50,7 @@
 						label="#{msgs.commons_edit}"
 						action="#{manager.activeModAndSub('Forms', 'formEditor')}" 
 						rendered="#{aForm.permissionDTO.update}">
-						<f:setPropertyActionListener target="#{formEditorBean.form}"
+						<f:setPropertyActionListener target="#{formEditorBean.formFromLister}"
 							value="#{aForm}" />
 						<f:setPropertyActionListener target="#{formEditorBean.newForm}"
 							value="false" />
@@ -60,7 +60,7 @@
 
 					<rich:menuItem icon="#{resource['img:share.png']}"
 						render="shareForm:shareFormId" label="#{msgs.form_share}"
-						action="#{shareFormBean.setForm(aForm)}"
+						action="#{formPolicyEditorBean.setFormDTO(aForm)}"
 						onclick="showShareForm('#{msgs.form_share_settings}');" 
 						rendered="#{aForm.permissionDTO.share}">
 					</rich:menuItem>
