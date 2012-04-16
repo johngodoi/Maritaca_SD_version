@@ -60,7 +60,7 @@
 			initFormEditor('#{(formEditorBean.formDTO.title!=null) ? formEditorBean.formDTO.title : msgs.form_new}');
 			if(#{!formEditorBean.newForm} || #{importFormBean.successful}){
 				try{
-					loadFormFromXML('#{formEditorBean.xml}');
+					loadFormFromXML('#{formEditorBean.formDTO.xml}');
 				} catch( err ) {
 					alert('#{msgs.form_edit_error_loading}, ' + err )
 				}
