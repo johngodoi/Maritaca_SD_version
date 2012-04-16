@@ -70,7 +70,7 @@
 						action="#{formEditorBean.deleteForm}"
 						actionListener="#{formListerBean.listOwnFormsChanged}" 
 						rendered="#{aForm.permissionDTO.delete}">
-						<f:setPropertyActionListener target="#{formEditorBean.form}"
+						<f:setPropertyActionListener target="#{formEditorBean.formFromLister}"
 							value="#{aForm}" />
 					</rich:menuItem>
 					
