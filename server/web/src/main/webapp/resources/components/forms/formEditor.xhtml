@@ -29,7 +29,7 @@
 			<!-- TODO: Bug from richfaces, analyse!! -->
 			<rich:menuItem label="#{msgs.commons_import}"
 				onclick="showImportForm('#{msgs.form_import_title}');"
-				execute="@form" render="importForm:importFormId"
+				mode="client" render="importForm:importFormId"
 				icon="#{resource['img:import.png']}" />
 
 			<!-- Save option -->

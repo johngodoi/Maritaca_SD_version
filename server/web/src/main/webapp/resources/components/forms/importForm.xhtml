@@ -18,7 +18,8 @@
 					<h:outputText value="#{msgs.form_import_fileUploadTitle}" />
 					<rich:fileUpload id="upload" 
 						fileUploadListener="#{importFormBean.listener}"
-						acceptedTypes="xml" listWidth="50px" listHeight="45px"
+						acceptedTypes="xml" listWidth="50px" 
+						listHeight="45px" autoclear="true"
 						maxFilesQuantity="1" render="panelContent">
 					</rich:fileUpload>
 					<h:outputText value="#{msgs.form_import_fileUploadNote}" />

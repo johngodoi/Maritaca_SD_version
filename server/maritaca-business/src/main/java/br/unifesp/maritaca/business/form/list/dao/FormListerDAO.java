@@ -199,5 +199,22 @@ public class FormListerDAO extends BaseDAO {
 
 	public <T> boolean currentUserHasPermission(User user, T entity, Operation op) {
 		return userHasPermission(user, entity, op);
-	}		
+	}
+	
+	public MaritacaList searchMaritacaListByName(String groupName) {
+		if (entityManager == null || groupName == null)
+			return null;
+
+		List<MaritacaList> foundGroups = entityManager.cQuery(MaritacaList.class, "name",
+				groupName);
+
+		if (foundGroups.size() == 0) {
+			return null;
+		} else if (foundGroups.size() == 1) {
+			return foundGroups.get(0);
+		} else {
+//			throw new InvalidNumberOfEntries(groupName, MaritacaList.class);
+			return null;
+		}
+	}
 }

@@ -9,6 +9,7 @@ import br.unifesp.maritaca.business.parser.RandomAnswersCreator;
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.MaritacaDate;
+import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.core.User;
 
 public class FormEditorDAO extends BaseDAO {
@@ -64,5 +65,21 @@ public class FormEditorDAO extends BaseDAO {
 	public void delete(Form form) {
 		entityManager.delete(form);
 	}
-
+	
+	public User getOwnerOfMaritacaList(MaritacaList gr) {
+		if (gr.getOwner() != null) {
+			return getUser(gr.getOwner().getKey());
+		} else {
+			MaritacaList group = entityManager.find(MaritacaList.class, gr.getKey(), true);
+			if (group != null) {
+				return getOwnerOfMaritacaList(group);
+			} else {
+				return null;
+			}
+		}
+	}
+	
+	public User getUser(UUID uuid) {
+		return entityManager.find(User.class, uuid);
+	}
 }

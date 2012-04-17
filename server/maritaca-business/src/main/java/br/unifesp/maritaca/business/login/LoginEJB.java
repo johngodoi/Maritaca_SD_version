@@ -6,7 +6,6 @@ import javax.inject.Inject;
 import br.unifesp.maritaca.business.login.dao.LoginDAO;
 import br.unifesp.maritaca.business.login.dto.LoginDTO;
 import br.unifesp.maritaca.core.User;
-import br.unifesp.maritaca.model.ModelFactory;
 import br.unifesp.maritaca.persistence.dto.UserDTO;
 
 @Stateless
@@ -25,7 +24,7 @@ public class LoginEJB {
 			userDTO.setLastname(dbUser.getLastname());
 			userDTO.setMaritacaListKey(dbUser.getMaritacaList().getKey());
 			
-			ModelFactory.getInstance().registryUser(dbUser);
+			//ModelFactory.getInstance().registryUser(dbUser);
 		}
 		return userDTO;
 	}

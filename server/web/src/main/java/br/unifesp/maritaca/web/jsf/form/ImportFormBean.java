@@ -1,8 +1,11 @@
 package br.unifesp.maritaca.web.jsf.form;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URI;
+import java.net.URL;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
@@ -17,8 +20,8 @@ import org.apache.commons.validator.UrlValidator;
 import org.richfaces.event.FileUploadEvent;
 import org.richfaces.model.UploadedFile;
 
-import br.unifesp.maritaca.core.Form;
-import br.unifesp.maritaca.web.jsf.AbstractBean;
+import br.unifesp.maritaca.business.form.dto.FormDTO;
+import br.unifesp.maritaca.web.base.MaritacaJSFBean;
 import br.unifesp.maritaca.web.utils.Utils;
 
 
@@ -29,58 +32,50 @@ import br.unifesp.maritaca.web.utils.Utils;
  */
 @ManagedBean
 @RequestScoped
-public class ImportFormBean extends AbstractBean {
+public class ImportFormBean extends MaritacaJSFBean {
 
 	private static final Log log = LogFactory.getLog(ImportFormBean.class);
 	private static final long serialVersionUID = 1L;
 
 	private String url;
 	private boolean successful;
+	
 	@ManagedProperty("#{formEditorBean}")
 	private FormEditorBean formEditorBean;
 
 	private String result;
 
-	public ImportFormBean() {
-		super(true, true);
-	}
-
 	// TODO Validate the xml content.
 	public void listener(FileUploadEvent event) throws Exception {
 		UploadedFile file = event.getUploadedFile();
 		String data = new String(file.getData());
+		data = data.replace('\n', ' ');
 		
-		setForm(file.getName(), data);
+		FormDTO formDTO = new FormDTO();
+		formDTO.setTitle(file.getName());
+		formDTO.setXml(data);
+		formEditorBean.setFormDTO(formDTO);
+
 		setSuccessful(true);
-		addMessage("form_import_successful", FacesMessage.SEVERITY_INFO);
 	}
 
 	// TODO Validate the xml content.
 	public void processUrl() {
-//		String value = Utils
-//				.getMessageFromResourceProperties("form_import_successful");
+		String value = Utils
+				.getMessageFromResourceProperties("form_import_successful");
 		try {
-			/*ClientConfig config = new DefaultClientConfig();
-			Client client = Client.create(config);
-			WebResource service = client.resource(getBaseURI(getUrl()));
-			String xml = service.accept(MediaType.TEXT_XML).get(String.class);
-
-			setForm(getUrl(), xml);
+			log.info(getUrl());
+			FormDTO formDTO = new FormDTO();
+			formDTO.setTitle(getUrl());
+			formDTO.setXml(readFileFromURL(getUrl()));
+			formEditorBean.setFormDTO(formDTO);
+			
 			setResult(value);
-			setSuccessful(true);*/
-			addMessage("form_import_successful", FacesMessage.SEVERITY_INFO);
+			setSuccessful(true);
+			addMessageInfo("form_import_successful");
 		} catch (Exception e) {
 			log.error("Invalid URL", e);
 		}
-	}
-
-	public void setForm(String title, String xml) {
-		xml = xml.replace("\n", "");
-		Form form = new Form();
-		form.setTitle(title);
-		form.setXml(xml);
-		// TODO
-		//getEditFormBean().setForm(form);
 	}
 
 	public URI getBaseURI(String url) {
@@ -101,6 +96,22 @@ public class ImportFormBean extends AbstractBean {
 			setSuccessful(false);
 		}
 		setSuccessful(true);
+	}
+	
+	public String readFileFromURL(String stringURL) {
+		try {
+			URL url = new URL(stringURL);
+			BufferedReader in = new BufferedReader(new 
+					InputStreamReader(url.openStream()));
+			String inputLine;
+			String dataFile = "";
+			while( (inputLine = in.readLine()) != null)
+				dataFile += inputLine;
+			return dataFile;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public void setUrl(String url) {

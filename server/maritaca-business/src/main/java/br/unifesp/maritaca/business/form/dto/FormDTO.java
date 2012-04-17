@@ -1,7 +1,10 @@
 package br.unifesp.maritaca.business.form.dto;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.UUID;
 
+import br.unifesp.maritaca.access.Policy;
 import br.unifesp.maritaca.business.base.PermissionDTO;
 import br.unifesp.maritaca.business.base.dto.BaseDTO;
 
@@ -17,7 +20,8 @@ public class FormDTO extends BaseDTO {
 	
 	private String url;
 	
-	private String policy;
+	//private String policy;
+	private Policy policy = Policy.PRIVATE;
 	
 	private String owner; //email
 	
@@ -29,12 +33,13 @@ public class FormDTO extends BaseDTO {
 	
 	public FormDTO() { }
 	
-	public FormDTO(UUID key, String title, String owner, String xml,
-			String creationDate, String policy, PermissionDTO permissionDTO) {
+	public FormDTO(UUID key, String title, String owner, String url, String xml,
+			String creationDate, Policy policy, PermissionDTO permissionDTO) {
 		super();
 		this.key = key;
 		this.title = title;
 		this.owner = owner;
+		this.url = url;
 		this.xml = xml;
 		this.creationDate = creationDate;
 		this.policy = policy;
@@ -65,16 +70,16 @@ public class FormDTO extends BaseDTO {
 		this.url = url;
 	}
 
-	public String getPolicy() {
+	public UUID getUserKey() {
+		return userKey;
+	}
+
+	public Policy getPolicy() {
 		return policy;
 	}
 
-	public void setPolicy(String policy) {
+	public void setPolicy(Policy policy) {
 		this.policy = policy;
-	}
-
-	public UUID getUserKey() {
-		return userKey;
 	}
 
 	public void setUserKey(UUID userKey) {
@@ -112,6 +117,12 @@ public class FormDTO extends BaseDTO {
 	public void setKey(UUID key) {
 		this.key = key;
 	}
-
 	
+	public Map<String,Policy> getPolicyItems(){
+		Map<String,Policy> policyItems = new LinkedHashMap<String,Policy>(); 
+		for(Policy p : Policy.values()){
+			policyItems.put(p.toString(), p);
+		}
+		return policyItems;
+	}	
 }

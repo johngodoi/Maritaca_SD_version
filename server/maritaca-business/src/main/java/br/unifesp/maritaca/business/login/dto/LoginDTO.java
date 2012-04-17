@@ -21,13 +21,6 @@ public class LoginDTO extends BaseDTO {
 		this.password = password;
 	}
 
-	public LoginDTO(String email, String password, MessageDTO message) {
-		super();
-		this.email = email;
-		this.password = password;
-		this.setMessage(message);
-	}
-
 	public String getEmail() {
 		return email;
 	}

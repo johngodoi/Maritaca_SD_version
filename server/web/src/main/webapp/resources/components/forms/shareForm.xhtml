@@ -16,29 +16,29 @@
 			<rich:panel id="shareFormPanel" >
 				<h:panelGrid columns="2" width="100%">
 					<h:outputText value="#{msgs.form_title}:"/>
-					<h:outputText value="#{shareFormBean.form.title}"/>
+					<h:outputText value="#{formPolicyEditorBean.formDTO.title}"/>
 				
 					<h:outputText value="#{msgs.form_share_url}:" />
 					<h:inputText
-						value="#{shareFormBean.rootForSharing}#{shareFormBean.url}"
+						value="#{formPolicyEditorBean.rootForSharing}#{formPolicyEditorBean.formDTO.url}"
 						readonly="true" style="width:100%;" />
 					
-					<h:outputText value="#{msgs.form_policy}: "/>
+					<h:outputText value="#{msgs.form_policy}: "/>					
 					<f:ajax render="shareFormPanel" event="click">
-					<h:selectOneRadio value="#{shareFormBean.form.policy}">
-						<f:selectItems value="#{shareFormBean.form.policyItens}"/>															
+					<h:selectOneRadio value="#{formPolicyEditorBean.formDTO.policy}">
+						<f:selectItems value="#{formPolicyEditorBean.formDTO.policyItems}"/>															
 					</h:selectOneRadio>
 					</f:ajax>							
 				</h:panelGrid>
 
-				<rich:panel rendered="#{shareFormBean.form.policy.useList}">
-					<util:itemList	backBean="#{shareFormBean}"
+				<rich:panel rendered="#{formPolicyEditorBean.formDTO.policy.useList}">
+					<util:itemList	backBean="#{formPolicyEditorBean}"
 									listLabel="#{msgs.form_list_of_users}"/>
 				</rich:panel>
 				
 			<!-- Save & Cancel -->
-			<util:saveCancelButtons save="#{shareFormBean.save()}"
-									cancel="#{shareFormBean.cancel()}" />				
+			<util:saveCancelButtons save="#{formPolicyEditorBean.save()}"
+									cancel="#{formPolicyEditorBean.cancel()}" />				
 			</rich:panel>
 		</div>
 	</composite:implementation>
