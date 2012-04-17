@@ -1,46 +1,39 @@
 package br.unifesp.maritaca.web.jsf.answer;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
+import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 
-import br.unifesp.maritaca.core.Answer;
-import br.unifesp.maritaca.core.Form;
-import br.unifesp.maritaca.web.jsf.AbstractBean;
+import br.unifesp.maritaca.business.answer.list.ListAnswersEJB;
+import br.unifesp.maritaca.business.answer.list.dto.AnswerListDTO;
+import br.unifesp.maritaca.business.form.dto.FormDTO;
+import br.unifesp.maritaca.web.base.MaritacaJSFBean;
 
-//@ManagedBean
+@ManagedBean
 @ViewScoped
-public class ListAnswersBean extends AbstractBean {
+public class ListAnswersBean extends MaritacaJSFBean {
 	private static final long serialVersionUID = 1L;
-	private Form form;
-	private Collection<Answer> answers;
-
+	
+	private AnswerListDTO answerListDTO;	
+	
+	@Inject
+	private ListAnswersEJB listAnswersEJB;	
+	
 	public ListAnswersBean() {
-		super(true, false);
-		answers = new ArrayList<Answer>();
+		/* Default constructor: Nothing here */
+	}
+	
+	public String listAnswers(FormDTO form){
+		setAnswerList(listAnswersEJB.findAnswerListFromForm(form));
+		getModuleManager().activeModAndSub("Answer", "listAnswers");
+		return null;
 	}
 
-	public Collection<Answer> getAnswers() {
-		return answers;
+	public AnswerListDTO getAnswerList() {
+		return answerListDTO;
 	}
 
-	public void setAnswers(Collection<Answer> answers) {
-		this.answers = answers;
-	}
-
-	public String getViewAnswer() {
-		return "viewAnswer";
-	}
-
-	public Form getForm() {
-		return form;
-	}
-
-	public void setForm(Form form) {
-		this.form = form;
-		if (form != null) {
-			answers = formAnswCtrl.listAllAnswersMinimal(form.getKey());
-		}
+	public void setAnswerList(AnswerListDTO answerListDTO) {
+		this.answerListDTO = answerListDTO;
 	}
 }

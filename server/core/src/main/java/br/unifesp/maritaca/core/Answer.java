@@ -1,5 +1,8 @@
 package br.unifesp.maritaca.core;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 import javax.persistence.Entity;
@@ -7,7 +10,6 @@ import javax.persistence.Id;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import br.unifesp.maritaca.access.Policy;
 import br.unifesp.maritaca.persistence.annotations.Column;
 import br.unifesp.maritaca.persistence.annotations.Minimal;
 
@@ -29,8 +31,7 @@ public class Answer {
 	private String xml;
 	
 	@Column
-	@Minimal
-	private Policy policy = Policy.PRIVATE;
+	private MaritacaDate collectionDate;
 
 	@XmlElement(name = "id")
 	public UUID getKey() {
@@ -89,11 +90,21 @@ public class Answer {
 		return super.toString();
 	}
 
-	public Policy getPolicy() {
-		return policy;
+	public MaritacaDate getCollectionDate() {
+		return collectionDate;
 	}
 
-	public void setPolicy(Policy policy) {
-		this.policy = policy;
+	public void setCollectionDate(MaritacaDate collectionDate) {
+		this.collectionDate = collectionDate;
+	}
+	
+	public void setCollectionDate(String collectionDate) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy hh:mm a");
+		try {
+			Date d = sdf.parse(collectionDate);
+			setCollectionDate(new MaritacaDate(d));
+		} catch (ParseException e) {
+			throw new IllegalArgumentException("Can't parse date: " + collectionDate);
+		}
 	}
 }

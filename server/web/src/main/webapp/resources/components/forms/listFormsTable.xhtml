@@ -12,7 +12,7 @@
 		<composite:attribute name="submodule" required="true" />
 		<composite:attribute name="formList"  required="true" />
 		<composite:attribute name="title"     required="true" />
-		<composite:attribute name="idem"     required="true" />
+		<composite:attribute name="idem"      required="true" />
 	</composite:interface>
 	<composite:implementation>
 
@@ -77,13 +77,10 @@
 					<rich:menuSeparator />
 					<!-- todo: check mode="server" in list answers, it must be ajax, but
 					it is not working in ajax mode -->
-					<rich:menuItem mode="ajax" icon="#{resource['img:view_form.png']}"
+					<rich:menuItem mode="server" icon="#{resource['img:view_form.png']}"
 						label="#{msgs.form_view_answers}"
-						action="#{manager.activeModAndSub('Answer', 'listAnswers')}"
-						onclick="#{rich:component('mainTab')}.switchToItem('Answer');	return false;">
-						<f:setPropertyActionListener target="#{listAnswersBean.form}"
-							value="#{aForm}" />
-					</rich:menuItem>
+						action="#{listAnswersBean.listAnswers(aForm)}"
+						execute="@form"/>
 				</rich:dropDownMenu>
 				
 				<a4j:commandLink value="#{aForm.title}"

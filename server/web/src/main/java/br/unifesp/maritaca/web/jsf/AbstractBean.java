@@ -11,6 +11,7 @@ import br.unifesp.maritaca.model.FormAnswerModel;
 import br.unifesp.maritaca.model.ModelFactory;
 import br.unifesp.maritaca.model.UserModel;
 
+@Deprecated
 public abstract class AbstractBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
