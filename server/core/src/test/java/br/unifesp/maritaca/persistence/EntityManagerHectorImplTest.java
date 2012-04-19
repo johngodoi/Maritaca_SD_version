@@ -8,6 +8,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -29,12 +31,31 @@ public class EntityManagerHectorImplTest extends BaseEmbededServerSetupTest {
 
 	@Test
 	public void testCreateExistsDeleteColumnFamily() {
-		assertFalse(emHectorImpl.tableExists(CFforTesting.class));
-		assertTrue(emHectorImpl.createTable(CFforTesting.class));
-		assertTrue(emHectorImpl.tableExists(CFforTesting.class));
-		assertTrue(emHectorImpl.dropTable(CFforTesting.class));
-		assertFalse(emHectorImpl.tableExists(CFforTesting.class));
-
+		assertFalse(emHectorImpl.columnFamilyExists(CFforTesting.class));
+		assertTrue(emHectorImpl.createColumnFamily(CFforTesting.class));
+		assertTrue(emHectorImpl.columnFamilyExists(CFforTesting.class));
+		assertTrue(emHectorImpl.dropColumnFamily(CFforTesting.class));
+		assertFalse(emHectorImpl.columnFamilyExists(CFforTesting.class));
+	}
+	
+	@Test
+	public void testJsonValue() {
+		UUID uuid1 = new UUID(1, 2);
+		UUID uuid2 = new UUID(1, 4);
+		
+		CFforTesting cf = new CFforTesting();
+		List<UUID> uuids = new ArrayList<UUID>();
+		uuids.add(uuid1);
+		uuids.add(uuid2);		
+		cf.setList(uuids);
+		emHectorImpl.persist(cf);
+		
+		CFforTesting cfFound = emHectorImpl.find(cf.getClass(), cf.getKey());
+		assertTrue(cfFound.getList().size()==2);
+		assertTrue(cfFound.getList().get(0).equals(uuid1));
+		assertTrue(cfFound.getList().get(1).equals(uuid2));
+		
+		emHectorImpl.delete(cf);	
 	}
 
 	@Test

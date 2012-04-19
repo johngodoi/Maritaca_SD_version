@@ -49,7 +49,7 @@ public class ManagerModelImplTest extends BaseEmbededServerSetupTest {
 		manModel.initMaritaca(new HashMap<String, String>());
 		for (@SuppressWarnings("rawtypes")
 		Class cl : classes) {
-			assertTrue(em.tableExists(cl));
+			assertTrue(em.columnFamilyExists(cl));
 		}
 	}
 

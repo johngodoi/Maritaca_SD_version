@@ -18,11 +18,11 @@ public interface EntityManager {
 
 	<T> List<T> listAll(Class<T> cl);
 
-	<T> boolean createTable(Class<T> cl);
+	<T> boolean createColumnFamily(Class<T> cl);
 
-	<T> boolean tableExists(Class<T> cl);
+	<T> boolean columnFamilyExists(Class<T> cl);
 
-	<T> boolean dropTable(Class<T> cl);
+	<T> boolean dropColumnFamily(Class<T> cl);
 
 	<T> T find(Class<T> cl, UUID uuid, boolean justMinimal);
 

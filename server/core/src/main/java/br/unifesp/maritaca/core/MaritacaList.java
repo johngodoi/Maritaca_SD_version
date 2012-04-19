@@ -1,5 +1,6 @@
 package br.unifesp.maritaca.core;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Entity;
@@ -7,6 +8,7 @@ import javax.persistence.Id;
 
 import br.unifesp.maritaca.persistence.annotations.Column;
 import br.unifesp.maritaca.persistence.annotations.Minimal;
+import br.unifesp.maritaca.persistence.annotations.JSONValue;
 
 @Entity
 public class MaritacaList {
@@ -23,6 +25,10 @@ public class MaritacaList {
 	@Column
 	@Minimal
 	private String description;
+	
+	@Column
+	@JSONValue
+	private List<UUID> users;
 
 	public UUID getKey() {
 		return key;
@@ -84,5 +90,13 @@ public class MaritacaList {
 		} else {
 			return false;
 		}
+	}
+
+	public List<UUID> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<UUID> users) {
+		this.users = users;
 	}
 }

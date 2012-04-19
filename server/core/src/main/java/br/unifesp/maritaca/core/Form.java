@@ -2,6 +2,7 @@ package br.unifesp.maritaca.core;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -15,6 +16,7 @@ import me.prettyprint.cassandra.utils.TimeUUIDUtils;
 import br.unifesp.maritaca.access.Policy;
 import br.unifesp.maritaca.persistence.annotations.Column;
 import br.unifesp.maritaca.persistence.annotations.Minimal;
+import br.unifesp.maritaca.persistence.annotations.JSONValue;
 
 @XmlRootElement(name = "form")
 @Entity
@@ -22,6 +24,9 @@ public class Form implements Comparable<Form> {
 	@Id
 	private UUID key;
 
+	@JSONValue
+	private List<UUID> lists; //lists of MaritacaList
+	
 	@Column
 	private String xml;
 
@@ -49,6 +54,7 @@ public class Form implements Comparable<Form> {
 	private Date creationDate;
 	
 	// 0 means order by name; 1 means order by date
+	@Deprecated
 	private int flagToOrder;
 	
 	public void setKey(UUID key) {
@@ -175,5 +181,13 @@ public class Form implements Comparable<Form> {
 	
 	public void setPolicy(Policy policy) {
 		this.policy = policy;
+	}
+
+	public List<UUID> getLists() {
+		return lists;
+	}
+
+	public void setLists(List<UUID> lists) {
+		this.lists = lists;
 	}
 }

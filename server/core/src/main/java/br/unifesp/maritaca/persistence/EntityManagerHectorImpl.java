@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -50,9 +51,14 @@ import org.apache.cassandra.thrift.ColumnDef;
 import org.apache.cassandra.thrift.IndexType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.codehaus.jackson.map.introspect.BasicClassIntrospector.GetterMethodFilter;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import br.unifesp.maritaca.persistence.annotations.Column;
 import br.unifesp.maritaca.persistence.annotations.Minimal;
+import br.unifesp.maritaca.persistence.annotations.JSONValue;
 
 public class EntityManagerHectorImpl implements EntityManager, Serializable {
 	
@@ -92,9 +98,9 @@ public class EntityManagerHectorImpl implements EntityManager, Serializable {
 			throw new IllegalArgumentException("object null or not an entity");
 		}
 
-		if (!tableExists(obj.getClass()) && createTable) {
+		if (!columnFamilyExists(obj.getClass()) && createTable) {
 			try {
-				createTable(obj.getClass());
+				createColumnFamily(obj.getClass());
 			} catch (Exception e) {
 				log.error(e);
 				return false;
@@ -124,9 +130,14 @@ public class EntityManagerHectorImpl implements EntityManager, Serializable {
 
 			if (result != null) {
 				HColumn column = getHColumn(f.getName(), result);
+
+				if(f.isAnnotationPresent(JSONValue.class)){
+					Gson gson = new Gson();
+					result = gson.toJson(result);					
+				}
 				
-				int timeToLive = (f.getAnnotation(Column.class)).ttl();
-				if(timeToLive>0){
+				int timeToLive = (f.getAnnotation(Column.class)).ttl();				
+				if(timeToLive>0) {					
 					column.setTtl(timeToLive);
 				}
 				
@@ -339,11 +350,11 @@ public class EntityManagerHectorImpl implements EntityManager, Serializable {
 	}
 
 	@Override
-	public <T> boolean createTable(Class<T> cl) {
+	public <T> boolean createColumnFamily(Class<T> cl) {
 		if (cl == null || isEntity(cl.getClass())) {
 			throw new IllegalArgumentException("object null or not an entity");
 		}
-		if (!tableExists(cl)) {
+		if (!columnFamilyExists(cl)) {
 
 			List<ColumnDef> columns = new ArrayList<ColumnDef>();
 			for (Field f : getColumnFields(cl, false)) {
@@ -378,7 +389,7 @@ public class EntityManagerHectorImpl implements EntityManager, Serializable {
 	}
 
 	@Override
-	public <T> boolean tableExists(Class<T> cl) {
+	public <T> boolean columnFamilyExists(Class<T> cl) {
 		if (cl == null || isEntity(cl.getClass())) {
 			throw new IllegalArgumentException("object null or not an entity");
 		}
@@ -396,12 +407,12 @@ public class EntityManagerHectorImpl implements EntityManager, Serializable {
 	}
 
 	@Override
-	public <T> boolean dropTable(Class<T> cl) {
+	public <T> boolean dropColumnFamily(Class<T> cl) {
 		if (cl == null || isEntity(cl.getClass())) {
 			throw new IllegalArgumentException("object null or not an entity");
 		}
 
-		if (tableExists(cl)) {
+		if (columnFamilyExists(cl)) {
 			cluster.dropColumnFamily(keyspace.getKeyspaceName(),
 					cl.getSimpleName());
 			return true;
@@ -481,7 +492,12 @@ public class EntityManagerHectorImpl implements EntityManager, Serializable {
 		Method method = getMethod(result, "set" + toUpperFirst(f.getName()),
 				f.getType());
 		try {
-			if (f.getType() == String.class)
+			if(f.isAnnotationPresent(JSONValue.class)){
+				Gson gson = new Gson();
+				Type type = new TypeToken<List<UUID>>(){}.getType();
+				List<UUID> listJson = gson.fromJson(value, type);
+				method.invoke(result, listJson);
+			}else if (f.getType() == String.class)
 
 				method.invoke(result, value);
 

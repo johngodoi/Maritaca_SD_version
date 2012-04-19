@@ -42,7 +42,7 @@ public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel,
 
 		}
 		User rootUser = null;
-		if (!entityManager.tableExists(User.class)) {
+		if (!entityManager.columnFamilyExists(User.class)) {
 			// create main user
 			rootUser = new User();
 			rootUser.setFirstname(ROOT);
@@ -70,11 +70,11 @@ public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel,
 		}
 
 		// create another tables
-		entityManager.createTable(Form.class);
-		entityManager.createTable(Answer.class);
+		entityManager.createColumnFamily(Form.class);
+		entityManager.createColumnFamily(Answer.class);
 
-		if (!entityManager.tableExists(MaritacaList.class)) {
-			entityManager.createTable(MaritacaList.class);						
+		if (!entityManager.columnFamilyExists(MaritacaList.class)) {
+			entityManager.createColumnFamily(MaritacaList.class);						
 
 			// create ALL_USERS list
 			MaritacaList gr = new MaritacaList();
@@ -87,15 +87,15 @@ public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel,
 			}
 		}
 
-		entityManager.createTable(MaritacaListUser.class);
-		entityManager.createTable(FormPermissions.class);
-		entityManager.createTable(OpenId.class);
-		entityManager.createTable(OAuthToken.class);
-		entityManager.createTable(OAuthCode.class);
+		entityManager.createColumnFamily(MaritacaListUser.class);
+		entityManager.createColumnFamily(FormPermissions.class);
+		entityManager.createColumnFamily(OpenId.class);
+		entityManager.createColumnFamily(OAuthToken.class);
+		entityManager.createColumnFamily(OAuthCode.class);
 		
 		//client id for mobile client
-		if(!entityManager.tableExists(OAuthClient.class)){
-			entityManager.createTable(OAuthClient.class);
+		if(!entityManager.columnFamilyExists(OAuthClient.class)){
+			entityManager.createColumnFamily(OAuthClient.class);
 			OAuthClient oaclient = new OAuthClient();
 			oaclient.setClientId("maritacamobile");
 			oaclient.setSecret("maritacasecret");
