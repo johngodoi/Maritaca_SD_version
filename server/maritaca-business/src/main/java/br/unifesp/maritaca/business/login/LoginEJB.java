@@ -31,5 +31,21 @@ public class LoginEJB {
 	
 	private boolean loginSuccessful(LoginDTO loginDTO, User dbUser) {
 		return (dbUser != null && loginDTO.getPassword().equals(dbUser.getPassword()));
+	}
+
+	public UserDTO findUserByEmail(String email) {
+		UserDTO userDTO = null;
+		User dbUser = loginDAO.findUserByEmail(email);
+		if (dbUser != null) {
+			userDTO = new UserDTO();
+			userDTO.setEmail(email);
+			userDTO.setKey(dbUser.getKey());
+			userDTO.setFirstname(dbUser.getFirstname());
+			userDTO.setLastname(dbUser.getLastname());
+			//TODO SAVE LIST!!!!!
+//			userDTO.setMaritacaListKey(dbUser.getMaritacaList().getKey());
+		}
+			
+		return userDTO;
 	}	
 }
