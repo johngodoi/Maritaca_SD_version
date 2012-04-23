@@ -2,8 +2,8 @@ package br.unifesp.maritaca.business.form.list.dto;
 
 import java.util.UUID;
 
-import br.unifesp.maritaca.business.base.PermissionDTO;
 import br.unifesp.maritaca.business.base.dto.BaseDTO;
+import br.unifesp.maritaca.business.base.dto.PermissionDTO;
 
 public class FormListerDTO extends BaseDTO {
 

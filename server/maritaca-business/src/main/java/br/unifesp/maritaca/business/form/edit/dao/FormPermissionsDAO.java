@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-import br.unifesp.maritaca.access.Policy;
+import br.unifesp.maritaca.access.PrePolicy;
 import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.business.base.dao.BaseDAO;
 import br.unifesp.maritaca.core.Configuration;
@@ -39,7 +39,7 @@ public class FormPermissionsDAO extends BaseDAO {
 		MaritacaList  ownerList    = owner.getMaritacaList();
 		MaritacaList  allUsersList = this.getAllUsersList();		
 
-		Policy policy = form.getPolicy();
+		PrePolicy policy = null;//form.getPolicy();
 		
 		FormPermissions ownerPermissions  = policy.buildOwnerFormPermission(form, ownerList);
 		FormPermissions publicPermissions = policy.buildPublicFormPermission(form, allUsersList);

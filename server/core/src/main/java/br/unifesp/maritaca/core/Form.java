@@ -1,6 +1,5 @@
 package br.unifesp.maritaca.core;
 
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import me.prettyprint.cassandra.utils.TimeUUIDUtils;
-import br.unifesp.maritaca.access.Policy;
+import br.unifesp.maritaca.persistence.permission.Policy;
 import br.unifesp.maritaca.persistence.annotations.Column;
 import br.unifesp.maritaca.persistence.annotations.Minimal;
 import br.unifesp.maritaca.persistence.annotations.JSONValue;
@@ -51,7 +50,7 @@ public class Form implements Comparable<Form> {
 		return key;
 	}
 	
-	private Date creationDate;
+	private MaritacaDate creationDate;
 	
 	// 0 means order by name; 1 means order by date
 	@Deprecated
@@ -61,7 +60,7 @@ public class Form implements Comparable<Form> {
 		this.key = key;
 		if(key!=null){
 			long dl = TimeUUIDUtils.getTimeFromUUID(getKey());
-			Date date = new Date();
+			MaritacaDate date = new MaritacaDate();
 			date.setTime(dl);
 			creationDate = date;
 		}
@@ -95,7 +94,7 @@ public class Form implements Comparable<Form> {
 		setUser(f);
 	}
 	
-	public Date getCreationDate(){
+	public MaritacaDate getCreationDate() {
 		return creationDate;
 	}
 
@@ -159,12 +158,12 @@ public class Form implements Comparable<Form> {
 		return flagToOrder;
 	}
 	
-	public Map<String,Policy> getPolicyItens(){
-		Map<String,Policy> policyItens = new LinkedHashMap<String,Policy>(); 
+	public Map<String, Policy> getPolicyItems(){
+		Map<String, Policy> policyItems = new LinkedHashMap<String, Policy>(); 
 		for(Policy p : Policy.values()){
-			policyItens.put(p.toString(), p);
+			policyItems.put(p.toString(), p);
 		}		
-		return policyItens;
+		return policyItems;
 	}
 
 	public void setFlagToOrder(int flagToOrder) {
@@ -190,4 +189,8 @@ public class Form implements Comparable<Form> {
 	public void setLists(List<UUID> lists) {
 		this.lists = lists;
 	}
+	
+	public Boolean isPublic() {
+        return policy.getIdPolicy() == Policy.PUBLIC.getIdPolicy();
+    } 
 }

@@ -7,7 +7,8 @@ import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
 import br.unifesp.maritaca.core.MaritacaList;
 
-public enum Policy {
+@Deprecated
+public enum PrePolicy {
 	PRIVATE(new FormPermissions(AccessLevel.NO_ACCESS,     AccessLevel.NO_ACCESS),
 			new FormPermissions(AccessLevel.FULL_ACCESS,   AccessLevel.FULL_ACCESS),
 			null),	
@@ -29,16 +30,16 @@ public enum Policy {
 	private FormPermissions publicPermissions;
 	private FormPermissions ownerPermissions;
 	private FormPermissions listPermissions;
-	private static final Log log = LogFactory.getLog(Policy.class);
+	private static final Log log = LogFactory.getLog(PrePolicy.class);
 	
-	Policy(FormPermissions publicPermissions, FormPermissions ownerPermissions, FormPermissions listPermissions){
+	PrePolicy(FormPermissions publicPermissions, FormPermissions ownerPermissions, FormPermissions listPermissions){
 		setAllUsersPermissions(publicPermissions);
 		setOwnerPermissions(ownerPermissions);
 		setListPermissions(listPermissions);
 	}
 	
 	public static String[] valuesLabels(){
-		Policy[] policies = Policy.values();
+		PrePolicy[] policies = PrePolicy.values();
 		String[] labels   = new String[policies.length];
 		
 		for(int i=0; i<policies.length; i++)
@@ -51,8 +52,8 @@ public enum Policy {
 		return this.name().replace("_", " ").toLowerCase();
 	}
 	
-	public static Policy getPolicyFromString(String str){
-		for(Policy p : Policy.values()){
+	public static PrePolicy getPolicyFromString(String str){
+		for(PrePolicy p : PrePolicy.values()){
 			String policyName = p.toString();
 			if(policyName.equals(str)){
 				return p;

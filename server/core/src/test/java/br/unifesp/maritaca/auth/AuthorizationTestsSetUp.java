@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import br.unifesp.maritaca.access.Policy;
+import br.unifesp.maritaca.access.PrePolicy;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
 import br.unifesp.maritaca.core.MaritacaList;
@@ -81,8 +81,8 @@ public class AuthorizationTestsSetUp {
 		
 		publicFormUser1.setUser(user1grp1);
 		
-		Policy publicPolicy = Policy.PUBLIC;		
-		publicFormUser1.setPolicy(publicPolicy);
+		PrePolicy publicPolicy = PrePolicy.PUBLIC;		
+		publicFormUser1.setPolicy("publicPolicy");//(publicPolicy);
 		em.persist(publicFormUser1);
 			
 		FormPermissions fp;
@@ -93,8 +93,8 @@ public class AuthorizationTestsSetUp {
 				
 		privateFormUser1.setUser(user1grp1);
 		
-		Policy privatePolicy = Policy.PRIVATE;		
-		privateFormUser1.setPolicy(privatePolicy);
+		PrePolicy privatePolicy = PrePolicy.PRIVATE;		
+		privateFormUser1.setPolicy("privatePolicy");//(privatePolicy);
 		em.persist(privateFormUser1);
 			
 		fp = privatePolicy.buildPublicFormPermission(privateFormUser1, grpAllUsers);
@@ -104,8 +104,8 @@ public class AuthorizationTestsSetUp {
 		
 		sharedHierFormUser1.setUser(user1grp1);
 		
-		Policy sharedHierPolicy = Policy.SHARED_HIERARCHICAL;		
-		sharedHierFormUser1.setPolicy(sharedHierPolicy);
+		PrePolicy sharedHierPolicy = PrePolicy.SHARED_HIERARCHICAL;		
+		sharedHierFormUser1.setPolicy("sharedHierPolicy");//(sharedHierPolicy);
 		em.persist(sharedHierFormUser1);
 			
 		fp = sharedHierPolicy.buildPublicFormPermission(sharedHierFormUser1, grpAllUsers);
@@ -117,8 +117,8 @@ public class AuthorizationTestsSetUp {
 		
 		sharedSocialFormUser1.setUser(user1grp1);
 		
-		Policy sharedSocialPolicy = Policy.SHARED_SOCIAL;		
-		sharedSocialFormUser1.setPolicy(sharedSocialPolicy);
+		PrePolicy sharedSocialPolicy = PrePolicy.SHARED_SOCIAL;		
+		sharedSocialFormUser1.setPolicy("sharedSocialPolicy");//(sharedSocialPolicy);
 		em.persist(sharedSocialFormUser1);
 			
 		fp = sharedSocialPolicy.buildPublicFormPermission(sharedSocialFormUser1, grpAllUsers);

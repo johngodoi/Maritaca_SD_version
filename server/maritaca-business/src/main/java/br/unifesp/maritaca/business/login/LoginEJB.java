@@ -23,8 +23,6 @@ public class LoginEJB {
 			userDTO.setFirstname(dbUser.getFirstname());
 			userDTO.setLastname(dbUser.getLastname());
 			userDTO.setMaritacaListKey(dbUser.getMaritacaList().getKey());
-			
-			//ModelFactory.getInstance().registryUser(dbUser);
 		}
 		return userDTO;
 	}

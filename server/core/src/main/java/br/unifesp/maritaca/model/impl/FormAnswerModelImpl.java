@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import br.unifesp.maritaca.access.AccessLevel;
-import br.unifesp.maritaca.access.Policy;
+import br.unifesp.maritaca.access.PrePolicy;
 import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Form;
@@ -503,7 +503,7 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 		MaritacaList  ownerList    = owner.getMaritacaList();
 		MaritacaList  allUsersList = userModel.getAllUsersList();		
 
-		Policy p = form.getPolicy();
+		PrePolicy p = null;//form.getPolicy();
 		
 		FormPermissions ownerPermissions  = p.buildOwnerFormPermission(form, ownerList);
 		FormPermissions publicPermissions = p.buildPublicFormPermission(form, allUsersList);

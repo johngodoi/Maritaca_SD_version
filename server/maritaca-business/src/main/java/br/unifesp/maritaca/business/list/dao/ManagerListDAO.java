@@ -11,8 +11,8 @@ import javax.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import br.unifesp.maritaca.business.base.UserDAO;
 import br.unifesp.maritaca.business.base.dao.BaseDAO;
+import br.unifesp.maritaca.business.base.dao.UserDAO;
 import br.unifesp.maritaca.business.exception.InvalidNumberOfEntries;
 import br.unifesp.maritaca.business.form.list.dao.FormListerDAO;
 import br.unifesp.maritaca.core.MaritacaList;
