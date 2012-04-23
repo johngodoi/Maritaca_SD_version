@@ -68,7 +68,7 @@ public class AccountEditorBean extends MaritacaJSFBean{
 	 * @return null if not successful (refresh current view)
 	 * or the navigation string to the home page if successful. 
 	 */
-	private String saveNewAccount(){					
+	public String saveNewAccount(){					
 		getAccountEditorEJB().saveAccount(userDto);
 		getLoginManagerBean().login(userDto);
 		return MaritacaConstants.FACES_HOME;
