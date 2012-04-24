@@ -17,6 +17,7 @@ import br.unifesp.maritaca.business.form.dto.FormDTO;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.dto.UserDTO;
+import br.unifesp.maritaca.persistence.permission.Document;
 import br.unifesp.maritaca.persistence.permission.Permission;
 
 @Stateless
@@ -43,7 +44,7 @@ public class FormListerEJB extends AbstractEJB {
 			User user = userDAO.findUserByEmail(userDTO.getEmail());
 			if(user != null) {
                 for(Form form : forms) {
-                	Permission permission = super.getPermission(form, form.getUser().getKey());
+                	Permission permission = super.getPermission(form, form.getUser().getKey(), Document.FORM);
                 	if(permission != null) {
 	                	FormDTO formDTO = new FormDTO(
 	                            form.getKey(),
@@ -79,7 +80,7 @@ public class FormListerEJB extends AbstractEJB {
 			User user = userDAO.findUserByEmail(userDTO.getEmail());
 			if(user != null) {
                 for(Form form : forms) {
-                	Permission permission = super.getPermission(form, form.getUser().getKey());
+                	Permission permission = super.getPermission(form, form.getUser().getKey(), Document.FORM);
                 	if(permission != null) {
 	                	FormDTO formDTO = new FormDTO(
 	                            form.getKey(),

@@ -25,6 +25,7 @@ import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.exception.AuthorizationDenied;
 import br.unifesp.maritaca.persistence.dto.UserDTO;
+import br.unifesp.maritaca.persistence.permission.Document;
 import br.unifesp.maritaca.persistence.permission.Permission;
 import br.unifesp.maritaca.util.UtilsCore;
 
@@ -67,7 +68,8 @@ public class FormEditorEJB extends AbstractEJB {
 		
 		//TODO: Change for UUID
 		form.setUser(user);
-		formDAO.persistForm(form);		
+		formDAO.persistForm(form);
+		formEditorDAO.createRandownAnswer(form);
 	}
 	
 	/**
@@ -96,7 +98,7 @@ public class FormEditorEJB extends AbstractEJB {
 		verifyReturnNullValuesInDB(userDTO);
 		Form form = (Form) verifyReturnNullValuesInDB(formDTO);
 		
-		Permission permission = super.getPermission(form, userDTO.getKey());
+		Permission permission = super.getPermission(form, userDTO.getKey(), Document.FORM);
 		if(permission != null) {
 			formDTO = new FormDTO();
 			formDTO.setKey(form.getKey());
@@ -120,7 +122,7 @@ public class FormEditorEJB extends AbstractEJB {
 		Form originalForm = (Form) verifyReturnNullValuesInDB(formDTO);		
 		User user = (User) verifyReturnNullValuesInDB(userDTO);
 		
-		Permission permission = super.getPermission(originalForm, userDTO.getKey());
+		Permission permission = super.getPermission(originalForm, userDTO.getKey(), Document.FORM);
 		if(permission != null && permission.getUpdate()) {
 			Form form = new Form();
 			form.setKey(formDTO.getKey());
@@ -144,7 +146,7 @@ public class FormEditorEJB extends AbstractEJB {
 		Form originalForm = (Form) verifyReturnNullValuesInDB(formDTO);		
 		User user = (User) verifyReturnNullValuesInDB(userDTO);
 				
-		Permission permission = super.getPermission(originalForm, userDTO.getKey());
+		Permission permission = super.getPermission(originalForm, userDTO.getKey(), Document.FORM);
 		if(permission != null && permission.getDelete()) {
 			//TODO delete answers?
 			formDAO.delete(originalForm);			

@@ -3,6 +3,7 @@ package br.unifesp.maritaca.web.servlet;
 import java.io.File;
 import java.util.HashMap;
 
+import javax.inject.Inject;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -11,16 +12,19 @@ import javax.servlet.http.HttpServlet;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.PropertyConfigurator;
 
-import br.unifesp.maritaca.model.ManagerModel;
-import br.unifesp.maritaca.model.ModelFactory;
-import br.unifesp.maritaca.persistence.EntityManagerFactory;
+import br.unifesp.maritaca.business.init.MaritacaInitEJB;
 
 /**
  * Servlet implementation class MaritacaInitServlet
  */
 public class MaritacaInitServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
+	private static final String PARAM_NAME_CLUSTER = "cluster";
+	private static final String PARAM_NAME_KEYSPACE = "keyspace";
 
+	@Inject MaritacaInitEJB maritacaInitEJB; 
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -32,13 +36,12 @@ public class MaritacaInitServlet extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		initLogger(config);
+		
 		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("cluster", config.getInitParameter("cluster"));
-		params.put("keyspace", config.getInitParameter("keyspace"));
+		params.put(PARAM_NAME_CLUSTER, config.getInitParameter(PARAM_NAME_CLUSTER));
+		params.put(PARAM_NAME_KEYSPACE, config.getInitParameter(PARAM_NAME_KEYSPACE));
 
-		ManagerModel managerModel = ModelFactory.getInstance().createManagerModel();
-		managerModel.initMaritaca(params);
-
+		maritacaInitEJB.initMaritaca(params);
 	}
 
 	private void initLogger(ServletConfig config) {
@@ -65,7 +68,6 @@ public class MaritacaInitServlet extends HttpServlet {
 
 	@Override
 	public void destroy() {
-		EntityManagerFactory.getInstance().closeEntityManager(
-				EntityManagerFactory.HECTOR_MARITACA_EM);
+		maritacaInitEJB.terminateMaritaca();
 	}
 }

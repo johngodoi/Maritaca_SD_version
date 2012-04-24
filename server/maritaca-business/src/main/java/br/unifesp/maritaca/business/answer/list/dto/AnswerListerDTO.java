@@ -7,16 +7,19 @@ import java.util.List;
  * It is used mainly in the "List Answers" view.
  * @author tiagobarabasz
  */
-public class AnswerListDTO {	
-	private List<AnswerListItemDTO> answers;
+public class AnswerListerDTO {
+	
+	private List<AnswerDTO> answers;
+	
 	private List<String>            questions;
+	
 	private String                  formTitle;
 	
-	public List<AnswerListItemDTO> getAnswers() {
+	public List<AnswerDTO> getAnswers() {
 		return answers;
 	}
 	
-	public String answerFromQuestion(String question, AnswerListItemDTO answer){
+	public String answerFromQuestion(String question, AnswerDTO answer){
 		for(int i=0; i<questions.size(); i++){
 			if(questions.get(i).equals(question)){
 				return answer.getAnswers().get(i);
@@ -25,7 +28,7 @@ public class AnswerListDTO {
 		throw new RuntimeException();
 	}
 
-	public void setAnswers(List<AnswerListItemDTO> answers) {
+	public void setAnswers(List<AnswerDTO> answers) {
 		this.answers = answers;
 	}
 
