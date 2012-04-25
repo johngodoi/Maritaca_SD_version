@@ -25,6 +25,7 @@ import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.exception.AuthorizationDenied;
 import br.unifesp.maritaca.persistence.dto.UserDTO;
+import br.unifesp.maritaca.persistence.permission.Document;
 import br.unifesp.maritaca.persistence.permission.Permission;
 import br.unifesp.maritaca.util.UtilsCore;
 
@@ -63,8 +64,9 @@ public class FormEditorEJB extends AbstractEJB {
 		User user = (User) verifyReturnNullValuesInDB(userDTO);
 		
 		form.setUser(user);
-		form.setLists(getOwnMaritacaListByUser(user));
+		//form.setLists(getOwnMaritacaListByUser(user));
 		formDAO.persistForm(form);	
+		formEditorDAO.createRandownAnswer(form);
 	}
 	
 	/**
@@ -110,7 +112,7 @@ public class FormEditorEJB extends AbstractEJB {
 		//Form form = (Form) verifyReturnNullValuesInDB(formDTO);
 		Form form = formDAO.getFormByKey(formDTO.getKey(), false);
 		
-		Permission permission = super.getPermission(form, userDTO.getKey());
+		Permission permission = super.getPermission(form, userDTO.getKey(), Document.FORM);
 		if(permission != null) {
 			formDTO = new FormDTO();
 			formDTO.setKey(form.getKey());
@@ -136,7 +138,7 @@ public class FormEditorEJB extends AbstractEJB {
 		Form originalForm = (Form) verifyReturnNullValuesInDB(formDTO);
 		User user = (User) verifyReturnNullValuesInDB(userDTO);
 		
-		Permission permission = super.getPermission(originalForm, userDTO.getKey());
+		Permission permission = super.getPermission(originalForm, userDTO.getKey(), Document.FORM);
 		if(permission != null && permission.getUpdate()) {
 			Form form = new Form();
 			form.setKey(formDTO.getKey());
@@ -163,7 +165,7 @@ public class FormEditorEJB extends AbstractEJB {
 		User user = (User) verifyReturnNullValuesInDB(userDTO);
 		Form originalForm = formDAO.getFormByKey(formDTO.getKey(), false);
 		
-		Permission permission = super.getPermission(originalForm, userDTO.getKey());
+		Permission permission = super.getPermission(originalForm, userDTO.getKey(), Document.FORM);
 		if(permission != null && permission.getDelete()) {
 			formDAO.delete(originalForm);
 			formEditorDAO.deleteFormAccessible(originalForm, user);//
@@ -216,12 +218,16 @@ public class FormEditorEJB extends AbstractEJB {
 		form.setXml(formDTO.getXml());
 		form.setUrl(getUniqueUrl());
 		form.setPolicy(formDTO.getPolicy());
-		form.setLists(getListsForForm(usedItems));
+		if(form.isShared()) {
+			form.setLists(getListsForForm(usedItems));
+		}
 		
-		Permission permission = super.getPermission(originalForm, userDTO.getKey());
+		Permission permission = super.getPermission(originalForm, userDTO.getKey(), Document.FORM);
 		if(permission != null && permission.getUpdate()) {
 			formDAO.persistForm(form);
-			formEditorDAO.createOrUpdateFormAccessible(form, user);//
+			if(form.isShared()) {
+				formEditorDAO.createOrUpdateFormAccessible(form, user);//
+			}
 			return true;
 		}
 		else {
@@ -267,8 +273,16 @@ public class FormEditorEJB extends AbstractEJB {
 	}
 	
 	public List<String> populateFormSharedList(FormDTO formDTO) {
-		List<String> lstItems = new ArrayList<String>();
-		Form form = formDAO.getFormByKey(formDTO.getKey(), false);		
+		List<String> lstItems = new ArrayList<String>();		
+		Form form = formDAO.getFormByKey(formDTO.getKey(), false);
+		User owner = userDAO.findUserByKey(form.getUser().getKey());
+		if(owner != null) {	
+			MaritacaList ownerList = managerListDAO.getMaritacaList(owner.getMaritacaList().getKey());
+			if(ownerList != null) {
+				lstItems.add(ownerList.getName());
+			}
+		}
+		
 		if(form != null && form.getLists() != null && !form.getLists().isEmpty()) {
 			for(UUID uuid : form.getLists()) {
 				MaritacaList mList = managerListDAO.getMaritacaList(uuid);

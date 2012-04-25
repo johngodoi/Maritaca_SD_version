@@ -203,4 +203,9 @@ public class Form implements Comparable<Form> {
 	public Boolean changePolicy() {
         return policy.getIdPolicy() == Policy.PRIVATE.getIdPolicy();
     }
+	
+	public Boolean isShared() {
+        return policy.getIdPolicy() == Policy.SHARED_HIERARCHICAL.getIdPolicy() || 
+        		policy.getIdPolicy() == Policy.SHARED_SOCIAL.getIdPolicy();
+    }
 }

@@ -12,6 +12,7 @@ import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.EntityManager;
 
+@Deprecated
 public interface FormAnswerModel extends GenericModel{
 		
 	boolean saveForm(Form form);

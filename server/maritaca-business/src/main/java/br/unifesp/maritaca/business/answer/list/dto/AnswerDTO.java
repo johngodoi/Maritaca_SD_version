@@ -8,27 +8,34 @@ import java.util.List;
  * containing one answer per question.  
  * @author tiagobarabasz
  */
-public class AnswerListItemDTO {
+public class AnswerDTO {
 	
-	private String       user;
-	private Date         collectDate;	
+	private String       userEmail;
+	
+	private Date         collectDate;
+	
 	private List<String> answers;
-	
-	public String getUser() {
-		return user;
+
+	public String getUserEmail() {
+		return userEmail;
 	}
-	public void setUser(String user) {
-		this.user = user;
+
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
 	}
+
 	public Date getCollectDate() {
 		return collectDate;
 	}
+
 	public void setCollectDate(Date collectDate) {
 		this.collectDate = collectDate;
 	}
+
 	public List<String> getAnswers() {
 		return answers;
 	}
+
 	public void setAnswers(List<String> answers) {
 		this.answers = answers;
 	}

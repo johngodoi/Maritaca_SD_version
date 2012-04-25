@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 
 import br.unifesp.maritaca.business.form.dto.FormDTO;
 import br.unifesp.maritaca.business.form.edit.FormEditorEJB;
+import br.unifesp.maritaca.persistence.permission.Permission;
 import br.unifesp.maritaca.web.Manager;
 import br.unifesp.maritaca.web.base.MaritacaJSFBean;
 
@@ -38,6 +39,7 @@ public class FormEditorBean extends MaritacaJSFBean {
 
 	public void clean() {
 		setFormDTO(new FormDTO());
+		getFormDTO().setPermission(new Permission(true, true, true, true));
 		setXml("");
 		setNewForm(true);
 		setEditableForm(true);

@@ -17,17 +17,17 @@
 		<composite:attribute name="submodule" required="true" />
 	</composite:interface>
 	<composite:implementation>
-		<rich:dataTable value="#{listAnswersBean.answerList.answers}"
+		<rich:dataTable value="#{answersListerBean.answerListerDTO.answers}"
 			id="answersTable" var="aAnswer" styleClass="maritacaTable">
 			<f:facet name="header">
-				<h:outputText value="#{listAnswersBean.answerList.formTitle}" />
+				<h:outputText value="#{answersListerBean.answerListerDTO.formTitle}" />
 			</f:facet>
 
 			<rich:column>
 				<f:facet name="header">
 					<h:outputText value="#{msgs.answer_list_author}" />
 				</f:facet>
-				<h:outputText value="#{aAnswer.user}" />
+				<h:outputText value="#{aAnswer.userEmail}" />
 			</rich:column>
 
 			<rich:column>
@@ -37,13 +37,13 @@
 				<h:outputText value="#{aAnswer.collectDate}" />
 			</rich:column>
 
-			<c:forEach items="#{listAnswersBean.answerList.questions}"	var="aQuestion">
+			<c:forEach items="#{answersListerBean.answerListerDTO.questions}"	var="aQuestion">
 				<rich:column>
 					<f:facet name="header">
 						<h:outputText value="#{aQuestion}" />
 					</f:facet>
 					<h:outputText
-						value="#{listAnswersBean.answerList.answerFromQuestion(aQuestion,aAnswer)}" />
+						value="#{answersListerBean.answerListerDTO.answerFromQuestion(aQuestion,aAnswer)}" />
 				</rich:column>
 			</c:forEach>
 		</rich:dataTable>

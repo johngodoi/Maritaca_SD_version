@@ -22,7 +22,8 @@ public class FormEditorDAO extends BaseDAO {
 	@Inject private FormAccessibleByListDAO formAccessibleByListDAO;
 	
 	public void createOrUpdateFormAccessible(Form form, User owner) {
-		if(form.getKey() != null ) {
+		if(form.getKey() != null && owner != null) {
+			form.getLists().remove(owner.getMaritacaList().getKey());//
 			for(UUID uuid : form.getLists()) {
 				FormAccessibleByList formsByList = formAccessibleByListDAO.findFormAccesibleByKey(uuid);
 				if(formsByList == null) {//TODO:
@@ -86,7 +87,7 @@ public class FormEditorDAO extends BaseDAO {
 	 * the mobile answers collector is being developed.
 	 * @param form
 	 */
-	private void createRandownAnswer(Form form) {
+	public void createRandownAnswer(Form form) {
 		Random  rand = new Random();
 		Integer numAnswers = rand.nextInt(10)+2;
 		for(int i=0; i < numAnswers;i++){
