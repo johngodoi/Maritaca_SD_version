@@ -86,7 +86,7 @@ public class FormEditorDAO extends BaseDAO {
 	 * the mobile answers collector is being developed.
 	 * @param form
 	 */
-	private void createRandownAnswer(Form form) {
+	public void createRandownAnswer(Form form) {
 		Random  rand = new Random();
 		Integer numAnswers = rand.nextInt(10)+2;
 		for(int i=0; i < numAnswers;i++){
