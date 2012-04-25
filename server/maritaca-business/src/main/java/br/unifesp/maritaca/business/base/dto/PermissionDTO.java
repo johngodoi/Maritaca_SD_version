@@ -1,4 +1,4 @@
-package br.unifesp.maritaca.business.base;
+package br.unifesp.maritaca.business.base.dto;
 
 import java.io.Serializable;
 

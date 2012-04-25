@@ -23,7 +23,7 @@ public class MaritacaDate extends Date{
 	
 	@Override
 	public String toString(){
-		SimpleDateFormat sdf     = new SimpleDateFormat("dd/mm/yy hh:mm a");
+		SimpleDateFormat sdf     = new SimpleDateFormat("dd/MM/yy hh:mm a");
 		String           dateStr = sdf.format(this);
 		return dateStr;
 	}

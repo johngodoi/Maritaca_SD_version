@@ -51,11 +51,10 @@ public class FormEditorBean extends MaritacaJSFBean {
 	
 	public void saveForm() {
 		formDTO.setUserKey(getCurrentUser().getKey());
-		
 		if (formDTO.getKey() == null) {
 			formEditorEJB.saveNewForm(formDTO);
 		} else {
-			formEditorEJB.updateForm(formDTO, getCurrentUser());
+			formEditorEJB.updateForm(formDTO, getCurrentUser());			
 		}
 		
 		setNewForm(false);

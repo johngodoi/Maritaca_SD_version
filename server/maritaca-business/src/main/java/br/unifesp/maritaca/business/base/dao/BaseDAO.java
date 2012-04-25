@@ -6,13 +6,16 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import java.util.UUID;
 
 import br.unifesp.maritaca.persistence.EntityManager;
 import br.unifesp.maritaca.persistence.EntityManagerFactory;
+import br.unifesp.maritaca.persistence.permission.Rule;
 
 public class BaseDAO {
 
 	protected EntityManager entityManager;
+	protected Rule rules = Rule.getInstance();	
 
 	private static final Log log = LogFactory.getLog(BaseDAO.class);
 	
@@ -49,5 +52,9 @@ public class BaseDAO {
 					+ " in the class " + cl.getSimpleName());
 		}
 		return result;
+	}
+
+	public Boolean isRootUser(UUID userKey) {
+		return true;
 	}
 }

@@ -40,7 +40,7 @@ public class ParameterVerfierTest {
 	public void testNullParamaterFormEjb(){
 		FormEditorEJB formEditorEjb    = new FormEditorEJB();		
 		try{
-			formEditorEjb.getFormDTOByKey(null);
+			formEditorEjb.getMaritacaListsByPrefix(null);
 			fail();
 		} catch (ParameterException e){			
 		}		

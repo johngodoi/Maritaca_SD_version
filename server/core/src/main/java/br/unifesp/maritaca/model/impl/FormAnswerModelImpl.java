@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 import br.unifesp.maritaca.access.AccessLevel;
-import br.unifesp.maritaca.access.Policy;
+import br.unifesp.maritaca.access.PrePolicy;
 import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Form;

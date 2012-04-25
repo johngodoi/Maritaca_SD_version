@@ -11,24 +11,36 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import br.unifesp.maritaca.access.operation.Operation;
-import br.unifesp.maritaca.business.base.PermissionDTO;
-import br.unifesp.maritaca.business.base.UserDAO;
+import br.unifesp.maritaca.business.base.AbstractEJB;
+import br.unifesp.maritaca.business.base.dao.FormDAO;
+import br.unifesp.maritaca.business.base.dao.UserDAO;
 import br.unifesp.maritaca.business.form.dto.FormDTO;
 import br.unifesp.maritaca.business.form.edit.dao.FormEditorDAO;
 import br.unifesp.maritaca.business.form.edit.dao.FormPermissionsDAO;
 import br.unifesp.maritaca.business.form.list.dao.FormListerDAO;
 import br.unifesp.maritaca.business.list.list.dao.ListMaritacaListDAO;
+import br.unifesp.maritaca.business.list.list.dto.MaritacaListDTO;
+import br.unifesp.maritaca.business.util.UtilsBusiness;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
 import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.exception.AuthorizationDenied;
 import br.unifesp.maritaca.persistence.dto.UserDTO;
+import br.unifesp.maritaca.persistence.permission.Document;
+import br.unifesp.maritaca.persistence.permission.Permission;
 import br.unifesp.maritaca.util.UtilsCore;
 
+/**
+ * 
+ * @author alvaro, jimvalsan
+ *
+ */
 @Stateless
-public class FormEditorEJB {
-	
+public class FormEditorEJB extends AbstractEJB {
+
+	private static final long serialVersionUID = 1L;
+
 	private static final Log log = LogFactory.getLog(FormEditorEJB.class);
 	
 	@Inject private FormEditorDAO formEditorDAO;
@@ -37,36 +49,169 @@ public class FormEditorEJB {
 	@Inject private FormPermissionsDAO formPermissionsDAO;
 	@Inject private UserDAO userDAO;
 	
-	public FormDTO getFormDTOByKey(FormDTO formDTO) {
-		Form form = formEditorDAO.getForm(formDTO.getKey(), true);
-		if(form != null) {
-			FormDTO newForDTO = new FormDTO();
-			newForDTO.setKey(form.getKey());
-			newForDTO.setTitle(form.getTitle());
-			newForDTO.setUrl(form.getUrl());
-			newForDTO.setPolicy(form.getPolicy());
-			return newForDTO;
+	
+	//////////////////////////////////////////////////////////////////
+	@Inject private FormDAO formDAO;
+	
+	/**
+	 * 
+	 * @param formDTO
+	 */
+	public void saveNewForm(FormDTO formDTO) {
+		//TODO: verifyEntity(formDTO.getUserKey()); verifyNullProperties(formDTO); and keyUser
+		Form form = new Form();
+		form.setTitle(formDTO.getTitle());
+		form.setXml(formDTO.getXml());
+		form.setUrl(this.getUniqueUrl());
+		
+		UserDTO userDTO = new UserDTO(); 
+		userDTO.setKey(formDTO.getUserKey());
+		User user = (User) verifyReturnNullValuesInDB(userDTO);
+		
+		//TODO: Change for UUID
+		form.setUser(user);
+		formDAO.persistForm(form);
+		formEditorDAO.createRandownAnswer(form);
+	}
+	
+	/**
+	 * Get an unique url for a form
+	 * 
+	 * @return String
+	 */
+	private String getUniqueUrl() {
+		// TODO: check if this random string is enough
+		// maybe it is better to generate uuid-based string
+		String url = UtilsCore.randomString();
+		if (!formDAO.verifyIfUrlExist(url))
+			return url;
+		else
+			return getUniqueUrl();
+	}
+	
+	/**
+	 * 
+	 * @param userDTO
+	 * @param formDTO
+	 * @return FormDTO
+	 */
+	public FormDTO getFormDTOByUserDTOAndFormDTO(UserDTO userDTO, FormDTO formDTO) {
+		//TODO: Verify userDTO.getKey()				
+		verifyReturnNullValuesInDB(userDTO);
+		Form form = (Form) verifyReturnNullValuesInDB(formDTO);
+		
+		Permission permission = super.getPermission(form, userDTO.getKey(), Document.FORM);
+		if(permission != null) {
+			formDTO = new FormDTO();
+			formDTO.setKey(form.getKey());
+			formDTO.setTitle(form.getTitle());
+			formDTO.setUrl(form.getUrl());
+			formDTO.setPolicy(form.getPolicy());
+			formDTO.setPermission(permission);
+			return formDTO;
+		}
+		else {
+			throw new AuthorizationDenied(Form.class, form.getKey(), userDTO.getKey(), Operation.READ);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param formDTO
+	 */
+	public void updateForm(FormDTO formDTO, UserDTO userDTO) {
+		//TODO: verifyEntity(formDTO.getUserKey()); verifyNullProperties(formDTO); and keyUser
+		Form originalForm = (Form) verifyReturnNullValuesInDB(formDTO);		
+		User user = (User) verifyReturnNullValuesInDB(userDTO);
+		
+		Permission permission = super.getPermission(originalForm, userDTO.getKey(), Document.FORM);
+		if(permission != null && permission.getUpdate()) {
+			Form form = new Form();
+			form.setKey(formDTO.getKey());
+			form.setTitle(formDTO.getTitle());
+			form.setXml(formDTO.getXml());
+			form.setUrl(getUniqueUrl());
+			form.setPolicy(originalForm.getPolicy());			
+			formDAO.persistForm(form);
+		}
+		else {
+			throw new AuthorizationDenied(Form.class, originalForm.getKey(), user.getKey(), Operation.UPDATE);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param formDTO
+	 * @param userDTO
+	 */
+	public void deleteForm(FormDTO formDTO, UserDTO userDTO) {
+		Form originalForm = (Form) verifyReturnNullValuesInDB(formDTO);		
+		User user = (User) verifyReturnNullValuesInDB(userDTO);
+				
+		Permission permission = super.getPermission(originalForm, userDTO.getKey(), Document.FORM);
+		if(permission != null && permission.getDelete()) {
+			//TODO delete answers?
+			formDAO.delete(originalForm);			
+		}
+		else {
+			throw new AuthorizationDenied(Form.class, originalForm.getKey(), user.getKey(), Operation.DELETE);
+		}
+	}
+	
+	private <T> Object verifyReturnNullValuesInDB(T obj) {
+		if(obj instanceof FormDTO) {
+			FormDTO formDTO = (FormDTO)obj;
+			Form form = formDAO.getFormByKey(formDTO.getKey(), true);
+			if(form == null) {
+				throw new IllegalArgumentException("Form " +formDTO.getKey()+ " does not exist in database");
+			}
+			return form;
+		}
+		else if(obj instanceof UserDTO) {
+			UserDTO userDTO = (UserDTO)obj;
+			User user = userDAO.findUserByKey(userDTO.getKey());
+			if(user == null) {
+				throw new IllegalArgumentException("User does not exist in database");
+			}
+			return user;
 		}
 		return null;
 	}
 	
-	public List<String> populateFormSharedList(FormDTO formDTO) {		
-		List<String> lstItems = new ArrayList<String>();
+	
+	//////////////////////////////////////////////////////////////////
+	public FormDTO getFormWithPermissions(FormDTO formDTO, UserDTO userDTO) {
 		Form form = new Form();
 		form.setKey(formDTO.getKey());
+		User user = userDAO.findUserByEmail(userDTO.getEmail());
+		/*Permission permission = new Permission(
+				formListerDAO.currentUserHasPermission(user, form, Operation.READ), 
+				formListerDAO.currentUserHasPermission(user, form, Operation.UPDATE), 
+				formListerDAO.currentUserHasPermission(user, form, Operation.SHARE), 
+				formListerDAO.currentUserHasPermission(user, form, Operation.DELETE));
+		formDTO.setPermission(permission);*/
+		return formDTO;
+	}
+	
+	public List<MaritacaListDTO> populateFormSharedList(FormDTO formDTO) {		
+		List<MaritacaListDTO> formLists = new ArrayList<MaritacaListDTO>();
+		Form                  form      = new Form();
+		form.setKey(formDTO.getKey());
+		
 		for(FormPermissions fp : formListerDAO.getFormPermissions(form)) {
 			MaritacaList list = formListerDAO.getMaritacaList(fp.getMaritacaList().getKey());
 			if(!list.equals(formListerDAO.getAllUsersList())) {
-				lstItems.add(list.getName());				
+				formLists.add(UtilsBusiness.convertToClass(list, MaritacaListDTO.class));				
 			}
 		}
-		return lstItems;
+		
+		return formLists;
 	}
 	
-	public String searchMaritacaListByName(String selectedItem) {
+	public MaritacaListDTO searchMaritacaListByName(String selectedItem) {
 		MaritacaList list = formListerDAO.searchMaritacaListByName(selectedItem);
 		if(list != null) {
-			return list.getName();
+			return UtilsBusiness.convertToClass(list, MaritacaListDTO.class);
 		}		
 		return null;
 	}
@@ -75,15 +220,13 @@ public class FormEditorEJB {
 		return managerListDAO.maritacaListsStartingWith(prefix);
 	}
 	
-	public List<String> getOwnerOfMaritacaListByPrefix(String prefix) {
-		List<String> listsNames = new ArrayList<String>();
-		Collection<MaritacaList> lists = managerListDAO.maritacaListsStartingWith(prefix);
-		for(MaritacaList gr : lists) {
-			//set data of the owner
-			gr.setOwner(formEditorDAO.getOwnerOfMaritacaList(gr));
-			listsNames.add(gr.getName());
+	public List<MaritacaListDTO> getOwnerOfMaritacaListByPrefix(String prefix) {
+		List<MaritacaListDTO>    listsDto = new ArrayList<MaritacaListDTO>();
+		Collection<MaritacaList> lists    = managerListDAO.maritacaListsStartingWith(prefix);
+		for(MaritacaList list : lists) {
+			listsDto.add(UtilsBusiness.convertToClass(list, MaritacaListDTO.class));
 		}	
-		return listsNames;
+		return listsDto;
 	}
 	
 	public boolean updateFormFromPolicyEditor(FormDTO formDTO, UserDTO userDTO, List<String> usedItems) {		
@@ -119,94 +262,6 @@ public class FormEditorEJB {
 	}
 	
 	//
-
-	public void saveNewForm(FormDTO formDTO) {
-		log.info("in saveNewForm");
-//		verifyEntity(formDTO.getUserKey());
-//		verifyNullProperties(formDTO);
-		
-		Form form = new Form();
-		form.setTitle(formDTO.getTitle());
-		form.setXml(formDTO.getXml());
-		form.setUrl(getUniqueUrl());
-		if( formEditorDAO.verifyIfUserExist(formDTO.getUserKey()) ){
-			form.setUser(userDAO.findUserByKey(formDTO.getUserKey()));
-			formEditorDAO.persistForm(form);
-			formPermissionsDAO.saveFormPermissionsByPolicy(form,new ArrayList<MaritacaList>());
-		} else {
-			throw new IllegalArgumentException("User does not exist in database");
-		}
-		
-	}
 	
-	public void updateForm(FormDTO formDTO, UserDTO currentUserDTO){
-		log.info("in updateForm");
-//		verifyEntity(formDTO.getUserKey());
-//		verifyNullProperties(formDTO);
 		
-		Form form = new Form();
-		form.setKey(formDTO.getKey());
-		form.setTitle(formDTO.getTitle());
-		form.setXml(formDTO.getXml());
-		form.setUrl(getUniqueUrl());
-		// check permissions for updating
-		Form originalForm = formEditorDAO.getForm(form.getKey(), true);
-		if(!formPermissionsDAO.currentUserHasPermission(originalForm, Operation.UPDATE)){
-			throw new AuthorizationDenied(Form.class, formDTO.getKey(), currentUserDTO.getKey(), Operation.UPDATE);
-		}
-		if( formEditorDAO.verifyIfUserExist(formDTO.getUserKey()) ){
-			form.setUser(userDAO.findUserByKey(formDTO.getUserKey()));
-			formEditorDAO.persistForm(form);
-			// save permissions of a form
-			formPermissionsDAO.saveFormPermissionsByPolicy(form, new ArrayList<MaritacaList>());
-		} else {
-			throw new IllegalArgumentException("User does not exist in database");
-		}
-	}
-	
-	/**
-	 * Get an unique url for a form
-	 * 
-	 * @return
-	 */
-	private String getUniqueUrl() {
-		// TODO: check if this random string is enough
-		// maybe it is better to generate uuid-based string
-		String url = UtilsCore.randomString();
-		if (!formEditorDAO.verifyIfUrlExist(url))
-			return url;
-		else
-			return getUniqueUrl();
-	}
-
-	public FormDTO getFormWithPermissions(FormDTO formDTO, UserDTO userDTO) {
-		Form form = new Form();
-		form.setKey(formDTO.getKey());
-		User user = null; //TODO TMP!!!
-		PermissionDTO permission = new PermissionDTO(
-				formListerDAO.currentUserHasPermission(user, form, Operation.READ), 
-				formListerDAO.currentUserHasPermission(user, form, Operation.UPDATE), 
-				formListerDAO.currentUserHasPermission(user, form, Operation.SHARE), 
-				formListerDAO.currentUserHasPermission(user, form, Operation.DELETE));
-		formDTO.setPermissionDTO(permission);
-		return formDTO;
-	}
-
-	public void deleteForm(FormDTO formDTO, UserDTO userDTO) {
-		// verify if current user has permissions
-		if (formPermissionsDAO.currentUserHasPermission(formDTO, Operation.DELETE)) {
-			Form form = new Form();
-			form.setKey(formDTO.getKey());
-			// first delete permissions
-			List<FormPermissions> permissionsList = 
-					formPermissionsDAO.getFormPermissions(form);
-			for (FormPermissions fp : permissionsList) {
-				formPermissionsDAO.delete(fp);
-			}
-			formEditorDAO.delete(form);
-			// TODO delete answers?
-		} else {
-			throw new AuthorizationDenied(Form.class, formDTO.getKey(), userDTO.getKey(), Operation.DELETE);
-		}	
-	}		
 }

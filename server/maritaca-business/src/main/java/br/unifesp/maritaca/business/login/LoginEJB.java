@@ -3,20 +3,22 @@ package br.unifesp.maritaca.business.login;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import br.unifesp.maritaca.business.login.dao.LoginDAO;
+import br.unifesp.maritaca.business.account.edit.dao.AccountEditorDAO;
 import br.unifesp.maritaca.business.login.dto.LoginDTO;
+import br.unifesp.maritaca.business.util.UtilsBusiness;
+import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.dto.UserDTO;
 
 @Stateless
 public class LoginEJB {
 	
 	@Inject
-	private LoginDAO loginDAO;
+	private AccountEditorDAO accountDAO;
 	
 	public UserDTO doLogin(LoginDTO loginDTO) {
-		UserDTO dbUser = loginDAO.findUserByEmail(loginDTO.getEmail());
-		if(loginSuccessful(loginDTO, dbUser)) {
-			return dbUser;
+		UserDTO userDto = findUserByEmail(loginDTO.getEmail());
+		if(loginSuccessful(loginDTO, userDto)) {
+			return userDto;
 		} else {
 			return null;
 		}
@@ -24,5 +26,10 @@ public class LoginEJB {
 	
 	private boolean loginSuccessful(LoginDTO loginDTO, UserDTO dbUser) {
 		return (dbUser != null && loginDTO.getPassword().equals(dbUser.getPassword()));
+	}
+
+	public UserDTO findUserByEmail(String email) {
+		User    user    = accountDAO.findUserByEmail(email);
+		return UtilsBusiness.convertToClass(user, UserDTO.class);
 	}	
 }

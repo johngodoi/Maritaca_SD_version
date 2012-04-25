@@ -14,6 +14,7 @@ import br.unifesp.maritaca.persistence.EntityManager;
 import br.unifesp.maritaca.persistence.EntityManagerFactory;
 import br.unifesp.maritaca.util.UserLocator;
 
+@Deprecated
 public class ModelFactory {
 	private static final Log log = LogFactory.getLog(ModelFactory.class);
 	private static ModelFactory instance;

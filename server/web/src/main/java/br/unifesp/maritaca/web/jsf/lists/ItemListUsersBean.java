@@ -5,9 +5,9 @@ import java.util.UUID;
 
 import br.unifesp.maritaca.business.list.edit.ListEditorEJB;
 import br.unifesp.maritaca.persistence.dto.UserDTO;
-import br.unifesp.maritaca.web.jsf.util.ItemListBean;
+import br.unifesp.maritaca.web.jsf.util.ItemList;
 
-public class ItemListUsersBean extends ItemListBean<UserDTO>{
+public class ItemListUsersBean extends ItemList<UserDTO>{
 
 	private ListEditorEJB listEditorEJB;
 	private UUID          currentUserKey;

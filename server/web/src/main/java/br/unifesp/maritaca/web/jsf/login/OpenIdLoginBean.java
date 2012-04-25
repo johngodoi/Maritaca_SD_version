@@ -8,6 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
@@ -17,15 +18,15 @@ import org.expressme.openid.Authentication;
 import org.expressme.openid.Endpoint;
 import org.expressme.openid.OpenIdManager;
 
-import br.unifesp.maritaca.core.User;
+import br.unifesp.maritaca.business.login.LoginEJB;
 import br.unifesp.maritaca.persistence.dto.UserDTO;
-import br.unifesp.maritaca.web.jsf.AbstractBean;
+import br.unifesp.maritaca.web.base.MaritacaJSFBean;
 import br.unifesp.maritaca.web.jsf.account.AccountEditorBean;
 import br.unifesp.maritaca.web.utils.Utils;
 
 @ManagedBean
 @SessionScoped
-public class OpenIdLoginBean extends AbstractBean implements Serializable{
+public class OpenIdLoginBean extends MaritacaJSFBean implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	private static final Log  log              = LogFactory.getLog(OpenIdLoginBean.class);
@@ -42,8 +43,9 @@ public class OpenIdLoginBean extends AbstractBean implements Serializable{
 	
 	private OpenIdManager manager;
 	
+	@Inject private LoginEJB loginEJB;
+	
 	public OpenIdLoginBean() {
-		super(false, true);
 	}
 	
 	/**
@@ -69,22 +71,20 @@ public class OpenIdLoginBean extends AbstractBean implements Serializable{
         
         fillCurrentUser(authentication);
         
-//        if(getAccountEditorBean().registeredEmail()){
-//        	loadUserInfoFromDatabase();        	
-//        } else {
-//        	getAccountEditorBean().saveNewAccount();
-//        }
-    	getLoginManagerBean().login(new UserDTO());
+        if(getAccountEditorBean().registeredEmail()){
+        	getLoginManagerBean().login(
+        			loadUserInfoFromDatabase());        	
+        } else {
+        	getAccountEditorBean().saveNewAccount();
+        }
     }
     
     /**
      * Loads user info from database.
      */
-    private void loadUserInfoFromDatabase() {
+    private UserDTO loadUserInfoFromDatabase() {
     	String email = getAccountEditorBean().getUserDto().getEmail();
-    	User   user  = super.userCtrl.findUserByEmail(email);
-    	
-//    	getAccountEditorBean().getCurrentUserBean().setUser(new UserDTO());//(user);		
+    	return loginEJB.findUserByEmail(email);
 	}
 
 	private void facesRedirect(String url){
@@ -111,13 +111,13 @@ public class OpenIdLoginBean extends AbstractBean implements Serializable{
 	 * @param authentication
 	 */
 	private void fillCurrentUser(Authentication authentication) {
-		User currentUser = new User();
+		UserDTO userDTO = new UserDTO();
 		
-		currentUser.setEmail(authentication.getEmail());
-		currentUser.setFirstname(authentication.getFirstname());
-		currentUser.setLastname(authentication.getLastname());
+		userDTO.setEmail(authentication.getEmail());
+		userDTO.setFirstname(authentication.getFirstname());
+		userDTO.setLastname(authentication.getLastname());
 		
-//		getAccountEditorBean().fillInformationFromUser(currentUser);
+		getAccountEditorBean().setUserDto(userDTO);
 	}
 
 	public OpenIdManager getManager() {

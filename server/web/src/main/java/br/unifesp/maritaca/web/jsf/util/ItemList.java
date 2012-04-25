@@ -16,11 +16,11 @@ import br.unifesp.maritaca.web.utils.Utils;
  * @author tiagobarabasz
  * @param <T>
  */
-public abstract class ItemListBean<T>{
+public abstract class ItemList<T>{
 	
 	private static final String ITEM_LIST_EMPTY_FIELD   = "item_list_add_empty_field";
 	private static final String ITEM_LIST_REPEATED_ITEM = "item_list_repeated_item";
-
+	
 	private List<T> usedItens;
 	private List<T> cachedItens;
 	private String  selectedItem;
@@ -31,7 +31,6 @@ public abstract class ItemListBean<T>{
 	protected abstract List<T> searchAutoCompleteItens(String prefix);
 	protected abstract String  itemToString(T item);
 	
-	
 	public List<String> autoComplete(String prefix){
 		List<String> autoCompleteList = new ArrayList<String>();
 		for(T item : searchAutoCompleteItens(prefix)){
@@ -40,7 +39,7 @@ public abstract class ItemListBean<T>{
 		return autoCompleteList;
 	}
 	
-	public ItemListBean() {
+	public ItemList() {
 		usedItens   = new ArrayList<T>();
 		cachedItens = new ArrayList<T>();
 	}

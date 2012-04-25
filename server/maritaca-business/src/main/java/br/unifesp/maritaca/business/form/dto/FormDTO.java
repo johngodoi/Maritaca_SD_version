@@ -4,9 +4,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import br.unifesp.maritaca.access.Policy;
-import br.unifesp.maritaca.business.base.PermissionDTO;
+import br.unifesp.maritaca.persistence.permission.Permission;
+import br.unifesp.maritaca.persistence.permission.Policy;
 import br.unifesp.maritaca.business.base.dto.BaseDTO;
+import br.unifesp.maritaca.business.base.dto.PermissionDTO;
 
 public class FormDTO extends BaseDTO {
 
@@ -29,12 +30,12 @@ public class FormDTO extends BaseDTO {
 	
 	private UUID userKey;
 	
-	private PermissionDTO permissionDTO;
+	private Permission permission;
 	
 	public FormDTO() { }
 	
 	public FormDTO(UUID key, String title, String owner, String url, String xml,
-			String creationDate, Policy policy, PermissionDTO permissionDTO) {
+			String creationDate, Policy policy, Permission permission) {
 		super();
 		this.key = key;
 		this.title = title;
@@ -43,7 +44,7 @@ public class FormDTO extends BaseDTO {
 		this.xml = xml;
 		this.creationDate = creationDate;
 		this.policy = policy;
-		this.permissionDTO = permissionDTO;
+		this.permission = permission;
 	}
 
 	public String getXml() {
@@ -73,7 +74,7 @@ public class FormDTO extends BaseDTO {
 	public UUID getUserKey() {
 		return userKey;
 	}
-
+	
 	public Policy getPolicy() {
 		return policy;
 	}
@@ -86,12 +87,12 @@ public class FormDTO extends BaseDTO {
 		this.userKey = userKey;
 	}
 
-	public PermissionDTO getPermissionDTO() {
-		return permissionDTO;
+	public Permission getPermission() {
+		return permission;
 	}
 
-	public void setPermissionDTO(PermissionDTO permissionDTO) {
-		this.permissionDTO = permissionDTO;
+	public void setPermission(Permission permission) {
+		this.permission = permission;
 	}
 
 	public String getOwner() {
@@ -118,8 +119,10 @@ public class FormDTO extends BaseDTO {
 		this.key = key;
 	}
 	
-	public Map<String,Policy> getPolicyItems(){
-		Map<String,Policy> policyItems = new LinkedHashMap<String,Policy>(); 
+	@Deprecated
+	//TODO: Form has this method too
+	public Map<String, Policy> getPolicyItems(){
+		Map<String, Policy> policyItems = new LinkedHashMap<String, Policy>(); 
 		for(Policy p : Policy.values()){
 			policyItems.put(p.toString(), p);
 		}
