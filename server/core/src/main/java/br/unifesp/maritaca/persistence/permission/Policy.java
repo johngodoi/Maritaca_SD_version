@@ -49,4 +49,14 @@ public enum Policy {
 		log.error(error);
 		throw new IllegalArgumentException(error);
 	}
+	
+	public boolean isShared() {
+		if(getIdPolicy() == Policy.SHARED_HIERARCHICAL.getIdPolicy() || getIdPolicy() == Policy.SHARED_SOCIAL.getIdPolicy())
+			return true;
+		return false;
+	}
+	
+	public boolean isUseList() {
+		return true;
+	}
 }

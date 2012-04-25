@@ -141,8 +141,7 @@ public class EntityManagerHectorImpl implements EntityManager, Serializable {
 					column.setTtl(timeToLive);
 				}
 				
-				mutator.addInsertion(key, obj.getClass().getSimpleName(),
-						column);
+				mutator.addInsertion(key, obj.getClass().getSimpleName(), column);
 			}
 		}
 
@@ -520,8 +519,8 @@ public class EntityManagerHectorImpl implements EntityManager, Serializable {
 				method.invoke(result, new Boolean(value));
 			else if (f.getType() == UUID.class)
 				method.invoke(result, UUID.fromString(value));
-			if (f.getType() == Date.class) {
-				SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yy hh:mm a");
+			else if (f.getType() == Date.class) {
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy hh:mm a");
 				Date date;
 				try {
 					date = sdf.parse(value);

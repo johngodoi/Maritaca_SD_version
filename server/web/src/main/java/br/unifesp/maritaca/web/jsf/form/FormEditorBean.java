@@ -33,7 +33,6 @@ public class FormEditorBean extends MaritacaJSFBean {
 	private boolean editableForm;
 
 	public FormEditorBean() {
-		log.info("create FormEditorBean");
 		clean();
 	}
 
@@ -45,8 +44,7 @@ public class FormEditorBean extends MaritacaJSFBean {
 	}
 	
 	public void setFormFromLister(FormDTO formDTO){
-		setFormDTO(formEditorEJB.
-				getFormWithPermissions(formDTO, getCurrentUser()));
+		setFormDTO(formEditorEJB.getFormDTOByUserDTOAndFormDTO(formDTO, getCurrentUser()));
 	}
 	
 	public void saveForm() {
@@ -112,21 +110,6 @@ public class FormEditorBean extends MaritacaJSFBean {
 		return formDTO;
 	}
 	
-//	public void setForm(FormDTO formDTO) {
-//		if (formDTO == null)
-//			return;
-//		this.formDTO = formDTO;
-//		// if form has key, it is not a new form
-//		if (this.formDTO.getKey() == null) {
-//			setNewForm(true);
-//		} else {
-////			if (this.formDTO.getXml() == null) {
-////				this.formDTO = formAnswCtrl.getForm(formDTO.getKey(), false);
-////			}
-//			xml = this.formDTO.getXml();
-//		}
-//	}
-
 	public boolean isNewForm() {
 		return newForm;
 	}
@@ -141,7 +124,7 @@ public class FormEditorBean extends MaritacaJSFBean {
 	public boolean isEditableForm() {
 		if (isNewForm()) {
 			return true;
-		} else if (formDTO != null && formDTO.getKey() != null) {
+		} else if (formDTO != null && formDTO.getKey() != null && formDTO.getPermission().getUpdate()) {
 			return true;//manager.isOperationEnabled(formDTO, Operation.UPDATE);
 		} else {
 			return editableForm;
@@ -183,5 +166,4 @@ public class FormEditorBean extends MaritacaJSFBean {
 	public void setFormEditorEJB(FormEditorEJB formEditorEJB) {
 		this.formEditorEJB = formEditorEJB;
 	}
-
 }

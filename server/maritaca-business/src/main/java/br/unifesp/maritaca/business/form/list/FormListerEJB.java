@@ -23,7 +23,6 @@ import br.unifesp.maritaca.persistence.permission.Permission;
 public class FormListerEJB extends AbstractEJB {
 	
 	private static final long serialVersionUID = 1L;
-
 	private static final Log log = LogFactory.getLog(FormListerEJB.class);
 		
 	@Inject private UserDAO userDAO;
@@ -36,8 +35,8 @@ public class FormListerEJB extends AbstractEJB {
 	 */
 	public Collection<FormDTO> getListOwnForms(UserDTO userDTO) {
 		List<FormDTO> formsDTO = null;
-		List<Form> forms = formDAO.getListSharedFormsByUserKey(userDTO.getKey().toString());
-		if(!forms.isEmpty()) {
+		List<Form> forms = formDAO.getListOwnFormsByUserKey(userDTO.getKey().toString());
+		if(forms != null && !forms.isEmpty()) {
 			formsDTO = new ArrayList<FormDTO>();
 			//TODO: Need I this query? this user has all the permissions for his/her forms!
 			User user = userDAO.findUserByEmail(userDTO.getEmail());
@@ -45,6 +44,7 @@ public class FormListerEJB extends AbstractEJB {
                 for(Form form : forms) {
                 	Permission permission = super.getPermission(form, form.getUser().getKey());
                 	if(permission != null) {
+                		if(permission.getShare()) { permission.setShare(form.changePolicy()); }
 	                	FormDTO formDTO = new FormDTO(
 	                            form.getKey(),
 	                            form.getTitle(), 
@@ -59,10 +59,10 @@ public class FormListerEJB extends AbstractEJB {
                 }            
 			}
             else {
-                log.error(userDTO.getEmail() + " User doesn't exist");
+                log.error(userDTO.getEmail() + " User does not exist");
             }
 		}
-	    return formsDTO;
+	    return formsDTO;	  
 	}	
 	
 	/**
@@ -72,30 +72,33 @@ public class FormListerEJB extends AbstractEJB {
 	 */
 	public Collection<FormDTO> getListSharedForms(UserDTO userDTO) {
 		List<FormDTO> formsDTO = null;
-		List<Form> forms = formDAO.getListSharedFormsByUserKey(userDTO.getKey().toString());
-		if(!forms.isEmpty()) {
+		List<Form> forms = formDAO.getAllSharedFormsByUserKey(userDTO.getKey().toString());
+		if(forms!= null && !forms.isEmpty()) {
 			formsDTO = new ArrayList<FormDTO>();
 			//TODO: Need I this query?
 			User user = userDAO.findUserByEmail(userDTO.getEmail());
 			if(user != null) {
                 for(Form form : forms) {
-                	Permission permission = super.getPermission(form, form.getUser().getKey());
-                	if(permission != null) {
-	                	FormDTO formDTO = new FormDTO(
-	                            form.getKey(),
-	                            form.getTitle(), 
-	                            userDTO.getEmail(), 
-	                            form.getUrl(), 
-	                            form.getXml(),
-	                            form.getCreationDate().toString(), 
-	                            form.getPolicy(),
-	                            permission);
-	                	formsDTO.add(formDTO);
+                	if(!userDTO.getKey().toString().equals(form.getUser().getKey().toString())) {
+                		Permission permission = super.getPermission(form, userDTO.getKey());
+	                	if(permission != null) {
+	                		if(permission.getShare()) { permission.setShare(form.changePolicy()); }
+	                		FormDTO formDTO = new FormDTO(
+		                            form.getKey(),
+		                            form.getTitle(), 
+		                            userDTO.getEmail(), 
+		                            form.getUrl(), 
+		                            form.getXml(),
+		                            form.getCreationDate().toString(), 
+		                            form.getPolicy(),
+		                            permission);
+		                	formsDTO.add(formDTO);
+	                	}
                 	}
                 }            
 			}
             else {
-                log.error(userDTO.getEmail() + " User doesn't exist");
+                log.error(userDTO.getEmail() + " User does not exist");
             }
 		}
 	    return formsDTO;

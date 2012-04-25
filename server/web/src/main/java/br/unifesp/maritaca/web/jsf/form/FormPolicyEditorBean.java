@@ -62,7 +62,7 @@ public class FormPolicyEditorBean extends ItemListBean {
 	}
 	
 	private FormDTO updateFormDTO(FormDTO formDTO) {
-		return formEditorEJB.getFormDTOByUserDTOAndFormDTO(getCurrentUser(), formDTO);
+		return formEditorEJB.getFormDTOByUserDTOAndFormDTO(formDTO, getCurrentUser());
 	}
 	
 	private void populateFormSharedList(FormDTO formDTO) {
