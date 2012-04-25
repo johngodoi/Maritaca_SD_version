@@ -1,6 +1,8 @@
 package br.unifesp.maritaca.business.account.edit.dao;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.inject.Inject;
 
@@ -9,7 +11,6 @@ import br.unifesp.maritaca.business.exception.InvalidNumberOfEntries;
 import br.unifesp.maritaca.business.list.edit.dao.ListEditorDAO;
 import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.core.User;
-import br.unifesp.maritaca.persistence.dto.UserDTO;
 
 public class AccountEditorDAO extends BaseDAO {
 
@@ -23,11 +24,18 @@ public class AccountEditorDAO extends BaseDAO {
 	 * 
 	 * @param user
 	 */
-	public void saveUser(UserDTO userDto) {
-		User user = createUserFromDto(userDto);
-		saveUser(user);
-		userDto.setKey(user.getKey());
-		userDto.setMaritacaListKey(user.getMaritacaList().getKey());
+	public void saveUser(User user) {
+		getEntityManager().persist(user);
+		
+		if(user.getMaritacaList()==null){
+			createUserList(user);			
+		} else {
+			updateUserListName(user);
+		}		
+	}
+	
+	public User findUserByKey(UUID userKey){
+		return getEntityManager().find(User.class, userKey);
 	}
 	
 	/**
@@ -47,18 +55,8 @@ public class AccountEditorDAO extends BaseDAO {
 		}
 	}
 	
-	private void saveUser(User user){
-		getEntityManager().persist(user);
-		
-		if(user.getMaritacaList()==null){
-			createUserList(user);			
-		} else {
-			updateUserListName(user);
-		}		
-	}
-	
-	private MaritacaList findUserList(MaritacaList maritacaList){
-		return getEntityManager().find(MaritacaList.class,maritacaList.getKey());
+	private MaritacaList findUserList(UUID maritacaListKey){
+		return getEntityManager().find(MaritacaList.class,maritacaListKey);
 	}
 	
 	/**
@@ -68,32 +66,28 @@ public class AccountEditorDAO extends BaseDAO {
 		MaritacaList userList = findUserList(user.getMaritacaList());
 		if (!userList.getName().equals(user.getEmail())) {						
 			userList.setName(user.getEmail());
-			listEditorDAO.saveMaritacaList(userList);
+			getListEditorDAO().saveMaritacaList(userList);
 		}
-	}
-
-	private User createUserFromDto(UserDTO userToSave) {
-		User user = new User();
-		user.setEmail(userToSave.getEmail());
-		user.setFirstname(userToSave.getFirstname());
-		user.setLastname(userToSave.getLastname());
-		user.setPassword(userToSave.getEncryptedPassword());
-		user.setKey(userToSave.getKey());
-		if(userToSave.getMaritacaListKey()!=null){
-			MaritacaList userList = new MaritacaList();
-			userList.setKey(userToSave.getMaritacaListKey());
-			user.setMaritacaList(userList);	
-		}
-		return user;
 	}
 	
 	private void createUserList(User owner) {
 		MaritacaList list = new MaritacaList();
 		list.setOwner(owner);
 		list.setName(owner.getEmail());
+		List<UUID> listUsers = new ArrayList<UUID>();
+		listUsers.add(owner.getKey());
+		list.setUsers(listUsers);
+		getListEditorDAO().saveMaritacaList(list);
+		
+		owner.setMaritacaList(list.getKey());
+		getEntityManager().persist(owner);				
+	}
 
-		listEditorDAO.saveMaritacaList(list);
-		getEntityManager().persist(owner);
-		owner.setMaritacaList(list);
+	public ListEditorDAO getListEditorDAO() {
+		return listEditorDAO;
+	}
+
+	public void setListEditorDAO(ListEditorDAO listEditorDAO) {
+		this.listEditorDAO = listEditorDAO;
 	}
 }

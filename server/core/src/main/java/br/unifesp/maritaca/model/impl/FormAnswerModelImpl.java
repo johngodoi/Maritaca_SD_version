@@ -6,9 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import br.unifesp.maritaca.access.AccessLevel;
@@ -18,7 +16,6 @@ import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
 import br.unifesp.maritaca.core.MaritacaList;
-import br.unifesp.maritaca.core.MaritacaListUser;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.exception.AuthorizationDenied;
 import br.unifesp.maritaca.model.FormAnswerModel;
@@ -404,28 +401,28 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 	 */
 	@Override
 	public Collection<Form> listSharedFormsFromCurrentUser(boolean minimal) {
-		User user = getCurrentUser();
-		
-		verifyEntity(user);
-		User currentUser = getCurrentUser();
-
-		Set<Form> forms = new HashSet<Form>();
-		// get lists where user is member
-		Collection<MaritacaListUser> lists = userModel.getMaritacaListByMember(user);
-		for (MaritacaListUser gu : lists) {
-			// get all formpermissions in each list
-			Collection<FormPermissions> l1Forms = getFormPermissionsByList(gu
-					.getMaritacaList());
-			for (FormPermissions fp : l1Forms) {
-				// get the form and add it if expdate > now
-				Form form = getFormWithPermission(fp, true);
-				if (form != null) {
-					if (!form.getUser().equals(currentUser))
-						forms.add(form);
-				}
-			}
-		}
-		return new ArrayList<Form>(forms);
+//		User user = getCurrentUser();
+//		
+//		verifyEntity(user);
+//		User currentUser = getCurrentUser();
+//
+//		Set<Form> forms = new HashSet<Form>();
+//		// get lists where user is member
+//		Collection<MaritacaListUser> lists = userModel.getMaritacaListByMember(user);
+//		for (MaritacaListUser gu : lists) {
+//			// get all formpermissions in each list
+//			Collection<FormPermissions> l1Forms = getFormPermissionsByList(gu
+//					.getMaritacaList());
+//			for (FormPermissions fp : l1Forms) {
+//				// get the form and add it if expdate > now
+//				Form form = getFormWithPermission(fp, true);
+//				if (form != null) {
+//					if (!form.getUser().equals(currentUser))
+//						forms.add(form);
+//				}
+//			}
+//		}
+		return new ArrayList<Form>();
 	}
 
 	/**
@@ -500,22 +497,22 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 		deleteOldFormPermissions(form);
 		
 		User          owner        = userModel.getUser(form.getUser().getKey());
-		MaritacaList  ownerList    = owner.getMaritacaList();
-		MaritacaList  allUsersList = userModel.getAllUsersList();		
-
-		Policy p = form.getPolicy();
-		
-		FormPermissions ownerPermissions  = p.buildOwnerFormPermission(form, ownerList);
-		FormPermissions publicPermissions = p.buildPublicFormPermission(form, allUsersList);
-		
-		saveFormPermission(ownerPermissions);
-		saveFormPermission(publicPermissions);
-		
-		for(MaritacaList list : formLists){
-			if(! list.equals(ownerList)){
-				FormPermissions listPermissions = p.buildListFormPermission(form, list);			
-				saveFormPermission(listPermissions);
-			}
-		}
+//		MaritacaList  ownerList    = owner.getMaritacaList();
+//		MaritacaList  allUsersList = userModel.getAllUsersList();		
+//
+//		Policy p = form.getPolicy();
+//		
+//		FormPermissions ownerPermissions  = p.buildOwnerFormPermission(form, ownerList);
+//		FormPermissions publicPermissions = p.buildPublicFormPermission(form, allUsersList);
+//		
+//		saveFormPermission(ownerPermissions);
+//		saveFormPermission(publicPermissions);
+//		
+//		for(MaritacaList list : formLists){
+//			if(! list.equals(ownerList)){
+//				FormPermissions listPermissions = p.buildListFormPermission(form, list);			
+//				saveFormPermission(listPermissions);
+//			}
+//		}
 	}
 }

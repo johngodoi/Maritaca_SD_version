@@ -13,13 +13,11 @@ import org.apache.commons.logging.LogFactory;
 import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.business.base.PermissionDTO;
 import br.unifesp.maritaca.business.base.UserDAO;
-import br.unifesp.maritaca.business.base.dto.MessageDTO;
-import br.unifesp.maritaca.business.base.dto.MessageDTO.MessageType;
 import br.unifesp.maritaca.business.form.dto.FormDTO;
 import br.unifesp.maritaca.business.form.edit.dao.FormEditorDAO;
 import br.unifesp.maritaca.business.form.edit.dao.FormPermissionsDAO;
 import br.unifesp.maritaca.business.form.list.dao.FormListerDAO;
-import br.unifesp.maritaca.business.list.dao.ManagerListDAO;
+import br.unifesp.maritaca.business.list.list.dao.ListMaritacaListDAO;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
 import br.unifesp.maritaca.core.MaritacaList;
@@ -35,7 +33,7 @@ public class FormEditorEJB {
 	
 	@Inject private FormEditorDAO formEditorDAO;
 	@Inject private FormListerDAO formListerDAO;
-	@Inject private ManagerListDAO managerListDAO;
+	@Inject private ListMaritacaListDAO managerListDAO;
 	@Inject private FormPermissionsDAO formPermissionsDAO;
 	@Inject private UserDAO userDAO;
 	
@@ -184,7 +182,7 @@ public class FormEditorEJB {
 	public FormDTO getFormWithPermissions(FormDTO formDTO, UserDTO userDTO) {
 		Form form = new Form();
 		form.setKey(formDTO.getKey());
-		User user = userDAO.findUserByEmail(userDTO.getEmail());
+		User user = null; //TODO TMP!!!
 		PermissionDTO permission = new PermissionDTO(
 				formListerDAO.currentUserHasPermission(user, form, Operation.READ), 
 				formListerDAO.currentUserHasPermission(user, form, Operation.UPDATE), 

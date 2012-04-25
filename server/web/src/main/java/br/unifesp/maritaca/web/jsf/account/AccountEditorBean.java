@@ -6,6 +6,7 @@ import javax.faces.bean.SessionScoped;
 import javax.inject.Inject;
 
 import br.unifesp.maritaca.business.account.edit.AccountEditorEJB;
+import br.unifesp.maritaca.business.util.UtilsBusiness;
 import br.unifesp.maritaca.persistence.dto.UserDTO;
 import br.unifesp.maritaca.web.base.MaritacaJSFBean;
 import br.unifesp.maritaca.web.jsf.login.LoginManagerBean;
@@ -89,11 +90,22 @@ public class AccountEditorBean extends MaritacaJSFBean{
 	public String editAccount(){
 		getModuleManager().setActiveModuleByString("Settings");
 		getModuleManager().setActiveSubModuleInActiveMod("accountEditor");
+		setUserDto((UserDTO)getCurrentUser().clone());
 		return null;
 	}
+
+	public boolean registeredEmail(){
+		if(userDto.getEmail()==null || emailFromCurrentUser())
+			return false;
+		return getAccountEditorEJB().registeredEmail(userDto.getEmail());
+	}
 	
-	public boolean registeredEmail(){		
-		return getAccountEditorEJB().registeredEmail(userDto.getEmail(), getCurrentUser());
+	private boolean emailFromCurrentUser(){
+		UserDTO currentUser = getCurrentUser();
+		if(currentUser==null){
+			return false;
+		}		
+		return userDto.getEmail().equals(currentUser.getEmail());
 	}
 	
 	/**

@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import br.unifesp.maritaca.web.jsf.util.MaritacaConstants;
+
 /**
  * Servlet Filter implementation class HomeFilter
  */
@@ -31,7 +33,7 @@ public class HomeFilter implements Filter {
 		if (request instanceof HttpServletRequest) {
 			HttpServletRequest hreq = (HttpServletRequest) request;
 			HttpSession session = hreq.getSession(true);
-			if (session.isNew() || session.getAttribute("currentuser") == null) {
+			if (session.isNew() || session.getAttribute(MaritacaConstants.CURRENT_USER) == null) {
 				session.invalidate();
 				((HttpServletResponse) response).sendRedirect(hreq
 						.getContextPath());

@@ -170,12 +170,6 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- AspectJ -->
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjrt</artifactId>
-			<version>1.6.11</version>
-		</dependency>
 	</dependencies>
 	<build>
 		<finalName>maritaca</finalName>
@@ -186,18 +180,6 @@
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>aspectj-maven-plugin</artifactId>
-				<version>1.4</version>
-				<configuration>
-					<sources>
-						<source>
-							<basedir>src/main/aspects</basedir>
-						</source>
-					</sources>
 				</configuration>
 			</plugin>
 		</plugins>

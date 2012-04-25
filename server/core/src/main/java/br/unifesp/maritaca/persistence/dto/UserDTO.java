@@ -6,11 +6,11 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 
-public class UserDTO {
+public class UserDTO implements Cloneable{
 
 	private UUID key;
 	
-	private UUID maritacaListKey;
+	private UUID maritacaList;
 	
 	//TODO The email reg exp should be read from MaritacaConstants
 	//TODO This can be done when UserDTO goes back to maritaca-business
@@ -23,7 +23,7 @@ public class UserDTO {
 	@Size(max = 20)
 	private String lastname;
 	
-	private String encryptedPassword;	
+	private String password;	
 
 	public UUID getKey() {
 		return key;
@@ -43,7 +43,7 @@ public class UserDTO {
 
 	@Override
 	public String toString() {
-		return "MaritacaUserDTO [key=" + key + ", email=" + email + "]";
+		return getEmail();
 	}
 
 	public String getFirstname() {
@@ -62,19 +62,42 @@ public class UserDTO {
 		this.lastname = lastname;
 	}
 
-	public String getEncryptedPassword() {
-		return encryptedPassword;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setEncryptedPassword(String encryptedPassword) {
-		this.encryptedPassword = encryptedPassword;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
-	public UUID getMaritacaListKey() {
-		return maritacaListKey;
+	public UUID getMaritacaList() {
+		return maritacaList;
 	}
 
-	public void setMaritacaListKey(UUID maritacaListKey) {
-		this.maritacaListKey = maritacaListKey;
+	public void setMaritacaList(UUID maritacaListKey) {
+		this.maritacaList = maritacaListKey;
+	}
+	
+	public void setMaritacaList(String maritacaListKey) {
+		this.maritacaList = UUID.fromString(maritacaListKey);
+	}
+	
+	@Override
+	public UserDTO clone(){
+		try {
+			UserDTO clone = (UserDTO)super.clone();
+			
+			UUID cloneKey = new UUID(getKey().getMostSignificantBits(),
+									 getKey().getLeastSignificantBits());			
+			clone.setKey(cloneKey);			
+			
+			UUID listKey  = new UUID(getMaritacaList().getMostSignificantBits(),
+									 getMaritacaList().getLeastSignificantBits());			
+			clone.setMaritacaList(listKey);
+			
+			return clone;
+		} catch (CloneNotSupportedException e) {
+			return null;
+		}				
 	}
 }

@@ -36,7 +36,7 @@ public class FormPermissionsDAO extends BaseDAO {
 		deleteOldFormPermissions(form);
 		
 		User          owner        = this.getUser(form.getUser().getKey());
-		MaritacaList  ownerList    = owner.getMaritacaList();
+		MaritacaList  ownerList    = null; //owner.getMaritacaList();
 		MaritacaList  allUsersList = this.getAllUsersList();		
 
 		Policy policy = form.getPolicy();

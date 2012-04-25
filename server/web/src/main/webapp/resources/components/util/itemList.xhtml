@@ -16,9 +16,10 @@
 							 type="br.unifesp.maritaca.web.jsf.util.ItemListBean"/>
 		<composite:attribute name="listLabel"	required="true" />
 	</composite:interface>
-	<composite:implementation>
-		<h:outputText value="#{cc.attrs.listLabel}:" />
-		<h:panelGrid  columns="2">
+	<composite:implementation>		
+	<h:form>
+		<h:panelGrid  columns="3">
+			<h:outputText value="#{cc.attrs.listLabel}:" />
 			<rich:autocomplete
 				autocompleteMethod="#{cc.attrs.backBean.autoComplete}"
 				mode="cachedAjax"
@@ -35,14 +36,15 @@
 		<rich:panel>
 			<rich:list	value="#{cc.attrs.backBean.usedItens}" var="item"
 						id="itemList">
-				#{item}
+				<h:outputText value="${item.toString()}" />
 				<a4j:commandButton	value="-" type="button"
 									render="addItemError itemList" immediate="true">
 					<f:setPropertyActionListener target="#{cc.attrs.backBean.removeItem}"
 												 value="#{item}"/>
 				</a4j:commandButton>
 			</rich:list>
-		</rich:panel>			
+		</rich:panel>
+	</h:form>			
 	</composite:implementation>
 </body>
 </html>
