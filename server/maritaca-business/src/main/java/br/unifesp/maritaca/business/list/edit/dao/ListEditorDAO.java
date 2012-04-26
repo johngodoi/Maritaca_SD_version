@@ -13,7 +13,7 @@ public class ListEditorDAO extends BaseDAO{
 	public void saveMaritacaList(MaritacaList list) {
 		if (newList(list)) {
 			if (searchMaritacaListByName(list.getName()) != null) {
-				throw new InvalidNumberOfEntries(list.getName(), MaritacaList.class);
+				throw new InvalidNumberOfEntries(MaritacaList.class, "name", list.getName());
 			}
 			getEntityManager().persist(list);
 			
@@ -36,7 +36,7 @@ public class ListEditorDAO extends BaseDAO{
 		} else if (foundGroups.size() == 1) {
 			return foundGroups.get(0);
 		} else {
-			throw new InvalidNumberOfEntries(groupName, MaritacaList.class);
+			throw new InvalidNumberOfEntries(MaritacaList.class, "name", groupName);
 		}
 	}
 	

@@ -43,7 +43,7 @@ public class AccountEditorDAO extends BaseDAO {
 		} else if (users.size() == 1) {
 			return users.get(0);
 		} else {
-			throw new InvalidNumberOfEntries(email, User.class);
+			throw new InvalidNumberOfEntries(User.class, "email", email);
 		}
 	}
 	

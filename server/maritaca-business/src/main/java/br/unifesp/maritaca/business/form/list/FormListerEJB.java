@@ -37,7 +37,7 @@ public class FormListerEJB extends AbstractEJB {
 	 */
 	public Collection<FormDTO> getListOwnForms(UserDTO userDTO) {
 		List<FormDTO> formsDTO = null;
-		List<Form> forms = formDAO.getListSharedFormsByUserKey(userDTO.getKey().toString());
+		List<Form> forms = formDAO.getListOwnFormsByUserKey(userDTO.getKey().toString());
 		if(!forms.isEmpty()) {
 			formsDTO = new ArrayList<FormDTO>();
 			//TODO: Need I this query? this user has all the permissions for his/her forms!
@@ -74,7 +74,7 @@ public class FormListerEJB extends AbstractEJB {
 	public Collection<FormDTO> getListSharedForms(UserDTO userDTO) {
 		List<FormDTO> formsDTO = null;
 		List<Form> forms = formDAO.getListSharedFormsByUserKey(userDTO.getKey().toString());
-		if(!forms.isEmpty()) {
+		/*if(!forms.isEmpty()) {
 			formsDTO = new ArrayList<FormDTO>();
 			//TODO: Need I this query?
 			User user = userDAO.findUserByEmail(userDTO.getEmail());
@@ -98,7 +98,7 @@ public class FormListerEJB extends AbstractEJB {
             else {
                 log.error(userDTO.getEmail() + " User doesn't exist");
             }
-		}
+		}*/
 	    return formsDTO;
 	}
 }

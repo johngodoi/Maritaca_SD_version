@@ -84,7 +84,7 @@ public class ManagerListDAO extends BaseDAO {
 		} else if (foundGroups.size() == 1) {
 			return foundGroups.get(0);
 		} else {
-			throw new InvalidNumberOfEntries(listName, MaritacaList.class);
+			throw new InvalidNumberOfEntries(MaritacaList.class, "name", listName);
 		}
 	}
 			
