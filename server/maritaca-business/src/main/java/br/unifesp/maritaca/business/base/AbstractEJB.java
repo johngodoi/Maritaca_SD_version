@@ -7,7 +7,9 @@ import java.util.UUID;
 import javax.inject.Inject;
 
 import br.unifesp.maritaca.business.base.dao.ConfigurationDAO;
+import br.unifesp.maritaca.business.base.dao.FormDAO;
 import br.unifesp.maritaca.core.Form;
+import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.persistence.permission.Accessor;
 import br.unifesp.maritaca.persistence.permission.Document;
 import br.unifesp.maritaca.persistence.permission.Permission;
@@ -17,6 +19,7 @@ public abstract class AbstractEJB implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@Inject protected ConfigurationDAO configurationDAO;
+	@Inject protected FormDAO formDAO;
 	protected Rule rules = Rule.getInstance();
 	
 	/**
@@ -27,8 +30,15 @@ public abstract class AbstractEJB implements Serializable {
 	 */
 	protected Boolean isMemberOfTheList(List<UUID> lstUUID, UUID userUUID) {
 		if(lstUUID != null && !lstUUID.isEmpty()) {
-			if(lstUUID.contains(userUUID))
-				return true;
+			for(UUID uuid : lstUUID) {
+				MaritacaList mList = formDAO.getMaritacaListByKey(uuid, false);
+				if(mList != null && mList.getUsers() != null && !mList.getUsers().isEmpty())
+				for(UUID us : mList.getUsers()) {
+					if(us.toString().equals(userUUID.toString())) {
+						return true;
+					}
+				}
+			}
 		}
 		return false;
 	}
@@ -45,7 +55,7 @@ public abstract class AbstractEJB implements Serializable {
 		}
 		
 		else if(form != null && userKey.toString().equals(form.getUser().getKey().toString())) {
-			return rules.getPermission(form.getPolicy(), doc, Accessor.OWNER);
+			return rules.getPermission(form.getPolicy(), doc, Accessor.OWNER);			
 		}
 		
 		else if(form != null && isMemberOfTheList(form.getLists(), userKey)) {

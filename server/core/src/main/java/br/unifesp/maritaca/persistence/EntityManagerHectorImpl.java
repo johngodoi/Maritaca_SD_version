@@ -51,7 +51,6 @@ import org.apache.cassandra.thrift.ColumnDef;
 import org.apache.cassandra.thrift.IndexType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.codehaus.jackson.map.introspect.BasicClassIntrospector.GetterMethodFilter;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -65,8 +64,7 @@ public class EntityManagerHectorImpl implements EntityManager, Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	private static final Log log = LogFactory
-			.getLog(EntityManagerHectorImpl.class);
+	private static final Log log = LogFactory.getLog(EntityManagerHectorImpl.class);
 	private static EntityManagerHectorImpl instance;
 
 	private Cluster cluster;
@@ -141,8 +139,7 @@ public class EntityManagerHectorImpl implements EntityManager, Serializable {
 					column.setTtl(timeToLive);
 				}
 				
-				mutator.addInsertion(key, obj.getClass().getSimpleName(),
-						column);
+				mutator.addInsertion(key, obj.getClass().getSimpleName(), column);
 			}
 		}
 
@@ -520,8 +517,8 @@ public class EntityManagerHectorImpl implements EntityManager, Serializable {
 				method.invoke(result, new Boolean(value));
 			else if (f.getType() == UUID.class)
 				method.invoke(result, UUID.fromString(value));
-			if (f.getType() == Date.class) {
-				SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yy hh:mm a");
+			else if (f.getType() == Date.class) {
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy hh:mm a");
 				Date date;
 				try {
 					date = sdf.parse(value);

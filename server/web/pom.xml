@@ -170,11 +170,21 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- AspectJ -->
+		<!-- OAuth2 -->
 		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjrt</artifactId>
-			<version>1.6.11</version>
+			<groupId>net.smartam.leeloo</groupId>
+			<artifactId>oauth2-authzserver</artifactId>
+			<version>0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>net.smartam.leeloo</groupId>
+			<artifactId>oauth2-common</artifactId>
+			<version>0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>net.smartam.leeloo</groupId>
+			<artifactId>oauth2-rs-filter</artifactId>
+			<version>0.1</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -186,18 +196,6 @@
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>aspectj-maven-plugin</artifactId>
-				<version>1.4</version>
-				<configuration>
-					<sources>
-						<source>
-							<basedir>src/main/aspects</basedir>
-						</source>
-					</sources>
 				</configuration>
 			</plugin>
 		</plugins>

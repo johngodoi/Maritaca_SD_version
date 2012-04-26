@@ -7,13 +7,12 @@ import me.prettyprint.hector.api.Keyspace;
 import me.prettyprint.hector.api.factory.HFactory;
 
 public class EntityManagerFactory {
-	public static final int HECTOR_MARITACA_EM = 1;
+	public  static final int HECTOR_MARITACA_EM = 1;
 	private static EntityManagerFactory instance;
-
+	private static EntityManagerHectorImpl hectorEM;// singleton
+	
 	private Cluster cluster;
-	private Keyspace keyspace;
-
-	private EntityManagerHectorImpl hectorEM;// singleton
+	private Keyspace keyspace;	
 
 	private EntityManagerFactory() {
 	}
@@ -24,9 +23,12 @@ public class EntityManagerFactory {
 		}
 		return instance;
 	}
+	
+	public static void setHectorEntityManager(EntityManagerHectorImpl hectorEM){
+		EntityManagerFactory.hectorEM = hectorEM;
+	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public EntityManager createEntityManager(int type, Map params) {
+	public EntityManager createEntityManager(int type, Map<String,String> params) {
 		EntityManager em = null;
 		switch (type) {
 		case HECTOR_MARITACA_EM:

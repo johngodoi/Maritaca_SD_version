@@ -23,7 +23,7 @@
 	<div class="loggedUserPanel">
 		<h:form>
 			<h:commandLink	action="#{accountEditorBean.editAccount}"
-							value="#{currentUserBean.user.email}"
+							value="#{loginManagerBean.currentUserEmail()}"
 							render="menuAndContentForm"/>
 			<h:commandLink action="#{logoutBean.logout}">
         			<h:graphicImage value="#{resource['img:logout_button.png']}" />

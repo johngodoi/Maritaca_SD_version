@@ -7,7 +7,7 @@ import br.unifesp.maritaca.business.base.dao.BaseDAO;
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Configuration;
 import br.unifesp.maritaca.core.Form;
-import br.unifesp.maritaca.core.FormAccesibleByUser;
+import br.unifesp.maritaca.core.FormAccessibleByList;
 import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.core.OAuthClient;
 import br.unifesp.maritaca.core.OAuthCode;
@@ -69,7 +69,7 @@ public class MaritacaInitDAO extends BaseDAO {
 		
 		entityManager.createColumnFamily(Form.class);
 		entityManager.createColumnFamily(Answer.class);
-		entityManager.createColumnFamily(FormAccesibleByUser.class);
+		entityManager.createColumnFamily(FormAccessibleByList.class);
 		
 		if (!entityManager.columnFamilyExists(MaritacaList.class)) {
 			entityManager.createColumnFamily(MaritacaList.class);						
@@ -121,7 +121,7 @@ public class MaritacaInitDAO extends BaseDAO {
 		list.setName(rootUser.getEmail());
 		entityManager.persist(list);
 		
-		rootUser.setMaritacaList(list);
+		rootUser.setMaritacaList(list.getKey());
 		entityManager.persist(rootUser);
 	}
 	

@@ -4,7 +4,8 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import br.unifesp.maritaca.business.account.edit.dao.AccountEditorDAO;
-import br.unifesp.maritaca.business.annotations.VerifyObject;
+import br.unifesp.maritaca.business.util.UtilsBusiness;
+import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.dto.UserDTO;
 
 @Stateless
@@ -20,14 +21,8 @@ public class AccountEditorEJB{
 	 * @param currentUser 
 	 * @return true if the email is already taken, false otherwise.
 	 */
-	public boolean registeredEmail(String email, UserDTO currentUser){
-		if(email==null){
-			return false;
-		}
-		if(currentUser!=null && email.equals(currentUser.getEmail())){
-			return false;
-		}
-		return accountEditorDAO.findUserByEmail(email)!=null;
+	public boolean registeredEmail(String email){
+		return getAccountEditorDAO().findUserByEmail(email)!=null;
 	}
 	
 	/**
@@ -35,19 +30,21 @@ public class AccountEditorEJB{
 	 * @param userDto
 	 * @throws IllegalArgumentException
 	 */
-	public void saveAccount(@VerifyObject(UserDTO.class) UserDTO userDto){		
-		if(!validateAccount(userDto)){
+	public void saveAccount(UserDTO userDto){
+		if(userDto.getEmail()==null||registeredEmail(userDto.getEmail())){
 			throw new IllegalArgumentException();
-		}				
-		accountEditorDAO.saveUser(userDto);						
+		}
+		User user = UtilsBusiness.convertToClass(userDto, User.class);
+		getAccountEditorDAO().saveUser(user);
+		userDto.setKey(user.getKey());
+		userDto.setMaritacaList(user.getMaritacaList());
 	}
 
-	private boolean validateAccount(UserDTO user){
-		String email = user.getEmail();
-		if(registeredEmail(email,user)){
-			return false;
-		} else {
-			return true;
-		}		
+	public AccountEditorDAO getAccountEditorDAO() {
+		return accountEditorDAO;
+	}
+
+	public void setAccountEditorDAO(AccountEditorDAO accountEditorDAO) {
+		this.accountEditorDAO = accountEditorDAO;
 	}
 }

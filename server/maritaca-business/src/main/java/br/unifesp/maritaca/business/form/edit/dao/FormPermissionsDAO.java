@@ -17,6 +17,7 @@ import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.exception.AuthorizationDenied;
 import br.unifesp.maritaca.model.ManagerModel;
 
+@Deprecated
 public class FormPermissionsDAO extends BaseDAO {
 	
 	String CFG_ROOT = "root";
@@ -36,7 +37,7 @@ public class FormPermissionsDAO extends BaseDAO {
 		deleteOldFormPermissions(form);
 		
 		User          owner        = this.getUser(form.getUser().getKey());
-		MaritacaList  ownerList    = owner.getMaritacaList();
+		MaritacaList  ownerList    = null; //owner.getMaritacaList();
 		MaritacaList  allUsersList = this.getAllUsersList();		
 
 		PrePolicy policy = null;//form.getPolicy();

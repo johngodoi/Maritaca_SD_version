@@ -23,13 +23,14 @@ public class Form implements Comparable<Form> {
 	@Id
 	private UUID key;
 
-	@JSONValue
+	@Column
+	@JSONValue	
 	private List<UUID> lists; //lists of MaritacaList
 	
 	@Column
 	private String xml;
 
-	@Column(indexed = true)
+	@Column(indexed=true)
 	@Minimal
 	private User user;
 
@@ -41,7 +42,7 @@ public class Form implements Comparable<Form> {
 	@Minimal
 	private String url;
 	
-	@Column
+	@Column(indexed=true)
 	@Minimal
 	private Policy policy = Policy.PRIVATE;
 
@@ -192,5 +193,14 @@ public class Form implements Comparable<Form> {
 	
 	public Boolean isPublic() {
         return policy.getIdPolicy() == Policy.PUBLIC.getIdPolicy();
-    } 
+    }
+	
+	/**
+	 * Policy can be changed only when it is PRIVATE
+	 * //TODO: Ask about this case
+	 * @return
+	 */
+	public Boolean changePolicy() {
+        return policy.getIdPolicy() == Policy.PRIVATE.getIdPolicy();
+    }
 }
