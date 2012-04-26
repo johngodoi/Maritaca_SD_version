@@ -17,6 +17,7 @@ import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.exception.AuthorizationDenied;
 import br.unifesp.maritaca.model.ManagerModel;
 
+@Deprecated
 public class FormPermissionsDAO extends BaseDAO {
 	
 	String CFG_ROOT = "root";

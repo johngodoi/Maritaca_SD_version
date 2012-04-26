@@ -10,18 +10,17 @@ import br.unifesp.maritaca.persistence.annotations.Column;
 import br.unifesp.maritaca.persistence.annotations.JSONValue;
 
 @Entity
-public class FormAccesibleByUser {
+public class FormAccessibleByList {
 	
 	@Id
 	private UUID key;
 	
 	@Column(indexed=true)
-	private UUID user;
+	private UUID maritacaList;
 	
 	@Column
 	@JSONValue
 	private List<UUID> forms;
-
 	
 	public List<UUID> getForms() {
 		return forms;
@@ -39,11 +38,11 @@ public class FormAccesibleByUser {
 		this.key = key;
 	}
 
-	public UUID getUser() {
-		return user;
+	public UUID getMaritacaList() {
+		return maritacaList;
 	}
 
-	public void setUser(UUID user) {
-		this.user = user;
+	public void setMaritacaList(UUID maritacaList) {
+		this.maritacaList = maritacaList;
 	}
 }

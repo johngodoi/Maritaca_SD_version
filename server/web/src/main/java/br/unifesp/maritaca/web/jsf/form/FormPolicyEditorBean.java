@@ -1,8 +1,5 @@
 package br.unifesp.maritaca.web.jsf.form;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -13,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import br.unifesp.maritaca.business.base.MaritacaConstants;
 import br.unifesp.maritaca.business.form.dto.FormDTO;
 import br.unifesp.maritaca.business.form.edit.FormEditorEJB;
-import br.unifesp.maritaca.business.list.list.dto.MaritacaListDTO;
 import br.unifesp.maritaca.web.base.MaritacaJSFBean;
 
 /**
@@ -52,12 +48,11 @@ public class FormPolicyEditorBean extends MaritacaJSFBean {
 	public void setRootForSharing(String root) {
 	}
 	
-	public void saveItem(FormDTO form) {
-		List<String> usedLists = new ArrayList<String>();
-		for(MaritacaListDTO listDto : getListItem().getUsedItens()){
-			usedLists.add(listDto.getKey().toString());
+	public String save(){
+		if(!formEditorEJB.updateFormFromPolicyEditor(getFormDTO(), getCurrentUser(), getListItem().getUsedItens())) {
+			
 		}		
-		formEditorEJB.updateFormFromPolicyEditor(form, getCurrentUser(), usedLists);
+		return null;
 	}
 	
 	public String cancel(){
@@ -65,7 +60,7 @@ public class FormPolicyEditorBean extends MaritacaJSFBean {
 	}
 	
 	private FormDTO updateFormDTO(FormDTO formDTO) {
-		return formEditorEJB.getFormDTOByUserDTOAndFormDTO(getCurrentUser(), formDTO);
+		return formEditorEJB.getFormDTOByUserDTOAndFormDTO(formDTO, getCurrentUser());
 	}
 	
 	private void populateFormSharedList(FormDTO formDTO) {

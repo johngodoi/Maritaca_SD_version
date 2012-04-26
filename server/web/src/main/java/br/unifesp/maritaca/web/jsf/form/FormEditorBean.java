@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 
 import br.unifesp.maritaca.business.form.dto.FormDTO;
 import br.unifesp.maritaca.business.form.edit.FormEditorEJB;
+import br.unifesp.maritaca.persistence.permission.Permission;
 import br.unifesp.maritaca.web.Manager;
 import br.unifesp.maritaca.web.base.MaritacaJSFBean;
 
@@ -33,20 +34,19 @@ public class FormEditorBean extends MaritacaJSFBean {
 	private boolean editableForm;
 
 	public FormEditorBean() {
-		log.info("create FormEditorBean");
 		clean();
 	}
 
 	public void clean() {
 		setFormDTO(new FormDTO());
+		getFormDTO().setPermission(new Permission(true, true, true, true));
 		setXml("");
 		setNewForm(true);
 		setEditableForm(true);
 	}
 	
 	public void setFormFromLister(FormDTO formDTO){
-		setFormDTO(formEditorEJB.
-				getFormWithPermissions(formDTO, getCurrentUser()));
+		setFormDTO(formEditorEJB.getFormDTOByUserDTOAndFormDTO(formDTO, getCurrentUser()));
 	}
 	
 	public void saveForm() {
@@ -112,21 +112,6 @@ public class FormEditorBean extends MaritacaJSFBean {
 		return formDTO;
 	}
 	
-//	public void setForm(FormDTO formDTO) {
-//		if (formDTO == null)
-//			return;
-//		this.formDTO = formDTO;
-//		// if form has key, it is not a new form
-//		if (this.formDTO.getKey() == null) {
-//			setNewForm(true);
-//		} else {
-////			if (this.formDTO.getXml() == null) {
-////				this.formDTO = formAnswCtrl.getForm(formDTO.getKey(), false);
-////			}
-//			xml = this.formDTO.getXml();
-//		}
-//	}
-
 	public boolean isNewForm() {
 		return newForm;
 	}
@@ -141,7 +126,7 @@ public class FormEditorBean extends MaritacaJSFBean {
 	public boolean isEditableForm() {
 		if (isNewForm()) {
 			return true;
-		} else if (formDTO != null && formDTO.getKey() != null) {
+		} else if (formDTO != null && formDTO.getKey() != null && formDTO.getPermission().getUpdate()) {
 			return true;//manager.isOperationEnabled(formDTO, Operation.UPDATE);
 		} else {
 			return editableForm;
@@ -183,5 +168,4 @@ public class FormEditorBean extends MaritacaJSFBean {
 	public void setFormEditorEJB(FormEditorEJB formEditorEJB) {
 		this.formEditorEJB = formEditorEJB;
 	}
-
 }

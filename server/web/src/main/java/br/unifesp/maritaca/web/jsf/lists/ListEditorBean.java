@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
@@ -25,35 +24,25 @@ import br.unifesp.maritaca.web.base.MaritacaJSFBean;
 public class ListEditorBean extends MaritacaJSFBean {
 			
 	@Inject
-	private ListEditorEJB         listEditorEJB;
-	private ItemListUsersBean     usersList;
-	private MaritacaListDTO       listDto;
-
-//	private static final Log log = LogFactory.getLog(MaritacaListEditorBean.class);
-	/* Error messages resources */
-	/*
-	private static final String LIST_ADD_ERROR_USER_NOT_FOUND = "list_add_error_user_not_found";
-	private static final String LIST_ADD_ERROR_USER_ADDED     = "list_add_error_user_added";	
-	private static final String LIST_REMOVE_OWNER_ERROR       = "list_remove_owner_error";
-	private static final String LIST_ADD_EMPTY_EMAIL          = "item_list_add_empty_field";	
-	private static final String LIST_ADD_FAILURE              = "list_add_fail";
-	*/
-	private static final String LIST_ADD_SUCESS               = "list_add_sucess";	
-	private static final long   serialVersionUID              = 1L;
+	private ListEditorEJB       listEditorEJB;
+	private ItemListUsersBean   usersList;
+	private MaritacaListDTO     listDto;
+	
+	private static final String LIST_ADD_SUCESS  = "list_add_sucess";	
+	private static final long   serialVersionUID = 1L;
 	
 	public ListEditorBean() {
+		setListDto(new MaritacaListDTO());
 	}
 	
 	/**
 	 * Method used to clear the group information.<br>
 	 * It must be called when the createGroup sub module is invoked.
 	 */
-	@PostConstruct
 	public void clearList() {
 		setUsersList(new ItemListUsersBean());
 		getUsersList().setCurrentUserKey(getCurrentUser().getKey());
 		getUsersList().setListEditorEJB(listEditorEJB);
-		setListDto(new MaritacaListDTO());
 	}
 
 	/**
@@ -64,7 +53,6 @@ public class ListEditorBean extends MaritacaJSFBean {
 	 * 
 	 * @return true if there is, false otherwise
 	 */
-	//TODO: Improve this method with the event(onchange)
 	public boolean registeredListName() {
 		return false;
 	}

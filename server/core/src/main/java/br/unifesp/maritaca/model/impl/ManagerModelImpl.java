@@ -7,6 +7,7 @@ import java.util.UUID;
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Configuration;
 import br.unifesp.maritaca.core.Form;
+import br.unifesp.maritaca.core.FormAccessibleByList;
 import br.unifesp.maritaca.core.FormPermissions;
 import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.core.OAuthClient;
@@ -71,6 +72,7 @@ public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel,
 		// create another tables
 		entityManager.createColumnFamily(Form.class);
 		entityManager.createColumnFamily(Answer.class);
+		entityManager.createColumnFamily(FormAccessibleByList.class);
 
 		if (!entityManager.columnFamilyExists(MaritacaList.class)) {
 			entityManager.createColumnFamily(MaritacaList.class);						

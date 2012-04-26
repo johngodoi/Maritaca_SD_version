@@ -37,7 +37,7 @@
 				onclick="sendFormToServer();"
 				mode="client"
 				icon="#{resource['img:save.png']}" status="formEditor_status"
-				rendered="#{formEditorBean.hasPermission('UPDATE')}"/>
+				rendered="#{formEditorBean.formDTO.permission.update}"/>
 
 			<!-- Save as option -->
 			<rich:menuItem label="#{msgs.commons_saveas}" 
@@ -50,14 +50,14 @@
 				onclick="clearForm()"
 				mode="client" id="clearForm" 
 				icon="#{resource['img:clear.png']}"
-				rendered="#{formEditorBean.hasPermission('UPDATE')}"/>
+				rendered="#{formEditorBean.formDTO.permission.update}"/>
 
 			<!-- Delete option -->
 			<rich:menuItem label="#{msgs.commons_delete}" 
 				onclick="deleteFormDialog()"			
 				mode="ajax"
 				icon="#{resource['img:remove.png']}"
-				rendered="#{formEditorBean.hasPermission('DELETE')}"/>
+				rendered="#{formEditorBean.formDTO.permission.update}"/>
 
 			<!-- rich:toolbarGroup>
 				<rich:dropDownMenu mode="ajax" styleClass="listItemOption">

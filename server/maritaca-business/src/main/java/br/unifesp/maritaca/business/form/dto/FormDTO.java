@@ -7,7 +7,6 @@ import java.util.UUID;
 import br.unifesp.maritaca.persistence.permission.Permission;
 import br.unifesp.maritaca.persistence.permission.Policy;
 import br.unifesp.maritaca.business.base.dto.BaseDTO;
-import br.unifesp.maritaca.business.base.dto.PermissionDTO;
 
 public class FormDTO extends BaseDTO {
 
@@ -21,7 +20,6 @@ public class FormDTO extends BaseDTO {
 	
 	private String url;
 	
-	//private String policy;
 	private Policy policy = Policy.PRIVATE;
 	
 	private String owner; //email
@@ -118,9 +116,7 @@ public class FormDTO extends BaseDTO {
 	public void setKey(UUID key) {
 		this.key = key;
 	}
-	
-	@Deprecated
-	//TODO: Form has this method too
+
 	public Map<String, Policy> getPolicyItems(){
 		Map<String, Policy> policyItems = new LinkedHashMap<String, Policy>(); 
 		for(Policy p : Policy.values()){

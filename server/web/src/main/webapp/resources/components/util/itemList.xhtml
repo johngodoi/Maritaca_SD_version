@@ -17,7 +17,6 @@
 		<composite:attribute name="listLabel"	required="true" />
 	</composite:interface>
 	<composite:implementation>		
-	<h:form>
 		<h:panelGrid  columns="3">
 			<h:outputText value="#{cc.attrs.listLabel}:" />
 			<rich:autocomplete
@@ -43,8 +42,7 @@
 												 value="#{item}"/>
 				</a4j:commandButton>
 			</rich:list>
-		</rich:panel>
-	</h:form>			
+		</rich:panel>			
 	</composite:implementation>
 </body>
 </html>

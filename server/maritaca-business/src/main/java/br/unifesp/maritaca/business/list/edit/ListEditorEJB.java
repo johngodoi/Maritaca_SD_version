@@ -46,13 +46,15 @@ public class ListEditorEJB {
 	}
 	
 	public List<UserDTO> searchUsersByMaritacaList(UUID searchedListKey) {
-		MaritacaList list  = getListEditorDAO().getMaritacaList(searchedListKey);
-		
+		MaritacaList  list     = getListEditorDAO().getMaritacaList(searchedListKey);		
 		List<UserDTO> usersDto = new ArrayList<UserDTO>();
-		for(UUID userKey : list.getUsers()){
-			User    user    = accountEditorDAO.findUserByKey(userKey);
-			UserDTO userDto = UtilsBusiness.convertToClass(user, UserDTO.class);
-			usersDto.add(userDto);
+		
+		if(list.getUsers().size()>0){
+			for(UUID userKey : list.getUsers()){
+				User    user    = accountEditorDAO.findUserByKey(userKey);
+				UserDTO userDto = UtilsBusiness.convertToClass(user, UserDTO.class);
+				usersDto.add(userDto);
+			}
 		}
 		return usersDto;
 	}
