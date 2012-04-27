@@ -1,7 +1,6 @@
 package br.unifesp.maritaca.web.jsf.form;
 
-import java.util.List;
-
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -11,8 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import br.unifesp.maritaca.business.base.MaritacaConstants;
 import br.unifesp.maritaca.business.form.dto.FormDTO;
 import br.unifesp.maritaca.business.form.edit.FormEditorEJB;
-import br.unifesp.maritaca.web.jsf.util.ItemListBean;
-import br.unifesp.maritaca.web.utils.Utils;
+import br.unifesp.maritaca.web.base.MaritacaJSFBean;
 
 /**
  * Managed bean for the Form sharing service the bean loads the url for sharing.
@@ -23,14 +21,21 @@ import br.unifesp.maritaca.web.utils.Utils;
  */
 @ManagedBean
 @ViewScoped
-public class FormPolicyEditorBean extends ItemListBean {
+public class FormPolicyEditorBean extends MaritacaJSFBean {
 	
-	private static final long serialVersionUID = 1L;	
+	private static final long   serialVersionUID = 1L;	
 	private static final String ROOT_FOR_SHARING = "/ws/form/share/";
 	
-	@Inject FormEditorEJB formEditorEJB;
+	@Inject
+	private FormEditorEJB    formEditorEJB;	
+	private FormDTO          formDTO;	
+	private MaritacaListItem listItem;
 	
-	private FormDTO formDTO;
+	@PostConstruct
+	public void setUp(){
+		listItem = new MaritacaListItem();
+		listItem.setFormEditorEJB(formEditorEJB);
+	}
 	
 	public String getRootForSharing() {
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -43,18 +48,11 @@ public class FormPolicyEditorBean extends ItemListBean {
 	public void setRootForSharing(String root) {
 	}
 	
-	@Override
-	protected boolean saveObject(Object formObj) {
-		FormDTO form = (FormDTO) formObj;
-		if(!formEditorEJB.updateFormFromPolicyEditor(form, getCurrentUser(), getUsedItens())) {
-			return false;
-		}				
-		return true;
-	}
-
-	@Override
-	protected Object createObjectFromItem() {		
-		return formDTO;
+	public String save(){
+		if(!formEditorEJB.updateFormFromPolicyEditor(getFormDTO(), getCurrentUser(), getListItem().getUsedItens())) {
+			
+		}		
+		return null;
 	}
 	
 	public String cancel(){
@@ -66,35 +64,8 @@ public class FormPolicyEditorBean extends ItemListBean {
 	}
 	
 	private void populateFormSharedList(FormDTO formDTO) {
-		super.getUsedItens().clear();
-		super.getUsedItens().addAll(formEditorEJB.populateFormSharedList(formDTO));
-	}
-
-	@Override
-	protected String searchItemInDatabase(String selectedItem) {
-		return formEditorEJB.searchMaritacaListByName(getSelectedItem());
-	}
-
-	@Override
-	public List<String> autoComplete(String prefix) {
-		return formEditorEJB.getOwnerOfMaritacaListByPrefix(prefix);
-	}
-
-	@Override
-	protected boolean newItem(Object form) {
-		//Forms being shared are already saved in the database
-		return false;
-	}
-	
-	@Override
-	public void setRemoveItem(String item){
-		clearAddItemError();		
-		String currentUsrEmail = getCurrentUser().getEmail();		
-		if(item.equals(currentUsrEmail)) {
-			setAddItemError(Utils.getMessageFromResourceProperties("list_remove_owner_error"));
-			return;
-		}
-		getUsedItens().remove(item);
+		getListItem().getUsedItens().clear();
+		getListItem().getUsedItens().addAll(formEditorEJB.populateFormSharedList(formDTO));
 	}
 	
 	/*** Getters y Setters ***/
@@ -106,5 +77,13 @@ public class FormPolicyEditorBean extends ItemListBean {
 		//Creating a copy of the form in order to prevent temporary modifications
 		this.populateFormSharedList(formDTO);
 		this.formDTO = updateFormDTO(formDTO);
+	}
+
+	public MaritacaListItem getListItem() {
+		return listItem;
+	}
+
+	public void setListItem(MaritacaListItem listItem) {
+		this.listItem = listItem;
 	}
 }

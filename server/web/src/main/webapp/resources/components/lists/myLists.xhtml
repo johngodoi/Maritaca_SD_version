@@ -27,7 +27,7 @@
 					</f:facet>
 					<!-- Edit List --> 
 					<rich:menuItem icon="#{resource['img:edit_form.png']}"
-						action="#{maritacaListEditorBean.editList(aList)}"
+						action="#{listEditorBean.editList(aList)}"
 						render="menuAndContent" execute="@form"
 						label="#{msgs.list_options_edit}"/>
 					<!-- Remove List -->
@@ -41,11 +41,6 @@
 			<rich:column>
 				<f:facet name="header">#{msgs.list_description}</f:facet>				
 					#{aList.description}
-			</rich:column>
-
-			<rich:column>
-				<f:facet name="header">#{msgs.list_owner}</f:facet>				
-					#{aList.owner}
 			</rich:column>
 		</rich:dataTable>
 		</h:panelGrid>

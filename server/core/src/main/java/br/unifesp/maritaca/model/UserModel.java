@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.UUID;
 
 import br.unifesp.maritaca.core.MaritacaList;
-import br.unifesp.maritaca.core.MaritacaListUser;
 import br.unifesp.maritaca.core.OAuthClient;
 import br.unifesp.maritaca.core.OAuthCode;
 import br.unifesp.maritaca.core.OAuthToken;
@@ -20,7 +19,6 @@ import br.unifesp.maritaca.persistence.EntityManager;
  */
 @Deprecated
 public interface UserModel extends GenericModel{
-	boolean saveUser(User user);
 
 	User getUser(UUID uuid);
 	
@@ -42,7 +40,7 @@ public interface UserModel extends GenericModel{
 	
 	MaritacaList getMaritacaList(UUID uuid);
 	
-	boolean saveMaritacaList(MaritacaList maritacaList);
+//	boolean saveMaritacaList(MaritacaList maritacaList);
 	
 	/**
 	 * Search for the list with the given name. Returns null
@@ -71,8 +69,6 @@ public interface UserModel extends GenericModel{
 
 	Collection<MaritacaList> getMaritacaListsByOwner(User owner);
 
-	boolean addUserToMaritacaList(User user, MaritacaList list);
-
 	MaritacaList getAllUsersList();
 
 	void setManagerModel(ManagerModel managerModel);
@@ -81,17 +77,6 @@ public interface UserModel extends GenericModel{
 
 	boolean userIsMemberOfMaritacaList(User user, MaritacaList list);
 
-	Collection<MaritacaListUser> getMaritacaListByMember(User user);
-
-	/**
-	 * Returns all users that are in the given list.
-	 * @param maritacaList
-	 * @return A collection containing the users found.
-	 */
-	Collection<User> searchUsersByMaritacaList(MaritacaList maritacaList);
-	
-	boolean saveMaritacaListUser(MaritacaListUser maritacaListUser);
-	
 	/**
 	 * Returns a list<MaritacaList> with the list that match the string*
 	 * @param startingString
@@ -106,21 +91,6 @@ public interface UserModel extends GenericModel{
 	 */
 	User getOwnerOfMaritacaList(MaritacaList list);
 	
-	 /**  
-	 * Removes the current user from the given list.
-	 * @param maritacaList
-	 * @return true if successful, false otherwise 
-	 */
-	boolean removeCurrentUserFromMaritacaList(MaritacaList maritacaList);
-	
-	/**
-	 * Removes the given user from the given list.
-	 * @param list
-	 * @param user
-	 * @return
-	 */
-	boolean removeUserFromMaritacaList(MaritacaList list, User user);
-
 	/**
 	 * Removes the current user from the given list in the database. 
 	 * This method cascades the deletion to the MaritacaListUser table, removing

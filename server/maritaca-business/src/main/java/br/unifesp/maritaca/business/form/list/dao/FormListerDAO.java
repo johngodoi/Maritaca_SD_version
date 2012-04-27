@@ -14,11 +14,11 @@ import br.unifesp.maritaca.core.Configuration;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
 import br.unifesp.maritaca.core.MaritacaList;
-import br.unifesp.maritaca.core.MaritacaListUser;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.exception.AuthorizationDenied;
 import br.unifesp.maritaca.model.ManagerModel;
 
+@Deprecated
 public class FormListerDAO extends BaseDAO {
 	
 	public List<Form> getListOwnFormsByUserKey(String key) {
@@ -26,39 +26,9 @@ public class FormListerDAO extends BaseDAO {
 	}
 	
 	public List<Form> getListSharedFormsByUserKey(User user) {
-		
-		Set<Form> forms = new HashSet<Form>();
-		// get lists where user is member
-		Collection<MaritacaListUser> lists = this.getMaritacaListByMember(user);		
-		for (MaritacaListUser gu : lists) {
-			// get all formpermissions in each list
-			Collection<FormPermissions> l1Forms = getFormPermissionsByList(gu.getMaritacaList());
-			for (FormPermissions fp : l1Forms) {
-				// get the form and add it if expdate > now
-				Form form = getFormWithPermission(fp, true, user);
-				if (form != null) {					
-					if (!form.getUser().equals(user)) {
-						forms.add(form);
-					}
-				}
-			}
-		}
-		return new ArrayList<Form>(forms);
+		return null;
 	}
-	
-	public Collection<MaritacaListUser> getMaritacaListByMember(User user) {
-		MaritacaListUser allGroupUser = new MaritacaListUser();
-		allGroupUser.setUser(user);
-		allGroupUser.setMaritacaList(getAllUsersList());
 		
-		Collection<MaritacaListUser> groupsByMember;
-		groupsByMember =  entityManager.cQuery(MaritacaListUser.class, "user", user.getKey()
-												.toString(), true);
-		groupsByMember.add(allGroupUser);
-		
-		return groupsByMember;
-	}
-	
 	public Collection<FormPermissions> getFormPermissionsByList(MaritacaList list) {
 		List<FormPermissions> result = entityManager.cQuery(FormPermissions.class, "maritacaList", list.getKey().toString());
 		for (FormPermissions fp : result) {
@@ -66,20 +36,7 @@ public class FormListerDAO extends BaseDAO {
 		}
 		return result;
 	}
-	
-	private Form getFormWithPermission(FormPermissions fp, boolean minimal, User user) {
-		Form form = null;
-		long now = System.currentTimeMillis();
-		// verify expiration date
-		if (fp.getExpDate() != null && fp.getExpDate() < now) {
-				// TODO delete fp?, it has expired or add ttl in column?
-		} else if (!fp.getFormAccess().equals(AccessLevel.NO_ACCESS)) {
-			// date ok, verify access
-			form = getForm(fp.getForm().getKey(), minimal, user);
-		}
-		return form;
-	}
-	
+		
 	public Form getForm(UUID uid, boolean minimal, User user) {
 		if (uid == null ) {
 			throw new IllegalArgumentException("Incomplete parameters");
@@ -137,24 +94,6 @@ public class FormListerDAO extends BaseDAO {
 	}
 	
 	public boolean userIsMemberOfMaritacaList(User user, MaritacaList group) {
-		if (group.getOwner().equals(user)) {
-			// owner is default member of group
-			return true;
-		}
-		
-		if( group.equals(getAllUsersList()) ){
-			// all users are in the public group
-			return true;
-		}
-
-		// is not a owner, get members
-		List<MaritacaListUser> list = entityManager.cQuery(MaritacaListUser.class, "maritacaList",
-				group.getKey().toString(), true);
-		for (MaritacaListUser gu : list) {
-			if (gu.getUser().equals(user))
-				return true;// user is member
-		}
-
 		return false;// not a member
 	}
 	

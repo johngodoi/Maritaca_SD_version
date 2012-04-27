@@ -3,47 +3,33 @@ package br.unifesp.maritaca.business.login;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import br.unifesp.maritaca.business.login.dao.LoginDAO;
+import br.unifesp.maritaca.business.account.edit.dao.AccountEditorDAO;
 import br.unifesp.maritaca.business.login.dto.LoginDTO;
+import br.unifesp.maritaca.business.util.UtilsBusiness;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.dto.UserDTO;
 
 @Stateless
 public class LoginEJB {
 	
-	@Inject private LoginDAO loginDAO;
+	@Inject
+	private AccountEditorDAO accountDAO;
 	
 	public UserDTO doLogin(LoginDTO loginDTO) {
-		UserDTO userDTO = null;
-		User dbUser = loginDAO.findUserByEmail(loginDTO.getEmail());
-		if(loginSuccessful(loginDTO, dbUser)) {
-			userDTO = new UserDTO();
-			userDTO.setEmail(loginDTO.getEmail());
-			userDTO.setKey(dbUser.getKey());
-			userDTO.setFirstname(dbUser.getFirstname());
-			userDTO.setLastname(dbUser.getLastname());
-			userDTO.setMaritacaListKey(dbUser.getMaritacaList().getKey());
+		UserDTO userDto = findUserByEmail(loginDTO.getEmail());
+		if(loginSuccessful(loginDTO, userDto)) {
+			return userDto;
+		} else {
+			return null;
 		}
-		return userDTO;
 	}
 	
-	private boolean loginSuccessful(LoginDTO loginDTO, User dbUser) {
+	private boolean loginSuccessful(LoginDTO loginDTO, UserDTO dbUser) {
 		return (dbUser != null && loginDTO.getPassword().equals(dbUser.getPassword()));
 	}
 
 	public UserDTO findUserByEmail(String email) {
-		UserDTO userDTO = null;
-		User dbUser = loginDAO.findUserByEmail(email);
-		if (dbUser != null) {
-			userDTO = new UserDTO();
-			userDTO.setEmail(email);
-			userDTO.setKey(dbUser.getKey());
-			userDTO.setFirstname(dbUser.getFirstname());
-			userDTO.setLastname(dbUser.getLastname());
-			//TODO SAVE LIST!!!!!
-//			userDTO.setMaritacaListKey(dbUser.getMaritacaList().getKey());
-		}
-			
-		return userDTO;
+		User    user    = accountDAO.findUserByEmail(email);
+		return UtilsBusiness.convertToClass(user, UserDTO.class);
 	}	
 }

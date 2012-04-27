@@ -105,4 +105,20 @@ public class FormListerEJB extends AbstractEJB {
 		}
 	    return formsDTO;
 	}
+
+	public UserDAO getUserDAO() {
+		return userDAO;
+	}
+
+	public void setUserDAO(UserDAO userDAO) {
+		this.userDAO = userDAO;
+	}
+
+	public FormDAO getFormDAO() {
+		return formDAO;
+	}
+
+	public void setFormDAO(FormDAO formDAO) {
+		this.formDAO = formDAO;
+	}
 }

@@ -18,8 +18,9 @@ import br.unifesp.maritaca.business.base.dao.FormDAO;
 import br.unifesp.maritaca.business.base.dao.UserDAO;
 import br.unifesp.maritaca.business.form.dto.FormDTO;
 import br.unifesp.maritaca.business.form.edit.dao.FormEditorDAO;
-import br.unifesp.maritaca.business.form.list.dao.FormListerDAO;
-import br.unifesp.maritaca.business.list.dao.ManagerListDAO;
+import br.unifesp.maritaca.business.list.list.dao.ListMaritacaListDAO;
+import br.unifesp.maritaca.business.list.list.dto.MaritacaListDTO;
+import br.unifesp.maritaca.business.util.UtilsBusiness;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.core.User;
@@ -40,13 +41,27 @@ public class FormEditorEJB extends AbstractEJB {
 	private static final long serialVersionUID = 1L;
 	private static final Log log = LogFactory.getLog(FormEditorEJB.class);
 		
-	@Inject private FormListerDAO formListerDAO;
-	@Inject private ManagerListDAO managerListDAO;
-	
-	//////////////////////////////////////////////////////////////////
+	@Inject private ListMaritacaListDAO listMaritacaListDAO;
+	@Inject private UserDAO userDAO;
 	@Inject private FormDAO formDAO;
 	@Inject private FormEditorDAO formEditorDAO;
-	@Inject private UserDAO userDAO;
+	
+	
+	public Form saveNewForm2(FormDTO formDTO) {
+		//TODO: verifyEntity(formDTO.getUserKey()); verifyNullProperties(formDTO); and keyUser
+		Form form = new Form();
+		form.setTitle(formDTO.getTitle());
+		form.setXml(formDTO.getXml());
+		form.setUrl(this.getUniqueUrl());
+		
+		UserDTO userDTO = new UserDTO(); 
+		userDTO.setKey(formDTO.getUserKey());
+		User user = (User) verifyReturnNullValuesInDB(userDTO);
+		
+		form.setUser(user);
+		formDAO.persistForm(form);
+		return form;
+	}
 	
 	/**
 	 * Save a new form, by default the policy is PRIVATE
@@ -65,8 +80,8 @@ public class FormEditorEJB extends AbstractEJB {
 		
 		form.setUser(user);
 		//form.setLists(getOwnMaritacaListByUser(user));
-		formDAO.persistForm(form);	
-		formEditorDAO.createRandownAnswer(form);
+		formDAO.persistForm(form);
+		//formEditorDAO.createRandownAnswer(form);
 	}
 	
 	/**
@@ -207,7 +222,7 @@ public class FormEditorEJB extends AbstractEJB {
 	 * @param usedItems
 	 * @return
 	 */
-	public Boolean updateFormFromPolicyEditor(FormDTO formDTO, UserDTO userDTO, List<String> usedItems) {		
+	public Boolean updateFormFromPolicyEditor(FormDTO formDTO, UserDTO userDTO, List<MaritacaListDTO> usedItems) {		
 		//Form originalForm = (Form) verifyReturnNullValuesInDB(formDTO);//
 		Form originalForm = formDAO.getFormByKey(formDTO.getKey(), false);
 		User user = (User) verifyReturnNullValuesInDB(userDTO);
@@ -219,20 +234,20 @@ public class FormEditorEJB extends AbstractEJB {
 		form.setUrl(getUniqueUrl());
 		form.setPolicy(formDTO.getPolicy());
 		if(form.isShared()) {
-			form.setLists(getListsForForm(usedItems));
+			form.setLists(fetchKeysFromLists(usedItems));
 		}
 		
 		Permission permission = super.getPermission(originalForm, userDTO.getKey(), Document.FORM);
 		if(permission != null && permission.getUpdate()) {
 			formDAO.persistForm(form);
-			if(form.isShared()) {
+			if(form.isShared()) {//
 				formEditorDAO.createOrUpdateFormAccessible(form, user);//
 			}
 			return true;
 		}
 		else {
 			throw new AuthorizationDenied(Form.class, originalForm.getKey(), user.getKey(), Operation.UPDATE);
-		}
+		}		
 	}
 	
 	/**
@@ -253,7 +268,24 @@ public class FormEditorEJB extends AbstractEJB {
 	
 	//MaritacaList > autocomplete
 	//////////////////////////////////////////////////////////////////
-	public List<String> getOwnerOfMaritacaListByPrefix(String prefix) {
+	public List<MaritacaListDTO> getOwnerOfMaritacaListByPrefix(String prefix) {
+		List<MaritacaListDTO>    listsDto = new ArrayList<MaritacaListDTO>();
+		Collection<MaritacaList> lists    = listMaritacaListDAO.maritacaListsStartingWith(prefix);
+		for(MaritacaList list : lists) {
+			listsDto.add(UtilsBusiness.convertToClass(list, MaritacaListDTO.class));
+		}	
+		return listsDto;
+	}
+	
+	public MaritacaListDTO searchMaritacaListByName(String selectedItem) {
+		MaritacaList list = formEditorDAO.searchMaritacaListByName(selectedItem);
+		if(list != null) {
+			return UtilsBusiness.convertToClass(list, MaritacaListDTO.class);
+		}		
+		return null;
+	}
+	
+	/*public List<String> getOwnerOfMaritacaListByPrefix(String prefix) {
 		List<String> listsNames = new ArrayList<String>();
 		Collection<MaritacaList> lists = managerListDAO.maritacaListsStartingWith(prefix);
 		for(MaritacaList gr : lists) {
@@ -262,17 +294,17 @@ public class FormEditorEJB extends AbstractEJB {
 			listsNames.add(gr.getName());
 		}	
 		return listsNames;
-	}
+	}*/
 	
-	public String searchMaritacaListByName(String selectedItem) {
+	/*public String searchMaritacaListByName(String selectedItem) {
 		MaritacaList list = formListerDAO.searchMaritacaListByName(selectedItem);
 		if(list != null) {
 			return list.getName();
 		}		
 		return null;
-	}
+	}*/
 	
-	public List<String> populateFormSharedList(FormDTO formDTO) {
+	/*public List<String> populateFormSharedList(FormDTO formDTO) {
 		List<String> lstItems = new ArrayList<String>();		
 		Form form = formDAO.getFormByKey(formDTO.getKey(), false);
 		User owner = userDAO.findUserByKey(form.getUser().getKey());
@@ -281,30 +313,74 @@ public class FormEditorEJB extends AbstractEJB {
 			if(ownerList != null) {
 				lstItems.add(ownerList.getName());
 			}
+		}*/
+		
+
+		
+	public List<MaritacaListDTO> populateFormSharedList(FormDTO formDTO) {
+		List<MaritacaListDTO> lstItems = new ArrayList<MaritacaListDTO>();
+		Form form = formDAO.getFormByKey(formDTO.getKey(), false);		
+		User owner = userDAO.findUserByKey(form.getUser().getKey());
+		if(owner != null) {	
+			MaritacaList ownerList = listMaritacaListDAO.getMaritacaList(owner.getMaritacaList());
+			if(ownerList != null) {
+				lstItems.add(UtilsBusiness.convertToClass(ownerList, MaritacaListDTO.class));
+			}
 		}
 		
 		if(form != null && form.getLists() != null && !form.getLists().isEmpty()) {
 			for(UUID uuid : form.getLists()) {
-				MaritacaList mList = managerListDAO.getMaritacaList(uuid);
+				MaritacaList mList = listMaritacaListDAO.getMaritacaList(uuid);
 				if(mList != null && !mList.getName().equals(MaritacaConstants.ALL_USERS)) {
-					lstItems.add(mList.getName());
+					lstItems.add(UtilsBusiness.convertToClass(mList, MaritacaListDTO.class));
 				}
 			}
 		}
 		return lstItems;
 	}
 
-	/////TODO: managerListDAO, formListerDAO
-	public Collection<MaritacaList> getMaritacaListsByPrefix(String prefix) {
-		return managerListDAO.maritacaListsStartingWith(prefix);
-	}	
-	
-	private List<MaritacaList> getFormLists(List<String> usedItems) {
-		List<MaritacaList> lists = new ArrayList<MaritacaList>();
-		for(String listName : usedItems) {
-			MaritacaList list = formListerDAO.searchMaritacaListByName(listName);
-			lists.add(list);
+	private List<UUID> fetchKeysFromLists(List<MaritacaListDTO> usedLists) {
+		List<UUID> uuids = new ArrayList<UUID>();
+		for(MaritacaListDTO list : usedLists) {			
+			uuids.add(list.getKey());			
 		}
-		return lists;
+		return uuids;
+	}
+	
+	//
+	public Collection<MaritacaList> getMaritacaListsByPrefix(String prefix) {
+		return listMaritacaListDAO.maritacaListsStartingWith(prefix);
+	}
+
+	public ListMaritacaListDAO getListMaritacaListDAO() {
+		return listMaritacaListDAO;
+	}
+
+	public void setListMaritacaListDAO(ListMaritacaListDAO listMaritacaListDAO) {
+		this.listMaritacaListDAO = listMaritacaListDAO;
+	}
+
+	public UserDAO getUserDAO() {
+		return userDAO;
+	}
+
+	public void setUserDAO(UserDAO userDAO) {
+		this.userDAO = userDAO;
+	}
+
+	public FormDAO getFormDAO() {
+		return formDAO;
+	}
+
+	public void setFormDAO(FormDAO formDAO) {
+		this.formDAO = formDAO;
+	}
+
+	public FormEditorDAO getFormEditorDAO() {
+		return formEditorDAO;
+	}
+
+	public void setFormEditorDAO(FormEditorDAO formEditorDAO) {
+		this.formEditorDAO = formEditorDAO;
 	}	
 }

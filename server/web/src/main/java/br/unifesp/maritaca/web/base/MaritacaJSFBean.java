@@ -21,14 +21,17 @@ public abstract class MaritacaJSFBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@ManagedProperty("#{manager}")
-	private Manager moduleManager;
+	private Manager moduleManager;		
 	
 	protected UserDTO getCurrentUser() {
 		UserDTO maritacaUser = (UserDTO)Utils.clientRequest().getSession().getAttribute(MaritacaConstants.CURRENT_USER);
-		//MaritacaUserDTO maritacaUser = (MaritacaUserDTO) getFacesContext().getExternalContext().getSessionMap().get("currentuser");
 		if(maritacaUser != null)
 			return maritacaUser;
 		return null;
+	}
+	
+	protected void setCurrentUser(UserDTO userDto){
+		Utils.clientRequest().getSession().setAttribute(MaritacaConstants.CURRENT_USER, userDto);
 	}
 	
 	protected FacesContext getFacesContext() {

@@ -67,4 +67,21 @@ public abstract class AbstractEJB implements Serializable {
 		}
 		return null;
 	}
+	
+	//
+	public ConfigurationDAO getConfigurationDAO() {
+		return configurationDAO;
+	}
+
+	public void setConfigurationDAO(ConfigurationDAO configurationDAO) {
+		this.configurationDAO = configurationDAO;
+	}
+
+	public FormDAO getFormDAO() {
+		return formDAO;
+	}
+
+	public void setFormDAO(FormDAO formDAO) {
+		this.formDAO = formDAO;
+	}
 }

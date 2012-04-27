@@ -3,11 +3,6 @@ package br.unifesp.maritaca.access.operation;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
-
-@ManagedBean
-@SessionScoped
 public enum Operation {
 	CREATE,
 	READ,
@@ -15,6 +10,9 @@ public enum Operation {
 	DELETE,
 	SHARE,
 	LIST;
+
+	private Operation() {
+	}
 	
 	public static Operation[] allExceptShare(){
 		List<Operation> ops = new ArrayList<Operation>();

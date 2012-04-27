@@ -51,7 +51,6 @@ import org.apache.cassandra.thrift.ColumnDef;
 import org.apache.cassandra.thrift.IndexType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.codehaus.jackson.map.introspect.BasicClassIntrospector.GetterMethodFilter;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -65,8 +64,7 @@ public class EntityManagerHectorImpl implements EntityManager, Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	private static final Log log = LogFactory
-			.getLog(EntityManagerHectorImpl.class);
+	private static final Log log = LogFactory.getLog(EntityManagerHectorImpl.class);
 	private static EntityManagerHectorImpl instance;
 
 	private Cluster cluster;

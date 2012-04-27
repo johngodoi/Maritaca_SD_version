@@ -1,51 +1,60 @@
 package br.unifesp.maritaca.web.jsf.lists;
 
-import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.RequestScoped;
 import javax.inject.Inject;
 
-import br.unifesp.maritaca.business.list.ManagerListEJB;
-import br.unifesp.maritaca.business.list.dto.MaritacaListDTO;
+import br.unifesp.maritaca.business.list.list.ListMaritacaListEJB;
+import br.unifesp.maritaca.business.list.list.dto.MaritacaListDTO;
 import br.unifesp.maritaca.web.base.MaritacaJSFBean;
-import br.unifesp.maritaca.web.utils.Utils;
 
 /**
  * Bean used to present lists to the user.
  * @author tiagobarabasz
  */
 @ManagedBean
-@ViewScoped
+@RequestScoped
 public class ListMaritacaListBean extends MaritacaJSFBean {
 	
 	private static final long serialVersionUID = 1L;
 	
-	@Inject ManagerListEJB managerListEJB;
-	
-	private Collection<MaritacaListDTO> myLists;
+	@Inject
+	private ListMaritacaListEJB   maritacaListEJB;	
+	private List<MaritacaListDTO> myLists;
 	
 	public void removeList(MaritacaListDTO list) {
-		if(managerListEJB.removeMaritacaList(list)) {
-			getMyLists().remove(list);
-		} else {
-			throw new RuntimeException(Utils.getMessageFromResourceProperties("list_remove_error"));
-		}	
+		maritacaListEJB.removeMaritacaList(list.getKey());
+		getMyLists().remove(list);
 	}
 
 	@PostConstruct
 	public void updateMyLists() {
-            System.out.println("PostConstruct  - updateMyLists");
-		setMyLists(managerListEJB.getMaritacaListsByOwner(getCurrentUser()));
+		setMyLists(maritacaListEJB.getMaritacaListsByOwner(getCurrentUser().getKey()));
+		removeUserListFromCurrentUser();
 	}
         
-        /*** Setters y Getters ***/
-        public Collection<MaritacaListDTO> getMyLists() {
+    private void removeUserListFromCurrentUser() {    	
+    	MaritacaListDTO myUserList = null;
+    	for(MaritacaListDTO list : myLists){
+    		if(getCurrentUser().getMaritacaList().equals(list.getKey())){
+    			myUserList = list;
+    		}
+    	}
+		if(myUserList==null){
+			throw new RuntimeException("User list not found for: " + getCurrentUser().getEmail());
+		}else{
+			getMyLists().remove(myUserList);
+		}    	
+	}
+
+	public List<MaritacaListDTO> getMyLists() {
 		return myLists;
 	}
 
-	public void setMyLists(Collection<MaritacaListDTO> myLists) {
+	public void setMyLists(List<MaritacaListDTO> myLists) {
 		this.myLists = myLists;
 	}
 }

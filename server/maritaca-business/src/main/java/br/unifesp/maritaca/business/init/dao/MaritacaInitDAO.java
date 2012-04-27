@@ -121,7 +121,7 @@ public class MaritacaInitDAO extends BaseDAO {
 		list.setName(rootUser.getEmail());
 		entityManager.persist(list);
 		
-		rootUser.setMaritacaList(list);
+		rootUser.setMaritacaList(list.getKey());
 		entityManager.persist(rootUser);
 	}
 	

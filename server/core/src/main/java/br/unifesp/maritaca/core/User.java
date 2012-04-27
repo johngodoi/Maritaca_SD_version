@@ -31,7 +31,7 @@ public class User implements Serializable, Cloneable{
 	
 	@Column
 	@Minimal
-	private MaritacaList maritacaList;
+	private UUID maritacaList;
 	
 	@Column(indexed=true)
 	@Minimal
@@ -115,17 +115,15 @@ public class User implements Serializable, Cloneable{
 		}
 	}
 
-	public MaritacaList getMaritacaList() {
+	public UUID getMaritacaList() {
 		return maritacaList;
 	}
 
-	public void setMaritacaList(MaritacaList maritacaList) {
+	public void setMaritacaList(UUID maritacaList) {
 		this.maritacaList = maritacaList;
 	}
 	
-	public void setMaritacaList(String maritacaListId){
-		MaritacaList maritacaList = new MaritacaList();
-		maritacaList.setKey(maritacaListId);
-		this.maritacaList = maritacaList;
+	public void setMaritacaList(String maritacaList){
+		this.maritacaList = UUID.fromString(maritacaList);
 	}
 }

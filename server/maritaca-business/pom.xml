@@ -12,7 +12,6 @@
 	<packaging>jar</packaging>
 	<name>maritaca-business</name>
 	<url>https://sourceforge.net/p/maritaca</url>
-
 	<repositories>
 		<repository>
 			<id>maven2-repository.java.net</id>
@@ -21,31 +20,69 @@
 			<layout>default</layout>
 		</repository>
 	</repositories>
-
 	<dependencies>
-
 		<!-- MARITACA -->
 		<dependency>
 			<groupId>br.unifesp.maritaca</groupId>
 			<artifactId>maritaca-core</artifactId>
 			<version>${maritaca.version}</version>
 		</dependency>
-
 		<!-- JEE6 -->
 		<dependency>
 			<groupId>javax</groupId>
 			<artifactId>javaee-api</artifactId>
 			<version>6.0</version>
 			<scope>provided</scope>
-		</dependency>
-
+		</dependency>		
+		<!-- AspectJ -->
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+			<version>1.6.11</version>
+		</dependency>		
 		<!-- Testing -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>me.prettyprint</groupId>
+			<artifactId>hector-test</artifactId>
+			<version>1.0-2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${org.springframework.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${org.springframework.version}</version>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${org.springframework.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>${mockito.version}</version>
+			<scope>test</scope>
+		</dependency>					
 	</dependencies>
 	<build>
 		<plugins>
@@ -57,6 +94,18 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>aspectj-maven-plugin</artifactId>
+				<version>1.4</version>
+				<configuration>
+					<sources>
+						<source>
+							<basedir>src/main/aspects</basedir>
+						</source>
+					</sources>
+				</configuration>
+			</plugin>					
 		</plugins>
 	</build>
 </project>

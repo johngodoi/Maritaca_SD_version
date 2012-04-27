@@ -3,24 +3,20 @@ package br.unifesp.maritaca.web.jsf.login;
 import java.io.IOException;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 import br.unifesp.maritaca.persistence.dto.UserDTO;
-import br.unifesp.maritaca.web.jsf.account.CurrentUserBean;
-import br.unifesp.maritaca.web.jsf.util.MaritacaConstants;
+import br.unifesp.maritaca.web.base.MaritacaJSFBean;
 import br.unifesp.maritaca.web.utils.Utils;
 
 @ManagedBean
 @SessionScoped
-public class LoginManagerBean {
-	
+public class LoginManagerBean extends MaritacaJSFBean{
+		
+	private static final long serialVersionUID = 1L;
 	private String oauth_token;
-	
-	@ManagedProperty("#{currentUserBean}")
-	private CurrentUserBean currentUser;
-	
+		
 	/**
 	 * Redirects the user to the successful login page, which can be: <li>The
 	 * home page</li> <li>localhost page (for mobile client)</li>
@@ -36,9 +32,7 @@ public class LoginManagerBean {
 			} else {
 				successfulLoginUrl = Utils.buildViewUrl("/views/home.xhtml");
 			}
-			//TODO: Next step: delete CurrentUserBean
-			Utils.clientRequest().getSession().setAttribute(MaritacaConstants.CURRENT_USER, userDTO);
-			currentUser.setUser(userDTO);			
+			setCurrentUser(userDTO);
 						
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.getExternalContext().redirect(successfulLoginUrl);
@@ -46,19 +40,15 @@ public class LoginManagerBean {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	public String currentUserEmail(){
+		return getCurrentUser().getEmail();
+	}
 
 	private String buildQueryString() {
 		return  "oauth_token=" + getOauth_token() + "&" +
 				"xoauth_end_user_decision=" + "yes" + "&" +  
-				"userid=" + getCurrentUser().getUser().getKey();
-	}
-
-	public CurrentUserBean getCurrentUser() {
-		return currentUser;
-	}
-
-	public void setCurrentUser(CurrentUserBean currentUser) {
-		this.currentUser = currentUser;
+				"userid=" + getCurrentUser().getKey();
 	}
 
 	public String getOauth_token() {

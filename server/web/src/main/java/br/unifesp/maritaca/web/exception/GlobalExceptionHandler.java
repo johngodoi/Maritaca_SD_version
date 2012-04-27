@@ -21,6 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import br.unifesp.maritaca.business.exception.InvalidNumberOfEntries;
+import br.unifesp.maritaca.business.exception.MaritacaException;
 import br.unifesp.maritaca.exception.AuthorizationDenied;
 
 /**
@@ -47,53 +48,32 @@ public class GlobalExceptionHandler extends ExceptionHandlerWrapper {
 	 */
 	@Override
 	public void handle() throws FacesException {
-		Iterator<ExceptionQueuedEvent> i = getUnhandledExceptionQueuedEvents()
+		Iterator<ExceptionQueuedEvent> iterator = getUnhandledExceptionQueuedEvents()
 				.iterator();
-		while (i.hasNext()) {
-			ExceptionQueuedEvent exEvt = i.next();
+		while (iterator.hasNext()) {
+			ExceptionQueuedEvent exEvt = iterator.next();
 			ExceptionQueuedEventContext context = (ExceptionQueuedEventContext) exEvt
 					.getSource();
 			Throwable thr = getRootCause(context.getException());
 
+			String logMessage = null;			
+			String userMessage = null;
+			
+			try{
+				throw thr;
+			} catch(MaritacaException e){
+				logMessage  = e.getMessage();
+				userMessage = e.getUserMessage();				
+			} catch(Throwable e){
+				logMessage  = e.getMessage();
+				userMessage = MaritacaException.GENERIC_MESSAGE;
+			}
+			log.error(logMessage);
+			addMessage(userMessage, FacesMessage.SEVERITY_ERROR);
+			
 			// check what type of exception to create a custom messages
 			// messages are keys in messages_properties
-			if (thr instanceof ViewExpiredException) {
-				handleViewExpiredException((ViewExpiredException) thr);
-			} else if (thr instanceof HectorException) {
-				addMessage("error_hector_exception",
-						FacesMessage.SEVERITY_ERROR);
-				log.error("Error accessing data", thr);
-			} else if (thr instanceof IllegalArgumentException) {
-				addMessage("error_illegal_argument",
-						FacesMessage.SEVERITY_ERROR);
-				log.error("Illegal argument", thr);
-			} else if(thr instanceof EvaluationException &&
-					  thr.getCause() instanceof AuthorizationDenied ){
-				AuthorizationDenied authDenied = (AuthorizationDenied) thr.getCause();
-				addMessage("error_authorization_denied", FacesMessage.SEVERITY_ERROR);
-				log.error("Authorization denied "+
-							"- operation: " + authDenied.getOperation() +
-							", target: "    + authDenied.getTarget()+
-							", targetId: "  + authDenied.getTargetId()+
-							", userId: "    + authDenied.getUserId());				
-			} else if(thr instanceof InvalidNumberOfEntries ){
-				InvalidNumberOfEntries invNumEnt = (InvalidNumberOfEntries) thr;
-				addMessage("error_invalid_number_of_entities", FacesMessage.SEVERITY_ERROR);
-				log.error("Entity: "+ invNumEnt.getEntity().getName()+
-						  " have multiple entries for value: "+invNumEnt.getValue()
-						  ,thr);
-			} else if(thr instanceof ELException){
-				continue;//this error are handle for JSF
-			}else if (thr.getMessage()!= null && thr.getMessage().equals("null source")) {
-				ViewExpiredException ex = new ViewExpiredException(
-						"session closed", thr.getCause(), "");
-				handleViewExpiredException(ex);
-			} else{
-				addMessage("error_unexpected", FacesMessage.SEVERITY_ERROR);
-				log.error("Error not identified", thr);
-				thr.printStackTrace();
-			}
-			i.remove();
+			iterator.remove();
 		}
 		getWrapped().handle();
 	}
@@ -132,3 +112,38 @@ public class GlobalExceptionHandler extends ExceptionHandlerWrapper {
 		getFacesContext().addMessage(null, fcMsg);
 	}
 }
+
+//			if (thr instanceof ViewExpiredException) {
+//				handleViewExpiredException((ViewExpiredException) thr);
+//			} else if (thr instanceof HectorException) {
+//				addMessage("error_hector_exception",
+//						FacesMessage.SEVERITY_ERROR);
+//				log.error("Error accessing data", thr);
+//			} else if (thr instanceof IllegalArgumentException) {
+//				addMessage("error_illegal_argument",
+//						FacesMessage.SEVERITY_ERROR);
+//				log.error("Illegal argument", thr);
+//			} else if(thr instanceof EvaluationException &&
+//					  thr.getCause() instanceof AuthorizationDenied ){
+//				AuthorizationDenied authDenied = (AuthorizationDenied) thr.getCause();
+//				addMessage("error_authorization_denied", FacesMessage.SEVERITY_ERROR);
+//				log.error("Authorization denied "+
+//							"- operation: " + authDenied.getOperation() +
+//							", target: "    + authDenied.getTarget()+
+//							", targetId: "  + authDenied.getTargetId()+
+//							", userId: "    + authDenied.getUserId());				
+//			} else if(thr instanceof InvalidNumberOfEntries ){
+//				InvalidNumberOfEntries invNumEnt = (InvalidNumberOfEntries) thr;
+//				addMessage("error_invalid_number_of_entities", FacesMessage.SEVERITY_ERROR);
+//				log.error( thr.getMessage() );
+//			} else if(thr instanceof ELException){
+//				continue;//this error are handle for JSF
+//			}else if (thr.getMessage()!= null && thr.getMessage().equals("null source")) {
+//				ViewExpiredException ex = new ViewExpiredException(
+//						"session closed", thr.getCause(), "");
+//				handleViewExpiredException(ex);
+//			} else{
+//				addMessage("error_unexpected", FacesMessage.SEVERITY_ERROR);
+//				log.error("Error not identified", thr);
+//				thr.printStackTrace();
+//			}
