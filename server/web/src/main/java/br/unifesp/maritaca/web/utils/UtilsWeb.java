@@ -10,7 +10,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-public class Utils {
+public class UtilsWeb {
 	public static final String SPACEWILDCARD="_";	
 	
 	public static String getCompactedVersion(String str){

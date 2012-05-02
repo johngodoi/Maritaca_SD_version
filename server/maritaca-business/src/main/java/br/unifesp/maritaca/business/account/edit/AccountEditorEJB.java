@@ -4,9 +4,9 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import br.unifesp.maritaca.business.account.edit.dao.AccountEditorDAO;
+import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
 import br.unifesp.maritaca.business.util.UtilsBusiness;
 import br.unifesp.maritaca.core.User;
-import br.unifesp.maritaca.persistence.dto.UserDTO;
 
 @Stateless
 public class AccountEditorEJB{

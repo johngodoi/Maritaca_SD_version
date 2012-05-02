@@ -6,8 +6,8 @@ import javax.faces.bean.SessionScoped;
 import javax.inject.Inject;
 
 import br.unifesp.maritaca.business.account.edit.AccountEditorEJB;
+import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
 import br.unifesp.maritaca.business.util.UtilsBusiness;
-import br.unifesp.maritaca.persistence.dto.UserDTO;
 import br.unifesp.maritaca.web.base.MaritacaJSFBean;
 import br.unifesp.maritaca.web.jsf.login.LoginManagerBean;
 import br.unifesp.maritaca.web.jsf.util.MaritacaConstants;

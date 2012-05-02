@@ -6,9 +6,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
-import br.unifesp.maritaca.persistence.dto.UserDTO;
+import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
 import br.unifesp.maritaca.web.base.MaritacaJSFBean;
-import br.unifesp.maritaca.web.utils.Utils;
+import br.unifesp.maritaca.web.utils.UtilsWeb;
 
 @ManagedBean
 @SessionScoped
@@ -28,9 +28,9 @@ public class LoginManagerBean extends MaritacaJSFBean{
 			
 			if (getOauth_token()!=null) {	
 				// TODO implement the query to ask to the user if allows access to its resources
-				successfulLoginUrl = Utils.buildServletUrl("/oauth/authorization/confirm") + buildQueryString();
+				successfulLoginUrl = UtilsWeb.buildServletUrl("/oauth/authorization/confirm") + buildQueryString();
 			} else {
-				successfulLoginUrl = Utils.buildViewUrl("/views/home.xhtml");
+				successfulLoginUrl = UtilsWeb.buildViewUrl("/views/home.xhtml");
 			}
 			setCurrentUser(userDTO);
 						

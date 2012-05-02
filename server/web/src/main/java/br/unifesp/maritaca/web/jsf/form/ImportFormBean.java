@@ -22,7 +22,7 @@ import org.richfaces.model.UploadedFile;
 
 import br.unifesp.maritaca.business.form.dto.FormDTO;
 import br.unifesp.maritaca.web.base.MaritacaJSFBean;
-import br.unifesp.maritaca.web.utils.Utils;
+import br.unifesp.maritaca.web.utils.UtilsWeb;
 
 
 /**
@@ -61,7 +61,7 @@ public class ImportFormBean extends MaritacaJSFBean {
 
 	// TODO Validate the xml content.
 	public void processUrl() {
-		String value = Utils
+		String value = UtilsWeb
 				.getMessageFromResourceProperties("form_import_successful");
 		try {
 			log.info(getUrl());
@@ -84,7 +84,7 @@ public class ImportFormBean extends MaritacaJSFBean {
 
 	public void validateUrl(FacesContext context, UIComponent toValidate,
 			Object value) throws ValidatorException {
-		String valueBundle = Utils
+		String valueBundle = UtilsWeb
 				.getMessageFromResourceProperties("form_import_urlRequired");
 
 		String url = (String) value;

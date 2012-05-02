@@ -6,11 +6,11 @@ import java.util.UUID;
 
 import org.junit.Test;
 
+import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
 import br.unifesp.maritaca.business.list.list.dto.MaritacaListDTO;
 import br.unifesp.maritaca.business.util.UtilsBusiness;
 import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.core.User;
-import br.unifesp.maritaca.persistence.dto.UserDTO;
 
 public class UtilBusinessTest {			
 	private static final String LIST_NAME  = "List name";

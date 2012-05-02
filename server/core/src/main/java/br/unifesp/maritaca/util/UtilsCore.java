@@ -50,4 +50,12 @@ public class UtilsCore {
 			throw new IllegalArgumentException("Invalid entity" + obj);
 		}
 	}
+	
+	public static String toUpperFirst(String valor) {
+		StringBuilder result = new StringBuilder(valor);
+		result.setCharAt(0, new String(Character.toString(result.charAt(0)))
+				.toUpperCase().charAt(0));
+
+		return result.toString();
+	}
 }

@@ -7,6 +7,7 @@ import java.util.UUID;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
 import br.unifesp.maritaca.business.answer.list.dao.AnswersListerDAO;
 import br.unifesp.maritaca.business.answer.list.dto.AnswerDTO;
 import br.unifesp.maritaca.business.answer.list.dto.AnswerListerDTO;
@@ -16,7 +17,6 @@ import br.unifesp.maritaca.business.form.dto.FormDTO;
 import br.unifesp.maritaca.business.parser.XmlParser;
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Form;
-import br.unifesp.maritaca.persistence.dto.UserDTO;
 import br.unifesp.maritaca.persistence.permission.Document;
 import br.unifesp.maritaca.persistence.permission.Permission;
 
