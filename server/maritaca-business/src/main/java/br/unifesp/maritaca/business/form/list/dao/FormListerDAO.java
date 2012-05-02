@@ -18,6 +18,7 @@ import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.exception.AuthorizationDenied;
 import br.unifesp.maritaca.model.ManagerModel;
 
+@Deprecated
 public class FormListerDAO extends BaseDAO {
 	
 	public List<Form> getListOwnFormsByUserKey(String key) {

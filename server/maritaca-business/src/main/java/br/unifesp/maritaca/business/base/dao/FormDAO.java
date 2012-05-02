@@ -58,6 +58,14 @@ public class FormDAO extends BaseDAO {
 		return entityManager.find(Form.class, formKey, minimal);
 	}
 	
+	public Form findFormByUrl(String url) {
+		List<Form> forms = entityManager.cQuery(Form.class, "url", url, true);
+		if(!forms.isEmpty()) {
+			return  forms.get(0);
+		}
+		return null;
+	}
+	
 	public boolean verifyIfUrlExist(String url) {
 		// TODO: improve this
 		// look for url in the Form columnFamily

@@ -22,7 +22,8 @@ public class FormEditorDAO extends BaseDAO {
 	@Inject private FormAccessibleByListDAO formAccessibleByListDAO;
 	
 	public void createOrUpdateFormAccessible(Form form, User owner) {
-		if(form.getKey() != null ) {
+		if(form.getKey() != null && owner != null) {
+			//form.getLists().remove(owner.getMaritacaList().getKey());//
 			for(UUID uuid : form.getLists()) {
 				FormAccessibleByList formsByList = formAccessibleByListDAO.findFormAccesibleByKey(uuid);
 				if(formsByList == null) {//TODO:
@@ -61,8 +62,35 @@ public class FormEditorDAO extends BaseDAO {
 			}
 		}
 	}
+	
+	//
+	public FormAccessibleByListDAO getFormAccessibleByListDAO() {
+		return formAccessibleByListDAO;
+	}
+
+	public void setFormAccessibleByListDAO(
+			FormAccessibleByListDAO formAccessibleByListDAO) {
+		this.formAccessibleByListDAO = formAccessibleByListDAO;
+	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	public MaritacaList searchMaritacaListByName(String groupName) {
+		if (entityManager == null || groupName == null)
+			return null;
+
+		List<MaritacaList> foundGroups = entityManager.cQuery(MaritacaList.class, "name",
+				groupName);
+
+		if (foundGroups.size() == 0) {
+			return null;
+		} else if (foundGroups.size() == 1) {
+			return foundGroups.get(0);
+		} else {
+//			throw new InvalidNumberOfEntries(groupName, MaritacaList.class);
+			return null;
+		}
+	}
 	
 	public boolean verifyIfUserExist(UUID userKey) {
 		return entityManager.rowDataExists(User.class, userKey);
@@ -131,5 +159,5 @@ public class FormEditorDAO extends BaseDAO {
 	
 	public User getUser(UUID uuid) {
 		return entityManager.find(User.class, uuid);
-	}
+	}	
 }

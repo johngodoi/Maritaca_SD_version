@@ -37,7 +37,7 @@ public class ListEditorDAO extends BaseDAO {
 		foundLists = entityManager.cQuery(MaritacaList.class, "owner",
 				owner.toString());
 		for (MaritacaList list : foundLists) {
-			if (list.getName().equals(listName)) {
+			if (list.getName() != null && list.getName().equals(listName)) {
 				return list;
 			}
 		}

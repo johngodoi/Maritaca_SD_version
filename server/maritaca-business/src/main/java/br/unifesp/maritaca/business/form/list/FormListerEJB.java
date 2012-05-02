@@ -80,14 +80,15 @@ public class FormListerEJB extends AbstractEJB {
 			User user = userDAO.findUserByEmail(userDTO.getEmail());
 			if(user != null) {
                 for(Form form : forms) {
-                	if(!userDTO.getKey().toString().equals(form.getUser().getKey().toString())) {
+                	if(form != null && !userDTO.getKey().toString().equals(form.getUser().getKey().toString())) {
                 		Permission permission = super.getPermission(form, userDTO.getKey(), Document.FORM);
 	                	if(permission != null) {
 	                		if(permission.getShare()) { permission.setShare(form.changePolicy()); }
+	                		User owner = userDAO.findUserByKey(form.getUser().getKey());
 	                		FormDTO formDTO = new FormDTO(
 		                            form.getKey(),
 		                            form.getTitle(), 
-		                            userDTO.getEmail(), 
+		                            owner!=null?owner.getEmail():"", 
 		                            form.getUrl(), 
 		                            form.getXml(),
 		                            form.getCreationDate().toString(), 
@@ -103,5 +104,21 @@ public class FormListerEJB extends AbstractEJB {
             }
 		}
 	    return formsDTO;
+	}
+
+	public UserDAO getUserDAO() {
+		return userDAO;
+	}
+
+	public void setUserDAO(UserDAO userDAO) {
+		this.userDAO = userDAO;
+	}
+
+	public FormDAO getFormDAO() {
+		return formDAO;
+	}
+
+	public void setFormDAO(FormDAO formDAO) {
+		this.formDAO = formDAO;
 	}
 }
