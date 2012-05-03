@@ -31,7 +31,7 @@ public class AnswersListerEJB extends AbstractEJB {
 	private UserDAO userDAO;
 
 	/**
-	 * Returns all the answers to the given form. TODO Must check permissions!
+	 * Returns all the answers to the given form.
 	 * 
 	 * @param formDTO
 	 * @return
