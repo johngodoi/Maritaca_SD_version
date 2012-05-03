@@ -5,10 +5,18 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+
+import br.unifesp.maritaca.business.exception.ObjectConversionException;
 import br.unifesp.maritaca.business.exception.ParameterException;
+import br.unifesp.maritaca.util.UtilsCore;
 
 public class UtilsBusiness {
 
+	private static Log log = LogFactory.getLog(UtilsBusiness.class);
+	
 	public static void verifyString(String str, Class<?> parameterClass){	
 		if(str==null || str.isEmpty()){
 			throw new ParameterException(str, parameterClass);
@@ -37,26 +45,30 @@ public class UtilsBusiness {
 	public static final <T> T convertToClass(Object originalObj, Class<T> targetClass){
 		if(originalObj == null){
 			return null;
-		}		
+		}
+		Field currentField = null;
 		try {
 			T           targetObj    = targetClass.getConstructor().newInstance();			
 			List<Field> targetFields = Arrays.asList(targetClass.getDeclaredFields());
 			for(Field tField : targetFields){
-				String getterName = "get"+toUpperFirst(tField.getName());				
+				currentField = tField;
+
+				String getterName = "get"+UtilsCore.toUpperFirst(tField.getName());				
 				Method getter;
 				try{
 					getter = originalObj.getClass().getDeclaredMethod(getterName);
 				} catch (NoSuchMethodException e){
+					convertClassLogError(tField, targetClass, originalObj);
 					continue;
 				}
 				
-				String setterName = "set"+toUpperFirst(tField.getName());
+				String setterName = "set"+UtilsCore.toUpperFirst(tField.getName());
 				Method setter = null;
 				Object value  = null;
 				try{
 					setter = targetObj.getClass().getDeclaredMethod(setterName, getter.getReturnType());
 					value  = getter.invoke(originalObj);
-				} catch (NoSuchMethodException e){					
+				} catch (NoSuchMethodException e){
 				}
 				try{
 					if(setter==null){
@@ -67,6 +79,7 @@ public class UtilsBusiness {
 						}
 					}
 				} catch (NoSuchMethodException e){
+					convertClassLogError(tField, targetClass, originalObj);
 					continue;
 				}								
 				if(value == null )
@@ -75,17 +88,17 @@ public class UtilsBusiness {
 			}			
 			return targetObj;
 		} catch (Exception e) {
-			throw new RuntimeException(	"Error converting: "+originalObj.getClass()+
-										", to: " + targetClass.getClass() +
-										" - " + e.getLocalizedMessage());
+			throw new ObjectConversionException(originalObj.getClass(), targetClass.getClass(), currentField);
 		}		
-	}
+	}	
 	
-	private static String toUpperFirst(String valor) {
-		StringBuilder result = new StringBuilder(valor);
-		result.setCharAt(0, new String(Character.toString(result.charAt(0)))
-				.toUpperCase().charAt(0));
+	private static void convertClassLogError(Field tField, Class<?> targetClass, Object originalObj){
+		getLog().warn(	"Property: "+tField.getName()+
+				 		", from target class: "+targetClass.getSimpleName()+
+				 		", not found in object: " + originalObj.getClass().getSimpleName());		
+	}
 
-		return result.toString();
+	public static Log getLog() {
+		return log;
 	}
 }

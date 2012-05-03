@@ -4,12 +4,12 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.inject.Inject;
 
+import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
 import br.unifesp.maritaca.business.login.LoginEJB;
 import br.unifesp.maritaca.business.login.dto.LoginDTO;
-import br.unifesp.maritaca.persistence.dto.UserDTO;
 import br.unifesp.maritaca.web.base.MaritacaJSFBean;
 import br.unifesp.maritaca.web.jsf.util.MaritacaConstants;
-import br.unifesp.maritaca.web.utils.Utils;
+import br.unifesp.maritaca.web.utils.UtilsWeb;
 import javax.faces.bean.ManagedBean;
 
 @ManagedBean
@@ -39,7 +39,7 @@ public class LoginBean extends MaritacaJSFBean {
 			return "";
 		}
 		else {
-			setStatus(Utils.getMessageFromResourceProperties("login_failed"));
+			setStatus(UtilsWeb.getMessageFromResourceProperties("login_failed"));
 			return MaritacaConstants.FACES_LOGIN;
 		}
 	}

@@ -12,12 +12,14 @@ import javax.annotation.Resource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import br.unifesp.maritaca.business.account.edit.AccountEditorEJB;
 import br.unifesp.maritaca.business.account.edit.dao.AccountEditorDAO;
+import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
 import br.unifesp.maritaca.business.base.dao.ConfigurationDAO;
 import br.unifesp.maritaca.business.base.dao.FormAccessibleByListDAO;
 import br.unifesp.maritaca.business.base.dao.FormDAO;
@@ -39,7 +41,6 @@ import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.EntityManagerFactory;
 import br.unifesp.maritaca.persistence.EntityManagerHectorImpl;
-import br.unifesp.maritaca.persistence.dto.UserDTO;
 import br.unifesp.maritaca.persistence.permission.Policy;
 
 @RunWith(SpringJUnit4ClassRunner.class)

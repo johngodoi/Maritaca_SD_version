@@ -58,6 +58,7 @@ import com.google.gson.reflect.TypeToken;
 import br.unifesp.maritaca.persistence.annotations.Column;
 import br.unifesp.maritaca.persistence.annotations.Minimal;
 import br.unifesp.maritaca.persistence.annotations.JSONValue;
+import br.unifesp.maritaca.util.UtilsCore;
 
 public class EntityManagerHectorImpl implements EntityManager, Serializable {
 	
@@ -114,7 +115,7 @@ public class EntityManagerHectorImpl implements EntityManager, Serializable {
 		}
 
 		for (Field f : getColumnFields(obj.getClass(), false)) {
-			Method method = getMethod(obj, "get" + toUpperFirst(f.getName()));
+			Method method = getMethod(obj, "get" + UtilsCore.toUpperFirst(f.getName()));
 			Object result;
 			try {
 				result = method.invoke(obj);
@@ -486,7 +487,7 @@ public class EntityManagerHectorImpl implements EntityManager, Serializable {
 	}
 
 	private <T> void setValue(T result, Field f, String value) {
-		Method method = getMethod(result, "set" + toUpperFirst(f.getName()),
+		Method method = getMethod(result, "set" + UtilsCore.toUpperFirst(f.getName()),
 				f.getType());
 		try {
 			if(f.isAnnotationPresent(JSONValue.class)){
@@ -530,7 +531,7 @@ public class EntityManagerHectorImpl implements EntityManager, Serializable {
 				try {
 					// alternative method with String
 					method = getMethod(result, "set"
-							+ toUpperFirst(f.getName()), String.class);
+							+ UtilsCore.toUpperFirst(f.getName()), String.class);
 					method.invoke(result, value);
 				} catch (Exception e) {
 					log.error("Losing data, method set" + f.getName()
@@ -547,14 +548,6 @@ public class EntityManagerHectorImpl implements EntityManager, Serializable {
 			throw new RuntimeException(e1);
 		}
 
-	}
-
-	private String toUpperFirst(String valor) {
-		StringBuilder result = new StringBuilder(valor);
-		result.setCharAt(0, new String(Character.toString(result.charAt(0)))
-				.toUpperCase().charAt(0));
-
-		return result.toString();
 	}
 
 	private UUID getUUID(Object obj) {

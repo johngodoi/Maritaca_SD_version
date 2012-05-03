@@ -1,7 +1,7 @@
 package br.unifesp.maritaca.web.submodule;
 
 import br.unifesp.maritaca.web.module.Module;
-import br.unifesp.maritaca.web.utils.Utils;
+import br.unifesp.maritaca.web.utils.UtilsWeb;
 
 public class SubModuleImpl implements SubModule {
 
@@ -40,7 +40,7 @@ public class SubModuleImpl implements SubModule {
 	
 	@Override
 	public String getId(){
-		return Utils.getCompactedVersion(getComponent());
+		return UtilsWeb.getCompactedVersion(getComponent());
 	}
 	
 	@Override
