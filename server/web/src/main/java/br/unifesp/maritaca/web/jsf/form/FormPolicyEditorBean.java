@@ -49,9 +49,7 @@ public class FormPolicyEditorBean extends MaritacaJSFBean {
 	}
 	
 	public String save(){
-		if(!formEditorEJB.updateFormFromPolicyEditor(getFormDTO(), getCurrentUser(), getListItem().getUsedItens())) {
-			
-		}		
+		formEditorEJB.updateFormFromPolicyEditor(getFormDTO(), getCurrentUser(), getListItem().getUsedItens());	
 		return null;
 	}
 	

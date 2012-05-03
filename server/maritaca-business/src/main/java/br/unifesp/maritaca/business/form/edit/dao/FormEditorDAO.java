@@ -37,8 +37,8 @@ public class FormEditorDAO extends BaseDAO {
 				}
 				else {
 					if(!formsByList.getForms().isEmpty()) {
-						if(!formsByList.getForms().contains(uuid)) {
-							formsByList.getForms().add(uuid);
+						if(!formsByList.getForms().contains(form.getKey())) {
+							formsByList.getForms().add(form.getKey());
 							formAccessibleByListDAO.persist(formsByList);
 						}
 					}
@@ -91,23 +91,6 @@ public class FormEditorDAO extends BaseDAO {
 			return null;
 		}
 	}
-	
-	public boolean verifyIfUserExist(UUID userKey) {
-		return entityManager.rowDataExists(User.class, userKey);
-	}
-	
-	public boolean verifyIfUrlExist(String url) {
-		// TODO: improve this
-		// look for url in the Form columnFamily
-		List<Form> fsList = entityManager.cQuery(Form.class, "url", url, true);
-		return fsList.size() > 0;
-	}
-
-	public void persistForm(Form form) {
-		entityManager.persist(form);
-		
-		createRandownAnswer(form);
-	}
 
 	/**
 	 * This is a temporary method used to test the answers visualization while
@@ -126,38 +109,4 @@ public class FormEditorDAO extends BaseDAO {
 			entityManager.persist(answer);
 		}
 	}
-
-	public Form getForm(UUID key, boolean minimal) {
-		if (key == null ) {
-			throw new IllegalArgumentException("Incomplete parameters");
-		}
-		Form form = entityManager.find(Form.class, key, minimal);
-//		if(userHasPermission(getCurrentUser(), form, Operation.READ)){
-//			return form;	
-//		} else {
-//			throw new AuthorizationDenied(Form.class, form.getKey(), getCurrentUser().getKey(), Operation.READ);
-//		}	
-		return form;
-	}
-
-	public void delete(Form form) {
-		entityManager.delete(form);
-	}
-	
-	public User getOwnerOfMaritacaList(MaritacaList gr) {
-		if (gr.getOwner() != null) {
-			return getUser(gr.getOwner().getKey());
-		} else {
-			MaritacaList group = entityManager.find(MaritacaList.class, gr.getKey(), true);
-			if (group != null) {
-				return getOwnerOfMaritacaList(group);
-			} else {
-				return null;
-			}
-		}
-	}
-	
-	public User getUser(UUID uuid) {
-		return entityManager.find(User.class, uuid);
-	}	
 }
