@@ -184,12 +184,12 @@ public class FormListerTest extends BaseEmbededServerSetupTest {
 		UserDTO userDTO5 = new UserDTO(); userDTO5.setEmail(EMAIL_USR5);
 		UserDTO userDTO6 = new UserDTO(); userDTO6.setEmail(EMAIL_USR6);
 		
-		accountEditorEjb.saveAccount(userDTO1);
-		accountEditorEjb.saveAccount(userDTO2);
-		accountEditorEjb.saveAccount(userDTO3);
-		accountEditorEjb.saveAccount(userDTO4);
-		accountEditorEjb.saveAccount(userDTO5);
-		accountEditorEjb.saveAccount(userDTO6);
+		accountEditorEjb.saveNewAccount(userDTO1);
+		accountEditorEjb.saveNewAccount(userDTO2);
+		accountEditorEjb.saveNewAccount(userDTO3);
+		accountEditorEjb.saveNewAccount(userDTO4);
+		accountEditorEjb.saveNewAccount(userDTO5);
+		accountEditorEjb.saveNewAccount(userDTO6);
 		
 		user1 = formEditorEJB.getUserDAO().findUserByEmail(EMAIL_USR1);
 		user2 = formEditorEJB.getUserDAO().findUserByEmail(EMAIL_USR2);
@@ -230,7 +230,7 @@ public class FormListerTest extends BaseEmbededServerSetupTest {
 		FormDTO privateFDTO = new FormDTO();
 		privateFDTO.setTitle("new Form");
 		privateFDTO.setXml("<form>private</form>");		
-		privateFDTO.setUserKey(userKey);
+		privateFDTO.setUser(userKey);
 		formEditorEJB.saveNewForm(privateFDTO);				
 	}
 	
@@ -238,7 +238,7 @@ public class FormListerTest extends BaseEmbededServerSetupTest {
 		FormDTO publicFDTO = new FormDTO();
 		publicFDTO.setTitle("new Form");
 		publicFDTO.setXml("<form>public</form>");		
-		publicFDTO.setUserKey(userKey);
+		publicFDTO.setUser(userKey);
 		formEditorEJB.saveNewForm(publicFDTO);
 		Form publicForm = formEditorEJB.getFormDAO().getFormByKey(publicFDTO.getKey(), false);		
 		formEditorEJB.updateFormFromPolicyEditor(getFormDTO(publicForm, Policy.PUBLIC), getUserDTO(user), getUsedItems(mList1, mList2));					
@@ -248,7 +248,7 @@ public class FormListerTest extends BaseEmbededServerSetupTest {
 		FormDTO shaHieFormDTO = new FormDTO();
 		shaHieFormDTO.setTitle("new Form");
 		shaHieFormDTO.setXml("<form>sharedHierarchical</form>");		
-		shaHieFormDTO.setUserKey(userKey);
+		shaHieFormDTO.setUser(userKey);
 		formEditorEJB.saveNewForm(shaHieFormDTO);
 		Form sharedHierarchicalForm = formEditorEJB.getFormDAO().getFormByKey(shaHieFormDTO.getKey(), false);		
 		formEditorEJB.updateFormFromPolicyEditor(getFormDTO(sharedHierarchicalForm, Policy.SHARED_HIERARCHICAL), getUserDTO(user), getUsedItems(mList1, mList2));
@@ -259,7 +259,7 @@ public class FormListerTest extends BaseEmbededServerSetupTest {
 		FormDTO shaSocFormDTO = new FormDTO();
 		shaSocFormDTO.setTitle("new Form");
 		shaSocFormDTO.setXml("<form>sharedSocial</form>");		
-		shaSocFormDTO.setUserKey(userKey);
+		shaSocFormDTO.setUser(userKey);
 		formEditorEJB.saveNewForm(shaSocFormDTO);
 		Form sharedSocialForm = formEditorEJB.getFormDAO().getFormByKey(shaSocFormDTO.getKey(), false);		
 		formEditorEJB.updateFormFromPolicyEditor(getFormDTO(sharedSocialForm, Policy.SHARED_SOCIAL), getUserDTO(user), getUsedItems(mList1, mList2));

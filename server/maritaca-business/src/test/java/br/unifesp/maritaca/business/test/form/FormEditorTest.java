@@ -104,8 +104,8 @@ public class FormEditorTest extends BaseEmbededServerSetupTest {
 	private void createUserAndList() {
 		UserDTO userDTO1 = new UserDTO(); userDTO1.setEmail(EMAIL_USR1);
 		UserDTO userDTO2 = new UserDTO(); userDTO2.setEmail(EMAIL_USR2);		
-		accountEditorEjb.saveAccount(userDTO1);
-		accountEditorEjb.saveAccount(userDTO2);
+		accountEditorEjb.saveNewAccount(userDTO1);
+		accountEditorEjb.saveNewAccount(userDTO2);
 		user1 = formEditorEJB.getUserDAO().findUserByEmail(EMAIL_USR1);
 		user2 = formEditorEJB.getUserDAO().findUserByEmail(EMAIL_USR2);
 
@@ -124,7 +124,7 @@ public class FormEditorTest extends BaseEmbededServerSetupTest {
 		FormDTO privateFDTO = new FormDTO();
 		privateFDTO.setTitle("new Form");
 		privateFDTO.setXml("<form>private</form>");		
-		privateFDTO.setUserKey(user1.getKey());
+		privateFDTO.setUser(user1.getKey());
 		formEditorEJB.saveNewForm(privateFDTO);
 		Form privateForm = formEditorEJB.getFormDAO().getFormByKey(privateFDTO.getKey(), false);
 		assertNotNull("Form not found", privateForm);
@@ -158,7 +158,7 @@ public class FormEditorTest extends BaseEmbededServerSetupTest {
 		FormDTO publicFDTO = new FormDTO();
 		publicFDTO.setTitle("new Form");
 		publicFDTO.setXml("<form>public</form>");		
-		publicFDTO.setUserKey(user1.getKey());
+		publicFDTO.setUser(user1.getKey());
 		formEditorEJB.saveNewForm(publicFDTO);
 		Form publicForm = formEditorEJB.getFormDAO().getFormByKey(publicFDTO.getKey(), false);
 		assertNotNull("Form not found", publicForm);
@@ -179,7 +179,7 @@ public class FormEditorTest extends BaseEmbededServerSetupTest {
 		FormDTO shaHieFormDTO = new FormDTO();
 		shaHieFormDTO.setTitle("new Form");
 		shaHieFormDTO.setXml("<form>sharedHierarchical</form>");		
-		shaHieFormDTO.setUserKey(user1.getKey());
+		shaHieFormDTO.setUser(user1.getKey());
 		formEditorEJB.saveNewForm(shaHieFormDTO);
 		Form sharedHierarchicalForm = formEditorEJB.getFormDAO().getFormByKey(shaHieFormDTO.getKey(), false);
 		assertNotNull("Form not found", sharedHierarchicalForm);
@@ -205,7 +205,7 @@ public class FormEditorTest extends BaseEmbededServerSetupTest {
 		FormDTO shaSocFormDTO = new FormDTO();
 		shaSocFormDTO.setTitle("new Form");
 		shaSocFormDTO.setXml("<form>sharedSocial</form>");		
-		shaSocFormDTO.setUserKey(user1.getKey());
+		shaSocFormDTO.setUser(user1.getKey());
 		formEditorEJB.saveNewForm(shaSocFormDTO);
 		Form sharedSocialForm = formEditorEJB.getFormDAO().getFormByKey(shaSocFormDTO.getKey(), false);
 		assertNotNull("Form not found", sharedSocialForm);

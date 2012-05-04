@@ -112,9 +112,9 @@ public class AnswersTest  extends BaseEmbededServerSetupTest {
 		userC = new UserDTO();
 		userC.setEmail("userC@mail.com");
 
-		accountEditorEjb.saveAccount(userA);		
-		accountEditorEjb.saveAccount(userB);
-		accountEditorEjb.saveAccount(userC);
+		accountEditorEjb.saveNewAccount(userA);		
+		accountEditorEjb.saveNewAccount(userB);
+		accountEditorEjb.saveNewAccount(userC);
 		
 		listFromUsrB = new MaritacaListDTO();
 		listFromUsrB.setOwner(userB.getKey());
@@ -124,24 +124,24 @@ public class AnswersTest  extends BaseEmbededServerSetupTest {
 		listEditorEjb.saveMaritacaList(listFromUsrB);
 		
 		privFormUsrA   = new FormDTO();
-		privFormUsrA.setUserKey(userA.getKey());
+		privFormUsrA.setUser(userA.getKey());
 		privFormUsrA.setPolicy(Policy.PRIVATE);
 		privFormUsrA.setXml(formXml);
 		
 		shHierFormUsrB = new FormDTO();
-		shHierFormUsrB.setUserKey(userB.getKey());
+		shHierFormUsrB.setUser(userB.getKey());
 		shHierFormUsrB.setPolicy(Policy.SHARED_HIERARCHICAL);
 		shHierFormUsrB.setXml(formXml);
 		shHierFormUsrB.setLists(listUsersFromB);
 				
 		shSocFormUsrB  = new FormDTO();
-		shSocFormUsrB.setUserKey(userB.getKey());
+		shSocFormUsrB.setUser(userB.getKey());
 		shSocFormUsrB.setPolicy(Policy.SHARED_SOCIAL);
 		shSocFormUsrB.setXml(formXml);
 		shSocFormUsrB.setLists(listUsersFromB);
 						
 		pubFormUsrC    = new FormDTO();
-		pubFormUsrC.setUserKey(userC.getKey());
+		pubFormUsrC.setUser(userC.getKey());
 		pubFormUsrC.setPolicy(Policy.PUBLIC);
 		pubFormUsrC.setXml(formXml);
 						

@@ -55,7 +55,7 @@ public class AccountTests extends BaseEmbededServerSetupTest{
 		UserDTO userDto = new UserDTO();		
 		userDto.setEmail(USER_EMAIL);
 		try{
-			accountEditorEjb.saveAccount(userDto);
+			accountEditorEjb.saveNewAccount(userDto);
 		}catch(IllegalArgumentException e){
 			fail();
 		}
@@ -63,7 +63,7 @@ public class AccountTests extends BaseEmbededServerSetupTest{
 		assertNotNull(userDto.getMaritacaList());
 		
 		try{
-			accountEditorEjb.saveAccount(userDto);
+			accountEditorEjb.saveNewAccount(userDto);
 			fail();
 		}catch(IllegalArgumentException e){			
 		}
@@ -75,7 +75,7 @@ public class AccountTests extends BaseEmbededServerSetupTest{
 		
 		UserDTO userDto = new UserDTO();
 		userDto.setEmail(USER_EMAIL);
-		accountEditorEjb.saveAccount(userDto);
+		accountEditorEjb.saveNewAccount(userDto);
 		
 		assertTrue(accountEditorEjb.registeredEmail(USER_EMAIL));
 	}

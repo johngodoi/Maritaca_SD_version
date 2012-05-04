@@ -27,7 +27,7 @@ public class FormDTO extends BaseDTO {
 	
 	private String creationDate;
 	
-	private UUID userKey;
+	private UUID user;
 	
 	private List<UUID> lists;
 	
@@ -72,8 +72,8 @@ public class FormDTO extends BaseDTO {
 		this.url = url;
 	}
 
-	public UUID getUserKey() {
-		return userKey;
+	public UUID getUser() {
+		return user;
 	}
 	
 	public Policy getPolicy() {
@@ -84,8 +84,8 @@ public class FormDTO extends BaseDTO {
 		this.policy = policy;
 	}
 
-	public void setUserKey(UUID userKey) {
-		this.userKey = userKey;
+	public void setUser(UUID userKey) {
+		this.user = userKey;
 	}
 
 	public Permission getPermission() {

@@ -53,7 +53,7 @@ public class FormEditorEJB extends AbstractEJB {
 		form.setUrl(this.getUniqueUrl());	
 
 		UserDTO userDTO = new UserDTO(); 
-		userDTO.setKey(formDTO.getUserKey());
+		userDTO.setKey(formDTO.getUser());
 		User user = (User) verifyReturnNullValuesInDB(userDTO);		
 		form.setUser(user);
 		
@@ -147,7 +147,9 @@ public class FormEditorEJB extends AbstractEJB {
 		Permission permission = super.getPermission(originalForm, userDTO.getKey(), Document.FORM);
 		if(permission != null && permission.getDelete()) {
 			formDAO.delete(originalForm);
-			formEditorDAO.deleteFormAccessible(originalForm, user);//
+			if(originalForm.getLists()!=null){
+				formEditorDAO.deleteFormAccessible(originalForm, user);//
+			}
 		}
 		else {
 			throw new AuthorizationDenied(Document.FORM, originalForm.getKey(), user.getKey(), Operation.DELETE);

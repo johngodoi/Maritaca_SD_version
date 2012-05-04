@@ -116,8 +116,8 @@ public class MaritacaListTests extends BaseEmbededServerSetupTest{
 		user1.setEmail(EMAIL_USR1);
 		user2.setEmail(EMAIL_USR2);
 		
-		accountEditor.saveAccount(user1);
-		accountEditor.saveAccount(user2);
+		accountEditor.saveNewAccount(user1);
+		accountEditor.saveNewAccount(user2);
 				
 		MaritacaListDTO list1User1 = new MaritacaListDTO();				
 		MaritacaListDTO list2User1 = new MaritacaListDTO();
@@ -153,8 +153,8 @@ public class MaritacaListTests extends BaseEmbededServerSetupTest{
 		user1.setEmail(EMAIL_USR1);
 		user2.setEmail(EMAIL_USR2);
 		
-		accountEditor.saveAccount(user1);
-		accountEditor.saveAccount(user2);
+		accountEditor.saveNewAccount(user1);
+		accountEditor.saveNewAccount(user2);
 				
 		MaritacaListDTO list1User1 = new MaritacaListDTO();				
 		MaritacaListDTO list1User2 = new MaritacaListDTO();

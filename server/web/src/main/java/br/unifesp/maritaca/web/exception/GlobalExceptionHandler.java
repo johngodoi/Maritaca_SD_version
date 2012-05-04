@@ -15,7 +15,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import br.unifesp.maritaca.business.exception.MaritacaException;
-import br.unifesp.maritaca.web.utils.UtilsWeb;
 
 /**
  * Class to handle all exception and create human-readable messages
@@ -49,27 +48,42 @@ public class GlobalExceptionHandler extends ExceptionHandlerWrapper {
 					.getSource();
 			Throwable thr = getRootCause(context.getException());
 
-			String logMessage = null;			
+			String logMessage  = null;			
 			String userMessage = null;
 			
-			try{
-				throw thr;
-			} catch(MaritacaException e){
-				logMessage  = e.getMessage();
-				userMessage = e.getUserMessage();				
-			} catch(Throwable e){
-				logMessage  = e.getMessage();
+			MaritacaException maritacaException = searchMaritacaExceptionInCause(thr);
+			
+			if(maritacaException!=null){
+				logMessage  = maritacaException.getMessage();
+				userMessage = maritacaException.getUserMessage();								
+			} else {
+				logMessage  = thr.getMessage();
 				userMessage = MaritacaException.GENERIC_MESSAGE;
 			}
-			log.error(logMessage);
-			userMessage = UtilsWeb.getMessageFromResourceProperties(userMessage);
-			addMessage(userMessage, FacesMessage.SEVERITY_ERROR);
+
+			showAndLogError(logMessage,userMessage);
 			
 			// check what type of exception to create a custom messages
 			// messages are keys in messages_properties
 			iterator.remove();
 		}
 		getWrapped().handle();
+	}
+	
+	private MaritacaException searchMaritacaExceptionInCause(Throwable thr) {
+		Throwable cause = thr.getCause();
+		while(cause!=null){
+			if(cause instanceof MaritacaException){
+				return (MaritacaException) cause;
+			}
+			cause = cause.getCause();
+		}
+		return null;
+	}
+
+	private void showAndLogError(String logMessage, String userMessage){
+		log.error(logMessage);
+		addMessage(userMessage, FacesMessage.SEVERITY_ERROR);
 	}
 
 	private FacesContext getFacesContext() {
