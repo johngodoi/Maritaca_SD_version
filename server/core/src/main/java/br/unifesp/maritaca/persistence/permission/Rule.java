@@ -4,9 +4,6 @@ import static br.unifesp.maritaca.persistence.permission.Accessor.*;
 import static br.unifesp.maritaca.persistence.permission.Document.*;
 import static br.unifesp.maritaca.persistence.permission.Policy.*;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * 
  * @author jimvalsan
@@ -14,10 +11,8 @@ import org.apache.commons.logging.LogFactory;
  */
 public class Rule {
 	
-	private static final Log log = LogFactory.getLog(Rule.class);
 	
-	private static Rule instance;
-	
+	private static Rule instance;	
 	private Permission[][][] permission = new Permission[Policy.values().length][Document.values().length][Accessor.values().length];
 	
 	public static Rule getInstance() {
@@ -30,40 +25,39 @@ public class Rule {
 		this.createRules();
 	}
 	
-	private void createRules() {
-																						//PERMISSION(READ, UPDATE, DELETE, SHARE)
-		//TODO: Use AccessLevel and Operation
-		permission[PRIVATE.getIdPolicy()][FORM.getIdDocument()][OWNER.getIdAccessor()]  = new Permission(true, true, true, true);
-        permission[PRIVATE.getIdPolicy()][FORM.getIdDocument()][LIST.getIdAccessor()]   = new Permission(false, false, false, false);
-        permission[PRIVATE.getIdPolicy()][FORM.getIdDocument()][ALL.getIdAccessor()] 	= new Permission(false, false, false, false);
+	private void createRules() {																					
+		//TODO: Use AccessLevel and Operation                        //PERMISSION(READ, UPDATE, DELETE, SHARE)
+		permission[PRIVATE.getId()][FORM.getId()][OWNER.getId()] = new Permission(true, true, true, true);
+        permission[PRIVATE.getId()][FORM.getId()][LIST.getId()]  = new Permission(false, false, false, false);
+        permission[PRIVATE.getId()][FORM.getId()][ALL.getId()] 	 = new Permission(false, false, false, false);
         
-		permission[SHARED_HIERARCHICAL.getIdPolicy()][FORM.getIdDocument()][OWNER.getIdAccessor()]  = new Permission(true, true, true, true);
-        permission[SHARED_HIERARCHICAL.getIdPolicy()][FORM.getIdDocument()][LIST.getIdAccessor()]   = new Permission(true, false, false, false);
-        permission[SHARED_HIERARCHICAL.getIdPolicy()][FORM.getIdDocument()][ALL.getIdAccessor()] 	= new Permission(false, false, false, false);
+		permission[SHARED_HIERARCHICAL.getId()][FORM.getId()][OWNER.getId()]  = new Permission(true, true, true, true);
+        permission[SHARED_HIERARCHICAL.getId()][FORM.getId()][LIST.getId()]   = new Permission(true, false, false, false);
+        permission[SHARED_HIERARCHICAL.getId()][FORM.getId()][ALL.getId()] 	  = new Permission(false, false, false, false);
         
-        permission[SHARED_SOCIAL.getIdPolicy()][FORM.getIdDocument()][OWNER.getIdAccessor()]  = new Permission(true, true, true, true);
-        permission[SHARED_SOCIAL.getIdPolicy()][FORM.getIdDocument()][LIST.getIdAccessor()]   = new Permission(true, false, false, false);
-        permission[SHARED_SOCIAL.getIdPolicy()][FORM.getIdDocument()][ALL.getIdAccessor()]	  = new Permission(false, false, false, false);
+        permission[SHARED_SOCIAL.getId()][FORM.getId()][OWNER.getId()]  = new Permission(true, true, true, true);
+        permission[SHARED_SOCIAL.getId()][FORM.getId()][LIST.getId()]   = new Permission(true, false, false, false);
+        permission[SHARED_SOCIAL.getId()][FORM.getId()][ALL.getId()]	= new Permission(false, false, false, false);
         
-        permission[PUBLIC.getIdPolicy()][FORM.getIdDocument()][OWNER.getIdAccessor()]  = new Permission(true, true, true, true);
-        permission[PUBLIC.getIdPolicy()][FORM.getIdDocument()][LIST.getIdAccessor()]   = new Permission(true, false, false, false);
-        permission[PUBLIC.getIdPolicy()][FORM.getIdDocument()][ALL.getIdAccessor()]    = new Permission(true, false, false, false);
+        permission[PUBLIC.getId()][FORM.getId()][OWNER.getId()]  = new Permission(true, true, true, true);
+        permission[PUBLIC.getId()][FORM.getId()][LIST.getId()]   = new Permission(true, false, false, false);
+        permission[PUBLIC.getId()][FORM.getId()][ALL.getId()]    = new Permission(true, false, false, false);
         //
-        permission[PRIVATE.getIdPolicy()][ANSWER.getIdDocument()][OWNER.getIdAccessor()]  = new Permission(true, true, true, true);
-        permission[PRIVATE.getIdPolicy()][ANSWER.getIdDocument()][LIST.getIdAccessor()]   = new Permission(false, false, false, false);
-        permission[PRIVATE.getIdPolicy()][ANSWER.getIdDocument()][ALL.getIdAccessor()] 	  = new Permission(false, false, false, false);
+        permission[PRIVATE.getId()][ANSWER.getId()][OWNER.getId()]  = new Permission(true, true, true, true);
+        permission[PRIVATE.getId()][ANSWER.getId()][LIST.getId()]   = new Permission(false, false, false, false);
+        permission[PRIVATE.getId()][ANSWER.getId()][ALL.getId()] 	= new Permission(false, false, false, false);
         
-        permission[SHARED_HIERARCHICAL.getIdPolicy()][ANSWER.getIdDocument()][OWNER.getIdAccessor()]  = new Permission(true, true, true, true);
-        permission[SHARED_HIERARCHICAL.getIdPolicy()][ANSWER.getIdDocument()][LIST.getIdAccessor()]   = new Permission(true, false, false, false);
-        permission[SHARED_HIERARCHICAL.getIdPolicy()][ANSWER.getIdDocument()][ALL.getIdAccessor()] 	  = new Permission(false, false, false, false);
+        permission[SHARED_HIERARCHICAL.getId()][ANSWER.getId()][OWNER.getId()]  = new Permission(true, true, true, true);
+        permission[SHARED_HIERARCHICAL.getId()][ANSWER.getId()][LIST.getId()]   = new Permission(false, false, false, false);
+        permission[SHARED_HIERARCHICAL.getId()][ANSWER.getId()][ALL.getId()] 	= new Permission(false, false, false, false);
         
-        permission[SHARED_SOCIAL.getIdPolicy()][ANSWER.getIdDocument()][OWNER.getIdAccessor()]  = new Permission(true, true, true, true);
-        permission[SHARED_SOCIAL.getIdPolicy()][ANSWER.getIdDocument()][LIST.getIdAccessor()]   = new Permission(true, true, true, true);//
-        permission[SHARED_SOCIAL.getIdPolicy()][ANSWER.getIdDocument()][ALL.getIdAccessor()] 	= new Permission(false, false, false, false);
+        permission[SHARED_SOCIAL.getId()][ANSWER.getId()][OWNER.getId()]  = new Permission(true, true, true, true);
+        permission[SHARED_SOCIAL.getId()][ANSWER.getId()][LIST.getId()]   = new Permission(true, true, true, true);
+        permission[SHARED_SOCIAL.getId()][ANSWER.getId()][ALL.getId()] 	  = new Permission(false, false, false, false);
         
-        permission[PUBLIC.getIdPolicy()][ANSWER.getIdDocument()][OWNER.getIdAccessor()]  = new Permission(true, true, true, true);//
-        permission[PUBLIC.getIdPolicy()][ANSWER.getIdDocument()][LIST.getIdAccessor()]   = new Permission(true, true, true, true);//
-        permission[PUBLIC.getIdPolicy()][ANSWER.getIdDocument()][ALL.getIdAccessor()] 	 = new Permission(true, true, true, true);//
+        permission[PUBLIC.getId()][ANSWER.getId()][OWNER.getId()]  = new Permission(true, true, true, true);
+        permission[PUBLIC.getId()][ANSWER.getId()][LIST.getId()]   = new Permission(true, true, true, true);
+        permission[PUBLIC.getId()][ANSWER.getId()][ALL.getId()]    = new Permission(true, true, true, true);
 	}
 	
 	/**
@@ -75,7 +69,7 @@ public class Rule {
 	 */
 	public Permission getPermission(Policy policy, Document document, Accessor accessor) {
 		if(policy != null && document != null && accessor != null)
-			return permission[policy.getIdPolicy()][document.getIdDocument()][accessor.getIdAccessor()];
+			return permission[policy.getId()][document.getId()][accessor.getId()];
 		return null;
 	}
 }

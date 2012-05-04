@@ -8,15 +8,13 @@ import java.util.UUID;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
 import br.unifesp.maritaca.business.base.AbstractEJB;
 import br.unifesp.maritaca.business.base.MaritacaConstants;
 import br.unifesp.maritaca.business.base.dao.FormDAO;
 import br.unifesp.maritaca.business.base.dao.UserDAO;
+import br.unifesp.maritaca.business.exception.AuthorizationDenied;
 import br.unifesp.maritaca.business.form.dto.FormDTO;
 import br.unifesp.maritaca.business.form.edit.dao.FormEditorDAO;
 import br.unifesp.maritaca.business.list.list.dao.ListMaritacaListDAO;
@@ -25,7 +23,6 @@ import br.unifesp.maritaca.business.util.UtilsBusiness;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.core.User;
-import br.unifesp.maritaca.exception.AuthorizationDenied;
 import br.unifesp.maritaca.persistence.permission.Document;
 import br.unifesp.maritaca.persistence.permission.Permission;
 import br.unifesp.maritaca.util.UtilsCore;
@@ -38,50 +35,34 @@ import br.unifesp.maritaca.util.UtilsCore;
 @Stateless
 public class FormEditorEJB extends AbstractEJB {
 
-	private static final long serialVersionUID = 1L;
-	private static final Log log = LogFactory.getLog(FormEditorEJB.class);
-		
+	private static final long serialVersionUID = 1L;		
+	private boolean createAnswers = true;
+	
 	@Inject private ListMaritacaListDAO listMaritacaListDAO;
 	@Inject private UserDAO userDAO;
 	@Inject private FormDAO formDAO;
 	@Inject private FormEditorDAO formEditorDAO;
 	
 	
-	/**
-	 * Save a new Form, used in the tests(Form), due to those do not need to create answers
-	 * @param formDTO
-	 * @return
-	 */
-	public Form saveNewForm2(FormDTO formDTO) {
-		//TODO: verifyEntity(formDTO.getUserKey()); verifyNullProperties(formDTO); and keyUser
-		Form form = new Form();
-		form.setTitle(formDTO.getTitle());
-		form.setXml(formDTO.getXml());
-		form.setUrl(this.getUniqueUrl());		
-		UserDTO userDTO = new UserDTO(); 
-		userDTO.setKey(formDTO.getUserKey());
-		User user = (User) verifyReturnNullValuesInDB(userDTO);		
-		form.setUser(user);
-		formDAO.persistForm(form);
-		return form;
-	}
-	
-	/**
+	/** 
 	 * Save a new form, by default the policy is PRIVATE, it has not any list
 	 * @param formDTO
 	 */
-	public void saveNewForm(FormDTO formDTO) {
-		//TODO: verifyEntity(formDTO.getUserKey()); verifyNullProperties(formDTO); and keyUser
-		Form form = new Form();
-		form.setTitle(formDTO.getTitle());
-		form.setXml(formDTO.getXml());
-		form.setUrl(this.getUniqueUrl());		
+	public void saveNewForm(FormDTO formDTO) {		
+		Form form = UtilsBusiness.convertToClass(formDTO, Form.class);
+		form.setUrl(this.getUniqueUrl());	
+
 		UserDTO userDTO = new UserDTO(); 
 		userDTO.setKey(formDTO.getUserKey());
 		User user = (User) verifyReturnNullValuesInDB(userDTO);		
 		form.setUser(user);
+		
 		formDAO.persistForm(form);
-		formEditorDAO.createRandownAnswer(form);
+		formDTO.setKey(form.getKey());
+		
+		if(isCreateAnswers()){
+			formEditorDAO.createRandownAnswer(form);
+		}		
 	}
 	
 	/**
@@ -122,7 +103,7 @@ public class FormEditorEJB extends AbstractEJB {
 			return formDTO;
 		}
 		else {
-			throw new AuthorizationDenied(Form.class, form.getKey(), userDTO.getKey(), Operation.READ);
+			throw new AuthorizationDenied(Document.FORM, form.getKey(), userDTO.getKey(), Operation.READ);
 		}
 	}
 	
@@ -148,7 +129,7 @@ public class FormEditorEJB extends AbstractEJB {
 			formDAO.persistForm(form);
 		}
 		else {
-			throw new AuthorizationDenied(Form.class, originalForm.getKey(), user.getKey(), Operation.UPDATE);
+			throw new AuthorizationDenied(Document.FORM, originalForm.getKey(), user.getKey(), Operation.UPDATE);
 		}
 	}
 	
@@ -169,7 +150,7 @@ public class FormEditorEJB extends AbstractEJB {
 			formEditorDAO.deleteFormAccessible(originalForm, user);//
 		}
 		else {
-			throw new AuthorizationDenied(Form.class, originalForm.getKey(), user.getKey(), Operation.DELETE);
+			throw new AuthorizationDenied(Document.FORM, originalForm.getKey(), user.getKey(), Operation.DELETE);
 		}
 	}
 	
@@ -222,7 +203,7 @@ public class FormEditorEJB extends AbstractEJB {
 			return true;
 		}
 		else {
-			throw new AuthorizationDenied(Form.class, originalForm.getKey(), user.getKey(), Operation.UPDATE);
+			throw new AuthorizationDenied(Document.FORM, originalForm.getKey(), user.getKey(), Operation.UPDATE);
 		}		
 	}
 	
@@ -310,5 +291,13 @@ public class FormEditorEJB extends AbstractEJB {
 
 	public void setFormEditorDAO(FormEditorDAO formEditorDAO) {
 		this.formEditorDAO = formEditorDAO;
+	}
+
+	public boolean isCreateAnswers() {
+		return createAnswers;
+	}
+
+	public void setCreateAnswers(boolean createAnswers) {
+		this.createAnswers = createAnswers;
 	}	
 }

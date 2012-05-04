@@ -192,7 +192,7 @@ public class Form implements Comparable<Form> {
 	}
 	
 	public Boolean isPublic() {
-        return policy.getIdPolicy() == Policy.PUBLIC.getIdPolicy();
+        return policy.getId() == Policy.PUBLIC.getId();
     }
 	
 	/**
@@ -201,11 +201,11 @@ public class Form implements Comparable<Form> {
 	 * @return
 	 */
 	public Boolean changePolicy() {
-        return policy.getIdPolicy() == Policy.PRIVATE.getIdPolicy();
+        return policy.getId() == Policy.PRIVATE.getId();
     }
 	
 	public Boolean isShared() {
-        return policy.getIdPolicy() == Policy.SHARED_HIERARCHICAL.getIdPolicy() || 
-        		policy.getIdPolicy() == Policy.SHARED_SOCIAL.getIdPolicy();
+        return policy.getId() == Policy.SHARED_HIERARCHICAL.getId() || 
+        		policy.getId() == Policy.SHARED_SOCIAL.getId();
     }
 }
