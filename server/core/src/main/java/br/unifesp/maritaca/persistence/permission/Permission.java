@@ -1,5 +1,7 @@
 package br.unifesp.maritaca.persistence.permission;
 
+import br.unifesp.maritaca.access.operation.Operation;
+
 public class Permission {
 	
 	private Boolean read;
@@ -7,13 +9,17 @@ public class Permission {
 	private Boolean delete;
 	private Boolean share;
 	
-	public Permission(Boolean read, Boolean update, Boolean delete,
-			Boolean share) {
-		
-		this.read = read;
-		this.update = update;
-		this.delete = delete;
-		this.share = share;
+	public Permission(Operation... operations) {
+		this.read   = false;
+		this.update = false;
+		this.delete = false;
+		this.share  = false;
+		for(Operation op : operations) {
+			if(op == Operation.READ) 			{ this.read = true; }
+			else if(op == Operation.UPDATE) 	{ this.update = true; }
+			else if(op == Operation.DELETE) 	{ this.delete = true; }
+			else if(op == Operation.SHARE) 		{ this.share = true; }			
+		}
 	}
 
 	public Boolean getRead() {

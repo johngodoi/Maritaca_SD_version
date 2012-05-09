@@ -13,7 +13,6 @@ import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.core.OAuthClient;
 import br.unifesp.maritaca.core.OAuthCode;
 import br.unifesp.maritaca.core.OAuthToken;
-import br.unifesp.maritaca.core.OpenId;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.model.UseEntityManager;
 import br.unifesp.maritaca.persistence.EntityManager;
@@ -89,7 +88,7 @@ public class ManagerModelImpl implements br.unifesp.maritaca.model.ManagerModel,
 		}
 
 		entityManager.createColumnFamily(FormPermissions.class);
-		entityManager.createColumnFamily(OpenId.class);
+		//entityManager.createColumnFamily(OpenId.class);
 		entityManager.createColumnFamily(OAuthToken.class);
 		entityManager.createColumnFamily(OAuthCode.class);
 		

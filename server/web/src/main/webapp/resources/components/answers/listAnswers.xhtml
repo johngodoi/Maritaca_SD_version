@@ -17,8 +17,9 @@
 		<composite:attribute name="submodule" required="true" />
 	</composite:interface>
 	<composite:implementation>
-		<rich:dataTable value="#{answersListerBean.answerListerDTO.answers}"
-			id="answersTable" var="aAnswer" styleClass="maritacaTable">
+		<rich:extendedDataTable value="#{answersListerBean.answerListerDTO.answers}" rows="#{answersListerBean.itemsPerPage}" style="width:99%"
+			id="answersTable" var="aAnswer" styleClass="maritacaTable" frozenColumns="0"
+            selectionMode="none">
 			<f:facet name="header">
 				<h:outputText value="#{answersListerBean.answerListerDTO.formTitle}" />
 			</f:facet>
@@ -46,7 +47,13 @@
 						value="#{answersListerBean.answerListerDTO.answerFromQuestion(aQuestion,aAnswer)}" />
 				</rich:column>
 			</c:forEach>
-		</rich:dataTable>
+			<f:facet name="noData" >							
+				<h:outputText value="#{msgs.form_list_empty}"/>				
+            </f:facet>
+			<f:facet name="footer">
+                <rich:dataScroller id="scroller" for="answersTable" rendered="#{answersListerBean.numberOfPages>1}" maxPages="#{answersListerBean.numberOfPages}" page="1" />
+            </f:facet>
+		</rich:extendedDataTable>
 	</composite:implementation>
 
 </body>

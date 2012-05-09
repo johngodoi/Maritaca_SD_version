@@ -13,20 +13,38 @@
 		<composite:attribute name="submodule" required="true" />
 	</composite:interface>
 	<composite:implementation>
+	<h:outputStylesheet>
+		.right {
+        	text-align: right;
+        }
+        .left {
+        	text-align: left;
+        }
+        .center {
+        	text-align: center;
+        }
+    </h:outputStylesheet>       
+        
 		<h:inputHidden value="#{formListerBean.allForms}" />
 	
-		<h:panelGrid columns="1" width="100%">
+		<h:panelGrid columns="1" width="100%" columnClasses="center">
 			<forms:listFormsTable	submodule="#{cc.attrs.submodule}"
 								formList="#{formListerBean.ownForms}"
 								title="#{msgs.form_list_my_forms}"
-								idem="listMyForms"/>
+								idem="listMyForms" 
+								itemsPerPage="#{formListerBean.itemsPerPage}" 
+								numberOfPages="#{formListerBean.numberOfPagesOwnList}"
+								idScroller="ownListScroller" />
 		</h:panelGrid>							
 		
-		<h:panelGrid columns="1" width="100%">	
+		<h:panelGrid columns="1" width="100%" columnClasses="center">	
 			<forms:listFormsTable 	submodule="#{cc.attrs.submodule}"
 								formList="#{formListerBean.sharedForms}"
 								title="#{msgs.form_list_shared_forms}"
-								idem="listShadesForms"/>
+								idem="listShadesForms" 
+								itemsPerPage="#{formListerBean.itemsPerPage}" 
+								numberOfPages="#{formListerBean.numberOfPagesSharedList}"
+								idScroller="sharedListScroller" />
 		</h:panelGrid>
 								
 	</composite:implementation>

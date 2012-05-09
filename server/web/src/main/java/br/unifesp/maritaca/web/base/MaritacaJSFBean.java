@@ -20,6 +20,8 @@ public abstract class MaritacaJSFBean implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
+	private Integer itemsPerPage = MaritacaConstants.ITEMS_PER_PAGE;
+	
 	@ManagedProperty("#{manager}")
 	private Manager moduleManager;		
 	
@@ -33,6 +35,11 @@ public abstract class MaritacaJSFBean implements Serializable {
 	protected void setCurrentUser(UserDTO userDto){
 		UtilsWeb.clientRequest().getSession().setAttribute(MaritacaConstants.CURRENT_USER, userDto);
 	}
+	
+	protected Integer getNumberOfPages (Integer size, Integer itemsPage) {
+		Double pages = Math.ceil(size/itemsPage.doubleValue());
+		return pages.intValue();
+    }
 	
 	protected FacesContext getFacesContext() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -108,4 +115,12 @@ public abstract class MaritacaJSFBean implements Serializable {
 	public void setModuleManager(Manager moduleManager) {
 		this.moduleManager = moduleManager;
 	}
+
+	public Integer getItemsPerPage() {						
+		return itemsPerPage;
+	}
+
+	public void setItemsPerPage(Integer itemsPerPage) {
+		this.itemsPerPage = itemsPerPage;
+	}	
 }

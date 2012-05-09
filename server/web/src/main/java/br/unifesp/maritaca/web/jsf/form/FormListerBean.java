@@ -18,23 +18,28 @@ public class FormListerBean extends MaritacaJSFBean {
 	private static final long serialVersionUID = 1L;
 
 	@Inject private FormListerEJB formListerEJB;
+	private Integer numberOfPagesOwnList;
+	private Integer numberOfPagesSharedList;
 		
 	private Collection<FormDTO> ownForms;
 	private Collection<FormDTO> sharedForms;
 	
 	public String getAllForms() {
-		setOwnForms(formListerEJB.getListOwnForms(getCurrentUser()));
-		setSharedForms(formListerEJB.getListSharedForms(getCurrentUser()));
+		loadLists();
 		return "";
 	}
 	
 	public void setAllForms(String nothing) {
 	}
         
-        public void listOwnFormsChanged(ActionEvent evt) {
-		setOwnForms(formListerEJB.getListOwnForms(getCurrentUser()));
-		setSharedForms(formListerEJB.getListSharedForms(getCurrentUser()));
+    public void listOwnFormsChanged(ActionEvent evt) {
+    	loadLists();
 	}
+    
+    private void loadLists() {
+    	setOwnForms(formListerEJB.getListOwnForms(getCurrentUser()));
+		setSharedForms(formListerEJB.getListSharedForms(getCurrentUser()));
+    }
 	
 	//TODO: it's not working
 	public void sortByName() {
@@ -49,8 +54,8 @@ public class FormListerBean extends MaritacaJSFBean {
 		//forms = formAnswCtrl.listAllFormsSortedbyDate(currentUser.getUser());
 	}
         
-        /*** Setters y Getters ***/
-        public Collection<FormDTO> getOwnForms() {
+    /*** Setters y Getters ***/
+    public Collection<FormDTO> getOwnForms() {
 		return ownForms;
 	}
 
@@ -64,5 +69,23 @@ public class FormListerBean extends MaritacaJSFBean {
 
 	public void setSharedForms(Collection<FormDTO> sharedForms) {
 		this.sharedForms = sharedForms;
+	}
+
+	public Integer getNumberOfPagesOwnList() {
+		Integer numPages = ownForms!=null?ownForms.size():0;
+		return super.getNumberOfPages(numPages, getItemsPerPage());
+	}
+
+	public void setNumberOfPagesOwnList(Integer numberOfPagesOwnList) {
+		this.numberOfPagesOwnList = numberOfPagesOwnList;
+	}
+
+	public Integer getNumberOfPagesSharedList() {
+		Integer numPages = sharedForms!=null?ownForms.size():0;
+		return super.getNumberOfPages(numPages, super.getItemsPerPage());
+	}
+
+	public void setNumberOfPagesSharedList(Integer numberOfPagesSharedList) {
+		this.numberOfPagesSharedList = numberOfPagesSharedList;
 	}
 }

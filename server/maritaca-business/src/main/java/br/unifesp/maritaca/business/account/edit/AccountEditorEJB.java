@@ -31,7 +31,7 @@ public class AccountEditorEJB{
 	 * @throws IllegalArgumentException
 	 */
 	public void saveAccount(UserDTO userDto){
-		if(userDto.getEmail()==null||registeredEmail(userDto.getEmail())){
+		if(userDto.getEmail()==null||(userDto.getKey()==null && registeredEmail(userDto.getEmail()))){
 			throw new IllegalArgumentException();
 		}
 		User user = UtilsBusiness.convertToClass(userDto, User.class);

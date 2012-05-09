@@ -24,6 +24,7 @@ public class ListMaritacaListBean extends MaritacaJSFBean {
 	@Inject
 	private ListMaritacaListEJB   maritacaListEJB;	
 	private List<MaritacaListDTO> myLists;
+	private Integer numberOfPages;
 	
 	public void removeList(MaritacaListDTO list) {
 		maritacaListEJB.removeMaritacaList(list.getKey());
@@ -56,5 +57,15 @@ public class ListMaritacaListBean extends MaritacaJSFBean {
 
 	public void setMyLists(List<MaritacaListDTO> myLists) {
 		this.myLists = myLists;
+	}
+
+	public Integer getNumberOfPages() {
+		Integer numPages = myLists!=null?myLists.size():0;
+		return super.getNumberOfPages(numPages, getItemsPerPage());
+		//return numberOfPages;
+	}
+
+	public void setNumberOfPages(Integer numberOfPages) {
+		this.numberOfPages = numberOfPages;
 	}
 }

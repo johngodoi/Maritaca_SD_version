@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.business.form.dto.FormDTO;
 import br.unifesp.maritaca.business.form.edit.FormEditorEJB;
 import br.unifesp.maritaca.persistence.permission.Permission;
@@ -39,7 +40,7 @@ public class FormEditorBean extends MaritacaJSFBean {
 
 	public void clean() {
 		setFormDTO(new FormDTO());
-		getFormDTO().setPermission(new Permission(true, true, true, true));
+		getFormDTO().setPermission(new Permission(Operation.READ, Operation.UPDATE, Operation.DELETE, Operation.SHARE));
 		setXml("");
 		setNewForm(true);
 		setEditableForm(true);

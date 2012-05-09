@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
 import br.unifesp.maritaca.business.base.AbstractEJB;
 import br.unifesp.maritaca.business.base.dao.UserDAO;
@@ -28,7 +29,7 @@ public class FormListerEJB extends AbstractEJB {
 	@Inject private UserDAO userDAO;
 
 	/**
-	 * 
+	 * Gets its own list of forms
 	 * @param userDTO
 	 * @return Collection<FormDTO>
 	 */
@@ -36,12 +37,11 @@ public class FormListerEJB extends AbstractEJB {
 		List<FormDTO> formsDTO = null;
 		List<Form> forms = formDAO.getListOwnFormsByUserKey(userDTO.getKey().toString());
 		if(forms != null && !forms.isEmpty()) {
-			formsDTO = new ArrayList<FormDTO>();
-			//TODO: Need I this query? this user has all the permissions for his/her forms!
+			formsDTO = new ArrayList<FormDTO>();			
 			User user = userDAO.findUserByEmail(userDTO.getEmail());
 			if(user != null) {
                 for(Form form : forms) {//Ask
-                	Permission permission = new Permission(true, true, true, true);//super.getPermission(form, form.getUser().getKey(), Document.FORM);
+                	Permission permission = new Permission(Operation.READ, Operation.UPDATE, Operation.DELETE, Operation.SHARE);//super.getPermission(form, form.getUser().getKey(), Document.FORM);
                 	if(permission != null) {
                 		if(permission.getShare()) { permission.setShare(form.changePolicy()); }
 	                	FormDTO formDTO = new FormDTO(
@@ -65,7 +65,7 @@ public class FormListerEJB extends AbstractEJB {
 	}	
 	
 	/**
-	 * 
+	 * Gets the shared list of forms by user
 	 * @param userDTO
 	 * @return Collection<FormDTO>
 	 */
@@ -74,13 +74,12 @@ public class FormListerEJB extends AbstractEJB {
 		List<Form> forms = formDAO.getAllSharedFormsByUserKey(userDTO.getKey().toString());
 		if(forms!= null && !forms.isEmpty()) {
 			formsDTO = new ArrayList<FormDTO>();
-			//TODO: Need I this query?
 			User user = userDAO.findUserByEmail(userDTO.getEmail());
 			if(user != null) {
                 for(Form form : forms) {
                 	if(form != null && !userDTO.getKey().toString().equals(form.getUser().getKey().toString())) {
                 		Permission permission = super.getPermission(form, userDTO.getKey(), Document.FORM);
-	                	if(permission != null) {
+	                	if(permission != null && permission.getRead()) {
 	                		if(permission.getShare()) { permission.setShare(form.changePolicy()); }
 	                		User owner = userDAO.findUserByKey(form.getUser().getKey());
 	                		FormDTO formDTO = new FormDTO(

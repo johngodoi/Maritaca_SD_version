@@ -13,12 +13,15 @@
 		<composite:attribute name="formList"  required="true" />
 		<composite:attribute name="title"     required="true" />
 		<composite:attribute name="idem"      required="true" />
+		<composite:attribute name="itemsPerPage"  required="false" />
+		<composite:attribute name="numberOfPages" required="false" />
+		<composite:attribute name="idScroller"    required="false" />
 	</composite:interface>
 	<composite:implementation>
-
-		<h:dataTable value="#{cc.attrs.formList}" id="#{cc.attrs.idem}" 
+	
+		<rich:dataTable value="#{cc.attrs.formList}" id="#{cc.attrs.idem}" 
 			columnClasses="listFormColumnTitle, listFormColumnOwner, listFormColumnCreationDate, listFormColumnPolicy"   
-			var="aForm" width="100%" styleClass="maritacaTable">
+			var="aForm" width="100%" styleClass="maritacaTable" rows="#{cc.attrs.itemsPerPage}">
 			<f:facet name="header">
 				<h:outputText value="#{cc.attrs.title}"/>
 			</f:facet>
@@ -96,14 +99,14 @@
 			</h:column>
 
 			<!-- Actually it is showing the key. But the architecture need to be improved -->
-			<h:column rendered="#{!cc.attrs.formList.isEmpty()}">
+			<rich:column rendered="#{!cc.attrs.formList.isEmpty()}"  sortBy="#{aForm.owner}">
 				<f:facet name="header">
 					<a4j:commandLink value="#{msgs.form_list_ownerHeader}"
 						render="listforms, sorted" action="#{formListerBean.sortByDate}">
 					</a4j:commandLink>
 				</f:facet>
 				<h:outputText value="#{aForm.owner}" styleClass="listItemOption"/>
-			</h:column>
+			</rich:column>
 
 			<h:column rendered="#{!cc.attrs.formList.isEmpty()}">
 				<f:facet name="header">
@@ -119,11 +122,17 @@
 				<h:outputText value="#{aForm.policy.toString()}" styleClass="listItemOption"/>
 			</h:column>
 			
-			<h:column rendered="#{cc.attrs.formList.isEmpty()}" headerClass="columnEmptyListClass">
+			<!--h:column rendered="#{cc.attrs.formList.isEmpty()}" headerClass="columnEmptyListClass">
 				<f:facet name="header">
 					<h:outputText value="#{msgs.form_list_empty}"/>
 				</f:facet>
-			</h:column>
-		</h:dataTable>
+			</h:column-->
+			<f:facet name="noData">		
+				<h:outputText value="#{msgs.form_list_empty}"/>				
+            </f:facet>
+			<f:facet name="footer">
+                <rich:dataScroller id="#{cc.attrs.idScroller}" rendered="#{cc.attrs.numberOfPages>1}" for="#{cc.attrs.idem}" maxPages="#{cc.attrs.numberOfPages}" page="1" />
+            </f:facet>
+		</rich:dataTable>
 	</composite:implementation>
 </ui:composition>

@@ -8,8 +8,8 @@ public enum Operation {
 	READ,
 	UPDATE,	
 	DELETE,
-	SHARE,
-	LIST;
+	SHARE;
+	//LIST;
 
 	private Operation() {
 	}

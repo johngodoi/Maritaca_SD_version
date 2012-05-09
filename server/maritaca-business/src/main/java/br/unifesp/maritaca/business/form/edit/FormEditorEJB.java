@@ -111,7 +111,7 @@ public class FormEditorEJB extends AbstractEJB {
 		Form form = formDAO.getFormByKey(formDTO.getKey(), false);
 		
 		Permission permission = super.getPermission(form, userDTO.getKey(), Document.FORM);
-		if(permission != null) {
+		if(permission != null && permission.getRead()) {
 			formDTO = new FormDTO();
 			formDTO.setKey(form.getKey());
 			formDTO.setTitle(form.getTitle());
@@ -212,7 +212,7 @@ public class FormEditorEJB extends AbstractEJB {
 		originalForm.setPolicy(formDTO.getPolicy());
 		if(originalForm.isShared()) {
 			originalForm.setLists(fetchKeysFromLists(usedItems));
-		}		
+		}
 		Permission permission = super.getPermission(originalForm, userDTO.getKey(), Document.FORM);
 		if(permission != null && permission.getUpdate()) {
 			formDAO.persistForm(originalForm);

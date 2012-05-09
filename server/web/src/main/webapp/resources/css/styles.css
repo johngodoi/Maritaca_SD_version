@@ -355,6 +355,7 @@ tr > td > span.error{
 }
 
 .listFormColumnTitle {
+	text-align: left;
 	width: 35%;
 }
 

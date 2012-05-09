@@ -8,7 +8,7 @@ import br.unifesp.maritaca.access.operation.Operation;
 public enum AccessLevel {
 
 	NO_ACCESS,
-	READ_AND_LIST(Operation.LIST, Operation.READ),
+	READ_AND_LIST(Operation.READ),	//READ_AND_LIST(Operation.LIST, Operation.READ),
 	CREATE_ONLY(Operation.CREATE),
 	CREATE_AND_UPDATE(Operation.CREATE, Operation.UPDATE),
 	FULL_NO_SHARE(Operation.allExceptShare()),

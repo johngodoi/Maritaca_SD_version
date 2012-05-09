@@ -18,6 +18,7 @@ public class AnswersListerBean extends MaritacaJSFBean {
 	private AnswersListerEJB answersListerEJB;	
 
 	private AnswerListerDTO answerListerDTO;	
+	private Integer numberOfPages;
 	
 	public AnswersListerBean() {
 		/* Default constructor: Nothing here */
@@ -38,4 +39,12 @@ public class AnswersListerBean extends MaritacaJSFBean {
 		this.answerListerDTO = answerListerDTO;
 	}
 
+	public Integer getNumberOfPages() {
+		Integer numPages = getAnswerListerDTO()!=null?getAnswerListerDTO().getAnswers()!=null?getAnswerListerDTO().getAnswers().size():0:0;
+		return super.getNumberOfPages(numPages, getItemsPerPage());
+	}
+
+	public void setNumberOfPages(Integer numberOfPages) {
+		this.numberOfPages = numberOfPages;
+	}
 }

@@ -198,20 +198,60 @@ var Box = function(type) {
 	this.msgAddBox          = null; 
 	this.msgRemoveError     = null;
 	this.msgBoxLabel        = null;
-
-	this.toHTMLSpecific = function(){
-		var html = '';
-		for(var i=0; i<this.optionsTitles.length; i++){
-			html +='<input ';
-			html += attribCreator('type', this.type);
-			html += attribCreator('name', this.boxId);
-			html += attribCreator('readonly', 'readonly');
-			html += '>';
-			html += this.optionsTitles[i];
-			html += '</input>';	
-		}				
-		return html;
-	};
+	this.bydefault			= '';
+	
+	switch(type) {
+		case 'radio': 
+		case 'checkbox':	
+			this.toHTMLSpecific = function(){
+				var html = '';
+				for(var i=0; i<this.optionsTitles.length; i++){
+					html +='<input ';
+					html += attribCreator('type', this.type);
+					html += attribCreator('name', this.boxId);
+					html += attribCreator('readonly', 'readonly');
+					if(this.optionsTitles[i] != '' && this.optionsTitles[i] == this.bydefault) {
+						html += 'checked';
+					}
+					html += '>';
+					html += this.optionsTitles[i];
+					html += '</input>';	
+				}				
+				return html;
+			};
+			break;
+		case 'combobox':
+			this.toHTMLSpecific = function(){
+				var html = "<select>";
+				for(var i = 0; i < this.optionsTitles.length; i++){
+					html += '<option value="' + this.optionsTitles[i]+'"';
+					if(this.optionsTitles[i] == this.bydefault) {
+						html += 'selected';
+					}
+					html += '>';
+					html += this.optionsTitles[i];
+					html += '</option>';
+				}		
+				html += "</select>";		
+	
+				return html;
+			};
+			break;
+		default:
+			this.toHTMLSpecific = function(){
+				var html = '';
+				for(var i=0; i<this.optionsTitles.length; i++){
+					html +='<input ';
+					html += attribCreator('type', this.type);
+					html += attribCreator('name', this.boxId);
+					html += attribCreator('readonly', 'readonly');
+					html += '>';
+					html += this.optionsTitles[i];
+					html += '</input>';	
+				}				
+				return html;
+			};
+	}	
 	
 	this.setJSONValuesSpecific = function(element) {
 		this.type          = element.type;
@@ -234,7 +274,10 @@ var Box = function(type) {
 	
 	
 	this.showSpecificProperties = function(){
-		var html = createLabelProperty("",this.msgBoxLabel);
+		var defaultTitle = jQuery.i18n.prop('msg_field_defaultProperty');
+		var html = createTextProperty('fieldDefault', this.bydefault, defaultTitle) ;
+		html += createLabelProperty("",this.msgBoxLabel);
+		
 		
 		html += this.openTable();
 		for(var i=0; i<this.optionsTitles.length; i++){
@@ -277,24 +320,42 @@ var Box = function(type) {
 		var uuid = generateUUID();
 		var htmlRow = '<tr id="'+uuid+'">';
 		htmlRow    += '   <td colspan="2">';
-		htmlRow    += inputCreator("text","",value,"","",this.optionLabelInputClass);
 		
+		htmlRow+= '      <a  onclick="new Box().setDefaultValue(\''+uuid+'\');saveField();">'; 
+        htmlRow+= '         <img src="../../resources/img/default.png"/>'; 
+        htmlRow+= '      </a>';
+		
+		htmlRow    += inputCreator("text","'txt_'"+uuid,value,"","",this.optionLabelInputClass);
+				
 		if(rowNumber != 0){
 			htmlRow+= '      <a  onclick="new Box().deleteBoxField(\''+uuid+'\');saveField();">'; 
 	        htmlRow+= '         <img src="../../resources/img/delete.png"/>'; 
 	        htmlRow+= '      </a>';	
-		}
+		}	
 		
 		htmlRow    += '   </td>';
 		htmlRow    += '</tr>';
 		return htmlRow;
 	};
 	
+	this. setDefaultValue = function(id) {	
+		var tr = $("tr#"+id);
+		$("#fieldDefault").attr("value", tr.find('input').val());		
+	};
+	
 	this. deleteBoxField = function(id){
-		$("tr#"+id).remove();
+		var tr = $("tr#"+id);
+		var fieldValue = tr.find('input').val();		
+		if(fieldValue == $("#fieldDefault").val()) {
+			var firstTr = $("table#boxOptionsTable:first").find("tr:first");
+			$("#fieldDefault").attr("value", firstTr.find('input').val());			
+		}		
+		$("tr#"+id).remove();		
 	};
 	
 	this.saveSpecificProperties = function(){
+		console.log('grrr');
+		this.bydefault = $('#fieldDefault').val();
 		var itensToSave = new Array();
 		$('input.'+this.optionLabelInputClass).each(function() {
 			itensToSave.push( $(this).val() );
@@ -303,6 +364,7 @@ var Box = function(type) {
 	};
 	
 	this.setSpecificFromXMLDoc = function($xmlDoc){
+		///////this.bydefault = $xmlDoc.attr('value');
 		var parsedOptions = new Array();		
 		var foundOptions  = $xmlDoc.find('option');
 		
@@ -338,18 +400,6 @@ var ComboBox  = function(){
 	this.msgAddBox        = jQuery.i18n.prop('msg_box_add'); 
 	this.msgRemoveError   = jQuery.i18n.prop('msg_box_remove_error');
 	this.msgBoxLabel      = jQuery.i18n.prop('msg_box_label');
-	
-	this.toHTMLSpecific = function(){
-		var html = "<select>";
-		for(var i = 0; i < this.optionsTitles.length; i++){
-			html += '<option value="' + this.optionsTitles[i] + '">';
-			html += this.optionsTitles[i];
-			html += '</option>';
-		}		
-		html += "</select>";		
-
-		return html;
-	};
 }; 
 ComboBox.prototype = new Box("combobox");
 

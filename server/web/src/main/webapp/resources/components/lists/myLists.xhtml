@@ -15,7 +15,7 @@
 	<composite:implementation>
 	
 		<h:panelGrid columns="1" width="100%">
-		<rich:dataTable value="#{listMaritacaListBean.myLists}" var="aList"
+		<rich:dataTable value="#{listMaritacaListBean.myLists}" var="aList" rows="#{listMaritacaListBean.itemsPerPage}" 
 			id="myListTable" styleClass="maritacaTable">
 			<f:facet name="header">#{msgs.list_header}</f:facet>
 
@@ -42,6 +42,13 @@
 				<f:facet name="header">#{msgs.list_description}</f:facet>				
 					#{aList.description}
 			</rich:column>
+			<f:facet name="noData" >							
+				<h:outputText value="#{msgs.form_list_empty}"/>				
+            </f:facet>
+			<f:facet name="footer">
+                <rich:dataScroller id="scroller" for="myListTable" rendered="#{listMaritacaListBean.numberOfPages>1}" maxPages="#{listMaritacaListBean.numberOfPages}" page="1" />
+            </f:facet>
+            
 		</rich:dataTable>
 		</h:panelGrid>
 	</composite:implementation>
