@@ -7,6 +7,7 @@
 //		toHTMLSpecific: return a string with HTML corresponding component
 //		showSpecificProperties: show the properties of a specific field 
 //		saveSpecificProperties: updates the properties of a field
+//      validateSpecific: checks if the fields were filled with valid information
 //      setFromXMLDoc: loads the data from xml
 //      setSpecificFromXMLDoc: parses the given document object setting the corresponding
 //                             properties in the current field
@@ -87,6 +88,9 @@ var Field = function() {
 	};
 	
 	this.saveProperties = function(){
+		if(!this.validateSpecific()){
+			return;
+		}		
 		this.title = $('#fieldLabel').val();
 		this.help = $('#fieldHelp').val();
 		this.required = $('#fieldRequiredTrue').is(':checked');
@@ -114,7 +118,6 @@ var TextBox = function() {
 	this.type = 'text';
 	// TODO evaluate the size default
 	this.size = '100';
-	this.maxValue = '';
 	this.bydefault = '';
 	
 	this.toHTMLSpecific = function() {
@@ -133,12 +136,10 @@ var TextBox = function() {
 	
 	this.setJSONValuesSpecific = function(element) {
 		this.size = element.size;
-		this.maxValue = element.maxValue;
 		this.bydefault = element.bydefault;
 	};
 	
 	this.addXMLSpecificAttributes = function() {
-		var xml = attribCreator('max', this.maxValue);
 		if(this.bydefault)
 			xml += attribCreator('value', this.bydefault);
 		return xml;
@@ -152,11 +153,9 @@ var TextBox = function() {
 	
 	this.showSpecificProperties = function(){
 		var defaultTitle = jQuery.i18n.prop('msg_field_defaultProperty');
-		var maxValueTitle = jQuery.i18n.prop('msg_field_maxValueProperty');
 		var sizeTitle = jQuery.i18n.prop('msg_field_sizeProperty');
 		
 		var html = createTextProperty('fieldDefault', this.bydefault, defaultTitle) ;
-		html += createNumberProperty('fieldMaxValue', this.maxValue, maxValueTitle) ;
 		html += createNumberProperty('fieldSize', this.size, sizeTitle);
 		
 		return html;
@@ -164,12 +163,23 @@ var TextBox = function() {
 	
 	this.saveSpecificProperties = function(){
 		this.bydefault = $('#fieldDefault').val();
-		this.maxValue = $('#fieldMaxValue').val();
 		this.size = $('#fieldSize').val();
 	};
 	
+	this.validateSpecific = function(){
+		bydefault = $('#fieldDefault').val();
+		size      = $('#fieldSize').val();
+		
+		if( bydefault!='' && size!='' ){
+			if(bydefault.length > size){
+				addMessage(jQuery.i18n.prop("msg_text_validation_error_size"),"error");
+				return false;
+			}
+		}
+		return true;
+	};
+	
 	this.setSpecificFromXMLDoc = function($xmlDoc){
-		this.maxValue = $xmlDoc.attr('max');
 		this.size = $xmlDoc.find('size').text();
 		this.bydefault = $xmlDoc.attr('value');
 	};
@@ -198,60 +208,20 @@ var Box = function(type) {
 	this.msgAddBox          = null; 
 	this.msgRemoveError     = null;
 	this.msgBoxLabel        = null;
-	this.bydefault			= '';
-	
-	switch(type) {
-		case 'radio': 
-		case 'checkbox':	
-			this.toHTMLSpecific = function(){
-				var html = '';
-				for(var i=0; i<this.optionsTitles.length; i++){
-					html +='<input ';
-					html += attribCreator('type', this.type);
-					html += attribCreator('name', this.boxId);
-					html += attribCreator('readonly', 'readonly');
-					if(this.optionsTitles[i] != '' && this.optionsTitles[i] == this.bydefault) {
-						html += 'checked';
-					}
-					html += '>';
-					html += this.optionsTitles[i];
-					html += '</input>';	
-				}				
-				return html;
-			};
-			break;
-		case 'combobox':
-			this.toHTMLSpecific = function(){
-				var html = "<select>";
-				for(var i = 0; i < this.optionsTitles.length; i++){
-					html += '<option value="' + this.optionsTitles[i]+'"';
-					if(this.optionsTitles[i] == this.bydefault) {
-						html += 'selected';
-					}
-					html += '>';
-					html += this.optionsTitles[i];
-					html += '</option>';
-				}		
-				html += "</select>";		
-	
-				return html;
-			};
-			break;
-		default:
-			this.toHTMLSpecific = function(){
-				var html = '';
-				for(var i=0; i<this.optionsTitles.length; i++){
-					html +='<input ';
-					html += attribCreator('type', this.type);
-					html += attribCreator('name', this.boxId);
-					html += attribCreator('readonly', 'readonly');
-					html += '>';
-					html += this.optionsTitles[i];
-					html += '</input>';	
-				}				
-				return html;
-			};
-	}	
+
+	this.toHTMLSpecific = function(){
+		var html = '';
+		for(var i=0; i<this.optionsTitles.length; i++){
+			html +='<input ';
+			html += attribCreator('type', this.type);
+			html += attribCreator('name', this.boxId);
+			html += attribCreator('readonly', 'readonly');
+			html += '>';
+			html += this.optionsTitles[i];
+			html += '</input>';	
+		}				
+		return html;
+	};
 	
 	this.setJSONValuesSpecific = function(element) {
 		this.type          = element.type;
@@ -272,12 +242,30 @@ var Box = function(type) {
 		return xml;
 	};
 	
+	this.validateSpecific = function(){
+		var itensToSave  = new Array();
+		var repeatedItem = null; 
+		$('input.'+this.optionLabelInputClass).each(function() {
+			var item = $(this).val();
+			if(itensToSave.indexOf(item)!=-1){
+				repeatedItem = $(this)[0];
+			}			
+			itensToSave.push(item);
+		});
+
+		if(repeatedItem !=null){
+			var rowId = repeatedItem.parentNode.parentNode.id;
+			this.deleteBoxField(rowId);
+			var errorMsg = jQuery.i18n.prop("msg_box_validation_error_repeated_item",repeatedItem.value); 
+			addMessage(errorMsg,"error");
+			return false;
+		}
+		
+		return true;
+	};
 	
 	this.showSpecificProperties = function(){
-		var defaultTitle = jQuery.i18n.prop('msg_field_defaultProperty');
-		var html = createTextProperty('fieldDefault', this.bydefault, defaultTitle) ;
-		html += createLabelProperty("",this.msgBoxLabel);
-		
+		var html = createLabelProperty("",this.msgBoxLabel);
 		
 		html += this.openTable();
 		for(var i=0; i<this.optionsTitles.length; i++){
@@ -320,42 +308,24 @@ var Box = function(type) {
 		var uuid = generateUUID();
 		var htmlRow = '<tr id="'+uuid+'">';
 		htmlRow    += '   <td colspan="2">';
+		htmlRow    += inputCreator("text","",value,"","",this.optionLabelInputClass);
 		
-		htmlRow+= '      <a  onclick="new Box().setDefaultValue(\''+uuid+'\');saveField();">'; 
-        htmlRow+= '         <img src="../../resources/img/default.png"/>'; 
-        htmlRow+= '      </a>';
-		
-		htmlRow    += inputCreator("text","'txt_'"+uuid,value,"","",this.optionLabelInputClass);
-				
 		if(rowNumber != 0){
 			htmlRow+= '      <a  onclick="new Box().deleteBoxField(\''+uuid+'\');saveField();">'; 
 	        htmlRow+= '         <img src="../../resources/img/delete.png"/>'; 
 	        htmlRow+= '      </a>';	
-		}	
+		}
 		
 		htmlRow    += '   </td>';
 		htmlRow    += '</tr>';
 		return htmlRow;
 	};
 	
-	this. setDefaultValue = function(id) {	
-		var tr = $("tr#"+id);
-		$("#fieldDefault").attr("value", tr.find('input').val());		
-	};
-	
 	this. deleteBoxField = function(id){
-		var tr = $("tr#"+id);
-		var fieldValue = tr.find('input').val();		
-		if(fieldValue == $("#fieldDefault").val()) {
-			var firstTr = $("table#boxOptionsTable:first").find("tr:first");
-			$("#fieldDefault").attr("value", firstTr.find('input').val());			
-		}		
-		$("tr#"+id).remove();		
+		$("tr#"+id).remove();
 	};
 	
 	this.saveSpecificProperties = function(){
-		console.log('grrr');
-		this.bydefault = $('#fieldDefault').val();
 		var itensToSave = new Array();
 		$('input.'+this.optionLabelInputClass).each(function() {
 			itensToSave.push( $(this).val() );
@@ -364,7 +334,6 @@ var Box = function(type) {
 	};
 	
 	this.setSpecificFromXMLDoc = function($xmlDoc){
-		///////this.bydefault = $xmlDoc.attr('value');
 		var parsedOptions = new Array();		
 		var foundOptions  = $xmlDoc.find('option');
 		
@@ -400,6 +369,18 @@ var ComboBox  = function(){
 	this.msgAddBox        = jQuery.i18n.prop('msg_box_add'); 
 	this.msgRemoveError   = jQuery.i18n.prop('msg_box_remove_error');
 	this.msgBoxLabel      = jQuery.i18n.prop('msg_box_label');
+	
+	this.toHTMLSpecific = function(){
+		var html = "<select>";
+		for(var i = 0; i < this.optionsTitles.length; i++){
+			html += '<option value="' + this.optionsTitles[i] + '">';
+			html += this.optionsTitles[i];
+			html += '</option>';
+		}		
+		html += "</select>";		
+
+		return html;
+	};
 }; 
 ComboBox.prototype = new Box("combobox");
 
@@ -430,7 +411,6 @@ var NumberField = function(){
 	this.addXMLElements = function(){
 		//TODO: return IF comparisons
 		return "";
-
 	};
 	
 	this.setJSONValuesSpecific = function(element) {
@@ -440,15 +420,44 @@ var NumberField = function(){
 	};
 	
 	this.showSpecificProperties = function(){
-		var defaultTitle = jQuery.i18n.prop('msg_field_defaultProperty');
+		var defaultTitle  = jQuery.i18n.prop('msg_field_defaultProperty');
 		var maxValueTitle = jQuery.i18n.prop('msg_field_maxValueProperty');
 		var minValueTitle = jQuery.i18n.prop('msg_field_minValueProperty');
 		
-		var html = createNumberProperty('fieldDefault', this.bydefault, defaultTitle) ;
-		html += createNumberProperty('fieldMaxValue', this.maxValue, maxValueTitle) ;
-		html += createNumberProperty('fieldMinValue', this.minValue, minValueTitle);
+		var html = createNumberProperty('fieldDefault', this.bydefault, defaultTitle) ;		
+		html    += createNumberProperty('fieldMaxValue', this.maxValue, maxValueTitle) ;		
+		html    += createNumberProperty('fieldMinValue', this.minValue, minValueTitle);
 		
 		return html;
+	};
+	
+	this.validateSpecific = function(){
+		maxValue  = $('#fieldMaxValue').val();
+		minValue  = $('#fieldMinValue').val();
+		bydefault = $('#fieldDefault').val();
+		
+		if(maxValue != '' && minValue != ''){
+			if(maxValue <= minValue){
+				addMessage(jQuery.i18n.prop("msg_number_validation_error_max_min"),"error");
+				return false;
+			}
+		}
+		
+		if(maxValue != '' && bydefault != ''){
+			if(maxValue < bydefault){
+				addMessage(jQuery.i18n.prop("msg_number_validation_error_max_default"),"error");
+				return false;
+			}
+		}
+		
+		if(minValue != '' && bydefault != ''){
+			if(minValue > bydefault){
+				addMessage(jQuery.i18n.prop("msg_number_validation_error_min_default"),"error");
+				return false;
+			}
+		}
+		
+		return true;
 	};
 	
 	this.saveSpecificProperties = function(){
@@ -518,6 +527,39 @@ var DateField = function() {
 		html += createDateProperty('fieldMinValue', this.minValue, minValueTitle);
 		
 		return html;
+	};
+	
+	this.validateSpecific= function(){				
+		maxValue  = $('#fieldMaxValue').val();
+		minValue  = $('#fieldMinValue').val();
+		bydefault = $('#fieldDefault').val();
+		
+		if(maxValue != '' && minValue != ''){
+			if(maxValue <= minValue){
+				addMessage(jQuery.i18n.prop("msg_date_validation_error_max_min"),"error");
+				return false;
+			}
+		}
+		
+		if(maxValue != '' && bydefault != ''){
+			if(maxValue < bydefault){
+				addMessage(jQuery.i18n.prop("msg_date_validation_error_max_default"),"error");
+				return false;
+			}
+		}
+		
+		if(minValue != '' && bydefault != ''){
+			if(minValue > bydefault){
+				addMessage(jQuery.i18n.prop("msg_date_validation_error_min_default"),"error");
+				return false;
+			}
+		}
+				
+		$("#fieldDefault").mask("99/99/9999");
+		$("#fieldMaxValue").mask("99/99/9999");
+		$("#fieldMinValue").mask("99/99/9999");
+							
+		return true;
 	};
 
 	this.saveSpecificProperties = function(){
