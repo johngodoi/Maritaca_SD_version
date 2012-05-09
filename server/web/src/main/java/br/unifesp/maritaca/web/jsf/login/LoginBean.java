@@ -32,10 +32,10 @@ public class LoginBean extends MaritacaJSFBean {
 	}
 	
 	public String submit() {
-		UserDTO maritacaUser = loginEJB.doLogin(loginDTO);		
-		if(maritacaUser != null) {
-			//Set the data of the current user in session
-			getLoginManagerBean().login(maritacaUser);
+		UserDTO userDTO = loginEJB.doLogin(loginDTO);		
+		if(userDTO != null) {
+			setCurrentUser(userDTO);
+			getLoginManagerBean().login(userDTO);
 			return "";
 		}
 		else {

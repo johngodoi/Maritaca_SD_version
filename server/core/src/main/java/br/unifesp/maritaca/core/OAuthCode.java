@@ -20,10 +20,6 @@ public class OAuthCode {
 	@Column
 	@Minimal
 	private String clientId;
-
-	@Column
-	@Minimal
-	private String verificationCode;
 	
 	@Column
 	@Minimal
@@ -65,12 +61,5 @@ public class OAuthCode {
 		user.setKey(key);
 		setUser(user);
 	}
-
-	public String getVerificationCode() {
-		return verificationCode;
-	}
-
-	public void setVerificationCode(String verificationCode) {
-		this.verificationCode = verificationCode;
-	}
+	
 }

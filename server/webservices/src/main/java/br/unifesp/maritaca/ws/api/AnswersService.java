@@ -1,5 +1,6 @@
 package br.unifesp.maritaca.ws.api;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -7,6 +8,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import br.unifesp.maritaca.core.Answer;
@@ -24,7 +26,8 @@ public interface AnswersService {
 	 */
 	@GET
 	@Path("/{id}")
-	Answer getAnswer(@PathParam("id") String answId) throws MaritacaWSException;
+	Answer getAnswer(@Context HttpServletRequest request,
+					 @PathParam("id") String answId) throws MaritacaWSException;
 	
 	/**
 	 * Save an Answer for a form
@@ -36,7 +39,11 @@ public interface AnswersService {
 	@POST
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	MaritacaResponse saveAnswer(@FormParam("xml")String xmlAnsw, @FormParam("formId")String formId,  @FormParam("userId")String userId) throws MaritacaWSException;
+	MaritacaResponse saveAnswer(@Context HttpServletRequest request,
+								@FormParam("xml")String xmlAnsw, 
+								@FormParam("formId")String formId,  
+								@FormParam("userId")String userId) 
+			throws MaritacaWSException;
 	
 	/**
 	 * Get all Answers of a Form
@@ -49,7 +56,8 @@ public interface AnswersService {
 	@GET
 	@Path("/list/{formId}")
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	MaritacaResponse listAnswersMinimal(@PathParam("formId") String formId);
+	MaritacaResponse listAnswersMinimal(@Context HttpServletRequest request,
+										@PathParam("formId") String formId);
 	
 	/**
 	 * 
@@ -59,5 +67,5 @@ public interface AnswersService {
 	@GET
 	@Path("/list")
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	MaritacaResponse listAnswersMinimal();
+	MaritacaResponse listAnswersMinimal(@Context HttpServletRequest request);
 }

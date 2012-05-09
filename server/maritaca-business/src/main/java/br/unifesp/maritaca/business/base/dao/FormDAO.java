@@ -65,6 +65,11 @@ public class FormDAO extends BaseDAO {
 		return fsList.size() > 0;
 	}
 	
+	public Form findFormByUrl(String url) {
+		List<Form> fsList = entityManager.cQuery(Form.class, "url", url, true);
+		return fsList.get(0);
+	}
+	
 	/**
 	 * 
 	 * @param userKey

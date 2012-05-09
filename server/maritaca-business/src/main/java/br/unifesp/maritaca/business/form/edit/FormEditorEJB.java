@@ -273,4 +273,42 @@ public class FormEditorEJB extends AbstractEJB {
 		}	
 		return listsDto;
 	}
+
+	public FormDTO getFormDTOById(UUID uuid, UserDTO userDTO) {
+		FormDTO formDTO = null;
+		Form form = formDAO.getFormByKey(uuid, false);
+		if(form != null) {			
+			Permission permission = super.getPermission(form, form.getUser().getKey(), Document.FORM);
+			if(permission != null && permission.getRead()) {
+				formDTO = new FormDTO();
+				formDTO.setKey(form.getKey());
+				formDTO.setTitle(form.getTitle());
+				formDTO.setUrl(form.getUrl());
+				formDTO.setXml(form.getXml());
+			}
+			else {
+				//TODO:
+			}
+		}
+		return formDTO;
+	}
+
+	public FormDTO getFormDTOFromUrl(String url) {
+		FormDTO formDTO = null;
+		Form form = formDAO.findFormByUrl(url);
+		if(form != null) {			
+			Permission permission = super.getPermission(form, form.getUser().getKey(), Document.FORM);
+			if(permission != null && permission.getRead()) {
+				formDTO = new FormDTO();
+				formDTO.setKey(form.getKey());
+				formDTO.setTitle(form.getTitle());
+				formDTO.setUrl(form.getUrl());
+				formDTO.setXml(form.getXml());
+			}
+			else {
+				//TODO:
+			}
+		}
+		return formDTO;
+	}
 }

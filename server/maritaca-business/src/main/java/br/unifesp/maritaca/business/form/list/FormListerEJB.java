@@ -40,7 +40,7 @@ public class FormListerEJB extends AbstractEJB {
 		if(forms != null && !forms.isEmpty()) {
 			formsDTO = new ArrayList<FormDTO>();
 			//TODO: Need I this query? this user has all the permissions for his/her forms!
-			User user = userDAO.findUserByEmail(userDTO.getEmail());
+			User user = userDAO.findUserByKey(userDTO.getKey());
 			if(user != null) {
                 for(Form form : forms) {
                 	Permission permission = super.getPermission(form, form.getUser().getKey(), Document.FORM);
@@ -51,7 +51,6 @@ public class FormListerEJB extends AbstractEJB {
 	                            form.getTitle(), 
 	                            userDTO.getEmail(), 
 	                            form.getUrl(), 
-	                            form.getXml(),
 	                            form.getCreationDate().toString(), 
 	                            form.getPolicy(),
 	                            permission);
@@ -77,7 +76,7 @@ public class FormListerEJB extends AbstractEJB {
 		if(forms!= null && !forms.isEmpty()) {
 			formsDTO = new ArrayList<FormDTO>();
 			//TODO: Need I this query?
-			User user = userDAO.findUserByEmail(userDTO.getEmail());
+			User user = userDAO.findUserByKey(userDTO.getKey());
 			if(user != null) {
                 for(Form form : forms) {
                 	if(!userDTO.getKey().toString().equals(form.getUser().getKey().toString())) {
@@ -89,7 +88,6 @@ public class FormListerEJB extends AbstractEJB {
 		                            form.getTitle(), 
 		                            userDTO.getEmail(), 
 		                            form.getUrl(), 
-		                            form.getXml(),
 		                            form.getCreationDate().toString(), 
 		                            form.getPolicy(),
 		                            permission);

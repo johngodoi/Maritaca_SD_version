@@ -1,5 +1,8 @@
 package br.unifesp.maritaca.business.exception;
 
+import javax.ejb.ApplicationException;
+
+@ApplicationException
 public class MaritacaException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
@@ -9,6 +12,11 @@ public class MaritacaException extends RuntimeException {
 	private String userMessage;
 	
 	public MaritacaException(){
+		setUserMessage(GENERIC_MESSAGE);
+	}
+	
+	public MaritacaException(String msg){
+		super(msg);
 		setUserMessage(GENERIC_MESSAGE);
 	}
 	

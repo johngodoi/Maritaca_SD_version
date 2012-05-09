@@ -7,13 +7,13 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import br.unifesp.maritaca.core.Form;
+import br.unifesp.maritaca.business.form.dto.FormDTO;
 
 @XmlRootElement(name="forms")
 public class FormListResponse extends MaritacaResponse {
 	
 	private int size;
-	private Collection<Form> list;
+	private Collection<FormDTO> list;
 	
 	public FormListResponse() {
 		setStatus(Response.Status.OK);
@@ -28,10 +28,10 @@ public class FormListResponse extends MaritacaResponse {
 	}
 	
 	@XmlElement(name="form")
-	public Collection<Form> getList() {
+	public Collection<FormDTO> getList() {
 		return list;
 	}
-	public void setList(Collection<Form> list) {
+	public void setList(Collection<FormDTO> list) {
 		if(list == null) 
 			return;
 		this.list = list;

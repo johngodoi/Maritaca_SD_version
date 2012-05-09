@@ -1,8 +1,12 @@
 package br.unifesp.maritaca.ws.util;
 
+import java.util.UUID;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response.Status;
 
+import br.unifesp.maritaca.business.base.MaritacaConstants;
+import br.unifesp.maritaca.persistence.dto.UserDTO;
 import br.unifesp.maritaca.ws.api.resp.ErrorResponse;
 import br.unifesp.maritaca.ws.exceptions.MaritacaWSException;
 
@@ -22,6 +26,13 @@ public class UtilsWS {
 		error.setCode(status.getStatusCode());
 		error.setMessage(message);
 		return new MaritacaWSException(error);
+	}
+	
+	public static UserDTO createUserDTO(HttpServletRequest request){
+		String userKey = (String) request.getAttribute(MaritacaConstants.WS_USER_KEY);
+		UserDTO userDTO = new UserDTO();
+		userDTO.setKey(UUID.fromString(userKey));
+		return userDTO;
 	}
 
 }

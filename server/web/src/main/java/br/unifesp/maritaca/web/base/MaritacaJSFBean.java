@@ -24,10 +24,7 @@ public abstract class MaritacaJSFBean implements Serializable {
 	private Manager moduleManager;		
 	
 	protected UserDTO getCurrentUser() {
-		UserDTO maritacaUser = (UserDTO)Utils.clientRequest().getSession().getAttribute(MaritacaConstants.CURRENT_USER);
-		if(maritacaUser != null)
-			return maritacaUser;
-		return null;
+		return (UserDTO)Utils.clientRequest().getSession().getAttribute(MaritacaConstants.CURRENT_USER);
 	}
 	
 	protected void setCurrentUser(UserDTO userDto){

@@ -141,26 +141,6 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 		return entityManager.listAll(Form.class, true);
 	}
 
-	// TODO In the future implement this on entitymanager
-	public Collection<Form> listAllFormsSortedbyName(User user) {
-		Collection<Form> forms = listFormsFromCurrentUser(true);
-		for (Form form : forms) {
-			form.setFlagToOrder(0);
-		}
-		Collections.sort((List<Form>) forms);
-		return forms;
-	}
-
-	// TODO In the future implement this on entitymanager
-	public Collection<Form> listAllFormsSortedbyDate(User user) {
-		Collection<Form> forms = listFormsFromCurrentUser(true);
-		for (Form form : forms) {
-			form.setFlagToOrder(1);
-		}
-		Collections.sort((List<Form>) forms);
-		return forms;
-	}
-
 	@Override
 	public boolean saveAnswer(Answer response) {
 		//TODO: add permission verification
