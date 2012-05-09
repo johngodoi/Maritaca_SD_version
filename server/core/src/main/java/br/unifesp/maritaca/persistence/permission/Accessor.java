@@ -11,7 +11,7 @@ public enum Accessor {
 		this.idAccessor = idAccessor;
 	}
 
-	public Integer getIdAccessor() {
+	public Integer getId() {
 		return idAccessor;
 	}
 

@@ -16,7 +16,7 @@ public enum Policy {
 		this.idPolicy = idPolicy;
 	}
 
-	public Integer getIdPolicy() {
+	public Integer getId() {
 		return idPolicy;
 	}
 
@@ -51,7 +51,7 @@ public enum Policy {
 	}
 	
 	public boolean isShared() {
-		if(getIdPolicy() == Policy.SHARED_HIERARCHICAL.getIdPolicy() || getIdPolicy() == Policy.SHARED_SOCIAL.getIdPolicy())
+		if(getId() == Policy.SHARED_HIERARCHICAL.getId() || getId() == Policy.SHARED_SOCIAL.getId())
 			return true;
 		return false;
 	}

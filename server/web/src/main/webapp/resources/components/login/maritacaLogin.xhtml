@@ -35,8 +35,12 @@
 			<h:commandButton	value="#{msgs.login}" action="#{loginBean.submit}"
   				        		onclick="encryptPassword()"/>
 			<h:commandLink value="#{msgs.login_create_account_link}"
-				styleClass="createAccountLink"
-				action="#{accountEditorBean.createAccount()}"/>
+					styleClass="createAccountLink"
+					action="#{accountEditorBean.createAccount()}">
+				<f:param name="#{oAuthParametersBean.redirectUri}"  value="#{loginManagerBean.redirectUri}"/>
+				<f:param name="#{oAuthParametersBean.clientId}"     value="#{loginManagerBean.clientId}"/>
+				<f:param name="#{oAuthParametersBean.responseType}" value="#{loginManagerBean.responseType}"/>
+			</h:commandLink>	
 		</h:form>
 	</composite:implementation>
 </body>

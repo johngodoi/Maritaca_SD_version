@@ -17,7 +17,8 @@ public class UserDAO extends BaseDAO {
 			return users.get(0);
 		} 
 		else {
-			throw new InvalidNumberOfEntries(User.class, "email", email);
+			throw new InvalidNumberOfEntries(User.class, "email", 
+					email, users.size());
 		}
 	}
 	

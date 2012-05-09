@@ -1,13 +1,19 @@
 package br.unifesp.maritaca.business.form.dto;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import br.unifesp.maritaca.persistence.permission.Permission;
 import br.unifesp.maritaca.persistence.permission.Policy;
 import br.unifesp.maritaca.business.base.dto.BaseDTO;
 
+@XmlRootElement(name = "form")
 public class FormDTO extends BaseDTO {
 
 	private static final long serialVersionUID = 1L;
@@ -26,20 +32,21 @@ public class FormDTO extends BaseDTO {
 	
 	private String creationDate;
 	
-	private UUID userKey;
+	private UUID user;
+	
+	private List<UUID> lists;
 	
 	private Permission permission;
 	
 	public FormDTO() { }
 	
-	public FormDTO(UUID key, String title, String owner, String url, String xml,
+	public FormDTO(UUID key, String title, String owner, String url, 
 			String creationDate, Policy policy, Permission permission) {
 		super();
 		this.key = key;
 		this.title = title;
 		this.owner = owner;
 		this.url = url;
-		this.xml = xml;
 		this.creationDate = creationDate;
 		this.policy = policy;
 		this.permission = permission;
@@ -69,8 +76,8 @@ public class FormDTO extends BaseDTO {
 		this.url = url;
 	}
 
-	public UUID getUserKey() {
-		return userKey;
+	public UUID getUser() {
+		return user;
 	}
 	
 	public Policy getPolicy() {
@@ -81,10 +88,11 @@ public class FormDTO extends BaseDTO {
 		this.policy = policy;
 	}
 
-	public void setUserKey(UUID userKey) {
-		this.userKey = userKey;
+	public void setUser(UUID userKey) {
+		this.user = userKey;
 	}
 
+	@XmlTransient
 	public Permission getPermission() {
 		return permission;
 	}
@@ -101,6 +109,7 @@ public class FormDTO extends BaseDTO {
 		this.owner = owner;
 	}
 
+	@XmlTransient
 	public String getCreationDate() {
 		return creationDate;
 	}
@@ -109,6 +118,7 @@ public class FormDTO extends BaseDTO {
 		this.creationDate = creationDate;
 	}
 
+	@XmlElement(name = "id")
 	public UUID getKey() {
 		return key;
 	}
@@ -123,5 +133,13 @@ public class FormDTO extends BaseDTO {
 			policyItems.put(p.toString(), p);
 		}
 		return policyItems;
+	}
+
+	public List<UUID> getLists() {
+		return lists;
+	}
+
+	public void setLists(List<UUID> lists) {
+		this.lists = lists;
 	}	
 }

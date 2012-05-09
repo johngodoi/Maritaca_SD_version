@@ -69,7 +69,6 @@ public abstract class AbstractEJB implements Serializable {
 		return null;
 	}
 	
-	//
 	public ConfigurationDAO getConfigurationDAO() {
 		return configurationDAO;
 	}

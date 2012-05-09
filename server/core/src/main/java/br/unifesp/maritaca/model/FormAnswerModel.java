@@ -62,9 +62,5 @@ public interface FormAnswerModel extends GenericModel{
 	
 	<T> boolean userHasPermission(User user, T entity, Operation op);
 	
-	Collection<Form> listAllFormsSortedbyName(User user);
-
-	Collection<Form> listAllFormsSortedbyDate(User user);
-
 	void close();
 }

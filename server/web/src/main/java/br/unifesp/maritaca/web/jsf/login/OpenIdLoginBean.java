@@ -18,8 +18,8 @@ import org.expressme.openid.Authentication;
 import org.expressme.openid.Endpoint;
 import org.expressme.openid.OpenIdManager;
 
-import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
 import br.unifesp.maritaca.business.login.LoginEJB;
+import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
 import br.unifesp.maritaca.web.base.MaritacaJSFBean;
 import br.unifesp.maritaca.web.jsf.account.AccountEditorBean;
 import br.unifesp.maritaca.web.utils.UtilsWeb;

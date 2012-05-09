@@ -28,7 +28,8 @@ public class ListEditorDAO extends BaseDAO {
 		} else if (foundGroups.size() == 1) {
 			return foundGroups.get(0);
 		} else {
-			throw new InvalidNumberOfEntries(MaritacaList.class, "name", listName);
+			throw new InvalidNumberOfEntries(MaritacaList.class, "name", 
+					listName, foundGroups.size());
 		}
 	}
 

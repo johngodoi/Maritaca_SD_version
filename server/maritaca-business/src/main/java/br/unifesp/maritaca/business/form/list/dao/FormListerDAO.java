@@ -1,22 +1,19 @@
 package br.unifesp.maritaca.business.form.list.dao;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
-import br.unifesp.maritaca.access.AccessLevel;
 import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.business.base.dao.BaseDAO;
+import br.unifesp.maritaca.business.exception.AuthorizationDenied;
 import br.unifesp.maritaca.core.Configuration;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
 import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.core.User;
-import br.unifesp.maritaca.exception.AuthorizationDenied;
 import br.unifesp.maritaca.model.ManagerModel;
+import br.unifesp.maritaca.persistence.permission.Document;
 
 @Deprecated
 public class FormListerDAO extends BaseDAO {
@@ -45,7 +42,7 @@ public class FormListerDAO extends BaseDAO {
 		if(userHasPermission(user, form, Operation.READ)){
 			return form;	
 		} else {
-			throw new AuthorizationDenied(Form.class, form.getKey(), user.getKey(), Operation.READ);
+			throw new AuthorizationDenied(Document.FORM, form.getKey(), user.getKey(), Operation.READ);
 		}		
 	}
 	

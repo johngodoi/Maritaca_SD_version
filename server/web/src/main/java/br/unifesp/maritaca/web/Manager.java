@@ -12,7 +12,6 @@ import javax.faces.context.FacesContext;
 
 import org.richfaces.component.UIPanelMenu;
 import org.richfaces.event.ItemChangeEvent;
-
 import br.unifesp.maritaca.web.module.Module;
 import br.unifesp.maritaca.web.module.ModuleImpl;
 import br.unifesp.maritaca.web.submodule.SubModule;

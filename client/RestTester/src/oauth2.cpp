@@ -7,8 +7,11 @@
 
 const QString OAuth2::CLIENT_ID="maritacamobile";
 const QString OAuth2::CLIENT_SECRET="maritacasecret";
-const QString OAuth2::AUTH_END_POINT="http://localhost:8080/maritaca/oauth/oauth/requestcode";
-const QString OAuth2::TOKEN_END_POINT="http://localhost:8080/maritaca/oauth/oauth/accesstoken";
+//const QString OAuth2::AUTH_END_POINT="http://localhost:8080/maritaca/oauth/oauth/requestcode";
+const QString OAuth2::AUTH_END_POINT="http://localhost:8080/maritaca-web/oauth/authorizationRequest";
+
+//const QString OAuth2::TOKEN_END_POINT="http://localhost:8080/maritaca/oauth/oauth/accesstoken";
+const QString OAuth2::TOKEN_END_POINT="http://localhost:8080/maritaca-web/oauth/accessTokenRequest";
 const QString OAuth2::RESP_TYPE="code";
 const QString OAuth2::SCOPE="read";
 const QString OAuth2::STATE="auth";
@@ -129,6 +132,7 @@ void OAuth2::on_nextBtn_clicked()
     params.addQueryItem("client_secret", ui->clientSecret2->text());
     params.addQueryItem("redirect_uri", ui->redirectUri1->text());
     params.addQueryItem("grant_type", ui->grantType->text());
+    params.addQueryItem("response_type", "token");
     requestToken(url, params);
 }
 
@@ -157,6 +161,7 @@ void OAuth2::onTokenReply()
     QString result(m_tokenReply->readAll());
     QScriptValue sc;
     QScriptEngine engine;
+    addLog(result);
     sc = engine.evaluate("JSON.parse").call(QScriptValue(), QScriptValueList() << result);
     if(sc.property("access_token").isString()){
         m_accessToken=sc.property("access_token").toString();
@@ -164,7 +169,7 @@ void OAuth2::onTokenReply()
         if(sc.property("refresh_token").isString()){
             m_refreshToken=sc.property("refresh_token").toString();
             addLog(tr("Refresh Token: ").append(m_refreshToken));
-            this->hide();
+            //this->hide();
             emit authReady();
         }
     }else {
@@ -191,3 +196,4 @@ const QString OAuth2::accessToken()
 {
     return m_accessToken;
 }
+

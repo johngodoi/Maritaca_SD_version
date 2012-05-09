@@ -37,8 +37,9 @@ public class FormListerEJB extends AbstractEJB {
 		List<FormDTO> formsDTO = null;
 		List<Form> forms = formDAO.getListOwnFormsByUserKey(userDTO.getKey().toString());
 		if(forms != null && !forms.isEmpty()) {
-			formsDTO = new ArrayList<FormDTO>();			
-			User user = userDAO.findUserByEmail(userDTO.getEmail());
+			formsDTO = new ArrayList<FormDTO>();
+			//TODO: Need I this query? this user has all the permissions for his/her forms!
+			User user = userDAO.findUserByKey(userDTO.getKey());
 			if(user != null) {
                 for(Form form : forms) {//Ask
                 	Permission permission = new Permission(Operation.READ, Operation.UPDATE, Operation.DELETE, Operation.SHARE);//super.getPermission(form, form.getUser().getKey(), Document.FORM);
@@ -49,7 +50,6 @@ public class FormListerEJB extends AbstractEJB {
 	                            form.getTitle(), 
 	                            userDTO.getEmail(), 
 	                            form.getUrl(), 
-	                            form.getXml(),
 	                            form.getCreationDate().toString(), 
 	                            form.getPolicy(),
 	                            permission);
@@ -74,7 +74,7 @@ public class FormListerEJB extends AbstractEJB {
 		List<Form> forms = formDAO.getAllSharedFormsByUserKey(userDTO.getKey().toString());
 		if(forms!= null && !forms.isEmpty()) {
 			formsDTO = new ArrayList<FormDTO>();
-			User user = userDAO.findUserByEmail(userDTO.getEmail());
+			User user = userDAO.findUserByKey(userDTO.getKey());
 			if(user != null) {
                 for(Form form : forms) {
                 	if(form != null && !userDTO.getKey().toString().equals(form.getUser().getKey().toString())) {
@@ -87,7 +87,6 @@ public class FormListerEJB extends AbstractEJB {
 		                            form.getTitle(), 
 		                            owner!=null?owner.getEmail():"", 
 		                            form.getUrl(), 
-		                            form.getXml(),
 		                            form.getCreationDate().toString(), 
 		                            form.getPolicy(),
 		                            permission);

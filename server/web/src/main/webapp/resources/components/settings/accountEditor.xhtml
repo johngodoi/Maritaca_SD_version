@@ -88,7 +88,5 @@
 			<!-- Hidden fields: Contains the passwords sent to server(using SHA1) -->							
 			<h:inputHidden value="#{accountEditorBean.userDto.password}" 
 						   id="passwordEncrypted"/>
-						   
- 			<f:event type="preRenderView" listener="#{accountEditorBean.updateUserInformation()}"/>
 	</composite:implementation>	
 </ui:composition>

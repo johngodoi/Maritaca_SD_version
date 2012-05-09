@@ -9,13 +9,14 @@ import java.util.UUID;
 import br.unifesp.maritaca.access.PrePolicy;
 import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.business.base.dao.BaseDAO;
+import br.unifesp.maritaca.business.exception.AuthorizationDenied;
 import br.unifesp.maritaca.core.Configuration;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
 import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.core.User;
-import br.unifesp.maritaca.exception.AuthorizationDenied;
 import br.unifesp.maritaca.model.ManagerModel;
+import br.unifesp.maritaca.persistence.permission.Document;
 
 @Deprecated
 public class FormPermissionsDAO extends BaseDAO {
@@ -126,7 +127,7 @@ public class FormPermissionsDAO extends BaseDAO {
 
 		if(fp.getKey()!=null && !currentUserHasPermission(fp.getForm(),Operation.UPDATE)){
 		// Form exists and user does not have permission to update
-			throw new AuthorizationDenied(Form.class, fp.getForm().getKey(), null, Operation.UPDATE);
+			throw new AuthorizationDenied(Document.FORM, fp.getForm().getKey(), null, Operation.UPDATE);
 		}
 
 		// verify if form and list exists

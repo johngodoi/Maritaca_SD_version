@@ -11,4 +11,5 @@ public class MaritacaConstants {
 	
 	public static final String EMAIL_REG_EXP = "^[\\w\\-]([\\.\\w])+[\\w]+@([\\w\\-]+\\.)+[a-zA-Z]{2,4}$";
 
+	public static final String WS_USER_KEY = "userKey";
 }

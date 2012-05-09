@@ -26,10 +26,7 @@ public abstract class MaritacaJSFBean implements Serializable {
 	private Manager moduleManager;		
 	
 	protected UserDTO getCurrentUser() {
-		UserDTO maritacaUser = (UserDTO)UtilsWeb.clientRequest().getSession().getAttribute(MaritacaConstants.CURRENT_USER);
-		if(maritacaUser != null)
-			return maritacaUser;
-		return null;
+		return (UserDTO)UtilsWeb.clientRequest().getSession().getAttribute(MaritacaConstants.CURRENT_USER);
 	}
 	
 	protected void setCurrentUser(UserDTO userDto){
@@ -115,7 +112,6 @@ public abstract class MaritacaJSFBean implements Serializable {
 	public void setModuleManager(Manager moduleManager) {
 		this.moduleManager = moduleManager;
 	}
-
 	public Integer getItemsPerPage() {						
 		return itemsPerPage;
 	}

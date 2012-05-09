@@ -7,9 +7,6 @@ import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import me.prettyprint.cassandra.utils.TimeUUIDUtils;
 import br.unifesp.maritaca.persistence.permission.Policy;
@@ -17,9 +14,8 @@ import br.unifesp.maritaca.persistence.annotations.Column;
 import br.unifesp.maritaca.persistence.annotations.Minimal;
 import br.unifesp.maritaca.persistence.annotations.JSONValue;
 
-@XmlRootElement(name = "form")
 @Entity
-public class Form implements Comparable<Form> {
+public class Form {
 	@Id
 	private UUID key;
 
@@ -46,16 +42,11 @@ public class Form implements Comparable<Form> {
 	@Minimal
 	private Policy policy = Policy.PRIVATE;
 
-	@XmlElement(name = "id")
 	public UUID getKey() {
 		return key;
 	}
 	
 	private MaritacaDate creationDate;
-	
-	// 0 means order by name; 1 means order by date
-	@Deprecated
-	private int flagToOrder;
 	
 	public void setKey(UUID key) {
 		this.key = key;
@@ -80,7 +71,6 @@ public class Form implements Comparable<Form> {
 		this.xml = xml;
 	}
 
-	@XmlTransient
 	public User getUser() {
 		return user;
 	}
@@ -144,20 +134,6 @@ public class Form implements Comparable<Form> {
 		}
 		return false;
 	}
-
-	@Override
-	public int compareTo(Form form) {
-		if (getFlagToOrder() == 0) {
-			return getTitle().toLowerCase().compareTo(form.getTitle().toLowerCase());
-		} else {
-			return getCreationDate().compareTo(form.getCreationDate());
-		}
-	}
-
-	@XmlTransient
-	public int getFlagToOrder() {
-		return flagToOrder;
-	}
 	
 	public Map<String, Policy> getPolicyItems(){
 		Map<String, Policy> policyItems = new LinkedHashMap<String, Policy>(); 
@@ -165,10 +141,6 @@ public class Form implements Comparable<Form> {
 			policyItems.put(p.toString(), p);
 		}		
 		return policyItems;
-	}
-
-	public void setFlagToOrder(int flagToOrder) {
-		this.flagToOrder = flagToOrder;
 	}
 
 	public Policy getPolicy() {
@@ -192,7 +164,7 @@ public class Form implements Comparable<Form> {
 	}
 	
 	public Boolean isPublic() {
-        return policy.getIdPolicy() == Policy.PUBLIC.getIdPolicy();
+        return policy.getId() == Policy.PUBLIC.getId();
     }
 	
 	/**
@@ -201,11 +173,11 @@ public class Form implements Comparable<Form> {
 	 * @return
 	 */
 	public Boolean changePolicy() {
-        return policy.getIdPolicy() == Policy.PRIVATE.getIdPolicy();
+        return policy.getId() == Policy.PRIVATE.getId();
     }
 	
 	public Boolean isShared() {
-        return policy.getIdPolicy() == Policy.SHARED_HIERARCHICAL.getIdPolicy() || 
-        		policy.getIdPolicy() == Policy.SHARED_SOCIAL.getIdPolicy();
+        return policy.getId() == Policy.SHARED_HIERARCHICAL.getId() || 
+        		policy.getId() == Policy.SHARED_SOCIAL.getId();
     }
 }

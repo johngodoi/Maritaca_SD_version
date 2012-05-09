@@ -5,7 +5,9 @@
 
 <!-- TODO Try to block or hide the address bar in the mobile client -->
 <f:metadata>
-	<f:viewParam name="#{oAuthParametersBean.OAuth_Token}" value="#{loginManagerBean.oauth_token}"/>
+	<f:viewParam name="#{oAuthParametersBean.redirectUri}"  value="#{loginManagerBean.redirectUri}"/>
+	<f:viewParam name="#{oAuthParametersBean.clientId}"     value="#{loginManagerBean.clientId}"/>
+	<f:viewParam name="#{oAuthParametersBean.responseType}" value="#{loginManagerBean.responseType}"/>
 </f:metadata>	
 
 <ui:composition template="/templates/masterLayout.xhtml">

@@ -60,24 +60,25 @@ public class FormListerTest extends BaseEmbededServerSetupTest {
 	private String LIST_ONE   = "listOne";
 	private String LIST_TWO   = "listTwo";
 	private String EMAIL_USR1 = "usr1@mail.com";
-	private String EMAIL_USR2 = "usr2@mail.com";
+	private String EMAIL_USR2 = "usr2@mail.com";	
 	private String EMAIL_USR3 = "usr3@mail.com";
-	User user1 = null;
-	User user2 = null;
-	User user3 = null;
-	MaritacaListDTO list1User2 = null;
-	MaritacaListDTO list2User1 = null;
+	
+	private User user1 = null;
+	private User user2 = null;
+	private User user3 = null;
+	private MaritacaListDTO list1User2 = null;
+	private MaritacaListDTO list2User1 = null;
 	//
-	private String LIST_THREE   = "listThree";
-	private String LIST_FOUR   = "listFour";
+	private String LIST_THREE = "listThree";
+	private String LIST_FOUR  = "listFour";
 	private String EMAIL_USR4 = "usr4@mail.com";
 	private String EMAIL_USR5 = "usr5@mail.com";
 	private String EMAIL_USR6 = "usr6@mail.com";
-	User user4 = null;
-	User user5 = null;
-	User user6 = null;
-	MaritacaListDTO list3User4 = null;
-	MaritacaListDTO list4User5 = null;
+	private User user4 = null;
+	private User user5 = null;
+	private User user6 = null;
+	private MaritacaListDTO list3User4 = null;
+	private MaritacaListDTO list4User5 = null;
 	
 	@Before
 	public void setUp() {
@@ -92,6 +93,7 @@ public class FormListerTest extends BaseEmbededServerSetupTest {
 		listEditorEjb.setListEditorDAO(new ListEditorDAO());
 		//Form Editor
 		formEditorEJB = new FormEditorEJB();
+		formEditorEJB.setCreateAnswers(false);
 		formEditorEJB.setConfigurationDAO(new ConfigurationDAO());
 		formEditorEJB.setListMaritacaListDAO((new ListMaritacaListDAO()));
 		formEditorEJB.setUserDAO(new UserDAO());
@@ -136,7 +138,7 @@ public class FormListerTest extends BaseEmbededServerSetupTest {
 			assertTrue("read(true)",   f.getPermission().getRead());
 			assertTrue("update(true)", f.getPermission().getUpdate());
 			assertTrue("delete(true)", f.getPermission().getDelete());
-			if(f.getPolicy().getIdPolicy() == Policy.PRIVATE.getIdPolicy()) {
+			if(f.getPolicy().getId() == Policy.PRIVATE.getId()) {
 				assertTrue("share(true)",  f.getPermission().getShare());
 			}
 			else {
@@ -182,12 +184,12 @@ public class FormListerTest extends BaseEmbededServerSetupTest {
 		UserDTO userDTO5 = new UserDTO(); userDTO5.setEmail(EMAIL_USR5);
 		UserDTO userDTO6 = new UserDTO(); userDTO6.setEmail(EMAIL_USR6);
 		
-		accountEditorEjb.saveAccount(userDTO1);
-		accountEditorEjb.saveAccount(userDTO2);
-		accountEditorEjb.saveAccount(userDTO3);
-		accountEditorEjb.saveAccount(userDTO4);
-		accountEditorEjb.saveAccount(userDTO5);
-		accountEditorEjb.saveAccount(userDTO6);
+		accountEditorEjb.saveNewAccount(userDTO1);
+		accountEditorEjb.saveNewAccount(userDTO2);
+		accountEditorEjb.saveNewAccount(userDTO3);
+		accountEditorEjb.saveNewAccount(userDTO4);
+		accountEditorEjb.saveNewAccount(userDTO5);
+		accountEditorEjb.saveNewAccount(userDTO6);
 		
 		user1 = formEditorEJB.getUserDAO().findUserByEmail(EMAIL_USR1);
 		user2 = formEditorEJB.getUserDAO().findUserByEmail(EMAIL_USR2);
@@ -228,17 +230,17 @@ public class FormListerTest extends BaseEmbededServerSetupTest {
 		FormDTO privateFDTO = new FormDTO();
 		privateFDTO.setTitle("new Form");
 		privateFDTO.setXml("<form>private</form>");		
-		privateFDTO.setUserKey(userKey);
-		formEditorEJB.saveNewForm2(privateFDTO);				
+		privateFDTO.setUser(userKey);
+		formEditorEJB.saveNewForm(privateFDTO);				
 	}
 	
 	private void createPublicForm(UUID userKey, User user, MaritacaListDTO mList1, MaritacaListDTO mList2) {
 		FormDTO publicFDTO = new FormDTO();
 		publicFDTO.setTitle("new Form");
 		publicFDTO.setXml("<form>public</form>");		
-		publicFDTO.setUserKey(userKey);
-		Form tmp = formEditorEJB.saveNewForm2(publicFDTO);
-		Form publicForm = formEditorEJB.getFormDAO().getFormByKey(tmp.getKey(), false);		
+		publicFDTO.setUser(userKey);
+		formEditorEJB.saveNewForm(publicFDTO);
+		Form publicForm = formEditorEJB.getFormDAO().getFormByKey(publicFDTO.getKey(), false);		
 		formEditorEJB.updateFormFromPolicyEditor(getFormDTO(publicForm, Policy.PUBLIC), getUserDTO(user), getUsedItems(mList1, mList2));					
 	}
 	
@@ -246,22 +248,22 @@ public class FormListerTest extends BaseEmbededServerSetupTest {
 		FormDTO shaHieFormDTO = new FormDTO();
 		shaHieFormDTO.setTitle("new Form");
 		shaHieFormDTO.setXml("<form>sharedHierarchical</form>");		
-		shaHieFormDTO.setUserKey(userKey);
-		Form tmp = formEditorEJB.saveNewForm2(shaHieFormDTO);
-		Form sharedHierarchicalForm = formEditorEJB.getFormDAO().getFormByKey(tmp.getKey(), false);		
+		shaHieFormDTO.setUser(userKey);
+		formEditorEJB.saveNewForm(shaHieFormDTO);
+		Form sharedHierarchicalForm = formEditorEJB.getFormDAO().getFormByKey(shaHieFormDTO.getKey(), false);		
 		formEditorEJB.updateFormFromPolicyEditor(getFormDTO(sharedHierarchicalForm, Policy.SHARED_HIERARCHICAL), getUserDTO(user), getUsedItems(mList1, mList2));
-		formEditorEJB.getFormDAO().getFormByKey(tmp.getKey(), false);
+		formEditorEJB.getFormDAO().getFormByKey(shaHieFormDTO.getKey(), false);
 	}
 	
 	private void createSharedSocialForm(UUID userKey, User user, MaritacaListDTO mList1, MaritacaListDTO mList2) {
 		FormDTO shaSocFormDTO = new FormDTO();
 		shaSocFormDTO.setTitle("new Form");
 		shaSocFormDTO.setXml("<form>sharedSocial</form>");		
-		shaSocFormDTO.setUserKey(userKey);
-		Form tmp = formEditorEJB.saveNewForm2(shaSocFormDTO);
-		Form sharedSocialForm = formEditorEJB.getFormDAO().getFormByKey(tmp.getKey(), false);		
+		shaSocFormDTO.setUser(userKey);
+		formEditorEJB.saveNewForm(shaSocFormDTO);
+		Form sharedSocialForm = formEditorEJB.getFormDAO().getFormByKey(shaSocFormDTO.getKey(), false);		
 		formEditorEJB.updateFormFromPolicyEditor(getFormDTO(sharedSocialForm, Policy.SHARED_SOCIAL), getUserDTO(user), getUsedItems(mList1, mList2));
-		formEditorEJB.getFormDAO().getFormByKey(tmp.getKey(), false);
+		formEditorEJB.getFormDAO().getFormByKey(shaSocFormDTO.getKey(), false);
 	}
 	
 	private UserDTO getUserDTO(User user) {

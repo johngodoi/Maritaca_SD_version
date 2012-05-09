@@ -15,9 +15,8 @@ public class RestServicesApp extends Application {
 	private Set<Class<?>> classes = new HashSet<Class<?>>();
 	
 	public RestServicesApp() {
-		singletons.add(new FormsServiceImpl());
-		singletons.add(new AnswersServiceImpl());
-		
+		classes.add(FormsServiceImpl.class);
+		classes.add(AnswersServiceImpl.class);
 		classes.add(MaritacaExceptionMapper.class);
 	}
 	

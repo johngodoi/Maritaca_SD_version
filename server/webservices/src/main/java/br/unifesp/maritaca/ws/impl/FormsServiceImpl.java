@@ -2,59 +2,53 @@ package br.unifesp.maritaca.ws.impl;
 
 import java.util.UUID;
 
-import javax.ws.rs.HeaderParam;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import br.unifesp.maritaca.core.Form;
-import br.unifesp.maritaca.core.User;
-import br.unifesp.maritaca.model.FormAnswerModel;
-import br.unifesp.maritaca.model.ModelFactory;
+import br.unifesp.maritaca.business.form.dto.FormDTO;
+import br.unifesp.maritaca.business.form.edit.FormEditorEJB;
+import br.unifesp.maritaca.business.form.list.FormListerEJB;
+import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
 import br.unifesp.maritaca.ws.api.FormsService;
 import br.unifesp.maritaca.ws.api.resp.ErrorResponse;
 import br.unifesp.maritaca.ws.api.resp.FormListResponse;
 import br.unifesp.maritaca.ws.api.resp.MaritacaResponse;
-import br.unifesp.maritaca.ws.api.resp.XmlSavedResponse;
 import br.unifesp.maritaca.ws.exceptions.MaritacaWSException;
+import br.unifesp.maritaca.ws.util.UtilsWS;
 
+@Stateless
 @Path("/form")
 public class FormsServiceImpl implements FormsService {
 
 	private static final Log log = LogFactory.getLog(FormsServiceImpl.class);
-	private FormAnswerModel formRespModel;
-	private User currentUser;
+	
+	@Inject
+	private FormListerEJB formListerEJB;
+	
+	@Inject
+	private FormEditorEJB formEditorEJB;
+	
+	private UserDTO userDTO;
 
-	public FormsServiceImpl() {	}
-
-	public FormsServiceImpl(@HeaderParam("curruserkey") String userkey) {
-		//get the user
-		if(userkey == null){
-			throw new RuntimeException("not current user");
-		}
-		log.debug("current user: " + userkey);
-		User user = new User();
-		user.setKey(userkey);
-		setCurrentUser(user);
-		
-		formRespModel = ModelFactory.getInstance().createFormResponseModel(getCurrentUser());
-		ModelFactory.getInstance().registryUser(user);
-		
-	}
-
-	public FormAnswerModel getFormAnswModel() {
-		return getFormRespModel();
+	public FormsServiceImpl() { 
+		log.info("in FormsServiceImpl");
 	}
 
 	@Override
-	public Form getForm(String formId) throws MaritacaWSException {
+	public FormDTO getForm(HttpServletRequest request, String formId) 
+			throws MaritacaWSException {
+		setUserDTO(UtilsWS.createUserDTO(request));
 		UUID uuid = UUID.fromString(formId);
-		Form form = null;
-		form = getFormRespModel().getForm(uuid, false);
-		if (form != null)
-			return form;
+		FormDTO formDTO = null;
+		formDTO = formEditorEJB.getFormDTOById(uuid, getUserDTO());
+		if (formDTO != null)
+			return formDTO;
 		else {
 			ErrorResponse error = new ErrorResponse();
 			error.setCode(Response.Status.NO_CONTENT.getStatusCode());
@@ -64,38 +58,20 @@ public class FormsServiceImpl implements FormsService {
 	}
 
 	@Override
-	public MaritacaResponse saveForm(String xmlForm, String userId)
-			throws MaritacaWSException {
-		Form form = new Form();
-		form.setXml(xmlForm);
-		form.setUser(userId);
-		if (getFormRespModel().saveForm(form)) {
-			XmlSavedResponse okresp = new XmlSavedResponse();
-			okresp.setId(form.getKey());
-			okresp.setType(MaritacaResponse.FORM_TYPE);
-			return okresp;
-		} else {
-			ErrorResponse error = new ErrorResponse();
-			error.setCode(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR
-					.getStatusCode());
-			error.setMessage("unknown error, not possible to save the form");
-			throw new MaritacaWSException(error);
-		}
-
-	}
-
-	@Override
-	public MaritacaResponse listFormsMinimal() {
+	public MaritacaResponse listFormsMinimal(HttpServletRequest request) {
+		setUserDTO(UtilsWS.createUserDTO(request));
 		FormListResponse resp = new FormListResponse();
-		resp.setList(getFormRespModel().listAllFormsMinimal());
+		resp.setList(formListerEJB.getListOwnForms(getUserDTO()));
 		return resp;
 	}
 
 	@Override
-	public Form getFormSharing(String url) throws MaritacaWSException {
-		String id = getFormRespModel().getFormIdFromUrl(url);
-		if (id != null) {
-			return getForm(id);
+	public FormDTO getFormSharing(HttpServletRequest request, String url) 
+			throws MaritacaWSException {
+		setUserDTO(UtilsWS.createUserDTO(request));
+		FormDTO formDTO = formEditorEJB.getFormDTOFromUrl(url);
+		if (formDTO != null) {
+			return formDTO;
 		} else {
 			ErrorResponse error = new ErrorResponse();
 			error.setCode(Response.Status.NO_CONTENT.getStatusCode());
@@ -104,23 +80,12 @@ public class FormsServiceImpl implements FormsService {
 		}
 	}
 
-	private FormAnswerModel getFormRespModel() {
-		if(formRespModel == null){
-			formRespModel = ModelFactory.getInstance().createFormResponseModel();
-		}
-		return formRespModel;
+	public UserDTO getUserDTO() {
+		return userDTO;
 	}
 
-	public User getCurrentUser() {
-		return currentUser;
+	public void setUserDTO(UserDTO userDTO) {
+		this.userDTO = userDTO;
 	}
-
-	public void setCurrentUser(User currentUser) {
-		this.currentUser = currentUser;
-	}
-
-	public void setFormAnswerModel(FormAnswerModel frControl) {
-		this.formRespModel = frControl;
-	}
-
+	
 }

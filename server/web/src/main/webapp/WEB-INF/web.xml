@@ -48,10 +48,6 @@
 		<param-value>emeraldTown</param-value>
 	</context-param>
 	<context-param>
-		<param-name>oauth.provider.provider-class</param-name>
-		<param-value>br.unifesp.maritaca.web.servlet.MaritacaOAuthProvider</param-value>
-	</context-param>
-	<context-param>
 		<param-name>resteasy.servlet.mapping.prefix</param-name>
 		<param-value>/ws</param-value>
 	</context-param>
@@ -115,7 +111,7 @@
 	</filter>
     <filter>
 		<filter-name>OAuth Filter</filter-name>
-        <filter-class>br.unifesp.maritaca.web.servlet.MaritacaOAuthFilter</filter-class>
+        <filter-class>br.unifesp.maritaca.web.oauth.OAuthFilter</filter-class>
 	</filter>
 
 	<!-- MAPPING -->
@@ -148,7 +144,6 @@
 		<filter-name>loginFilter</filter-name>
 		<url-pattern>/faces/views/login.xhtml</url-pattern>
 	</filter-mapping>
-
 	<filter-mapping>
         <filter-name>OAuth Filter</filter-name>
         <url-pattern>/ws/*</url-pattern>

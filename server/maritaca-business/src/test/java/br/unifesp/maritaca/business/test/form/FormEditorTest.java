@@ -57,10 +57,11 @@ public class FormEditorTest extends BaseEmbededServerSetupTest {
 	private String LIST_TWO   = "listTwo";
 	private String EMAIL_USR1 = "usr1@mail.com";
 	private String EMAIL_USR2 = "usr2@mail.com";
-	User user1 = null;
-	User user2 = null;
-	MaritacaListDTO list1User2 = null;
-	MaritacaListDTO list2User1 = null;
+	
+	private User            user1;
+	private User            user2;
+	private MaritacaListDTO list1User2;
+	private MaritacaListDTO list2User1;
 	
 	@Before
 	public void setUp() {
@@ -75,6 +76,7 @@ public class FormEditorTest extends BaseEmbededServerSetupTest {
 		listEditorEjb.setListEditorDAO(new ListEditorDAO());
 		//Form Editor
 		formEditorEJB = new FormEditorEJB();
+		formEditorEJB.setCreateAnswers(false);
 		formEditorEJB.setConfigurationDAO(new ConfigurationDAO());
 		formEditorEJB.setListMaritacaListDAO((new ListMaritacaListDAO()));
 		formEditorEJB.setUserDAO(new UserDAO());
@@ -99,19 +101,14 @@ public class FormEditorTest extends BaseEmbededServerSetupTest {
 		emHectorImpl.dropColumnFamily(FormAccessibleByList.class);
 	}
 	
-	//@Test
 	private void createUserAndList() {
 		UserDTO userDTO1 = new UserDTO(); userDTO1.setEmail(EMAIL_USR1);
 		UserDTO userDTO2 = new UserDTO(); userDTO2.setEmail(EMAIL_USR2);		
-		accountEditorEjb.saveAccount(userDTO1);
-		accountEditorEjb.saveAccount(userDTO2);
+		accountEditorEjb.saveNewAccount(userDTO1);
+		accountEditorEjb.saveNewAccount(userDTO2);
 		user1 = formEditorEJB.getUserDAO().findUserByEmail(EMAIL_USR1);
 		user2 = formEditorEJB.getUserDAO().findUserByEmail(EMAIL_USR2);
-		//assertNotNull("User1 not found", user1.getKey());
-		//assertEquals("User1 email does not match", EMAIL_USR1, user1.getEmail());
-		//assertNotNull("User2 not found", user2.getKey());
-		//assertEquals("User2 email does not match", EMAIL_USR2, user2.getEmail());
-		//
+
 		MaritacaListDTO list1User2DTO = new MaritacaListDTO();			
 		MaritacaListDTO list2User1DTO = new MaritacaListDTO();
 		list1User2DTO.setOwner(user2.getKey()); list1User2DTO.setName(LIST_ONE);
@@ -120,8 +117,6 @@ public class FormEditorTest extends BaseEmbededServerSetupTest {
 		listEditorEjb.saveMaritacaList(list2User1DTO);
 		list1User2 = listEditorEjb.searchMaritacaListByName(LIST_ONE, user2.getKey());
 		list2User1 = listEditorEjb.searchMaritacaListByName(LIST_TWO, user1.getKey());
-		//assertNotNull("List1User2 not found", list1User2.getKey());
-		//assertNotNull("List2User1 not found", list2User1.getKey());
 	}
 	
 	@Test
@@ -129,12 +124,12 @@ public class FormEditorTest extends BaseEmbededServerSetupTest {
 		FormDTO privateFDTO = new FormDTO();
 		privateFDTO.setTitle("new Form");
 		privateFDTO.setXml("<form>private</form>");		
-		privateFDTO.setUserKey(user1.getKey());
-		Form tmp = formEditorEJB.saveNewForm2(privateFDTO);
-		Form privateForm = formEditorEJB.getFormDAO().getFormByKey(tmp.getKey(), false);
+		privateFDTO.setUser(user1.getKey());
+		formEditorEJB.saveNewForm(privateFDTO);
+		Form privateForm = formEditorEJB.getFormDAO().getFormByKey(privateFDTO.getKey(), false);
 		assertNotNull("Form not found", privateForm);
 		assertNotNull("FormKey does not match", privateForm.getKey());
-		assertEquals("Form policy should be private", Policy.PRIVATE.getIdPolicy(), privateForm.getPolicy().getIdPolicy());
+		assertEquals("Form policy should be private", Policy.PRIVATE.getId(), privateForm.getPolicy().getId());
 		assertEquals("This form should not have a list", 0, privateForm.getLists()!=null?privateForm.getLists().size():0);
 	}
 	
@@ -163,18 +158,18 @@ public class FormEditorTest extends BaseEmbededServerSetupTest {
 		FormDTO publicFDTO = new FormDTO();
 		publicFDTO.setTitle("new Form");
 		publicFDTO.setXml("<form>public</form>");		
-		publicFDTO.setUserKey(user1.getKey());
-		Form tmp = formEditorEJB.saveNewForm2(publicFDTO);
-		Form publicForm = formEditorEJB.getFormDAO().getFormByKey(tmp.getKey(), false);
+		publicFDTO.setUser(user1.getKey());
+		formEditorEJB.saveNewForm(publicFDTO);
+		Form publicForm = formEditorEJB.getFormDAO().getFormByKey(publicFDTO.getKey(), false);
 		assertNotNull("Form not found", publicForm);
 		assertNotNull("FormKey does not match", publicForm.getKey());
-		assertEquals("Form policy should be private", Policy.PRIVATE.getIdPolicy(), publicForm.getPolicy().getIdPolicy());
+		assertEquals("Form policy should be private", Policy.PRIVATE.getId(), publicForm.getPolicy().getId());
 		assertEquals("This form should not have a list", 0, publicForm.getLists()!=null?publicForm.getLists().size():0);
 		formEditorEJB.updateFormFromPolicyEditor(getFormDTO(publicForm, Policy.PUBLIC), getUserDTO(user1), getUsedItems(list1User2, list2User1));
-		publicForm = formEditorEJB.getFormDAO().getFormByKey(tmp.getKey(), false);
+		publicForm = formEditorEJB.getFormDAO().getFormByKey(publicFDTO.getKey(), false);
 		assertNotNull("Form not found", publicForm);
 		assertNotNull("FormKey does not found", publicForm.getKey());		
-		assertEquals("Form policy should be public", Policy.PUBLIC.getIdPolicy(), publicForm.getPolicy().getIdPolicy());		
+		assertEquals("Form policy should be public", Policy.PUBLIC.getId(), publicForm.getPolicy().getId());		
 		assertEquals("This form should not have a list", 0, publicForm.getLists()!=null?publicForm.getLists().size():0);
 	}
 	
@@ -184,18 +179,18 @@ public class FormEditorTest extends BaseEmbededServerSetupTest {
 		FormDTO shaHieFormDTO = new FormDTO();
 		shaHieFormDTO.setTitle("new Form");
 		shaHieFormDTO.setXml("<form>sharedHierarchical</form>");		
-		shaHieFormDTO.setUserKey(user1.getKey());
-		Form tmp = formEditorEJB.saveNewForm2(shaHieFormDTO);
-		Form sharedHierarchicalForm = formEditorEJB.getFormDAO().getFormByKey(tmp.getKey(), false);
+		shaHieFormDTO.setUser(user1.getKey());
+		formEditorEJB.saveNewForm(shaHieFormDTO);
+		Form sharedHierarchicalForm = formEditorEJB.getFormDAO().getFormByKey(shaHieFormDTO.getKey(), false);
 		assertNotNull("Form not found", sharedHierarchicalForm);
 		assertNotNull("FormKey does not match", sharedHierarchicalForm.getKey());
-		assertEquals("Form policy is not private", Policy.PRIVATE.getIdPolicy(), sharedHierarchicalForm.getPolicy().getIdPolicy());
+		assertEquals("Form policy is not private", Policy.PRIVATE.getId(), sharedHierarchicalForm.getPolicy().getId());
 		assertEquals("Private form should not have a list", 0, sharedHierarchicalForm.getLists()!=null?sharedHierarchicalForm.getLists().size():0);
 		formEditorEJB.updateFormFromPolicyEditor(getFormDTO(sharedHierarchicalForm, Policy.SHARED_HIERARCHICAL), getUserDTO(user1), getUsedItems(list1User2, list2User1));
-		sharedHierarchicalForm = formEditorEJB.getFormDAO().getFormByKey(tmp.getKey(), false);
+		sharedHierarchicalForm = formEditorEJB.getFormDAO().getFormByKey(shaHieFormDTO.getKey(), false);
 		assertNotNull("Form not found", sharedHierarchicalForm);
 		assertNotNull("FormKey does not match", sharedHierarchicalForm.getKey());
-		assertEquals("Form policy should be shared hierarchical", Policy.SHARED_HIERARCHICAL.getIdPolicy(), sharedHierarchicalForm.getPolicy().getIdPolicy());
+		assertEquals("Form policy should be shared hierarchical", Policy.SHARED_HIERARCHICAL.getId(), sharedHierarchicalForm.getPolicy().getId());
 		assertEquals("This form should have 2 lists", 2, sharedHierarchicalForm.getLists()!=null?sharedHierarchicalForm.getLists().size():0);
 		//
 		for(UUID uuid : sharedHierarchicalForm.getLists()) {
@@ -210,18 +205,18 @@ public class FormEditorTest extends BaseEmbededServerSetupTest {
 		FormDTO shaSocFormDTO = new FormDTO();
 		shaSocFormDTO.setTitle("new Form");
 		shaSocFormDTO.setXml("<form>sharedSocial</form>");		
-		shaSocFormDTO.setUserKey(user1.getKey());
-		Form tmp = formEditorEJB.saveNewForm2(shaSocFormDTO);
-		Form sharedSocialForm = formEditorEJB.getFormDAO().getFormByKey(tmp.getKey(), false);
+		shaSocFormDTO.setUser(user1.getKey());
+		formEditorEJB.saveNewForm(shaSocFormDTO);
+		Form sharedSocialForm = formEditorEJB.getFormDAO().getFormByKey(shaSocFormDTO.getKey(), false);
 		assertNotNull("Form not found", sharedSocialForm);
 		assertNotNull("FormKey does not match", sharedSocialForm.getKey());
-		assertEquals("Form policy is not private", Policy.PRIVATE.getIdPolicy(), sharedSocialForm.getPolicy().getIdPolicy());
+		assertEquals("Form policy is not private", Policy.PRIVATE.getId(), sharedSocialForm.getPolicy().getId());
 		assertEquals("Private form should not have a list", 0, sharedSocialForm.getLists()!=null?sharedSocialForm.getLists().size():0);
 		formEditorEJB.updateFormFromPolicyEditor(getFormDTO(sharedSocialForm, Policy.SHARED_SOCIAL), getUserDTO(user1), getUsedItems(list1User2, list2User1));
-		sharedSocialForm = formEditorEJB.getFormDAO().getFormByKey(tmp.getKey(), false);
+		sharedSocialForm = formEditorEJB.getFormDAO().getFormByKey(shaSocFormDTO.getKey(), false);
 		assertNotNull("Form not found", sharedSocialForm);
 		assertNotNull("FormKey does not match", sharedSocialForm.getKey());
-		assertEquals("Form policy should be shared social", Policy.SHARED_SOCIAL.getIdPolicy(), sharedSocialForm.getPolicy().getIdPolicy());
+		assertEquals("Form policy should be shared social", Policy.SHARED_SOCIAL.getId(), sharedSocialForm.getPolicy().getId());
 		assertEquals("This form should have 2 lists", 2, sharedSocialForm.getLists()!=null?sharedSocialForm.getLists().size():0);
 		//
 		for(UUID uuid : sharedSocialForm.getLists()) {

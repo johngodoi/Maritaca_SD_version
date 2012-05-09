@@ -15,7 +15,7 @@ public class ParameterVerfierTest {
 	public void testNullParamaterAccountEjb(){
 		AccountEditorEJB accountEditorEJB = new AccountEditorEJB();				
 		try{
-			accountEditorEJB.saveAccount(null);
+			accountEditorEJB.saveNewAccount(null);
 			fail();
 		} catch (ParameterException e){			
 		}		
