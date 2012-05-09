@@ -8,7 +8,7 @@ import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
 
 import br.unifesp.maritaca.web.submodule.SubModule;
-import br.unifesp.maritaca.web.utils.Utils;
+import br.unifesp.maritaca.web.utils.UtilsWeb;
 
 public class ModuleImpl implements Module, Serializable {
 
@@ -80,7 +80,7 @@ public class ModuleImpl implements Module, Serializable {
 
 	@Override
 	public String getId() {
-		return Utils.getCompactedVersion(getTitle());
+		return UtilsWeb.getCompactedVersion(getTitle());
 	}
 
 	@Override

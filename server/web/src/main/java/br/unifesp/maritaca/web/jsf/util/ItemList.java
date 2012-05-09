@@ -3,7 +3,7 @@ package br.unifesp.maritaca.web.jsf.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.unifesp.maritaca.web.utils.Utils;
+import br.unifesp.maritaca.web.utils.UtilsWeb;
 
 /**
  * Class used together with the itemList.xhtml file to create
@@ -67,13 +67,13 @@ public abstract class ItemList<T>{
 		clearAddItemError();
 		
 		if(getSelectedItem()==null||getSelectedItem().equals("")){
-			setAddItemError(Utils
+			setAddItemError(UtilsWeb
 					.getMessageFromResourceProperties(ITEM_LIST_EMPTY_FIELD));
 			return;
 		}
 		
 		if(searchItemByString(getSelectedItem())!=null){
-			setAddItemError(Utils
+			setAddItemError(UtilsWeb
 					.getMessageFromResourceProperties(ITEM_LIST_REPEATED_ITEM));
 			return;
 		}

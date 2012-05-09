@@ -164,7 +164,7 @@ public class Form {
 	}
 	
 	public Boolean isPublic() {
-        return policy.getIdPolicy() == Policy.PUBLIC.getIdPolicy();
+        return policy.getId() == Policy.PUBLIC.getId();
     }
 	
 	/**
@@ -173,6 +173,11 @@ public class Form {
 	 * @return
 	 */
 	public Boolean changePolicy() {
-        return policy.getIdPolicy() == Policy.PRIVATE.getIdPolicy();
+        return policy.getId() == Policy.PRIVATE.getId();
+    }
+	
+	public Boolean isShared() {
+        return policy.getId() == Policy.SHARED_HIERARCHICAL.getId() || 
+        		policy.getId() == Policy.SHARED_SOCIAL.getId();
     }
 }

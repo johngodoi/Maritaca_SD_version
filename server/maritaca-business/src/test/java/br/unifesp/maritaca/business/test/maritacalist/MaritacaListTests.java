@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import br.unifesp.maritaca.business.account.edit.AccountEditorEJB;
 import br.unifesp.maritaca.business.account.edit.dao.AccountEditorDAO;
+import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
 import br.unifesp.maritaca.business.list.edit.ListEditorEJB;
 import br.unifesp.maritaca.business.list.edit.dao.ListEditorDAO;
 import br.unifesp.maritaca.business.list.list.ListMaritacaListEJB;
@@ -28,7 +29,6 @@ import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.core.User;
 import br.unifesp.maritaca.persistence.EntityManagerFactory;
 import br.unifesp.maritaca.persistence.EntityManagerHectorImpl;
-import br.unifesp.maritaca.persistence.dto.UserDTO;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "/cassandra-context-test-v2.xml")
@@ -116,8 +116,8 @@ public class MaritacaListTests extends BaseEmbededServerSetupTest{
 		user1.setEmail(EMAIL_USR1);
 		user2.setEmail(EMAIL_USR2);
 		
-		accountEditor.saveAccount(user1);
-		accountEditor.saveAccount(user2);
+		accountEditor.saveNewAccount(user1);
+		accountEditor.saveNewAccount(user2);
 				
 		MaritacaListDTO list1User1 = new MaritacaListDTO();				
 		MaritacaListDTO list2User1 = new MaritacaListDTO();
@@ -153,8 +153,8 @@ public class MaritacaListTests extends BaseEmbededServerSetupTest{
 		user1.setEmail(EMAIL_USR1);
 		user2.setEmail(EMAIL_USR2);
 		
-		accountEditor.saveAccount(user1);
-		accountEditor.saveAccount(user2);
+		accountEditor.saveNewAccount(user1);
+		accountEditor.saveNewAccount(user2);
 				
 		MaritacaListDTO list1User1 = new MaritacaListDTO();				
 		MaritacaListDTO list1User2 = new MaritacaListDTO();

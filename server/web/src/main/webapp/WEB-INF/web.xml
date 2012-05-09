@@ -81,7 +81,6 @@
 		<servlet-name>LogoutServlet</servlet-name>
 		<servlet-class>br.unifesp.maritaca.web.servlet.LogoutServlet</servlet-class>
 	</servlet>
-
 	<servlet>
 		<servlet-name>OAuth</servlet-name>
 		<servlet-class>br.unifesp.maritaca.web.oauth.AuthorizationServer</servlet-class>
@@ -114,7 +113,6 @@
 		<filter-name>OAuth Filter</filter-name>
         <filter-class>br.unifesp.maritaca.web.oauth.OAuthFilter</filter-class>
 	</filter>
-	
 
 	<!-- MAPPING -->
 	<servlet-mapping>

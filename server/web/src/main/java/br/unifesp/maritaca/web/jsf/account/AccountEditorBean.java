@@ -6,8 +6,7 @@ import javax.faces.bean.SessionScoped;
 import javax.inject.Inject;
 
 import br.unifesp.maritaca.business.account.edit.AccountEditorEJB;
-import br.unifesp.maritaca.business.util.UtilsBusiness;
-import br.unifesp.maritaca.persistence.dto.UserDTO;
+import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
 import br.unifesp.maritaca.web.base.MaritacaJSFBean;
 import br.unifesp.maritaca.web.jsf.login.LoginManagerBean;
 import br.unifesp.maritaca.web.jsf.util.MaritacaConstants;
@@ -51,16 +50,11 @@ public class AccountEditorBean extends MaritacaJSFBean{
 		return null;
 	}
 	
-	public void updateUserInformation(){
-		if(getCurrentUser()!=null){
-			setUserDto(getCurrentUser());
-		}
-	}
-	
 	private String updateAccount(){	
-		getAccountEditorEJB().saveAccount(userDto);
+		getAccountEditorEJB().updateAccount(userDto, getCurrentUser().getEmail());
 		getModuleManager().setActiveModuleByString("Forms");
-		getModuleManager().setActiveSubModuleInActiveMod("listForms");
+		getModuleManager().setActiveSubModuleInActiveMod("listForms");		
+		addMessageInfo("account_create_success");		
 		return MaritacaConstants.FACES_HOME;
 	}
 	
@@ -70,7 +64,7 @@ public class AccountEditorBean extends MaritacaJSFBean{
 	 * or the navigation string to the home page if successful. 
 	 */
 	public String saveNewAccount(){					
-		getAccountEditorEJB().saveAccount(userDto);
+		getAccountEditorEJB().saveNewAccount(userDto);
 		getLoginManagerBean().login(userDto);
 		return MaritacaConstants.FACES_HOME;
 	}
@@ -90,7 +84,7 @@ public class AccountEditorBean extends MaritacaJSFBean{
 	public String editAccount(){
 		getModuleManager().setActiveModuleByString("Settings");
 		getModuleManager().setActiveSubModuleInActiveMod("accountEditor");
-		setUserDto((UserDTO)getCurrentUser().clone());
+		setUserDto((UserDTO)getCurrentUser().clone());		
 		return null;
 	}
 

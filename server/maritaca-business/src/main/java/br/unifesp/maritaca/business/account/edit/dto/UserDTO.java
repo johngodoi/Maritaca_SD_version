@@ -1,9 +1,11 @@
-package br.unifesp.maritaca.persistence.dto;
+package br.unifesp.maritaca.business.account.edit.dto;
 
 import java.util.UUID;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import br.unifesp.maritaca.business.base.MaritacaConstants;
 
 
 public class UserDTO implements Cloneable{
@@ -12,9 +14,7 @@ public class UserDTO implements Cloneable{
 	
 	private UUID maritacaList;
 	
-	//TODO The email reg exp should be read from MaritacaConstants
-	//TODO This can be done when UserDTO goes back to maritaca-business
-	@Pattern(regexp = "^[\\w\\-]([\\.\\w])+[\\w]+@([\\w\\-]+\\.)+[a-zA-Z]{2,4}$")
+	@Pattern(regexp = MaritacaConstants.EMAIL_REG_EXP)
 	private String email;
 	
 	@Size(min = 3, max = 20)

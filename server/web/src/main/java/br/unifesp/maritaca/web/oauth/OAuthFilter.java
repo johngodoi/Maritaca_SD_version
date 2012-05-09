@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import br.unifesp.maritaca.business.base.MaritacaConstants;
+import br.unifesp.maritaca.business.exception.MaritacaException;
 import br.unifesp.maritaca.business.oauth.OAuthEJB;
 import br.unifesp.maritaca.business.oauth.OAuthTokenDTO;
 
@@ -92,8 +93,10 @@ public class OAuthFilter implements Filter {
 			log.info("doFilter");
 			filterChain.doFilter(request, response);
 		} catch (OAuthProblemException e) {
-			System.out.println("filtrou");
+			// TODO
+			throw new MaritacaException(e.getMessage());
 		} catch (Exception e) {
+			throw new MaritacaException(e.getMessage());
 		}
 		
 	}

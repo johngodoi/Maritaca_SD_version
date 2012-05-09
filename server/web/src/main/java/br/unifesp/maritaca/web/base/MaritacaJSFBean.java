@@ -11,10 +11,10 @@ import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
-import br.unifesp.maritaca.persistence.dto.UserDTO;
+import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
 import br.unifesp.maritaca.web.Manager;
 import br.unifesp.maritaca.web.jsf.util.MaritacaConstants;
-import br.unifesp.maritaca.web.utils.Utils;
+import br.unifesp.maritaca.web.utils.UtilsWeb;
 
 public abstract class MaritacaJSFBean implements Serializable {
 	
@@ -24,11 +24,11 @@ public abstract class MaritacaJSFBean implements Serializable {
 	private Manager moduleManager;		
 	
 	protected UserDTO getCurrentUser() {
-		return (UserDTO)Utils.clientRequest().getSession().getAttribute(MaritacaConstants.CURRENT_USER);
+		return (UserDTO)UtilsWeb.clientRequest().getSession().getAttribute(MaritacaConstants.CURRENT_USER);
 	}
 	
 	protected void setCurrentUser(UserDTO userDto){
-		Utils.clientRequest().getSession().setAttribute(MaritacaConstants.CURRENT_USER, userDto);
+		UtilsWeb.clientRequest().getSession().setAttribute(MaritacaConstants.CURRENT_USER, userDto);
 	}
 	
 	protected FacesContext getFacesContext() {

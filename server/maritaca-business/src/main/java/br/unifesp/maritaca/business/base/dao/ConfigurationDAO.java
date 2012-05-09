@@ -1,15 +1,17 @@
 package br.unifesp.maritaca.business.base.dao;
 
+import java.util.List;
 import java.util.UUID;
 
 import br.unifesp.maritaca.core.Configuration;
-import br.unifesp.maritaca.core.Form;
-import br.unifesp.maritaca.core.MaritacaList;
 
 public class ConfigurationDAO extends BaseDAO {
 	
 	public Configuration getSuperUserByName() {
-		return entityManager.cQuery(Configuration.class, "name", "root").get(0);
+		List<Configuration> confs = entityManager.cQuery(Configuration.class, "name", "root");
+		if(!confs.isEmpty() && confs.size() > 0)
+			return confs.get(0);
+		return null;
 	}
 	
 	public Boolean isRootUser(UUID userKey) {

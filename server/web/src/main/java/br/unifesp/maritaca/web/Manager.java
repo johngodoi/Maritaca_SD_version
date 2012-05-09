@@ -1,6 +1,5 @@
 package br.unifesp.maritaca.web;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -14,7 +13,6 @@ import javax.faces.context.FacesContext;
 import org.richfaces.component.UIPanelMenu;
 import org.richfaces.event.ItemChangeEvent;
 
-import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.web.jsf.AbstractBean;
 import br.unifesp.maritaca.web.module.Module;
 import br.unifesp.maritaca.web.module.ModuleImpl;

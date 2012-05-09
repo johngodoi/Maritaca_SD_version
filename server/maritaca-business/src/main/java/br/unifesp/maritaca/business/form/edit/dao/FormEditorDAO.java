@@ -22,7 +22,8 @@ public class FormEditorDAO extends BaseDAO {
 	@Inject private FormAccessibleByListDAO formAccessibleByListDAO;
 	
 	public void createOrUpdateFormAccessible(Form form, User owner) {
-		if(form.getKey() != null ) {
+		if(form.getKey() != null && owner != null) {
+			//form.getLists().remove(owner.getMaritacaList().getKey());//
 			for(UUID uuid : form.getLists()) {
 				FormAccessibleByList formsByList = formAccessibleByListDAO.findFormAccesibleByKey(uuid);
 				if(formsByList == null) {//TODO:
@@ -36,8 +37,8 @@ public class FormEditorDAO extends BaseDAO {
 				}
 				else {
 					if(!formsByList.getForms().isEmpty()) {
-						if(!formsByList.getForms().contains(uuid)) {
-							formsByList.getForms().add(uuid);
+						if(!formsByList.getForms().contains(form.getKey())) {
+							formsByList.getForms().add(form.getKey());
 							formAccessibleByListDAO.persist(formsByList);
 						}
 					}
@@ -61,24 +62,34 @@ public class FormEditorDAO extends BaseDAO {
 			}
 		}
 	}
+	
+	//
+	public FormAccessibleByListDAO getFormAccessibleByListDAO() {
+		return formAccessibleByListDAO;
+	}
+
+	public void setFormAccessibleByListDAO(
+			FormAccessibleByListDAO formAccessibleByListDAO) {
+		this.formAccessibleByListDAO = formAccessibleByListDAO;
+	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	public boolean verifyIfUserExist(UUID userKey) {
-		return entityManager.rowDataExists(User.class, userKey);
-	}
-	
-	public boolean verifyIfUrlExist(String url) {
-		// TODO: improve this
-		// look for url in the Form columnFamily
-		List<Form> fsList = entityManager.cQuery(Form.class, "url", url, true);
-		return fsList.size() > 0;
-	}
+	public MaritacaList searchMaritacaListByName(String groupName) {
+		if (entityManager == null || groupName == null)
+			return null;
 
-	public void persistForm(Form form) {
-		entityManager.persist(form);
-		
-		createRandownAnswer(form);
+		List<MaritacaList> foundGroups = entityManager.cQuery(MaritacaList.class, "name",
+				groupName);
+
+		if (foundGroups.size() == 0) {
+			return null;
+		} else if (foundGroups.size() == 1) {
+			return foundGroups.get(0);
+		} else {
+//			throw new InvalidNumberOfEntries(groupName, MaritacaList.class);
+			return null;
+		}
 	}
 
 	/**
@@ -97,39 +108,5 @@ public class FormEditorDAO extends BaseDAO {
 			answer.setCollectionDate(new MaritacaDate());
 			entityManager.persist(answer);
 		}
-	}
-
-	public Form getForm(UUID key, boolean minimal) {
-		if (key == null ) {
-			throw new IllegalArgumentException("Incomplete parameters");
-		}
-		Form form = entityManager.find(Form.class, key, minimal);
-//		if(userHasPermission(getCurrentUser(), form, Operation.READ)){
-//			return form;	
-//		} else {
-//			throw new AuthorizationDenied(Form.class, form.getKey(), getCurrentUser().getKey(), Operation.READ);
-//		}	
-		return form;
-	}
-
-	public void delete(Form form) {
-		entityManager.delete(form);
-	}
-	
-	public User getOwnerOfMaritacaList(MaritacaList gr) {
-		if (gr.getOwner() != null) {
-			return getUser(gr.getOwner().getKey());
-		} else {
-			MaritacaList group = entityManager.find(MaritacaList.class, gr.getKey(), true);
-			if (group != null) {
-				return getOwnerOfMaritacaList(group);
-			} else {
-				return null;
-			}
-		}
-	}
-	
-	public User getUser(UUID uuid) {
-		return entityManager.find(User.class, uuid);
 	}
 }

@@ -1,6 +1,7 @@
 package br.unifesp.maritaca.business.form.dto;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -31,7 +32,9 @@ public class FormDTO extends BaseDTO {
 	
 	private String creationDate;
 	
-	private UUID userKey;
+	private UUID user;
+	
+	private List<UUID> lists;
 	
 	private Permission permission;
 	
@@ -73,8 +76,8 @@ public class FormDTO extends BaseDTO {
 		this.url = url;
 	}
 
-	public UUID getUserKey() {
-		return userKey;
+	public UUID getUser() {
+		return user;
 	}
 	
 	public Policy getPolicy() {
@@ -85,8 +88,8 @@ public class FormDTO extends BaseDTO {
 		this.policy = policy;
 	}
 
-	public void setUserKey(UUID userKey) {
-		this.userKey = userKey;
+	public void setUser(UUID userKey) {
+		this.user = userKey;
 	}
 
 	@XmlTransient
@@ -130,5 +133,13 @@ public class FormDTO extends BaseDTO {
 			policyItems.put(p.toString(), p);
 		}
 		return policyItems;
+	}
+
+	public List<UUID> getLists() {
+		return lists;
+	}
+
+	public void setLists(List<UUID> lists) {
+		this.lists = lists;
 	}	
 }

@@ -12,7 +12,7 @@ import br.unifesp.maritaca.core.OAuthClient;
 import br.unifesp.maritaca.core.OAuthCode;
 import br.unifesp.maritaca.core.OAuthToken;
 import br.unifesp.maritaca.core.User;
-import br.unifesp.maritaca.persistence.dto.UserDTO;
+import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
 
 @Stateless
 public class OAuthEJB extends AbstractEJB {

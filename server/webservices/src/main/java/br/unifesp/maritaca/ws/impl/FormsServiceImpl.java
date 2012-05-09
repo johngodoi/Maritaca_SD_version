@@ -14,7 +14,7 @@ import org.apache.commons.logging.LogFactory;
 import br.unifesp.maritaca.business.form.dto.FormDTO;
 import br.unifesp.maritaca.business.form.edit.FormEditorEJB;
 import br.unifesp.maritaca.business.form.list.FormListerEJB;
-import br.unifesp.maritaca.persistence.dto.UserDTO;
+import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
 import br.unifesp.maritaca.ws.api.FormsService;
 import br.unifesp.maritaca.ws.api.resp.ErrorResponse;
 import br.unifesp.maritaca.ws.api.resp.FormListResponse;

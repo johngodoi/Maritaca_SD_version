@@ -4,9 +4,10 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import br.unifesp.maritaca.business.account.edit.dao.AccountEditorDAO;
+import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
+import br.unifesp.maritaca.business.exception.MaritacaException;
 import br.unifesp.maritaca.business.util.UtilsBusiness;
 import br.unifesp.maritaca.core.User;
-import br.unifesp.maritaca.persistence.dto.UserDTO;
 
 @Stateless
 public class AccountEditorEJB{
@@ -30,14 +31,31 @@ public class AccountEditorEJB{
 	 * @param userDto
 	 * @throws IllegalArgumentException
 	 */
-	public void saveAccount(UserDTO userDto){
+	public void saveNewAccount(UserDTO userDto){
 		if(userDto.getEmail()==null||registeredEmail(userDto.getEmail())){
 			throw new IllegalArgumentException();
 		}
+		saveAccount(userDto);
+	}
+	
+	private void saveAccount(UserDTO userDto) {
 		User user = UtilsBusiness.convertToClass(userDto, User.class);
 		getAccountEditorDAO().saveUser(user);
 		userDto.setKey(user.getKey());
 		userDto.setMaritacaList(user.getMaritacaList());
+	}
+
+	public void updateAccount(UserDTO userDto, String currentUserEmail){
+		if(userDto.getEmail()==null){
+			throw new IllegalArgumentException();
+		}
+		if(!userDto.getEmail().equals(currentUserEmail)
+				&&registeredEmail(userDto.getEmail())){
+			MaritacaException me = new MaritacaException();
+			me.setUserMessage("account_create_used_email");
+			throw me;
+		}		
+		saveAccount(userDto);
 	}
 
 	public AccountEditorDAO getAccountEditorDAO() {

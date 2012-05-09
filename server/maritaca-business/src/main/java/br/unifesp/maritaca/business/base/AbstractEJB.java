@@ -32,10 +32,11 @@ public abstract class AbstractEJB implements Serializable {
 		if(lstUUID != null && !lstUUID.isEmpty()) {
 			for(UUID uuid : lstUUID) {
 				MaritacaList mList = formDAO.getMaritacaListByKey(uuid, false);
-				if(mList != null && mList.getUsers() != null && !mList.getUsers().isEmpty())
-				for(UUID us : mList.getUsers()) {
-					if(us.toString().equals(userUUID.toString())) {
-						return true;
+				if(mList != null && mList.getUsers() != null && !mList.getUsers().isEmpty()) {
+					for(UUID us : mList.getUsers()) {
+						if(us.toString().equals(userUUID.toString())) {
+							return true;
+						}
 					}
 				}
 			}
@@ -66,5 +67,21 @@ public abstract class AbstractEJB implements Serializable {
 			return rules.getPermission(form.getPolicy(), doc, Accessor.ALL);
 		}
 		return null;
+	}
+	
+	public ConfigurationDAO getConfigurationDAO() {
+		return configurationDAO;
+	}
+
+	public void setConfigurationDAO(ConfigurationDAO configurationDAO) {
+		this.configurationDAO = configurationDAO;
+	}
+
+	public FormDAO getFormDAO() {
+		return formDAO;
+	}
+
+	public void setFormDAO(FormDAO formDAO) {
+		this.formDAO = formDAO;
 	}
 }

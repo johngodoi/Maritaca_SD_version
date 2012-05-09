@@ -9,11 +9,9 @@ import java.util.List;
  */
 public class AnswerListerDTO {
 	
-	private List<AnswerDTO> answers;
-	
-	private List<String>            questions;
-	
-	private String                  formTitle;
+	private List<AnswerDTO> answers;	
+	private List<String>    questions;	
+	private String          formTitle;
 	
 	public List<AnswerDTO> getAnswers() {
 		return answers;

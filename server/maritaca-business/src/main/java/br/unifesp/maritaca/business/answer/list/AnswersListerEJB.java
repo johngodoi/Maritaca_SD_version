@@ -7,16 +7,18 @@ import java.util.UUID;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import br.unifesp.maritaca.access.operation.Operation;
+import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
 import br.unifesp.maritaca.business.answer.list.dao.AnswersListerDAO;
 import br.unifesp.maritaca.business.answer.list.dto.AnswerDTO;
 import br.unifesp.maritaca.business.answer.list.dto.AnswerListerDTO;
 import br.unifesp.maritaca.business.base.AbstractEJB;
 import br.unifesp.maritaca.business.base.dao.UserDAO;
+import br.unifesp.maritaca.business.exception.AuthorizationDenied;
 import br.unifesp.maritaca.business.form.dto.FormDTO;
 import br.unifesp.maritaca.business.parser.XmlParser;
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Form;
-import br.unifesp.maritaca.persistence.dto.UserDTO;
 import br.unifesp.maritaca.persistence.permission.Document;
 import br.unifesp.maritaca.persistence.permission.Permission;
 
@@ -31,7 +33,7 @@ public class AnswersListerEJB extends AbstractEJB {
 	private UserDAO userDAO;
 
 	/**
-	 * Returns all the answers to the given form. TODO Must check permissions!
+	 * Returns all the answers to the given form.
 	 * 
 	 * @param formDTO
 	 * @return
@@ -43,7 +45,7 @@ public class AnswersListerEJB extends AbstractEJB {
 		answerListerDTO.setFormTitle(formDTO.getTitle());
 
 		// List Questions
-		Form form = answersListerDAO.findFormByFormKey(formDTO.getKey());
+		Form form = getAnswersListerDAO().findFormByFormKey(formDTO.getKey());
 		String formXml = form.getXml();
 
 		answerListerDTO.setQuestions(XmlParser.parseQuestionsLabels(formXml));
@@ -54,7 +56,7 @@ public class AnswersListerEJB extends AbstractEJB {
 		// Checking read answer permissions
 		Permission permission = super.getPermission(form, userDTO.getKey(),	Document.ANSWER);
 		if (permission != null && permission.getRead()) {
-			List<Answer> listAnswers = answersListerDAO.findAnswersByFormKey(formDTO.getKey());
+			List<Answer> listAnswers = getAnswersListerDAO().findAnswersByFormKey(formDTO.getKey());
 			AnswerDTO answerDTO;
 			
 			for (Answer answer : listAnswers) {
@@ -68,6 +70,8 @@ public class AnswersListerEJB extends AbstractEJB {
 				
 				listAnswersDTO.add(answerDTO);
 			}
+		} else {
+			throw new AuthorizationDenied(Document.ANSWER,form.getKey(),userDTO.getKey(),Operation.READ);
 		}
 		answerListerDTO.setAnswers(listAnswersDTO);
 
@@ -75,7 +79,23 @@ public class AnswersListerEJB extends AbstractEJB {
 	}
 
 	private String getUserEmailbyUserKey(UUID userKey) {
-		return userDAO.findUserByKey(userKey).getEmail();
+		return getUserDAO().findUserByKey(userKey).getEmail();
+	}
+
+	public AnswersListerDAO getAnswersListerDAO() {
+		return answersListerDAO;
+	}
+
+	public void setAnswersListerDAO(AnswersListerDAO answersListerDAO) {
+		this.answersListerDAO = answersListerDAO;
+	}
+
+	public UserDAO getUserDAO() {
+		return userDAO;
+	}
+
+	public void setUserDAO(UserDAO userDAO) {
+		this.userDAO = userDAO;
 	}
 
 }

@@ -19,10 +19,10 @@ import org.expressme.openid.Endpoint;
 import org.expressme.openid.OpenIdManager;
 
 import br.unifesp.maritaca.business.login.LoginEJB;
-import br.unifesp.maritaca.persistence.dto.UserDTO;
+import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
 import br.unifesp.maritaca.web.base.MaritacaJSFBean;
 import br.unifesp.maritaca.web.jsf.account.AccountEditorBean;
-import br.unifesp.maritaca.web.utils.Utils;
+import br.unifesp.maritaca.web.utils.UtilsWeb;
 
 @ManagedBean
 @SessionScoped
@@ -137,8 +137,8 @@ public class OpenIdLoginBean extends MaritacaJSFBean implements Serializable{
 		try {
 			FacesContext       context     = FacesContext.getCurrentInstance();
 			String             op          = parseOp(context);			
-			String             returnUrl   = Utils.buildViewUrl("/views/openIdLogin.xhtml");
-			String             returnRealm = Utils.buildServerAddressUrl();
+			String             returnUrl   = UtilsWeb.buildViewUrl("/views/openIdLogin.xhtml");
+			String             returnRealm = UtilsWeb.buildServerAddressUrl();
 	        HttpServletRequest request     = (HttpServletRequest) context.getExternalContext().getRequest();
 									
 			setManager(new OpenIdManager());
@@ -163,7 +163,7 @@ public class OpenIdLoginBean extends MaritacaJSFBean implements Serializable{
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			throw new RuntimeException(
-					Utils.getMessageFromResourceProperties("login_open_id_error"));
+					UtilsWeb.getMessageFromResourceProperties("login_open_id_error"));
 		}
 	}
 

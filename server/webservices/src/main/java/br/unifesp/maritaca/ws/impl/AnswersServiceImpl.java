@@ -5,23 +5,18 @@ import java.util.UUID;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
 import br.unifesp.maritaca.business.answer.list.AnswersListerEJB;
 import br.unifesp.maritaca.core.Answer;
-import br.unifesp.maritaca.core.User;
-import br.unifesp.maritaca.model.FormAnswerModel;
-import br.unifesp.maritaca.model.ModelFactory;
-import br.unifesp.maritaca.persistence.dto.UserDTO;
 import br.unifesp.maritaca.ws.api.AnswersService;
 import br.unifesp.maritaca.ws.api.resp.AnswerListResponse;
 import br.unifesp.maritaca.ws.api.resp.ErrorResponse;
 import br.unifesp.maritaca.ws.api.resp.MaritacaResponse;
-import br.unifesp.maritaca.ws.api.resp.XmlSavedResponse;
 import br.unifesp.maritaca.ws.exceptions.MaritacaWSException;
 import br.unifesp.maritaca.ws.util.UtilsWS;
 

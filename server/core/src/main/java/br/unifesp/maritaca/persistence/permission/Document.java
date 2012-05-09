@@ -10,7 +10,7 @@ public enum Document {
 		this.idDocument = idDocument;
 	}
 
-	public Integer getIdDocument() {
+	public Integer getId() {
 		return idDocument;
 	}
 

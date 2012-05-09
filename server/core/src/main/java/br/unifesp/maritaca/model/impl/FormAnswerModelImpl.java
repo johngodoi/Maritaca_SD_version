@@ -17,7 +17,6 @@ import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormPermissions;
 import br.unifesp.maritaca.core.MaritacaList;
 import br.unifesp.maritaca.core.User;
-import br.unifesp.maritaca.exception.AuthorizationDenied;
 import br.unifesp.maritaca.model.FormAnswerModel;
 import br.unifesp.maritaca.model.UseEntityManager;
 import br.unifesp.maritaca.model.UserModel;
@@ -78,7 +77,7 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 				// check permissions for updating
 				Form originalForm = getForm(form.getKey(), true);
 				if(!currentUserHasPermission(originalForm, Operation.UPDATE)){
-					throw new AuthorizationDenied(Form.class, form.getKey(), getCurrentUser().getKey(), Operation.UPDATE);
+//					throw new AuthorizationDenied(Form.class, form.getKey(), getCurrentUser().getKey(), Operation.UPDATE);
 				}
 			}
 			if (entityManager.persist(form)) {
@@ -123,7 +122,8 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 		if(userHasPermission(getCurrentUser(), form, Operation.READ)){
 			return form;	
 		} else {
-			throw new AuthorizationDenied(Form.class, form.getKey(), getCurrentUser().getKey(), Operation.READ);
+//			throw new AuthorizationDenied(Form.class, form.getKey(), getCurrentUser().getKey(), Operation.READ);
+			return null;
 		}		
 	}
 
@@ -202,7 +202,7 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 			entityManager.delete(form);
 			// TODO delete answers?
 		} else {
-			throw new AuthorizationDenied(Form.class, form.getKey(), getCurrentUser().getKey(), Operation.DELETE);
+//			throw new AuthorizationDenied(Form.class, form.getKey(), getCurrentUser().getKey(), Operation.DELETE);
 		}
 	}
 
@@ -267,7 +267,7 @@ public class FormAnswerModelImpl implements FormAnswerModel, UseEntityManager, S
 
 		if(fp.getKey()!=null && !currentUserHasPermission(fp.getForm(),Operation.UPDATE)){
 		// Form exists and user does not have permission to update
-			throw new AuthorizationDenied(Form.class, fp.getForm().getKey(), getCurrentUser().getKey(), Operation.UPDATE);
+//			throw new AuthorizationDenied(Form.class, fp.getForm().getKey(), getCurrentUser().getKey(), Operation.UPDATE);
 		}
 
 		// verify if form and list exists

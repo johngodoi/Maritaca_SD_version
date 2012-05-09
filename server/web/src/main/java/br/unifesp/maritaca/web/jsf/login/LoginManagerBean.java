@@ -6,9 +6,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
-import br.unifesp.maritaca.persistence.dto.UserDTO;
+import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
 import br.unifesp.maritaca.web.base.MaritacaJSFBean;
-import br.unifesp.maritaca.web.utils.Utils;
+import br.unifesp.maritaca.web.utils.UtilsWeb;
 
 @ManagedBean
 @SessionScoped
@@ -30,11 +30,11 @@ public class LoginManagerBean extends MaritacaJSFBean{
 		try {
 			String successfulLoginUrl;
 			
-			if (getRedirectUri()!= null && getResponseType()!=null && getClientId()!=null) {	
+			if (isValidOAuthParameters()) {	
 				// TODO implement the query to ask to the user if allows access to its resources
-				successfulLoginUrl = Utils.buildServletUrl("/oauth/authorizationConfirm") + buildQueryString();
+				successfulLoginUrl = UtilsWeb.buildServletUrl("/oauth/authorizationConfirm") + buildQueryString();
 			} else {
-				successfulLoginUrl = Utils.buildViewUrl("/views/home.xhtml");
+				successfulLoginUrl = UtilsWeb.buildViewUrl("/views/home.xhtml");
 			}
 			
 			FacesContext context = FacesContext.getCurrentInstance();
@@ -44,6 +44,14 @@ public class LoginManagerBean extends MaritacaJSFBean{
 		}
 	}
 	
+	private boolean isValidOAuthParameters() {
+		boolean validRedirectUri  = getRedirectUri()!=null && !getRedirectUri().equals("");
+		boolean validResponseType = getResponseType()!=null && !getResponseType().equals("");
+		boolean validClientId     = getClientId()!=null && !getClientId().equals("");
+		
+		return validRedirectUri && validResponseType && validClientId;
+	}
+
 	public String currentUserEmail(){
 		return getCurrentUser().getEmail();
 	}

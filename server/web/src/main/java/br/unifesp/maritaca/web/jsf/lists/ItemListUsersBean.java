@@ -3,8 +3,8 @@ package br.unifesp.maritaca.web.jsf.lists;
 import java.util.List;
 import java.util.UUID;
 
+import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
 import br.unifesp.maritaca.business.list.edit.ListEditorEJB;
-import br.unifesp.maritaca.persistence.dto.UserDTO;
 import br.unifesp.maritaca.web.jsf.util.ItemList;
 
 public class ItemListUsersBean extends ItemList<UserDTO>{
