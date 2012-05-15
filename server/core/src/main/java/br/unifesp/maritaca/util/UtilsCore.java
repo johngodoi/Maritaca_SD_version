@@ -8,7 +8,7 @@ import org.apache.commons.lang.RandomStringUtils;
 import br.unifesp.maritaca.persistence.EntityManager;
 
 public class UtilsCore {
-	private static final int STRING_LENGTH = 10;
+	private static final int STRING_LENGTH = 11;
 
 	public static final String randomString() {
 		return randomString(STRING_LENGTH);
