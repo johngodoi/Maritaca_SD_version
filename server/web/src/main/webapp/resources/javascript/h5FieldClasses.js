@@ -14,16 +14,20 @@
 //	See TextBox class as example
 //
 var Field = function() {
-	this.type = '';
-	this.id = '';
+	this.type     = '';
+	this.id       = '';
 	this.required = false;
-
-	this.title = '';
-	this.help = '';
 	
-	this.toHTML = function() {
+	this.title    = '';
+	this.help     = '';
+	
+	this.lastCondTableId = 0;	
+	this.conditionals    = new Array();
+	
+	this.toHTML = function(i) {
 		var html = '';
-		html += '<label class="fieldLabel" for="label_' + this.id + '">';
+		html += '<label class="fieldLabel" for="label_' + this.id + '"> ';
+		html += idToQuestionNumber("field_"+i) + " - ";
 		html += this.title;
 		if(this.required)
 			html += ' <span class="required">*</span>';
@@ -56,9 +60,58 @@ var Field = function() {
 		xml += '>';
 		xml += tagCreator('label', this.title);
 		xml += tagCreator('help', this.help);
+		xml += this.addConditionalsXML();
 		xml += this.addXMLElements();
 		xml += '</' + this.type + '>';
 		return xml;
+	};
+	
+	this.addConditionalsXML = function(){
+		var xml = '';
+		
+		for(var i=0; i<this.conditionals.length; i++){
+			xml += '<if ';
+			var comparator = this.symbolToString(this.conditionals[i].comparator);
+			xml += 'comparison="'+comparator+'" ';
+			xml += 'value="'+this.conditionals[i].value+'" ';
+			xml += 'goto="'+this.conditionals[i].goTo+'" />';
+		}
+		
+		return xml;
+	};
+	
+	this.symbolToString = function(symbol){				
+		switch(symbol){
+			case "<":
+				return "less";
+			case "<=":
+				return "lessequal";
+			case ">":
+				return "greater";
+			case ">=":
+				return "greaterequal";
+			case "==":
+				return "equal";
+			default:
+				addMessage(jQuery.i18n.prop('msg_error_form_parsing'), 'error');				
+		}
+	};
+	
+	this.stringToSymbol = function(string){
+		switch(string){
+			case "less":
+				return "<";
+			case "lessequal":
+				return "<=";
+			case "greater":
+				return ">";
+			case "greaterequal":
+				return ">=";
+			case "equal":
+				return "==";
+			default:
+				addMessage(jQuery.i18n.prop('msg_error_form_parsing'), 'error');
+		}		
 	};
 	
 	this.setJSONValues = function(element){
@@ -67,24 +120,139 @@ var Field = function() {
 		this.required = element.required;
 		this.title = element.title;
 		this.help = element.help;
+		this.conditionals = element.conditionals;
 		this.setJSONValuesSpecific(element);
 	};
 	
 	this.showProperties = function(){
 		// general properties are:
 		var label = jQuery.i18n.prop('msg_field_labelProperty');
-		var help = jQuery.i18n.prop('msg_field_helpProperty');
+		var help  = jQuery.i18n.prop('msg_field_helpProperty');
 		
 		var html = '<table>';
 		html += createTextProperty('fieldLabel', this.title, label);
 		html += createTextProperty('fieldHelp', this.help, help);
 		html += createRequiredProperty(this.required);
 		
+		if(nextQuestions = $('fieldset#xmlForm > ol > li.editing').nextAll().length<=1){
+			this.conditionals = new Array();
+		} else {
+			html += this.addConditions();
+		}
+		
 		html += this.showSpecificProperties();
-
 		html += '</table>';
 		
 		$('#properties').append(html);
+	};
+	
+	this.addConditions = function(){
+		var html       = "";
+		var htmlCondBt = this.addConditionalButton();
+		
+		for(var i=0; i<this.conditionals.length; i++){
+			comparison = this.conditionals[i].comparator;
+			value      = this.conditionals[i].value;
+			goTo       = this.conditionals[i].goTo;
+			
+			html += this.createConditionalProperty(comparison,value,goTo);
+		}
+		
+		html += htmlCondBt;						
+		return html;
+	};
+
+	this.removeConditional = function(tableId){
+		$("table.condPropTable#"+tableId).parent().parent().remove();
+	};
+
+	this.removeConditionalButton = function(tableId){
+		return	'<img src="../../resources/img/delete.png" class="removeConditional"'+
+				'onclick="new Field().removeConditional('+tableId+');saveField()"/>';
+	};
+
+	this.createConditionalProperty = function(comparison, value, goTo){		
+		var ifHtml        = tagCreator('label',jQuery.i18n.prop('msg_field_if_conditional'));
+		var comboHtml     = this.conditionalComboBox(comparison);
+		var inputIfHtml   = inputCreator('text',null,value,null,null,'valueCond');
+		var removeIfBtHtml= this.removeConditionalButton(this.lastCondTableId);
+		
+		var ifTdOneHtml   = tagCreator('td', ifHtml);
+		var ifTdTwoHtml   = tagCreator('td', comboHtml+inputIfHtml+removeIfBtHtml);
+		
+		var rowOne        = ifTdOneHtml + ifTdTwoHtml;	
+		var rowOneHtml    = tagCreator('tr', rowOne);
+		
+		var thenHtml      = tagCreator('label',jQuery.i18n.prop('msg_field_then_conditional'));
+		var inputThenHtml = this.goToBox(goTo);
+		
+		var thenTdOneHtml = tagCreator('td', thenHtml,'alignRight');
+		var thenTdTwoHtml = tagCreator('td', inputThenHtml);		
+		
+		var rowTwo        = thenTdOneHtml + thenTdTwoHtml; 
+		var rowTwoHtml    = tagCreator('tr',rowTwo);
+		
+		var tableHtml     = '<table class="condPropTable" id="'+this.lastCondTableId+'">'; 
+		tableHtml        += rowOneHtml + rowTwoHtml + '</table>';
+		
+		tableHtml         = '<tr><td colspan="2">'+tableHtml+'</td></tr>';
+		
+		this.lastTableId++;
+
+		return tableHtml;
+	};
+	
+	this.goToBox = function(goTo){
+		var nextQuestions = $('fieldset#xmlForm > ol > li.editing').nextAll();
+		
+		var html = '<select class="goToCond" onchange="saveField();">';
+		for(var i=0; i<nextQuestions.length; i++){
+			var selected="";
+			if(nextQuestions[i].id == goTo){
+				selected = 'selected="selected"';
+			}
+			var questionOption = nextQuestions[i].textContent;
+			html += '<option '+selected+'>' + questionOption + '</option>';
+		}
+		html += '</select>';
+				
+		return html;
+	};
+	
+	this.addConditionalProperty = function(){
+		var tableHtml = this.createConditionalProperty('','','');				
+		$("#addConditionalTable:first-child").prepend(tableHtml);
+	};
+
+	this.conditionalComboBox = function(selectedValue){
+		var options = "";
+		var conditionals = ["==", "<", "<=", ">", ">="];	
+		for(var i=0; i<conditionals.length; i++){
+			if(conditionals[i] == selectedValue){
+				options += '<option selected="selected">' + conditionals[i] + '</option>';
+			} else {
+				options += tagCreator('option',conditionals[i]);
+			}
+		}
+		var comboBox = '<select class="compCond">'+options+'</select>';
+
+		return comboBox;
+	};
+		
+	this.addConditionalButton = function(){
+		msgAdd = jQuery.i18n.prop('msg_field_add_conditional');
+		
+		var html =	'<tr><td colspan="2">'+
+		    '<table id="addConditionalTable">'+
+		    '<tr><td colspan="2">'+
+			'<button type="button" onclick="new Field().addConditionalProperty();">'+						
+				msgAdd+
+			'</button>'+
+			'</td></tr>'+
+			'</table>'+
+			'</td></tr>';
+		
+		return html;		
 	};
 	
 	this.saveProperties = function(){
@@ -92,23 +260,58 @@ var Field = function() {
 			return;
 		}		
 		this.title = $('#fieldLabel').val();
-		this.help = $('#fieldHelp').val();
+		this.help  = $('#fieldHelp').val();
 		this.required = $('#fieldRequiredTrue').is(':checked');
+		this.conditionals = this.retrieveConditionals();
 		this.saveSpecificProperties();
+	};
+	
+	this.retrieveConditionals = function (){
+		var localConditionals = new Array();
+		
+		var condComps  = $('select.compCond');
+		var condValues = $('input.valueCond');
+		var condGoTos  = $('select.goToCond > option:selected');
+		var condIds    = $('table.condPropTable');
+				
+		for(var i=0; i<condValues.length; i++){
+			var conditional = {};
+			
+			conditional.comparator=condComps[i].value;
+			conditional.value=condValues[i].value;
+			conditional.goTo=questionNumberToId(condGoTos[i].value);
+			conditional.id=condIds[i].attributes[1].value;
+			
+			localConditionals.push(conditional);
+		};
+		
+		return localConditionals;
 	};
 	
 	this.setFromXMLDoc = function(xmlDoc){
 		var $xmlDoc = $( xmlDoc );
 		if(xmlDoc.nodeName != this.type){
-			console.error(xmlDoc.nodeName + "is not a compatible type for " + this.type);
+			console.error(xmlDoc.nodeName + " is not a compatible type for " + this.type);
 			return;
 		}
-		this.id = $xmlDoc.attr('id');
+		this.id        = $xmlDoc.attr('id');
 		var isRequired = $xmlDoc.attr('required');
-		this.required = isRequired == 'true'? true : false;
+		this.required  = isRequired == 'true'? true : false;
 
-		this.title = $xmlDoc.find('label').text();
-		this.help = $xmlDoc.find('help').text();
+		this.title     = $xmlDoc.find('label').text();
+		this.help      = $xmlDoc.find('help').text();
+		
+		this.conditionals = new Array();
+		var listConditionals = $xmlDoc.find('if');
+		for(var i=0; i<listConditionals.length; i++){
+			var conditional = {};
+			var conditionalElement = listConditionals[i];
+			conditional.comparator=this.stringToSymbol(conditionalElement.attributes[0].value);
+			conditional.value = conditionalElement.attributes[1].value;
+			conditional.goTo  = conditionalElement.attributes[2].value;			
+			this.conditionals.push(conditional);
+		}
+		
 		this.setSpecificFromXMLDoc($xmlDoc);
 	};
 };
@@ -140,6 +343,7 @@ var TextBox = function() {
 	};
 	
 	this.addXMLSpecificAttributes = function() {
+		var xml = '';
 		if(this.bydefault)
 			xml += attribCreator('value', this.bydefault);
 		return xml;

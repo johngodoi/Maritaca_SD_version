@@ -336,6 +336,19 @@ function deleteField() {
 		warning = false;
 }
 
+function idToQuestionNumber(id){
+	var idNumber = id.split("_")[1];
+	idNumber++;
+	
+	return jQuery.i18n.prop('msg_form_question') + " " + idNumber;	
+};
+
+function questionNumberToId(questionNumber){
+	var idNumber = questionNumber.split(" ")[1];
+	idNumber--;
+	return "field_"+idNumber;
+};
+
 function saveField() {
 	var element = form.elements[editElement];
 	element.saveProperties();
