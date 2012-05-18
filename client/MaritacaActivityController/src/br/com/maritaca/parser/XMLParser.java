@@ -212,7 +212,7 @@ public class XMLParser {
 		setUserid(teste.getFirstChild().getNodeValue());
 		// Log.v("ARLINDO", "testes: + "+teste.getFirstChild().getNodeValue());
 
-		list = document.getElementsByTagName("question");
+		list = document.getElementsByTagName("questions");
 		teste = list.item(0);
 		Log.v("ARLINDO", "testes: + " + teste.getNodeName());
 
