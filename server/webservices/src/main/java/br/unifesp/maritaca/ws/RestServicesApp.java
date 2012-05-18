@@ -5,8 +5,8 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
-import br.unifesp.maritaca.ws.impl.AnswersServiceImpl;
-import br.unifesp.maritaca.ws.impl.FormsServiceImpl;
+import br.unifesp.maritaca.ws.api.impl.AnswersServiceImpl;
+import br.unifesp.maritaca.ws.api.impl.FormsServiceImpl;
 import br.unifesp.maritaca.ws.util.MaritacaExceptionMapper;
 
 public class RestServicesApp extends Application {

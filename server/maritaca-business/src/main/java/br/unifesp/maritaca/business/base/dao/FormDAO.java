@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-import br.unifesp.maritaca.business.base.MaritacaConstants;
+import br.unifesp.maritaca.business.util.ConstantsBusiness;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.FormAccessibleByList;
 import br.unifesp.maritaca.core.MaritacaList;
@@ -120,7 +120,7 @@ public class FormDAO extends BaseDAO {
 		
 		List<MaritacaList> mLists = new ArrayList<MaritacaList>(getAllMaritacaLists());			
 		for(MaritacaList mlist : mLists) {
-			if(mlist.getUsers() != null && !mlist.getName().equals(MaritacaConstants.ALL_USERS) && mlist.getUsers().contains(userKey)) {
+			if(mlist.getUsers() != null && !mlist.getName().equals(ConstantsBusiness.ALL_USERS) && mlist.getUsers().contains(userKey)) {
 				FormAccessibleByList form = this.findFormAccesibleByKey(mlist.getKey());
 				if(form !=null && !forms.contains(form))
 					forms.add(form);

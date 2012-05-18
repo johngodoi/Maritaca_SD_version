@@ -16,8 +16,8 @@ import br.unifesp.maritaca.ws.api.resp.XmlSavedResponse;
 /**
  * Class to generate the XML/JSON correctly for
  * the responses in restful
+ * 
  * @author emigueltriana
- *
  */
 @Provider
 public class JAXBContextResolver implements ContextResolver<JAXBContext> {

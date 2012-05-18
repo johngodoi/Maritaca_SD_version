@@ -12,6 +12,7 @@ import br.unifesp.maritaca.persistence.annotations.Minimal;
 
 @Entity
 public class CFforTesting{
+	
 	@Id
 	private UUID key;
 	
@@ -25,6 +26,9 @@ public class CFforTesting{
 	@Column
 	@JSONValue
 	private List<UUID> list;
+	
+	@Column(multi=true)
+	private List<String> multiColumnList;
 	
 	public UUID getKey() {
 		return key;
@@ -52,5 +56,11 @@ public class CFforTesting{
 	}
 	public void setList(List<UUID> list) {
 		this.list = list;
+	}
+	public List<String> getMultiColumnList() {
+		return multiColumnList;
+	}
+	public void setMultiColumnList(List<String> multiColumnList) {
+		this.multiColumnList = multiColumnList;
 	}
 }

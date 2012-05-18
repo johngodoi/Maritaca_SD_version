@@ -128,19 +128,29 @@ public class EntityManagerHectorImpl implements EntityManager, Serializable {
 			}
 
 			if (result != null) {
-				HColumn column = getHColumn(f.getName(), result);
-
-				if(f.isAnnotationPresent(JSONValue.class)){
-					Gson gson = new Gson();
-					result = gson.toJson(result);					
+				if(f.isAnnotationPresent(Column.class) && f.getAnnotation(Column.class).multi()){
+					if(!(result instanceof List)){
+						throw new RuntimeException("Result is not a list: "+result.getClass().getName());
+					}
+					List resultList = (List) result;
+					HColumn column; 
+					int i = 0;
+					for(Object listObj : resultList){
+						column = getHColumn(f.getName() + i, listObj);
+						i++;
+						saveColumn(obj, mutator, key, f, column);
+					}
+					
+				} else {
+					HColumn column = getHColumn(f.getName(), result);
+					
+					if(f.isAnnotationPresent(JSONValue.class)){
+						Gson gson = new Gson();
+						result = gson.toJson(result);					
+					}
+					
+					saveColumn(obj, mutator, key, f, column);
 				}
-				
-				int timeToLive = (f.getAnnotation(Column.class)).ttl();				
-				if(timeToLive>0) {					
-					column.setTtl(timeToLive);
-				}
-				
-				mutator.addInsertion(key, obj.getClass().getSimpleName(), column);
 			}
 		}
 
@@ -151,6 +161,15 @@ public class EntityManagerHectorImpl implements EntityManager, Serializable {
 		}
 
 		return true;
+	}
+
+	private void saveColumn(Object obj, Mutator<UUID> mutator, UUID key, Field f,
+			HColumn column) {
+		int timeToLive = (f.getAnnotation(Column.class)).ttl();				
+		if(timeToLive>0) {					
+			column.setTtl(timeToLive);
+		}		
+		mutator.addInsertion(key, obj.getClass().getSimpleName(), column);
 	}
 
 	private HColumn getHColumn(String columnname, Object obj) {

@@ -13,7 +13,6 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -106,6 +105,25 @@ public class EntityManagerHectorImplTest extends BaseEmbededServerSetupTest {
 		for (CFforTesting cf : lresult) {
 			assertNull(cf.getBigData());
 		}
+	}
+	
+	public void testMultiColumn() {
+		CFforTesting cfTest = new CFforTesting();
+		List<String> multiColumnList = new ArrayList<String>();
+		multiColumnList.add("test1");
+		multiColumnList.add("test2");
+		multiColumnList.add("test3");
+		
+		cfTest.setMultiColumnList(multiColumnList);
+		
+		emHectorImpl.persist(cfTest);
+		
+		assertTrue(cfTest.getKey() != null);
+		
+		CFforTesting cfTest1 = emHectorImpl.find(CFforTesting.class, cfTest.getKey());
+		
+		assertTrue("not equal MultiColumn", cfTest1.getMultiColumnList().containsAll(multiColumnList));
+		assertTrue("not equal MultiColumn", cfTest1.getMultiColumnList().size() == multiColumnList.size());
 	}
 
 }

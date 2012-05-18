@@ -21,10 +21,10 @@ import net.smartam.leeloo.rs.request.OAuthAccessResourceRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import br.unifesp.maritaca.business.base.MaritacaConstants;
 import br.unifesp.maritaca.business.exception.MaritacaException;
 import br.unifesp.maritaca.business.oauth.OAuthEJB;
 import br.unifesp.maritaca.business.oauth.OAuthTokenDTO;
+import br.unifesp.maritaca.business.util.ConstantsBusiness;
 
 /**
  * OAuth Filter that filter requests to resources.
@@ -88,7 +88,7 @@ public class OAuthFilter implements Filter {
 				return;
 			}
 			
-			request.setAttribute(MaritacaConstants.WS_USER_KEY, oauthTokenDTO.getUser());
+			request.setAttribute(ConstantsBusiness.WS_USER_KEY, oauthTokenDTO.getUser());
 			
 			log.info("doFilter");
 			filterChain.doFilter(request, response);

@@ -11,7 +11,6 @@ import javax.inject.Inject;
 import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
 import br.unifesp.maritaca.business.base.AbstractEJB;
-import br.unifesp.maritaca.business.base.MaritacaConstants;
 import br.unifesp.maritaca.business.base.dao.FormDAO;
 import br.unifesp.maritaca.business.base.dao.UserDAO;
 import br.unifesp.maritaca.business.exception.AuthorizationDenied;
@@ -19,6 +18,7 @@ import br.unifesp.maritaca.business.form.dto.FormDTO;
 import br.unifesp.maritaca.business.form.edit.dao.FormEditorDAO;
 import br.unifesp.maritaca.business.list.list.dao.ListMaritacaListDAO;
 import br.unifesp.maritaca.business.list.list.dto.MaritacaListDTO;
+import br.unifesp.maritaca.business.util.ConstantsBusiness;
 import br.unifesp.maritaca.business.util.UtilsBusiness;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.MaritacaList;
@@ -59,10 +59,6 @@ public class FormEditorEJB extends AbstractEJB {
 		
 		formDAO.persistForm(form);
 		formDTO.setKey(form.getKey());
-		
-		if(isCreateAnswers()){
-			formEditorDAO.createRandownAnswer(form);
-		}		
 	}
 	
 	/**
@@ -242,7 +238,7 @@ public class FormEditorEJB extends AbstractEJB {
 		if(form != null && form.getLists() != null && !form.getLists().isEmpty()) {
 			for(UUID uuid : form.getLists()) {
 				MaritacaList mList = listMaritacaListDAO.getMaritacaList(uuid);
-				if(mList != null && !mList.getName().equals(MaritacaConstants.ALL_USERS)) {
+				if(mList != null && !mList.getName().equals(ConstantsBusiness.ALL_USERS)) {
 					lstItems.add(UtilsBusiness.convertToClass(mList, MaritacaListDTO.class));
 				}
 			}

@@ -12,6 +12,11 @@ import br.unifesp.maritaca.business.form.dto.FormDTO;
 import br.unifesp.maritaca.ws.api.resp.MaritacaResponse;
 import br.unifesp.maritaca.ws.exceptions.MaritacaWSException;
 
+/**
+ * This Interface defines RESTFul services to Form.
+ * 
+ * @author emigueltriana and alvarohenry
+ */
 public interface FormsService {
 	/**
 	 * 

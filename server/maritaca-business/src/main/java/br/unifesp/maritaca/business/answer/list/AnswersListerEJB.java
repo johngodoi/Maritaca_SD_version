@@ -12,6 +12,7 @@ import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
 import br.unifesp.maritaca.business.answer.list.dao.AnswersListerDAO;
 import br.unifesp.maritaca.business.answer.list.dto.AnswerDTO;
 import br.unifesp.maritaca.business.answer.list.dto.AnswerListerDTO;
+import br.unifesp.maritaca.business.answer.list.dto.DataCollectedDTO;
 import br.unifesp.maritaca.business.base.AbstractEJB;
 import br.unifesp.maritaca.business.base.dao.UserDAO;
 import br.unifesp.maritaca.business.exception.AuthorizationDenied;
@@ -62,7 +63,8 @@ public class AnswersListerEJB extends AbstractEJB {
 			for (Answer answer : listAnswers) {
 				answerDTO = new AnswerDTO();
 				
-				List<String> listAnswerParsed = XmlParser.parseAnswers(answer.getXml());
+				// TODO 
+				List<String> listAnswerParsed = new ArrayList<String>();
 				
 				answerDTO.setUserEmail(this.getUserEmailbyUserKey(answer.getUser().getKey()));
 				answerDTO.setCollectDate(answer.getCollectionDate());
@@ -77,7 +79,7 @@ public class AnswersListerEJB extends AbstractEJB {
 
 		return answerListerDTO;
 	}
-
+	
 	private String getUserEmailbyUserKey(UUID userKey) {
 		return getUserDAO().findUserByKey(userKey).getEmail();
 	}

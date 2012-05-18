@@ -5,7 +5,7 @@ import java.util.UUID;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import br.unifesp.maritaca.business.base.MaritacaConstants;
+import br.unifesp.maritaca.business.util.ConstantsBusiness;
 
 
 public class UserDTO implements Cloneable{
@@ -14,7 +14,7 @@ public class UserDTO implements Cloneable{
 	
 	private UUID maritacaList;
 	
-	@Pattern(regexp = MaritacaConstants.EMAIL_REG_EXP)
+	@Pattern(regexp = ConstantsBusiness.EMAIL_REG_EXP)
 	private String email;
 	
 	@Size(min = 3, max = 20)

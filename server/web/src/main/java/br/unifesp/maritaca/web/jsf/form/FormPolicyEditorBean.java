@@ -7,10 +7,10 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
-import br.unifesp.maritaca.business.base.MaritacaConstants;
 import br.unifesp.maritaca.business.form.dto.FormDTO;
 import br.unifesp.maritaca.business.form.edit.FormEditorEJB;
 import br.unifesp.maritaca.web.base.MaritacaJSFBean;
+import br.unifesp.maritaca.web.utils.ConstantsWeb;
 
 /**
  * Managed bean for the Form sharing service the bean loads the url for sharing.
@@ -54,7 +54,7 @@ public class FormPolicyEditorBean extends MaritacaJSFBean {
 	}
 	
 	public String cancel(){
-		return MaritacaConstants.FACES_HOME;
+		return ConstantsWeb.FACES_HOME;
 	}
 	
 	private FormDTO updateFormDTO(FormDTO formDTO) {
