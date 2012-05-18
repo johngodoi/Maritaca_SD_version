@@ -1,0 +1,72 @@
+<form>
+    <formid>ABC</formid>
+    <userid>XYZ</userid>
+    <question> 
+		<text id="0" next="1" required="true" max="15">
+			<help>Enter with name of user.</help>
+			<label>0</label>
+			<default>Arlindo Flavio</default>
+		</text>
+	    
+	    <number id="1" next="2" required="false" min="0" max="100">
+	            <help>How old are you?</help>
+	            <label>1</label>
+	            <default>24</default>
+	            <if comparison="equal" val="24" goto="4" />
+	            <!-- special tag end, that sends the user to the end of the data gathering 
+	                (a screen asking if he/she wants to quit, continue, save, or upload data...) -->
+	            <if comparison="greater" val="100" goto="-1" /> <!-- sorry, you should be dead -->
+	            <if comparison="less" val="18" goto="-1" /> <!-- forbidden for under 18 -->
+<!-- 	            <if comparison="greaterequal" val="10" goto="2" /> -->
+	            <if comparison="lessequal" val="10" goto="2" />
+	    </number>
+	    
+	    <text id="2" next="3" required="false" max="2800">
+			<help>Terceira question, sem help</help>
+			<label>2</label>
+			<default>Sir Bruno</default>
+	    </text>
+	    
+	   <text id="3" next="4" required="true" max="100">
+			<help>Enter with name of user.</help>
+			<label>3</label>
+			<default>Fulano</default>
+			<if comparison="equal" val="ciclano" goto="3" />
+	   </text>
+	   
+	   <number id="4" next="5" required="false" min="0" max="100">
+	            <help>How old are the user?</help>
+	            <label>4</label>
+	            <default>0</default>
+	            <if comparison="equal" val="15" goto="2" />
+	            <!-- special tag end, that sends the user to the end of the data gathering 
+	                (a screen asking if he/she wants to quit, continue, save, or upload data...) -->
+	            <if comparison="greaterequal" val="25" goto="6" />
+	            <if comparison="greater" val="17" goto="1" /> <!-- sorry, you should be dead -->
+	             <if comparison="lessequal" val="7" goto="7" />
+	            <if comparison="less" val="13" goto="3" /> <!-- forbidden for under 18 -->
+	           
+	           
+	    </number>
+	    
+	   
+	   <text id="5" next="6" required="true" max="15">
+			<help>Quinta questao.</help>
+			<label>5:</label>
+			<default>Arlindo Flavio</default>
+		</text> 
+		
+	   <text id="6" next="7" required="true" max="15">
+			<help>Sexta questao.</help>
+			<label>6:</label>
+			<default>Arlindo Flavio</default>
+		</text> 
+		
+	   <text id="7" next="-1" required="true" max="15">
+			<help>Sexta questao.</help>
+			<label>7</label>
+			<default>Arlindo Flavio</default>
+		</text> 
+	   
+	</question>    
+</form>

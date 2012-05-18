@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, MaritacaActivity!</string>
+    <string name="app_name">Maritaca</string>
+    <string name="label">Digite o código</string>
+    <string name="botaoEnviar">Enviar</string>
+
+</resources>
