@@ -3,10 +3,17 @@
 var inputCreator = function(type, id, value, name, size, styleClass) {
 	var inputString = '<input ';
 	inputString += attribCreator( 'type' , type);
-	inputString += attribCreator('id', id);
-	inputString += attribCreator('value', value);
+	if(id!=null){
+		inputString += attribCreator('id', id);
+	}
+	if(value!=null){
+		inputString += attribCreator('value', value);
+	}
 	inputString += attribCreator('onchange', 'saveField()');
-	inputString += attribCreator('class', styleClass);
+
+	if(styleClass!=null){
+		inputString += attribCreator('class', styleClass);
+	}
 	switch (type) {
 		case 'radio':
 			inputString += attribCreator('name', name);
@@ -27,8 +34,13 @@ var  attribCreator = function (field, value){
 	return field + '="' + value + '" ';
 };
 
-var  tagCreator = function (tag, value){
-	return '<' + tag + '>' + value + '</' + tag + '>';
+var  tagCreator = function (tag, value, styleClass){
+	styleTag = "";
+	if(styleClass!=null){
+		styleTag = " class=\""+styleClass+"\" ";
+	}
+	
+	return '<' + tag + styleTag + '>' + value + '</' + tag + '>';
 };
 
 //general method to create a label
@@ -74,8 +86,3 @@ var createRequiredProperty = function(value){
 	
 	return required;
 };
-
-
-
-
-
