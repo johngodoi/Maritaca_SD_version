@@ -41,7 +41,7 @@ var MaritacaMessage = function(){
 		}
 		var html = '<div id=' + this.id + ' class="maritacaMsg ' + typeclass + '">';
 		html += '<p>' + this.message + '</p></div>';
-		$('#maritacaMessages').append(html);
+		$('.maritacaMessages').append(html);
 		$('#' + this.id).fadeIn(400).delay(4000).fadeOut(400);
 		window.setTimeout("removeMessage('" + this.id + "')", 4800);
 		
