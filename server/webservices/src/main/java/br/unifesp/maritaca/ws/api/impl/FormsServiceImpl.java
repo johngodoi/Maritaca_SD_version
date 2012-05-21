@@ -63,11 +63,19 @@ public class FormsServiceImpl implements FormsService {
 	}
 
 	@Override
-	public MaritacaResponse listFormsMinimal(HttpServletRequest request) {
+	public MaritacaResponse listFormsMinimal(HttpServletRequest request) 
+			throws MaritacaWSException {
 		setUserDTO(UtilsWS.createUserDTO(request));
 		FormListResponse resp = new FormListResponse();
 		resp.setList(formListerEJB.getListOwnForms(getUserDTO()));
-		return resp;
+		if (resp.getList() != null) {
+			return resp;
+		} else {
+			ErrorResponse error = new ErrorResponse();
+			error.setCode(Response.Status.UNAUTHORIZED.getStatusCode());
+			error.setMessage("User not authorized");
+			throw new MaritacaWSException(error);
+		}
 	}
 
 	@Override
