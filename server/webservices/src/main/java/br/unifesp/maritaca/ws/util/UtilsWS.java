@@ -5,7 +5,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response.Status;
 
-import br.unifesp.maritaca.business.base.MaritacaConstants;
+import br.unifesp.maritaca.business.util.ConstantsBusiness;
 import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
 import br.unifesp.maritaca.ws.api.resp.ErrorResponse;
 import br.unifesp.maritaca.ws.exceptions.MaritacaWSException;
@@ -29,7 +29,7 @@ public class UtilsWS {
 	}
 	
 	public static UserDTO createUserDTO(HttpServletRequest request){
-		String userKey = (String) request.getAttribute(MaritacaConstants.WS_USER_KEY);
+		String userKey = (String) request.getAttribute(ConstantsBusiness.WS_USER_KEY);
 		UserDTO userDTO = new UserDTO();
 		userDTO.setKey(UUID.fromString(userKey));
 		return userDTO;

@@ -9,10 +9,10 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
-import br.unifesp.maritaca.business.base.MaritacaConstants;
 import br.unifesp.maritaca.business.list.edit.ListEditorEJB;
 import br.unifesp.maritaca.business.list.list.dto.MaritacaListDTO;
 import br.unifesp.maritaca.web.base.MaritacaJSFBean;
+import br.unifesp.maritaca.web.utils.ConstantsWeb;
 
 /**
  * Bean responsible for managing user groups.
@@ -93,7 +93,7 @@ public class ListEditorBean extends MaritacaJSFBean {
 	}
 
 	public String cancel() {
-		return MaritacaConstants.FACES_HOME;
+		return ConstantsWeb.FACES_HOME;
 	}
 	
 	public MaritacaListDTO getListDto() {

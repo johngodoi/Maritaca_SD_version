@@ -7,13 +7,15 @@ import javax.persistence.Id;
 
 import br.unifesp.maritaca.persistence.annotations.Column;
 import br.unifesp.maritaca.persistence.annotations.Minimal;
+import br.unifesp.maritaca.util.ConstantsCore;
 
 @Entity
 public class OAuthCode {
+	
 	@Id
 	private UUID key;
 	
-	@Column(indexed = true)
+	@Column(indexed = true, ttl=ConstantsCore.OAUTH_CODE_TIME_TO_LIVE)
 	@Minimal
 	private String code;
 	

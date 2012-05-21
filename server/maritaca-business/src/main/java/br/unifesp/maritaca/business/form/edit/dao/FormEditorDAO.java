@@ -21,7 +21,7 @@ public class FormEditorDAO extends BaseDAO {
 
 	@Inject private FormAccessibleByListDAO formAccessibleByListDAO;
 	
-	public void createOrUpdateFormAccessible(Form form, User owner) {
+	public void createOrUpdateFormAccessible(Form form, User owner, List<UUID> deletedLists) {
 		if(form.getKey() != null && owner != null) {
 			//form.getLists().remove(owner.getMaritacaList().getKey());//
 			for(UUID uuid : form.getLists()) {
@@ -43,6 +43,22 @@ public class FormEditorDAO extends BaseDAO {
 						}
 					}
 				}
+			}
+			//Delete Form from the List
+			if(!deletedLists.isEmpty()) {
+				removeLists(deletedLists);
+			}
+		}
+	}
+	
+	private void removeLists(List<UUID> deletedLists) {
+		for(UUID uuid : deletedLists) {
+			FormAccessibleByList formsByList = formAccessibleByListDAO.findFormAccesibleByKey(uuid);			
+			if(formsByList != null) {
+				if(formsByList.getForms().contains(uuid)) {
+					formsByList.getForms().remove(uuid);
+				}
+				formAccessibleByListDAO.persist(formsByList);
 			}
 		}
 	}
@@ -89,24 +105,6 @@ public class FormEditorDAO extends BaseDAO {
 		} else {
 //			throw new InvalidNumberOfEntries(groupName, MaritacaList.class);
 			return null;
-		}
-	}
-
-	/**
-	 * This is a temporary method used to test the answers visualization while
-	 * the mobile answers collector is being developed.
-	 * @param form
-	 */
-	public void createRandownAnswer(Form form) {
-		Random  rand = new Random();
-		Integer numAnswers = rand.nextInt(10)+2;
-		for(int i=0; i < numAnswers;i++){
-			Answer answer = new Answer();
-			answer.setForm(form);
-			answer.setXml(RandomAnswersCreator.createRandomAnswersFromForm(form.getXml()));
-			answer.setUser(form.getUser());
-			answer.setCollectionDate(new MaritacaDate());
-			entityManager.persist(answer);
 		}
 	}
 }

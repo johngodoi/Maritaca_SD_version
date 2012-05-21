@@ -1,18 +1,14 @@
 package br.unifesp.maritaca.core;
 
-import java.util.Date;
 import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import br.unifesp.maritaca.persistence.annotations.Column;
 import br.unifesp.maritaca.persistence.annotations.Minimal;
+import br.unifesp.maritaca.util.ConstantsCore;
 
-@XmlRootElement(name="token")
 @Entity
 public class OAuthToken {
 	@Id
@@ -22,7 +18,7 @@ public class OAuthToken {
 	@Minimal
 	private String refreshToken;
 	
-	@Column(indexed=true, ttl=3600)
+	@Column(indexed=true, ttl=ConstantsCore.OAUTH_EXPIRATION_DATE)
 	@Minimal
 	private String accessToken;
 	
@@ -30,15 +26,10 @@ public class OAuthToken {
 	@Minimal
 	private User user;
 	
-	@Column(indexed=true, ttl=3600)
-	@Minimal
-	private Date expirationDate;
-	
 	@Column
 	@Minimal
 	private String clientId;
 	
-	@XmlElement(name="refresh_token")
 	public String getRefreshToken() {
 		return refreshToken;
 	}
@@ -46,7 +37,6 @@ public class OAuthToken {
 		this.refreshToken = refreshToken;
 	}
 	
-	@XmlElement(name="access_token")
 	public String getAccessToken() {
 		return accessToken;
 	}
@@ -54,10 +44,10 @@ public class OAuthToken {
 		this.accessToken = accessToken;
 	}
 	
-	@XmlTransient
 	public User getUser() {
 		return user;
 	}
+	
 	public void setUser(User user) {
 		this.user = user;
 	}
@@ -67,19 +57,9 @@ public class OAuthToken {
 		user.setKey(key);
 		setUser(user);
 	}
-	
-	@XmlTransient
-	public Date getExpirationDate() {
-		return expirationDate;
-	}
-	
-	public void setExpirationDate(Date expirationDate) {
-		this.expirationDate = expirationDate;
-	}
-	
-	@XmlElement(name="expires_in")
+		
 	public long getExpiresIn(){
-		return 3600;//temporal
+		return ConstantsCore.OAUTH_EXPIRATION_DATE;
 	}
 	public UUID getKey() {
 		return key;

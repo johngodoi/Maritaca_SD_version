@@ -26,6 +26,7 @@ import br.unifesp.maritaca.business.oauth.OAuthClientDTO;
 import br.unifesp.maritaca.business.oauth.OAuthCodeDTO;
 import br.unifesp.maritaca.business.oauth.OAuthEJB;
 import br.unifesp.maritaca.business.oauth.OAuthTokenDTO;
+import br.unifesp.maritaca.util.ConstantsCore;
 
 /**
  * This Servlet provides the OAuth2 Services and generate the access code and
@@ -45,7 +46,6 @@ public class AuthorizationServer extends HttpServlet {
 	private static final String AUTHORIZATION_CONFIRM = "/authorizationConfirm";
 	private static final String ACCESS_TOKEN_REQUEST = "/accessTokenRequest";
 
-	private static final Long   OAUTH_EXPIRATION_TIME = 3600L;
 	private static final String OAUTH_USER_ID = "user_id";
 	private static final String OAUTH_ERROR_URI = "error_uri";
 	private static final String OAUTH_ERROR_DESCRIPTION = "error_description";
@@ -227,7 +227,7 @@ public class AuthorizationServer extends HttpServlet {
 			response.setContentType("application/json");
 			sendValuesInJson(response, 
 							 OAuth.OAUTH_ACCESS_TOKEN, tokenDTO.getAccessToken(),
-							 OAuth.OAUTH_EXPIRES_IN, String.valueOf(OAUTH_EXPIRATION_TIME),
+							 OAuth.OAUTH_EXPIRES_IN, String.valueOf(ConstantsCore.OAUTH_EXPIRATION_DATE),
 							 OAuth.OAUTH_REFRESH_TOKEN, tokenDTO.getRefreshToken());
 			response.setStatus(HttpURLConnection.HTTP_OK);
 		} catch (OAuthProblemException e) {

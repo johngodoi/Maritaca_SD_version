@@ -12,18 +12,7 @@
 	<composite:interface>
 		<composite:attribute name="submodule" required="true" />
 	</composite:interface>
-	<composite:implementation>
-	<h:outputStylesheet>
-		.right {
-        	text-align: right;
-        }
-        .left {
-        	text-align: left;
-        }
-        .center {
-        	text-align: center;
-        }
-    </h:outputStylesheet>       
+	<composite:implementation>  
         
 		<h:inputHidden value="#{formListerBean.allForms}" />
 	

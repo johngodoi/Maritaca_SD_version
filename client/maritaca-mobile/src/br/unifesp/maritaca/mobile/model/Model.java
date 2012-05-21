@@ -44,13 +44,17 @@ public class Model {
 		currentIdQuestion = questions[currentIdQuestion].getPrevious();
 	}
 	
-	public void save(){
+	public void save2() {
 		String output = new String();
 		for(int i = 0 ; i < questions.length; i++){
 			output += i + ": " + questions[i].getValue() + "\n";
 		}
 		Log.i("info", output);
 		//TODO Walkirya save data!!!
+	}
+	
+	public Question[] save() {
+		return questions;
 	}
 	
 	public boolean validate(){

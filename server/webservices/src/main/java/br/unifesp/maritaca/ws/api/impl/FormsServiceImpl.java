@@ -1,4 +1,4 @@
-package br.unifesp.maritaca.ws.impl;
+package br.unifesp.maritaca.ws.api.impl;
 
 import java.util.UUID;
 
@@ -22,6 +22,11 @@ import br.unifesp.maritaca.ws.api.resp.MaritacaResponse;
 import br.unifesp.maritaca.ws.exceptions.MaritacaWSException;
 import br.unifesp.maritaca.ws.util.UtilsWS;
 
+/**
+ * Class to implements FormService interface.
+ * 
+ * @author emigueltriana and alvarohenry
+ */
 @Stateless
 @Path("/form")
 public class FormsServiceImpl implements FormsService {

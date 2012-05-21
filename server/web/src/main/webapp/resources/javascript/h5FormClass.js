@@ -8,7 +8,7 @@ var FormClass = function() {
 			html += '<ol>';
 		for(var i in this.elements){
 			html += '<li id="field_' + i + '">';
-			html += this.elements[i].toHTML();
+			html += this.elements[i].toHTML(i);
 			html += '</li>';
 		}
 		html += '</ol>';

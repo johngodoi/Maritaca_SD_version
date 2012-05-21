@@ -11,4 +11,5 @@ public @interface Column {
 	String name() default "";
 	boolean indexed() default false;
 	int ttl() default 0;
+	boolean multi() default false;
 }

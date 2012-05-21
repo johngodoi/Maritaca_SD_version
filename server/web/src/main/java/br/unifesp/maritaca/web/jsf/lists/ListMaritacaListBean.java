@@ -25,7 +25,7 @@ public class ListMaritacaListBean extends MaritacaJSFBean {
 	private ListMaritacaListEJB   maritacaListEJB;	
 	private List<MaritacaListDTO> myLists;
 	private Integer numberOfPages;
-	
+
 	public void removeList(MaritacaListDTO list) {
 		maritacaListEJB.removeMaritacaList(list.getKey());
 		getMyLists().remove(list);

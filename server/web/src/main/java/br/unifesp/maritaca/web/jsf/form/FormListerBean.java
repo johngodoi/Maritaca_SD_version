@@ -81,7 +81,7 @@ public class FormListerBean extends MaritacaJSFBean {
 	}
 
 	public Integer getNumberOfPagesSharedList() {
-		Integer numPages = sharedForms!=null?ownForms.size():0;
+		Integer numPages = sharedForms!=null?sharedForms.size():0;
 		return super.getNumberOfPages(numPages, super.getItemsPerPage());
 	}
 

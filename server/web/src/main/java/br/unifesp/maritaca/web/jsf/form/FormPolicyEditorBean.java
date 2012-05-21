@@ -7,10 +7,10 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
-import br.unifesp.maritaca.business.base.MaritacaConstants;
 import br.unifesp.maritaca.business.form.dto.FormDTO;
 import br.unifesp.maritaca.business.form.edit.FormEditorEJB;
 import br.unifesp.maritaca.web.base.MaritacaJSFBean;
+import br.unifesp.maritaca.web.utils.ConstantsWeb;
 
 /**
  * Managed bean for the Form sharing service the bean loads the url for sharing.
@@ -24,7 +24,7 @@ import br.unifesp.maritaca.web.base.MaritacaJSFBean;
 public class FormPolicyEditorBean extends MaritacaJSFBean {
 	
 	private static final long   serialVersionUID = 1L;	
-	private static final String ROOT_FOR_SHARING = "/ws/form/share/";
+	
 	
 	@Inject
 	private FormEditorEJB    formEditorEJB;	
@@ -42,7 +42,7 @@ public class FormPolicyEditorBean extends MaritacaJSFBean {
 		HttpServletRequest request = (HttpServletRequest) fc.getExternalContext().getRequest(); 
 		return request.getScheme() + "://" + request.getServerName() + ":"
 				+ request.getLocalPort() + request.getContextPath()
-				+ ROOT_FOR_SHARING;
+				+ ConstantsWeb.ROOT_FOR_SHARING;
 	}
 	
 	public void setRootForSharing(String root) {
@@ -54,7 +54,7 @@ public class FormPolicyEditorBean extends MaritacaJSFBean {
 	}
 	
 	public String cancel(){
-		return MaritacaConstants.FACES_HOME;
+		return ConstantsWeb.FACES_HOME;
 	}
 	
 	private FormDTO updateFormDTO(FormDTO formDTO) {

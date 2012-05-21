@@ -215,8 +215,8 @@ public class XMLParser {
 			Node node = list.item(i);
 			// TODO this order means precedence ?
 			String attribute = ((Element)node).getAttribute(Constants.XML_COMPARISON); 
-			String value 	 = ((Element)node).getAttribute("value");
-			Integer goTo 	 = Integer.parseInt(((Element)node).getAttribute("goto"));
+			String value 	 = ((Element)node).getAttribute(Constants.XML_VALUE);
+			Integer goTo 	 = Integer.parseInt(((Element)node).getAttribute(Constants.XML_GOTO));
 			
 			if(attribute.equals(Constants.XML_EQUAL)){
 				clauses[i] = new Equal(value, goTo);

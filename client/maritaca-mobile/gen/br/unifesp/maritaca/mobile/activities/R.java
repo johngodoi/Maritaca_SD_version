@@ -26,9 +26,14 @@ public final class R {
     }
     public static final class string {
         public static final int app_name=0x7f040000;
+        public static final int button_cancel=0x7f04000a;
         /**  Button 
          */
-        public static final int button_login=0x7f040006;
+        public static final int button_login=0x7f040008;
+        public static final int button_save=0x7f040009;
+        /**  
+         */
+        public static final int label_confirmation=0x7f040006;
         public static final int label_help=0x7f040004;
         public static final int label_next=0x7f040005;
         public static final int label_password=0x7f040002;
@@ -36,5 +41,6 @@ public final class R {
         /**  Label 
          */
         public static final int label_user=0x7f040001;
+        public static final int msg_confirmation=0x7f040007;
     }
 }
