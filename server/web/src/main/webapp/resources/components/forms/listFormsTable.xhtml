@@ -67,6 +67,13 @@
 						onclick="showShareForm('#{msgs.form_share_settings}');" 
 						rendered="#{aForm.permission.share}">
 					</rich:menuItem>
+					
+					<rich:menuItem icon="#{resource['img:save.png']}"
+						label="#{msgs.form_download_xml}"
+						action="#{formDownloader.download(aForm)}"
+						mode="server"
+						rendered="#{aForm.permission.read}">								
+					</rich:menuItem>
 
 					<rich:menuItem icon="#{resource['img:remove.png']}"
 						render="panelContent" label="#{msgs.commons_delete}"

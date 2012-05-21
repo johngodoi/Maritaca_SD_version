@@ -5,9 +5,6 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.business.form.dto.FormDTO;
 import br.unifesp.maritaca.business.form.edit.FormEditorEJB;
@@ -20,7 +17,6 @@ import br.unifesp.maritaca.web.base.MaritacaJSFBean;
 public class FormEditorBean extends MaritacaJSFBean {
 	
 	private static final long serialVersionUID = 1L;
-	private static final Log log = LogFactory.getLog(FormEditorBean.class);
 	
 	@Inject private FormEditorEJB formEditorEJB;
 
