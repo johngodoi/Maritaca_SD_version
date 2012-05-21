@@ -18,7 +18,6 @@ import br.unifesp.maritaca.business.form.dto.FormDTO;
 import br.unifesp.maritaca.business.form.edit.dao.FormEditorDAO;
 import br.unifesp.maritaca.business.list.list.dao.ListMaritacaListDAO;
 import br.unifesp.maritaca.business.list.list.dto.MaritacaListDTO;
-import br.unifesp.maritaca.business.util.ConstantsBusiness;
 import br.unifesp.maritaca.business.util.UtilsBusiness;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.MaritacaList;
