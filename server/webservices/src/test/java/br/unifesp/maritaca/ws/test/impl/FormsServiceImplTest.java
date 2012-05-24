@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 import org.jboss.resteasy.logging.Logger;
 import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Test;
 
 public class FormsServiceImplTest {
 
@@ -16,9 +17,10 @@ public class FormsServiceImplTest {
 		
 	}
 	
+	@Test
 	@Ignore
 	public void getFormTest() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 }
