@@ -13,7 +13,7 @@ public class Constants {
 	public static final String FORM_ID 			= "id";
 	public static final String FORM_TITLE 		= "title";
 	public static final String FORM_QUESTIONS 	= "questions";
-	public static final String FORM_XML 			= "xml";
+	public static final String FORM_XML 			= "sas";
 	
 	public static final String XML_ID 			= "id";
 	public static final String XML_NEXT 			= "next";

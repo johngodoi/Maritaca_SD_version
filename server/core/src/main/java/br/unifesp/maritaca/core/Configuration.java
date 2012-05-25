@@ -4,11 +4,13 @@ import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import br.unifesp.maritaca.persistence.annotations.Column;
 import br.unifesp.maritaca.persistence.annotations.Minimal;
 
 @Entity
+@Table(name="Configuration")
 public class Configuration {
 	@Id
 	private UUID key;

@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import me.prettyprint.cassandra.utils.TimeUUIDUtils;
 import br.unifesp.maritaca.persistence.permission.Policy;
@@ -15,6 +16,7 @@ import br.unifesp.maritaca.persistence.annotations.Minimal;
 import br.unifesp.maritaca.persistence.annotations.JSONValue;
 
 @Entity
+@Table(name="Form")
 public class Form {
 	@Id
 	private UUID key;

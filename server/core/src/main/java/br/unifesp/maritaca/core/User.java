@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
@@ -12,9 +13,10 @@ import javax.xml.bind.annotation.XmlType;
 import br.unifesp.maritaca.persistence.annotations.Column;
 import br.unifesp.maritaca.persistence.annotations.Minimal;
 
+@Entity
+@Table(name="User")
 @XmlRootElement(name = "user")
 @XmlType(propOrder = { "key", "firstname", "lastname", "email", "maritacaList" })
-@Entity
 public class User implements Serializable, Cloneable{
 
 	private static final long serialVersionUID = 1L;

@@ -10,7 +10,6 @@ import org.apache.commons.logging.LogFactory;
 
 import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
 import br.unifesp.maritaca.business.answer.edit.AnswerEditorEJB;
-import br.unifesp.maritaca.business.answer.list.AnswersListerEJB;
 import br.unifesp.maritaca.business.answer.list.dto.DataCollectedDTO;
 import br.unifesp.maritaca.ws.api.AnswersService;
 import br.unifesp.maritaca.ws.api.resp.ErrorResponse;
@@ -43,7 +42,7 @@ public class AnswersServiceImpl implements AnswersService {
 			answerEditorEJB.saveAnswers(collectedDTO);
 			
 			XmlSavedResponse okresp = new XmlSavedResponse();
-//			okresp.setId(answ.getKey());
+			okresp.setStatus("Opereration successful");
 			okresp.setType(MaritacaResponse.RESPONSE_TYPE);
 			return okresp;
 		} catch (Exception e) {

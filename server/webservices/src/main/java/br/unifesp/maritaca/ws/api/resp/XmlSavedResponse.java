@@ -5,7 +5,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name="xmlsaved")
 public class XmlSavedResponse extends MaritacaResponse{
+	
 	private String id;
+	
 	private String type;
 	
 	public XmlSavedResponse() {
