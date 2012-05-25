@@ -32,6 +32,8 @@ import br.unifesp.maritaca.mobile.util.XMLAnswerParser;
 import br.unifesp.maritaca.mobile.view.Viewer;
 
 public class ControllerActivity extends Activity {
+	
+	/* Comentario teste para commit conforme professor Arlindo pediu */
 
 	private String formId = "02753970-9f5c-11e1-b730-4666cfaa37dc";
 	private String userId = "e43dc800-9f5b-11e1-b730-4666cfaa37dc";
