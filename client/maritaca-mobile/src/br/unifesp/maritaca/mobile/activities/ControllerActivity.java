@@ -32,8 +32,6 @@ import br.unifesp.maritaca.mobile.util.XMLAnswerParser;
 import br.unifesp.maritaca.mobile.view.Viewer;
 
 public class ControllerActivity extends Activity {
-	
-	/* Comentario teste para commit conforme professor Arlindo pediu */
 
 	private String formId = "02753970-9f5c-11e1-b730-4666cfaa37dc";
 	private String userId = "e43dc800-9f5b-11e1-b730-4666cfaa37dc";
@@ -46,25 +44,11 @@ public class ControllerActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		try {
-			InputStream is;
-			String url = "http://172.20.22.7:8080/maritaca/ws/form/" + formId; // + "/?" + accessToken;
-			HttpClient httpClient = new DefaultHttpClient();
-			HttpGet request = new HttpGet(url);
-			ResponseHandler<String> handler = new BasicResponseHandler();
-			
-			String result = httpClient.execute(request, handler);
-			
-			httpClient.getConnectionManager().shutdown();
-	        Log.i("REQUEST", result);
-	        
-	        is = new ByteArrayInputStream(result.getBytes("UTF-8"));
-			
-			//is = getResources().getAssets().open("sample.xml");
+			InputStream is = getResources().getAssets().open("sample.xml");
 			model = new Model(is);
 
 			if (!model.isQuestionsEmpty()) {
 				viewer = new Viewer(this, model.getCurrentQuestion());
-				//Show it
 				setContentView(viewer.getView());
 			}
 		} catch (Exception e) {
@@ -94,7 +78,6 @@ public class ControllerActivity extends Activity {
 			setContentView(viewer.getView());
 		}
 		else {
-			Log.i("INFO", "saveDialog");
 			showDialog(Constants.SAVE_DIALOG);
 		}
 	}
@@ -137,13 +120,13 @@ public class ControllerActivity extends Activity {
 	private void saveFile(String formId, String userId, Question[] data) {
 		String content = "";
 		try {
-			File answersFile = new File(getFileStreamPath(Constants.ANSWERS_FILENAME).toString());
+			File answersFile = new File(this.getFileStreamPath(Constants.ANSWERS_FILENAME).toString());
 			if(answersFile.exists()) {
-				BufferedReader fin = new BufferedReader(new InputStreamReader(openFileInput(Constants.ANSWERS_FILENAME)));
+				BufferedReader fin = new BufferedReader(new InputStreamReader(this.openFileInput(Constants.ANSWERS_FILENAME)));
 				
 				content = XMLAnswerParser.updateContentFile(fin, formId, userId, data);
 				if(content != null && !"".equals(content)) {
-					OutputStreamWriter fout = new OutputStreamWriter(openFileOutput(Constants.ANSWERS_FILENAME, Context.MODE_PRIVATE), "UTF-8");
+					OutputStreamWriter fout = new OutputStreamWriter(this.openFileOutput(Constants.ANSWERS_FILENAME, Context.MODE_PRIVATE), "UTF-8");
 					fout.write(content);				
 					fout.close();
 				}
@@ -152,7 +135,7 @@ public class ControllerActivity extends Activity {
 			else {
 				content = XMLAnswerParser.buildContentFile(formId, userId, data);
 				if(content != null && !"".equals(content)) {
-					OutputStreamWriter fout = new OutputStreamWriter(openFileOutput(Constants.ANSWERS_FILENAME, Context.MODE_PRIVATE), "UTF-8");
+					OutputStreamWriter fout = new OutputStreamWriter(this.openFileOutput(Constants.ANSWERS_FILENAME, Context.MODE_PRIVATE), "UTF-8");
 					fout.write(content);				
 					fout.close();
 				}

@@ -2,7 +2,7 @@ package br.unifesp.maritaca.mobile.model;
 
 import java.io.InputStream;
 
-import br.unifesp.maritaca.mobile.util.XMLParser;
+import br.unifesp.maritaca.mobile.util.XMLFormParser;
 
 import android.util.Log;
 
@@ -17,8 +17,7 @@ public class Model {
 	//XMLParser xml;
 
 	public Model(InputStream is) {
-		XMLParser xmlParser = new XMLParser(is);
-		this.questions 			= xmlParser.getQuestions();
+		this.questions 			= new XMLFormParser().getQuestions(is);
 		this.currentIdQuestion 	= 0;
 	}
 	

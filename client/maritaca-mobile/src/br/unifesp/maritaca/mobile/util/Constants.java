@@ -12,6 +12,8 @@ public class Constants {
 	// xml form elements
 	public static final String FORM_ID 			= "id";
 	public static final String FORM_TITLE 		= "title";
+	public static final String FORM_URL	 		= "url";
+	public static final String FORM_USER	 		= "user";
 	public static final String FORM_QUESTIONS 	= "questions";
 	public static final String FORM_XML 			= "sas";
 	

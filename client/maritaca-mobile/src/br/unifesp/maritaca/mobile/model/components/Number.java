@@ -10,7 +10,7 @@ import br.unifesp.maritaca.mobile.activities.ControllerActivity;
 import br.unifesp.maritaca.mobile.model.Question;
 import br.unifesp.maritaca.mobile.util.ComponentType;
 import br.unifesp.maritaca.mobile.util.Constants;
-import br.unifesp.maritaca.mobile.util.XMLParser;
+import br.unifesp.maritaca.mobile.util.XMLFormParser;
 
 public class Number extends Question {
 
@@ -23,11 +23,11 @@ public class Number extends Question {
 					Element element) {
 		super(id, previous, next, help, label, required, element);
 		
-		this.min = XMLParser.convertStringToInteger(element.getAttribute(Constants.MIN));
-		this.max = XMLParser.convertStringToInteger(element.getAttribute(Constants.MAX));
-		String  attrDefault = XMLParser.getTagValue(Constants.DEFAULT, element);
+		this.min = XMLFormParser.convertStringToInteger(element.getAttribute(Constants.MIN));
+		this.max = XMLFormParser.convertStringToInteger(element.getAttribute(Constants.MAX));
+		String  attrDefault = XMLFormParser.getTagValue(Constants.DEFAULT, element);
 
-		super.value = XMLParser.convertStringToInteger(attrDefault);
+		super.value = XMLFormParser.convertStringToInteger(attrDefault);
 	}
 
 	@Override

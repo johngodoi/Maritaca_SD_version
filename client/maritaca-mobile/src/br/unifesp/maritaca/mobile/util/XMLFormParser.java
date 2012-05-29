@@ -1,6 +1,5 @@
 package br.unifesp.maritaca.mobile.util;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -18,96 +17,75 @@ import br.unifesp.maritaca.mobile.model.comparators.Greater;
 import br.unifesp.maritaca.mobile.model.comparators.GreaterEqual;
 import br.unifesp.maritaca.mobile.model.comparators.Less;
 import br.unifesp.maritaca.mobile.model.comparators.LessEqual;
-import br.unifesp.maritaca.mobile.model.components.Text;
 import br.unifesp.maritaca.mobile.model.components.Number;
+import br.unifesp.maritaca.mobile.model.components.Text;
 
-import android.util.Log;
-
-public class XMLParser {
+public class XMLFormParser {
 
 	private Document document; // DOM
-	private String formId;
-	private String formTitle;
-	private String formXml;
-	
-	public XMLParser(InputStream is) {
-		// TODO validate the xml format with DTD
-		buildHeaderForm(is);
-	}
 
-	public Question[] getQuestions() {
-		int totalQuestions = computeTotalQuestions();
 
-		if (totalQuestions == 0){
-			return null;
-		}
-
-		Question[] questions = new Question[totalQuestions];
-		
-		NodeList nodeList = document.getElementsByTagName(Constants.FORM_QUESTIONS);
-		Node node = nodeList.item(0);
-		nodeList = node.getChildNodes();
-
-//		int questionIndex = 0;
-
-		for (int i = 0; i < nodeList.getLength(); i++) {
-			node = nodeList.item(i);
-
-			Integer previous = i - 1;
-			if (previous < 0) {
-				previous = null;
-			}
-
-			Element element  = (Element) node;
-			Integer id 		 = convertStringToInteger(element.getAttribute(Constants.XML_ID));				
-			Integer next 	 = convertStringToInteger(element.getAttribute(Constants.XML_NEXT));
-			Boolean required = Boolean.parseBoolean(element.getAttribute(Constants.XML_REQUIRED));
-			String 	help	 = getTagValue(Constants.XML_HELP, element);
-			String 	label 	 = getTagValue(Constants.XML_LABEL, element);
-
-			// create a question
-			questions[i] = specificQuestion(node.getNodeName(), 
-														id,
-														previous, 
-														next, 
-														help, 
-														label, 
-														required, 
-														element);
-
-		}
-
-		return questions;
-	}
-
-	private void buildHeaderForm(InputStream is) {
+	public Question[] getQuestions(InputStream is) {
 		try {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();			
 			document = dBuilder.parse(is);
 			document.getDocumentElement().normalize();
 			
+			int totalQuestions = computeTotalQuestions();
+			if(totalQuestions == 0) {
+				return null;
+			}
+			Question[] questions = new Question[totalQuestions];
+			
 			NodeList nodeList = document.getElementsByTagName(Constants.FORM_ID);
 			Node node = nodeList.item(0);
-			formId = node.getFirstChild().getNodeValue();
+			node.getFirstChild().getNodeValue();
 			
 			nodeList = document.getElementsByTagName(Constants.FORM_TITLE);
 			node = nodeList.item(0);
-			formTitle = node.getFirstChild().getNodeValue();
+			node.getFirstChild().getNodeValue();
 			
-			nodeList = document.getElementsByTagName(Constants.FORM_XML);
+			nodeList = document.getElementsByTagName(Constants.FORM_URL);
 			node = nodeList.item(0);
-			formXml = node.getFirstChild().getNodeValue();
+			node.getFirstChild().getNodeValue();
 			
-			// Building the form questions
-			InputStream xmlIS = new ByteArrayInputStream(formXml.getBytes("UTF-8"));
-			document = dBuilder.parse(xmlIS);
-			document.getDocumentElement().normalize();			
+			nodeList = document.getElementsByTagName(Constants.FORM_USER);
+			node = nodeList.item(0);
+			node.getFirstChild().getNodeValue();
 			
+			nodeList = document.getElementsByTagName(Constants.FORM_QUESTIONS);
+			node = nodeList.item(0);
+			nodeList = node.getChildNodes();
+			
+			int questionIndex = 0;
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				node = nodeList.item(i);
+
+				Integer previous = i - 1;
+				if (previous < 0) {
+					previous = null;
+				}
+				if(node instanceof Element && node.hasAttributes()) {
+					Element element  = (Element) node;
+					Integer id 		 = convertStringToInteger(element.getAttribute(Constants.XML_ID));				
+					Integer next 	 = convertStringToInteger(element.getAttribute(Constants.XML_NEXT));
+					Boolean required = Boolean.parseBoolean(element.getAttribute(Constants.XML_REQUIRED));
+					String 	help	 = getTagValue(Constants.XML_HELP, element);
+					String 	label 	 = getTagValue(Constants.XML_LABEL, element);
+	
+					// create a question
+					questions[questionIndex] = specificQuestion(node.getNodeName(), id, previous, next, help, 
+													label, required, element);
+					questionIndex++;
+				}
+			}
+			return questions;
 		} catch (Exception e) {
-			// TODO define report errors
-			Log.e("ERROR", e.getMessage());
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		return null;
 	}
 	
 	/**
