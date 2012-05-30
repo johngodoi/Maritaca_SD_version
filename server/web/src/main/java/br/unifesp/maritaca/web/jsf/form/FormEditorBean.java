@@ -1,9 +1,13 @@
 package br.unifesp.maritaca.web.jsf.form;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
+import javax.servlet.ServletContext;
 
 import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.business.form.dto.FormDTO;
@@ -84,6 +88,12 @@ public class FormEditorBean extends MaritacaJSFBean {
 			return;
 		}
 		addMessageError("form_edit_delete_error");
+	}
+	
+	public void downloadApk(FormDTO formDTO) {
+		if(!formEditorEJB.downloadApkFromFormId(getFacesContext(), formDTO)) {
+			addMessageError("form_edit_download_app_failed");
+		}
 	}
 	
 	public void setFormAsCollectable(){

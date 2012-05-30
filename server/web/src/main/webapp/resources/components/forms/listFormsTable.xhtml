@@ -73,6 +73,13 @@
 						mode="server"
 						rendered="#{aForm.permission.read}">								
 					</rich:menuItem>
+					
+					<rich:menuItem icon="#{resource['img:app-mobile.png']}"
+						label="#{msgs.form_download_app_mobile}"
+						action="#{formEditorBean.downloadApk(aForm)}"
+						mode="server"
+						rendered="#{aForm.permission.read}">								
+					</rich:menuItem>
 
 					<rich:menuItem icon="#{resource['img:remove.png']}"
 						render="panelContent" label="#{msgs.commons_delete}"

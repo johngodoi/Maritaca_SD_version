@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import br.unifesp.maritaca.business.base.dao.BaseDAO;
+import br.unifesp.maritaca.business.util.ConstantsBusiness;
 import br.unifesp.maritaca.core.Answer;
 import br.unifesp.maritaca.core.Configuration;
 import br.unifesp.maritaca.core.Form;
@@ -97,6 +98,8 @@ public class MaritacaInitDAO extends BaseDAO {
 			entityManager.persist(oaclient);
 		}
 		
+		//
+		this.createMobileConstants();
 	}
 	
 	public void destroyEntityManager(){
@@ -125,4 +128,20 @@ public class MaritacaInitDAO extends BaseDAO {
 		entityManager.persist(rootUser);
 	}
 	
+	private void createMobileConstants() {
+		Configuration cfScriptLocation = new Configuration();
+		cfScriptLocation.setName(ConstantsBusiness.MOB_SCRIPT_LOCATION);
+		cfScriptLocation.setValue("/home/maritaca/test-mobile/maritaca.sh");
+		entityManager.persist(cfScriptLocation);
+		//
+		Configuration cfMaritacaPath = new Configuration();
+		cfMaritacaPath.setName(ConstantsBusiness.MOB_MARITACA_PATH);
+		cfMaritacaPath.setValue("/home/maritaca/test-mobile/");
+		entityManager.persist(cfMaritacaPath);
+		//
+		Configuration cfProjectsPath = new Configuration();
+		cfProjectsPath.setName(ConstantsBusiness.MOB_PROJECTS_PATH);
+		cfProjectsPath.setValue("/home/maritaca/test-mobile/apps/");
+		entityManager.persist(cfProjectsPath);
+	}	
 }

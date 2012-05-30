@@ -45,23 +45,23 @@ public class FormEditorDAO extends BaseDAO {
 				}
 			}
 			//Delete Form from the List
-			if(!deletedLists.isEmpty()) {
-				removeLists(deletedLists);
-			}
-		}
-	}
-	
-	private void removeLists(List<UUID> deletedLists) {
-		for(UUID uuid : deletedLists) {
-			FormAccessibleByList formsByList = formAccessibleByListDAO.findFormAccesibleByKey(uuid);			
-			if(formsByList != null) {
-				if(formsByList.getForms().contains(uuid)) {
-					formsByList.getForms().remove(uuid);
-				}
-				formAccessibleByListDAO.persist(formsByList);
-			}
-		}
-	}
+            if(!deletedLists.isEmpty()) {
+                removeLists(deletedLists, form.getKey());
+            }
+        }
+    }
+    
+    private void removeLists(List<UUID> deletedLists, UUID formKey) {
+        for(UUID uuid : deletedLists) {
+            FormAccessibleByList formsByList = formAccessibleByListDAO.findFormAccesibleByKey(uuid);            
+            if(formsByList != null) {
+                if(formsByList.getForms().contains(formKey)) {
+                    formsByList.getForms().remove(formKey);
+                }
+                formAccessibleByListDAO.persist(formsByList);
+            }
+        }
+    }
 	
 	public void deleteFormAccessible(Form form, User owner) {
 		if(form.getKey() != null ) {
