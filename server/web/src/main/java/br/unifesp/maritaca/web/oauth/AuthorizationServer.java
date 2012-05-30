@@ -25,7 +25,7 @@ import br.unifesp.maritaca.business.oauth.OAuthClientDTO;
 import br.unifesp.maritaca.business.oauth.OAuthCodeDTO;
 import br.unifesp.maritaca.business.oauth.OAuthEJB;
 import br.unifesp.maritaca.business.oauth.OAuthTokenDTO;
-import br.unifesp.maritaca.util.ConstantsCore;
+import br.unifesp.maritaca.persistence.util.ConstantsPersistence;
 import br.unifesp.maritaca.web.utils.ConstantsWeb;
 import br.unifesp.maritaca.web.utils.UtilsWeb;
 
@@ -65,11 +65,11 @@ public class AuthorizationServer extends HttpServlet {
 		log.debug("Serving " + pathInfo);
 		log.debug("Query " + request.getQueryString());
 
-		if (pathInfo.equals(AUTHORIZATION_REQUEST)) {
+		if (AUTHORIZATION_REQUEST.equals(pathInfo)) {
 			authorize(request, response);
-		} else if(pathInfo.equals(AUTHORIZATION_CONFIRM)) {
+		} else if(AUTHORIZATION_CONFIRM.equals(pathInfo)) {
 			authorizationConfirm(request, response);
-		} else if(pathInfo.equals(ACCESS_TOKEN_REQUEST)) {
+		} else if(ACCESS_TOKEN_REQUEST.equals(pathInfo)) {
 			accessToken(request, response);
 		} else {
 			response.setContentType("application/json");
@@ -221,7 +221,7 @@ public class AuthorizationServer extends HttpServlet {
 			response.setContentType("application/json");
 			UtilsWeb.sendValuesInJson(response, 
 							 OAuth.OAUTH_ACCESS_TOKEN, tokenDTO.getAccessToken(),
-							 OAuth.OAUTH_EXPIRES_IN, String.valueOf(ConstantsCore.OAUTH_EXPIRATION_DATE),
+							 OAuth.OAUTH_EXPIRES_IN, String.valueOf(ConstantsPersistence.OAUTH_EXPIRATION_DATE),
 							 OAuth.OAUTH_REFRESH_TOKEN, tokenDTO.getRefreshToken());
 			response.setStatus(HttpURLConnection.HTTP_OK);
 		} catch (OAuthProblemException e) {

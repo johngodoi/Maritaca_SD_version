@@ -5,9 +5,9 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
-import br.unifesp.maritaca.access.operation.Operation;
 import br.unifesp.maritaca.business.form.dto.FormDTO;
 import br.unifesp.maritaca.business.form.edit.FormEditorEJB;
+import br.unifesp.maritaca.persistence.permission.Operation;
 import br.unifesp.maritaca.persistence.permission.Permission;
 import br.unifesp.maritaca.web.Manager;
 import br.unifesp.maritaca.web.base.MaritacaJSFBean;

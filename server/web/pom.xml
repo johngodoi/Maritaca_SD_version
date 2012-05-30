@@ -55,7 +55,7 @@
 		<!-- MARITACA -->
 		<dependency>
 			<groupId>br.unifesp.maritaca</groupId>
-			<artifactId>maritaca-core</artifactId>
+			<artifactId>maritaca-persistence</artifactId>
 			<version>${maritaca.version}</version>
 		</dependency>
 		<dependency>
