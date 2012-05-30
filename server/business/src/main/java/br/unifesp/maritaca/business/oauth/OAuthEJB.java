@@ -7,6 +7,10 @@ import javax.inject.Inject;
 
 import br.unifesp.maritaca.business.base.AbstractEJB;
 import br.unifesp.maritaca.business.base.dao.UserDAO;
+import br.unifesp.maritaca.business.oauth.dto.DataAccessTokenDTO;
+import br.unifesp.maritaca.business.oauth.dto.OAuthClientDTO;
+import br.unifesp.maritaca.business.oauth.dto.OAuthCodeDTO;
+import br.unifesp.maritaca.business.oauth.dto.OAuthTokenDTO;
 import br.unifesp.maritaca.business.util.UtilsBusiness;
 import br.unifesp.maritaca.persistence.entity.OAuthClient;
 import br.unifesp.maritaca.persistence.entity.OAuthCode;
@@ -28,13 +32,13 @@ public class OAuthEJB extends AbstractEJB {
 	public OAuthClientDTO findOAuthClientByClientId(String clientId) {
 		OAuthClient oauthClient = oauthDAO.findAuthClientByClientId(clientId);  
 		if(oauthClient != null)
-			return UtilsBusiness.convertToClass(oauthClient, OAuthClientDTO.class);
+			return UtilsBusiness.reflectClasses(oauthClient, OAuthClientDTO.class);
 		
 		return null;
 	}
 
 	public void saveAuthorizationCode(OAuthCodeDTO oauthCodeDTO) {
-		OAuthCode oauthCode = UtilsBusiness.convertToClass(oauthCodeDTO, OAuthCode.class);
+		OAuthCode oauthCode = UtilsBusiness.reflectClasses(oauthCodeDTO, OAuthCode.class);
 		
 		oauthDAO.persisteOAuthCode(oauthCode);
 	}
@@ -45,7 +49,7 @@ public class OAuthEJB extends AbstractEJB {
 		OAuthCode authCode = oauthDAO.findOAuthCodeByCode(code);
 
 		if(authCode != null)
-			dataDTO.setOauthCodeDTO(UtilsBusiness.convertToClass(authCode, OAuthCodeDTO.class));
+			dataDTO.setOauthCodeDTO(UtilsBusiness.reflectClasses(authCode, OAuthCodeDTO.class));
 		else 
 			dataDTO.setOauthCodeDTO(null);
 		
@@ -55,7 +59,7 @@ public class OAuthEJB extends AbstractEJB {
 	}
 	
 	public void saveOAuthToken(OAuthTokenDTO tokenDTO) {
-		OAuthToken oauthToken = UtilsBusiness.convertToClass(tokenDTO, OAuthToken.class);
+		OAuthToken oauthToken = UtilsBusiness.reflectClasses(tokenDTO, OAuthToken.class);
 		
 		oauthDAO.persisteOAuthToken(oauthToken);
 	}
@@ -63,7 +67,7 @@ public class OAuthEJB extends AbstractEJB {
 	public OAuthTokenDTO findOAuthTokenByToken(String accessToken) {
 		OAuthToken oauthToken = oauthDAO.findOAuthTokenByToken(accessToken);
 		if(oauthToken != null)
-			return UtilsBusiness.convertToClass(oauthToken, OAuthTokenDTO.class);
+			return UtilsBusiness.reflectClasses(oauthToken, OAuthTokenDTO.class);
 		
 		return null;
 	}
@@ -71,7 +75,7 @@ public class OAuthEJB extends AbstractEJB {
 	public UserDTO findUserByUserKey(String userKey) {
 		User user = userDAO.findUserByKey(UUID.fromString(userKey));
 		
-		return UtilsBusiness.convertToClass(user, UserDTO.class);
+		return UtilsBusiness.reflectClasses(user, UserDTO.class);
 	}
 	
 }

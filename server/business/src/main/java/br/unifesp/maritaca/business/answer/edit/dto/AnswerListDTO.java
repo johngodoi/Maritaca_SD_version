@@ -1,9 +1,10 @@
-package br.unifesp.maritaca.business.answer.list.dto;
+package br.unifesp.maritaca.business.answer.edit.dto;
 
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
 
 @XmlRootElement
 public class AnswerListDTO {

@@ -1,4 +1,5 @@
-package br.unifesp.maritaca.business.oauth;
+package br.unifesp.maritaca.business.oauth.dto;
+
 
 public class DataAccessTokenDTO {
 

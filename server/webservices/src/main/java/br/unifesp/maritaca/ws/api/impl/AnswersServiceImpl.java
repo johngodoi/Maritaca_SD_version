@@ -10,7 +10,7 @@ import org.apache.commons.logging.LogFactory;
 
 import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
 import br.unifesp.maritaca.business.answer.edit.AnswerEditorEJB;
-import br.unifesp.maritaca.business.answer.list.dto.DataCollectedDTO;
+import br.unifesp.maritaca.business.answer.edit.dto.DataCollectedDTO;
 import br.unifesp.maritaca.ws.api.AnswersService;
 import br.unifesp.maritaca.ws.api.resp.ErrorResponse;
 import br.unifesp.maritaca.ws.api.resp.MaritacaResponse;

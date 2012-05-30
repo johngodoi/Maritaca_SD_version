@@ -16,13 +16,13 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import br.unifesp.maritaca.business.account.edit.AccountEditorDAO;
 import br.unifesp.maritaca.business.account.edit.AccountEditorEJB;
-import br.unifesp.maritaca.business.account.edit.dao.AccountEditorDAO;
 import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
+import br.unifesp.maritaca.business.list.edit.ListEditorDAO;
 import br.unifesp.maritaca.business.list.edit.ListEditorEJB;
-import br.unifesp.maritaca.business.list.edit.dao.ListEditorDAO;
+import br.unifesp.maritaca.business.list.list.ListMaritacaListDAO;
 import br.unifesp.maritaca.business.list.list.ListMaritacaListEJB;
-import br.unifesp.maritaca.business.list.list.dao.ListMaritacaListDAO;
 import br.unifesp.maritaca.business.list.list.dto.MaritacaListDTO;
 import br.unifesp.maritaca.persistence.EntityManagerFactory;
 import br.unifesp.maritaca.persistence.EntityManagerHectorImpl;

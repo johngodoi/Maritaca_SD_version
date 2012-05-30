@@ -1,4 +1,4 @@
-package br.unifesp.maritaca.business.account.edit.dao;
+package br.unifesp.maritaca.business.account.edit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import javax.inject.Inject;
 
 import br.unifesp.maritaca.business.base.dao.BaseDAO;
 import br.unifesp.maritaca.business.exception.InvalidNumberOfEntries;
-import br.unifesp.maritaca.business.list.edit.dao.ListEditorDAO;
+import br.unifesp.maritaca.business.list.edit.ListEditorDAO;
 import br.unifesp.maritaca.persistence.entity.MaritacaList;
 import br.unifesp.maritaca.persistence.entity.User;
 

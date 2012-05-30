@@ -25,8 +25,7 @@ import br.unifesp.maritaca.business.base.dao.FormDAO;
 import br.unifesp.maritaca.business.base.dao.UserDAO;
 import br.unifesp.maritaca.business.exception.AuthorizationDenied;
 import br.unifesp.maritaca.business.form.dto.FormDTO;
-import br.unifesp.maritaca.business.form.edit.dao.FormEditorDAO;
-import br.unifesp.maritaca.business.list.list.dao.ListMaritacaListDAO;
+import br.unifesp.maritaca.business.list.list.ListMaritacaListDAO;
 import br.unifesp.maritaca.business.list.list.dto.MaritacaListDTO;
 import br.unifesp.maritaca.business.util.ConstantsBusiness;
 import br.unifesp.maritaca.business.util.UtilsBusiness;
@@ -62,7 +61,7 @@ public class FormEditorEJB extends AbstractEJB {
 	 * @param formDTO
 	 */
 	public void saveNewForm(FormDTO formDTO) {		
-		Form form = UtilsBusiness.convertToClass(formDTO, Form.class);
+		Form form = UtilsBusiness.reflectClasses(formDTO, Form.class);
 		form.setUrl(this.getUniqueUrl());	
 
 		UserDTO userDTO = new UserDTO(); 
@@ -244,7 +243,7 @@ public class FormEditorEJB extends AbstractEJB {
 		List<MaritacaListDTO>    listsDto = new ArrayList<MaritacaListDTO>();
 		Collection<MaritacaList> lists    = listMaritacaListDAO.maritacaListsStartingWith(prefix);
 		for(MaritacaList list : lists) {
-			listsDto.add(UtilsBusiness.convertToClass(list, MaritacaListDTO.class));
+			listsDto.add(UtilsBusiness.reflectClasses(list, MaritacaListDTO.class));
 		}	
 		return listsDto;
 	}
@@ -252,7 +251,7 @@ public class FormEditorEJB extends AbstractEJB {
 	public MaritacaListDTO searchMaritacaListByName(String selectedItem) {
 		MaritacaList list = formEditorDAO.searchMaritacaListByName(selectedItem);
 		if(list != null) {
-			return UtilsBusiness.convertToClass(list, MaritacaListDTO.class);
+			return UtilsBusiness.reflectClasses(list, MaritacaListDTO.class);
 		}		
 		return null;
 	}
@@ -266,7 +265,7 @@ public class FormEditorEJB extends AbstractEJB {
 			for(UUID id : form.getLists()) {
 				MaritacaList mList = listMaritacaListDAO.getMaritacaListById(id);
 				if(mList != null) {
-					lstItems.add(UtilsBusiness.convertToClass(mList, MaritacaListDTO.class));
+					lstItems.add(UtilsBusiness.reflectClasses(mList, MaritacaListDTO.class));
 				}					
 			}
 		}
