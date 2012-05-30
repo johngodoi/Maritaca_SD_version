@@ -20,13 +20,12 @@ public abstract class Question {
 	private Boolean required;
 
 	public final static Integer END = new Integer(-1);
-	
-	private static final String LESS="less";
-	private static final String LESSEQUAL="lessequal";
-	private static final String EQUAL="equal";
-	private static final String GREATEREQUAL="greaterequal";
-	private static final String GREATER="greater";
-	
+
+	private static final String LESS = "less";
+	private static final String LESSEQUAL = "lessequal";
+	private static final String EQUAL = "equal";
+	private static final String GREATEREQUAL = "greaterequal";
+	private static final String GREATER = "greater";
 
 	// mapa com valores e perguntas
 	private Map<String, String> less = new HashMap<String, String>();
@@ -60,9 +59,9 @@ public abstract class Question {
 
 	public Integer getNext() {
 		Integer nextQuestion = this.solveNextQuestion();
-		Log.v("NEXT", ""+nextQuestion);
-		Log.v("NEXTori", ""+this.next);
-		return nextQuestion!=null ? nextQuestion : this.next;
+		Log.v("NEXT", "" + nextQuestion);
+		Log.v("NEXTori", "" + this.next);
+		return nextQuestion != null ? nextQuestion : this.next;
 	}
 
 	public void setNext(Integer next) {
@@ -130,61 +129,62 @@ public abstract class Question {
 
 	private void solverCondicional(Element elementoCondicional) {
 		String comparsion = elementoCondicional.getAttribute("comparison");
-		String val = elementoCondicional.getAttribute("val");
+		String val = elementoCondicional.getAttribute("value");
 		String go = elementoCondicional.getAttribute("goto");
-		Log.v("comparsion", "Comparsion: "+comparsion+"\nVal: "+val+"\nGoto: "+go);
-		if(comparsion.equals(LESS)){
+		Log.v("comparsion", "Comparsion: " + comparsion + "\nVal: " + val
+				+ "\nGoto: " + go);
+		if (comparsion.equals(LESS)) {
 			less.put(val, go);
-		}
-		else{
-			if(comparsion.equals(LESSEQUAL)){
+		} else {
+			if (comparsion.equals(LESSEQUAL)) {
 				lessEqual.put(val, go);
-			}
-			else{
-				if(comparsion.equals(EQUAL)){
+			} else {
+				if (comparsion.equals(EQUAL)) {
 					equal.put(val, go);
-				}
-				else{
-					if(comparsion.equals(GREATEREQUAL)){
+				} else {
+					if (comparsion.equals(GREATEREQUAL)) {
 						greaterEqual.put(val, go);
-					}
-					else{
-						if(comparsion.equals(GREATER)){
+					} else {
+						if (comparsion.equals(GREATER)) {
 							greater.put(val, go);
-						}
-						else{
-							throw new RuntimeException("Valor da tag comparsion errada");
+						} else {
+							throw new RuntimeException(
+									"Valor da tag comparsion errada");
 						}
 					}
 				}
 			}
 		}
 	}
-	
+
 	private Integer solveNextQuestion() {
 		String valorDaResposta = value.toString();
-		if(equal.containsKey(valorDaResposta))	return Integer.valueOf(equal.get(valorDaResposta));
-		
-		for(Entry<String, String> valor : greaterEqual.entrySet()){
+		Log.v("VALUE", valorDaResposta);
+		if (equal.containsKey(valorDaResposta))
+			return Integer.valueOf(equal.get(valorDaResposta));
+
+		for (Entry<String, String> valor : greaterEqual.entrySet()) {
 			Integer valorKey = new Integer(valor.getKey());
-			if(new Integer(valorDaResposta) >= valorKey)		return Integer.valueOf(valor.getValue());
+			if (new Integer(valorDaResposta) >= valorKey)
+				return Integer.valueOf(valor.getValue());
 		}
-		for(Entry<String, String> valor : greater.entrySet()){
+		for (Entry<String, String> valor : greater.entrySet()) {
 			Integer valorKey = new Integer(valor.getKey());
-			if(new Integer(valorDaResposta) > valorKey)		return Integer.valueOf(valor.getValue());
+			if (new Integer(valorDaResposta) > valorKey)
+				return Integer.valueOf(valor.getValue());
 		}
-		
-		for(Entry<String, String> valor : lessEqual.entrySet()){
+
+		for (Entry<String, String> valor : lessEqual.entrySet()) {
 			Integer valorKey = new Integer(valor.getKey());
-			if(new Integer(valorDaResposta) <= valorKey)		return Integer.valueOf(valor.getValue());
+			if (new Integer(valorDaResposta) <= valorKey)
+				return Integer.valueOf(valor.getValue());
 		}
-		for(Entry<String, String> valor : less.entrySet()){
+		for (Entry<String, String> valor : less.entrySet()) {
 			Integer valorKey = new Integer(valor.getKey());
-			if(new Integer(valorDaResposta) < valorKey)		return Integer.valueOf(valor.getValue());
+			if (new Integer(valorDaResposta) < valorKey)
+				return Integer.valueOf(valor.getValue());
 		}
-		
-		
-		
+
 		return null;
 	}
 

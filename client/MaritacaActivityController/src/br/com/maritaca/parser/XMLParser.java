@@ -14,9 +14,10 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import android.util.Log;
-import br.com.maritaca.questions.Question;
-import br.com.maritaca.questions.Text;
 import br.com.maritaca.questions.Number;
+import br.com.maritaca.questions.Question;
+import br.com.maritaca.questions.RadioButton;
+import br.com.maritaca.questions.Text;
 
 public class XMLParser {
 
@@ -24,7 +25,7 @@ public class XMLParser {
 	public static final String TEXT = "text";
 	public static final String NUMBER = "number";
 	public static final String CHECKLIST = "checklist";
-	public static final String COMBOBOX = "combobox";
+	public static final String COMBOBOX = "radiobutton";
 	public static final String SLIDE = "slide";
 	public static final String DATE = "date";
 	public static final String TIME = "time";
@@ -92,6 +93,7 @@ public class XMLParser {
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			document = dBuilder.parse(is);
 			document.getDocumentElement().normalize();
+			Log.v("XML", document.toString());
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		} catch (SAXException e) {
@@ -156,7 +158,8 @@ public class XMLParser {
 					element);
 
 		} else if (type.compareTo(COMBOBOX) == 0) {
-
+			question = new RadioButton(id, previous, next, help, label,
+					required, element);
 		} else if (type.compareTo(SLIDE) == 0) {
 
 		} else if (type.compareTo(DATE) == 0) {
@@ -230,7 +233,7 @@ public class XMLParser {
 		for (int i = 1; i < list.getLength(); i++) {
 			Node node = list.item(i);
 
-//			Integer previous = i-1;//questionIndex - 1;
+			// Integer previous = i-1;//questionIndex - 1;
 			Integer previous = questionIndex - 1;
 			if (previous < 0) {
 				previous = null;
@@ -249,8 +252,9 @@ public class XMLParser {
 				/* Elementos internos, usa o metodo getTagValue */
 				String help = getTagValue("help", element);
 				String label = getTagValue("label", element);
-				
-				Log.v("TAG","ID: "+id+"\nNext: "+next+"\nRequeried: "+required);
+
+				Log.v("TAG", "ID: " + id + "\nNext: " + next + "\nRequeried: "
+						+ required);
 
 				/* Pega a question atual */
 				// System.out.println (node.getNodeName());
