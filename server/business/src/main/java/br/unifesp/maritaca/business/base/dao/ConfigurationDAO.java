@@ -21,4 +21,11 @@ public class ConfigurationDAO extends BaseDAO {
 		}
 		return false;
 	}
+	
+	public String getValueByName(String name) {
+		List<Configuration> confs = entityManager.cQuery(Configuration.class, "name", name);
+		if(confs != null && !confs.isEmpty())
+			return confs.get(0).getValue();
+		return null;
+	}
 }
