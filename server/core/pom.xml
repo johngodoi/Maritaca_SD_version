@@ -22,12 +22,17 @@
 		<dependency>
 			<groupId>me.prettyprint</groupId>
 			<artifactId>hector-core</artifactId>
-			<version>1.0-2</version>
+			<version>1.0-5</version>
+		</dependency>
+		<dependency>
+			<groupId>me.prettyprint</groupId>
+			<artifactId>hector-object-mapper</artifactId>
+			<version>1.1-03</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.cassandra</groupId>
 			<artifactId>cassandra-all</artifactId>
-			<version>1.0.6</version>
+			<version>1.0.10</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -67,17 +72,6 @@
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
 			<version>${commons-logging.version}</version>
-		</dependency>
-		<!-- USER LOCATOR -->
-		<dependency>
-			<groupId>com.sun.faces</groupId>
-			<artifactId>jsf-api</artifactId>
-			<version>2.1.4</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.faces</groupId>
-			<artifactId>jsf-impl</artifactId>
-			<version>2.1.4</version>
 		</dependency>
 		
 		<!-- TESTING -->		

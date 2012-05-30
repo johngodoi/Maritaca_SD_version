@@ -18,7 +18,6 @@ import br.unifesp.maritaca.business.form.dto.FormDTO;
 import br.unifesp.maritaca.business.form.edit.dao.FormEditorDAO;
 import br.unifesp.maritaca.business.list.list.dao.ListMaritacaListDAO;
 import br.unifesp.maritaca.business.list.list.dto.MaritacaListDTO;
-import br.unifesp.maritaca.business.util.ConstantsBusiness;
 import br.unifesp.maritaca.business.util.UtilsBusiness;
 import br.unifesp.maritaca.core.Form;
 import br.unifesp.maritaca.core.MaritacaList;
@@ -188,6 +187,10 @@ public class FormEditorEJB extends AbstractEJB {
 		//Form originalForm = (Form) verifyReturnNullValuesInDB(formDTO);//
 		Form originalForm = formDAO.getFormByKey(formDTO.getKey(), false);
 		User user = (User) verifyReturnNullValuesInDB(userDTO);
+		List<UUID> originalLists = new ArrayList<UUID>();
+		if(originalForm.getLists() != null) {
+			originalLists.addAll(originalForm.getLists());
+		}
 		originalForm.setPolicy(formDTO.getPolicy());
 		if(originalForm.isShared()) {
 			originalForm.setLists(fetchKeysFromLists(usedItems));
@@ -196,13 +199,23 @@ public class FormEditorEJB extends AbstractEJB {
 		if(permission != null && permission.getUpdate()) {
 			formDAO.persistForm(originalForm);
 			if(originalForm.isShared()) {
-				formEditorDAO.createOrUpdateFormAccessible(originalForm, user);
+				formEditorDAO.createOrUpdateFormAccessible(originalForm, user, checkDeletedLists(originalLists, originalForm.getLists()));
 			}
 			return true;
 		}
 		else {
 			throw new AuthorizationDenied(Document.FORM, originalForm.getKey(), user.getKey(), Operation.UPDATE);
 		}		
+	}
+	
+	private List<UUID> checkDeletedLists(List<UUID> currentLists, List<UUID> newLists) {
+		List<UUID> deletedLists = new ArrayList<UUID>();
+		for(UUID current : currentLists) {
+			if(!newLists.contains(current)) {
+				deletedLists.add(current);
+			}
+		}
+		return deletedLists;
 	}
 	
 	//MaritacaList > autocomplete
@@ -226,21 +239,15 @@ public class FormEditorEJB extends AbstractEJB {
 		
 	public List<MaritacaListDTO> populateFormSharedList(FormDTO formDTO) {
 		List<MaritacaListDTO> lstItems = new ArrayList<MaritacaListDTO>();
-		Form form = formDAO.getFormByKey(formDTO.getKey(), false);		
-		User owner = userDAO.findUserByKey(form.getUser().getKey());
-		if(owner != null) {	
-			MaritacaList ownerList = listMaritacaListDAO.getMaritacaList(owner.getMaritacaList());
-			if(ownerList != null) {
-				lstItems.add(UtilsBusiness.convertToClass(ownerList, MaritacaListDTO.class));
-			}
-		}
-		
-		if(form != null && form.getLists() != null && !form.getLists().isEmpty()) {
-			for(UUID uuid : form.getLists()) {
-				MaritacaList mList = listMaritacaListDAO.getMaritacaList(uuid);
-				if(mList != null && !mList.getName().equals(ConstantsBusiness.ALL_USERS)) {
+		Form form = formDAO.getFormByKey(formDTO.getKey(), false);
+		//TODO: Lists should be only those where the owner is the current user
+		//User owner = userDAO.findUserByKey(form.getUser().getKey()); 
+		if(form.getLists() != null) {
+			for(UUID id : form.getLists()) {
+				MaritacaList mList = listMaritacaListDAO.getMaritacaListById(id);
+				if(mList != null) {
 					lstItems.add(UtilsBusiness.convertToClass(mList, MaritacaListDTO.class));
-				}
+				}					
 			}
 		}
 		return lstItems;

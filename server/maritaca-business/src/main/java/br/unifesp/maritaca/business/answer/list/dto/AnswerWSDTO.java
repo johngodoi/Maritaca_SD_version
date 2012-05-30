@@ -10,14 +10,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class AnswerWSDTO {
 
 	@XmlAttribute
-	private String timestamp;
+	private Long timestamp;
 		
 	@XmlElement(name="question")
 	private List<QuestionAnswerDTO> questions;
 	
 	public AnswerWSDTO() { }
 	
-	public String getTimestamp() {
+	public Long getTimestamp() {
 		return timestamp;
 	}
 	

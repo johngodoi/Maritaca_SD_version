@@ -21,6 +21,10 @@ public class MaritacaDate extends Date{
 		this.setTime(d.getTime());
 	}
 	
+	public MaritacaDate(Long timeStamp){
+		this.setTime(timeStamp);
+	}
+	
 	@Override
 	public String toString(){
 		SimpleDateFormat sdf     = new SimpleDateFormat("dd/MM/yy hh:mm a");

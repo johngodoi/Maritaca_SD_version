@@ -1,39 +1,36 @@
 package br.unifesp.maritaca.core;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.persistence.Table;
 
-import br.unifesp.maritaca.persistence.annotations.Column;
 import br.unifesp.maritaca.persistence.annotations.Minimal;
 
-@XmlRootElement(name = "answer")
 @Entity
+@Table(name="Answer")
 public class Answer {
+	
 	@Id
 	private UUID key;
 
-	@Column(indexed = true)
+	@Column(name="form")
 	@Minimal
-	private Form form;
+	private UUID form;
 
-	@Column(indexed = true)
+	@Column(name="user")
 	@Minimal
-	private User user;
+	private UUID user;
 
-	@Column
-	private String xml;
+	@me.prettyprint.hom.annotations.Column(name="questions")
+	private List<QuestionAnswer> questions;
 	
-	@Column
-	private MaritacaDate collectionDate;
+	@Column(name="creationDate")
+	private Long creationDate;
 
-	@XmlElement(name = "id")
 	public UUID getKey() {
 		return key;
 	}
@@ -45,43 +42,31 @@ public class Answer {
 	public void setKey(String ks) {
 		this.key = UUID.fromString(ks);
 	}
-
-	public Form getForm() {
+	
+	public UUID getForm() {
 		return form;
 	}
 
-	public void setForm(Form form) {
+	public void setForm(UUID form) {
 		this.form = form;
 	}
 
-	public User getUser() {
+	public UUID getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(UUID user) {
 		this.user = user;
 	}
 
-	public void setXml(String xml) {
-		this.xml = xml;
+	public List<QuestionAnswer> getQuestions() {
+		return questions;
 	}
-
-	public String getXml() {
-		return xml;
+	
+	public void setQuestions(List<QuestionAnswer> questions) {
+		this.questions = questions;
 	}
-
-	public void setForm(String formId) {
-		Form f = new Form();
-		f.setKey(formId);
-		setForm(f);
-	}
-
-	public void setUser(String userId) {
-		User f = new User();
-		f.setKey(userId);
-		setUser(f);
-	}
-
+	
 	@Override
 	public String toString() {
 		if (getKey() != null) {
@@ -90,21 +75,11 @@ public class Answer {
 		return super.toString();
 	}
 
-	public MaritacaDate getCollectionDate() {
-		return collectionDate;
+	public Long getCreationDate() {
+		return creationDate;
 	}
 
-	public void setCollectionDate(MaritacaDate collectionDate) {
-		this.collectionDate = collectionDate;
-	}
-	
-	public void setCollectionDate(String collectionDate) {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy hh:mm a");
-		try {
-			Date d = sdf.parse(collectionDate);
-			setCollectionDate(new MaritacaDate(d));
-		} catch (ParseException e) {
-			throw new IllegalArgumentException("Can't parse date: " + collectionDate);
-		}
+	public void setCreationDate(Long creationDate) {
+		this.creationDate = creationDate;
 	}
 }

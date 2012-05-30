@@ -27,6 +27,7 @@ public interface FormsService {
 	 */
 	@GET
 	@Path("/{id}")
+	@Produces({MediaType.APPLICATION_XML})
 	FormDTO getForm(@Context HttpServletRequest request,
 					@PathParam("id") String formId) throws MaritacaWSException;
 	
@@ -39,7 +40,8 @@ public interface FormsService {
 	@GET
 	@Path("/list")
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	MaritacaResponse listFormsMinimal(@Context HttpServletRequest request) ;
+	MaritacaResponse listFormsMinimal(@Context HttpServletRequest request) 
+			throws MaritacaWSException ;
 	
 	/**
 	 * 

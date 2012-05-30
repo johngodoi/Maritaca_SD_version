@@ -47,8 +47,7 @@ public class ListMaritacaListDAO extends BaseDAO {
 		return objectsStartingWith(MaritacaList.class, startingString, "getName");
 	}
 
-	public MaritacaList getMaritacaList(UUID uuid) {
-		// TODO Auto-generated method stub
-		return null;
+	public MaritacaList getMaritacaListById(UUID uuid) {
+		return entityManager.find(MaritacaList.class, uuid);
 	}	
 }

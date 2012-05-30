@@ -18,14 +18,13 @@
 		<composite:attribute name="idScroller"    required="false" />
 	</composite:interface>
 	<composite:implementation>
-	
 		<rich:dataTable value="#{cc.attrs.formList}" id="#{cc.attrs.idem}" 
 			columnClasses="listFormColumnTitle, listFormColumnOwner, listFormColumnCreationDate, listFormColumnPolicy"   
 			var="aForm" width="100%" styleClass="maritacaTable" rows="#{cc.attrs.itemsPerPage}">
 			<f:facet name="header">
 				<h:outputText value="#{cc.attrs.title}"/>
 			</f:facet>
-			<h:column rendered="#{!cc.attrs.formList.isEmpty()}">
+			<rich:column rendered="#{!cc.attrs.formList.isEmpty()}">
 				<f:facet name="header">
 					<a4j:commandLink value="#{msgs.form_list_titleHeader}" 
 						action="#{formListerBean.sortByName}" render="listforms">
@@ -67,6 +66,13 @@
 						onclick="showShareForm('#{msgs.form_share_settings}');" 
 						rendered="#{aForm.permission.share}">
 					</rich:menuItem>
+					
+					<rich:menuItem icon="#{resource['img:save.png']}"
+						label="#{msgs.form_download_xml}"
+						action="#{formDownloader.download(aForm)}"
+						mode="server"
+						rendered="#{aForm.permission.read}">								
+					</rich:menuItem>
 
 					<rich:menuItem icon="#{resource['img:remove.png']}"
 						render="panelContent" label="#{msgs.commons_delete}"
@@ -96,7 +102,7 @@
 					<f:setPropertyActionListener target="#{formEditorBean.editableForm}"
 						value="false" />
 				</a4j:commandLink>
-			</h:column>
+			</rich:column>
 
 			<!-- Actually it is showing the key. But the architecture need to be improved -->
 			<rich:column rendered="#{!cc.attrs.formList.isEmpty()}"  sortBy="#{aForm.owner}">
@@ -108,19 +114,19 @@
 				<h:outputText value="#{aForm.owner}" styleClass="listItemOption"/>
 			</rich:column>
 
-			<h:column rendered="#{!cc.attrs.formList.isEmpty()}">
+			<rich:column rendered="#{!cc.attrs.formList.isEmpty()}">
 				<f:facet name="header">
 					<a4j:commandLink value="#{msgs.form_list_creationDateHeader}"/>
 				</f:facet>
 				<h:outputText value="#{aForm.creationDate}" styleClass="listItemOption"/>
-			</h:column>
+			</rich:column>
 
-			<h:column rendered="#{!cc.attrs.formList.isEmpty()}">
+			<rich:column rendered="#{!cc.attrs.formList.isEmpty()}">
 				<f:facet name="header">
 					<a4j:commandLink value="#{msgs.form_policy}"/>
 				</f:facet>
 				<h:outputText value="#{aForm.policy.toString()}" styleClass="listItemOption"/>
-			</h:column>
+			</rich:column>
 			
 			<!--h:column rendered="#{cc.attrs.formList.isEmpty()}" headerClass="columnEmptyListClass">
 				<f:facet name="header">

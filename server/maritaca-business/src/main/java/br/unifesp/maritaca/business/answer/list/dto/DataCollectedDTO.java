@@ -8,7 +8,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="datacollected")
+@XmlRootElement(name="collecteddata")
 public class DataCollectedDTO {
 
 	@XmlElement

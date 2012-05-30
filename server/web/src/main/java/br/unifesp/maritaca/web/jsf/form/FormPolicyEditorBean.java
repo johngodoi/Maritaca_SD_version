@@ -24,7 +24,7 @@ import br.unifesp.maritaca.web.utils.ConstantsWeb;
 public class FormPolicyEditorBean extends MaritacaJSFBean {
 	
 	private static final long   serialVersionUID = 1L;	
-	private static final String ROOT_FOR_SHARING = "/ws/form/share/";
+	
 	
 	@Inject
 	private FormEditorEJB    formEditorEJB;	
@@ -42,7 +42,7 @@ public class FormPolicyEditorBean extends MaritacaJSFBean {
 		HttpServletRequest request = (HttpServletRequest) fc.getExternalContext().getRequest(); 
 		return request.getScheme() + "://" + request.getServerName() + ":"
 				+ request.getLocalPort() + request.getContextPath()
-				+ ROOT_FOR_SHARING;
+				+ ConstantsWeb.ROOT_FOR_SHARING;
 	}
 	
 	public void setRootForSharing(String root) {

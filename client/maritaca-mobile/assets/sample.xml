@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <form>
-    <id>dd338780-9eb0-11e1-a24b-6c626df9b0a0</id>
-    <policy>PRIVATE</policy>
-    <title>privateForm</title>
-    <url>NMGGsOVgoN</url>
-    <xml>
-<form>
-    <formid>590f3f80-8a6f-11e1-a16e-00163e398418</formid>
+    <id>590f3f80-8a6f-11e1-a16e-00163e398418</id>
     <title>Form Title</title>
-    <userid>XYZ</userid>
+    <url>NMGGsOVgoN</url>
+    <user>XYZ</user>
     <questions> 
 		<text id="0" next="1" required="true" max="100">
 			<help>Enter with name of user.</help>
@@ -65,6 +60,4 @@
 	            <!--  if comparison="equal" value="24" goto="5" /-->
 	    </number>
 	 </questions>    
-</form>
-	</xml>
 </form>

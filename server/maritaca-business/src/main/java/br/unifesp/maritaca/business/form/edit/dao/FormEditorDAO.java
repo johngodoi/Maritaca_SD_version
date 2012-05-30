@@ -21,7 +21,7 @@ public class FormEditorDAO extends BaseDAO {
 
 	@Inject private FormAccessibleByListDAO formAccessibleByListDAO;
 	
-	public void createOrUpdateFormAccessible(Form form, User owner) {
+	public void createOrUpdateFormAccessible(Form form, User owner, List<UUID> deletedLists) {
 		if(form.getKey() != null && owner != null) {
 			//form.getLists().remove(owner.getMaritacaList().getKey());//
 			for(UUID uuid : form.getLists()) {
@@ -43,6 +43,22 @@ public class FormEditorDAO extends BaseDAO {
 						}
 					}
 				}
+			}
+			//Delete Form from the List
+			if(!deletedLists.isEmpty()) {
+				removeLists(deletedLists);
+			}
+		}
+	}
+	
+	private void removeLists(List<UUID> deletedLists) {
+		for(UUID uuid : deletedLists) {
+			FormAccessibleByList formsByList = formAccessibleByListDAO.findFormAccesibleByKey(uuid);			
+			if(formsByList != null) {
+				if(formsByList.getForms().contains(uuid)) {
+					formsByList.getForms().remove(uuid);
+				}
+				formAccessibleByListDAO.persist(formsByList);
 			}
 		}
 	}

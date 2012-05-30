@@ -5,7 +5,7 @@ import org.w3c.dom.Element;
 import android.view.View;
 import br.unifesp.maritaca.mobile.activities.ControllerActivity;
 import br.unifesp.maritaca.mobile.util.ComponentType;
-import br.unifesp.maritaca.mobile.util.XMLParser;
+import br.unifesp.maritaca.mobile.util.XMLFormParser;
 
 public abstract class Question {
 
@@ -37,7 +37,7 @@ public abstract class Question {
 		this.help = help;
 		this.required = required;
 		this.element = element;
-		this.clauses = XMLParser.parseClauses(element);
+		this.clauses = XMLFormParser.parseClauses(element);
 	}
 	
 	/* Abstract methods */

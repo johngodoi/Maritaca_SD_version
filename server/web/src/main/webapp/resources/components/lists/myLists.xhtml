@@ -20,10 +20,10 @@
 			<f:facet name="header">#{msgs.list_header}</f:facet>
 
 			<rich:column>
-				<f:facet name="header">#{msgs.list_name}</f:facet>				
-					
-				<rich:dropDownMenu mode="ajax">
-					<f:facet name="label"><a href="">#{aList.name}</a><h:graphicImage value="#{resource['img:down.png']}" />
+				<f:facet name="header">#{msgs.list_name}</f:facet>								
+				<rich:dropDownMenu mode="ajax" styleClass="listItemOption">								
+					<f:facet name="label">
+						<h:graphicImage value="#{resource['img:down.png']}" />
 					</f:facet>
 					<!-- Edit List --> 
 					<rich:menuItem icon="#{resource['img:edit_form.png']}"
@@ -36,6 +36,11 @@
 						action="#{listMaritacaListBean.removeList(aList)}"
 						render="myListTable"/>
 				</rich:dropDownMenu>
+				
+				<a4j:commandLink value="#{aList.name}"
+					action="#{maritacaListEditorBean.editList(aList)}"
+					render="menuAndContent" execute="@form">
+				</a4j:commandLink>
 			</rich:column>
 
 			<rich:column>

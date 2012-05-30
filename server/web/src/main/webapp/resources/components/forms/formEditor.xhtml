@@ -45,6 +45,13 @@
 				mode="client"
 				icon="#{resource['img:save.png']}" status="formEditor_status"/>
 
+			<!-- Download as XML option -->				
+			<rich:menuItem icon="#{resource['img:save.png']}"
+						label="#{msgs.form_download_xml}"
+						action="#{formDownloader.download(formEditorBean.formDTO)}"
+						mode="server"
+						status="formEditor_status"/>
+
 			<!-- Clear option -->
 			<rich:menuItem label="#{msgs.commons_clear}" 
 				onclick="clearForm()"

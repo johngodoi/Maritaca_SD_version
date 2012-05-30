@@ -10,8 +10,14 @@
     <string name="label_previous">Previous</string>
     <string name="label_help">Help?</string>
     <string name="label_next">Next</string>
-       
+    
+    <!-- -->
+    <string name="label_confirmation">Confirmation</string>
+    <string name="msg_confirmation">Do you want to save the data?</string>
+           
     <!-- Button -->
     <string name="button_login">Login</string>
+    <string name="button_save">Save</string>
+    <string name="button_cancel">Cancel</string>
 
 </resources>

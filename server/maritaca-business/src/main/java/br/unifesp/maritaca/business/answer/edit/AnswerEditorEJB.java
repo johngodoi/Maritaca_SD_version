@@ -1,12 +1,20 @@
 package br.unifesp.maritaca.business.answer.edit;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import br.unifesp.maritaca.business.answer.edit.dao.AnswerEditorDAO;
+import br.unifesp.maritaca.business.answer.list.dto.AnswerWSDTO;
 import br.unifesp.maritaca.business.answer.list.dto.DataCollectedDTO;
+import br.unifesp.maritaca.business.answer.list.dto.QuestionAnswerDTO;
 import br.unifesp.maritaca.business.base.AbstractEJB;
+import br.unifesp.maritaca.business.util.UtilsBusiness;
 import br.unifesp.maritaca.core.Answer;
+import br.unifesp.maritaca.core.QuestionAnswer;
 
 @Stateless
 public class AnswerEditorEJB extends AbstractEJB {
@@ -16,14 +24,24 @@ public class AnswerEditorEJB extends AbstractEJB {
 	@Inject
 	private AnswerEditorDAO answerEditorDAO;
 	
-	public void saveAnswers(DataCollectedDTO collectedDTO){
+	public void saveAnswers(DataCollectedDTO collectedDTO) throws Exception{
+		Answer answer;
+		for (AnswerWSDTO answerDTO : collectedDTO.getAnswerList().getAnswers()) {
+			answer = new Answer();
+			answer.setForm(UUID.fromString(collectedDTO.getFormId()));
+			answer.setUser(UUID.fromString(collectedDTO.getUserId()));
+			answer.setCreationDate(answerDTO.getTimestamp());
+			
+			List<QuestionAnswer> questions = new ArrayList<QuestionAnswer>();
+			for (QuestionAnswerDTO qaDTO : answerDTO.getQuestions()) {
+				QuestionAnswer qa = UtilsBusiness.convertToClass(qaDTO, QuestionAnswer.class);
+				questions.add(qa);				
+			}
+			
+			answer.setQuestions(questions);
+			
+			answerEditorDAO.saveAnswer(answer);		
+		}
 		
-		Answer answer = new Answer();
-		answer.setUser(collectedDTO.getUserId());
-		answer.setForm(collectedDTO.getFormId());
-		answer.setXml(collectedDTO.toString());
-		
-		answerEditorDAO.saveAnswers(answer);		
 	}
-
 }

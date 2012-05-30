@@ -5,11 +5,13 @@ import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import br.unifesp.maritaca.persistence.annotations.Column;
 import br.unifesp.maritaca.persistence.annotations.JSONValue;
 
 @Entity
+@Table(name="FormAccessibleByList")
 public class FormAccessibleByList {
 	
 	@Id

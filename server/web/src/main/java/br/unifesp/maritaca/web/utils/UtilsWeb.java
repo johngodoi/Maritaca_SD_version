@@ -1,14 +1,20 @@
 package br.unifesp.maritaca.web.utils;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.HttpURLConnection;
 import java.util.ResourceBundle;
 
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+
+import br.unifesp.maritaca.business.exception.MaritacaException;
 
 public class UtilsWeb {
 	public static final String SPACEWILDCARD="_";	
@@ -79,4 +85,50 @@ public class UtilsWeb {
         return request;
     }
 
+	/**
+	 * This method makes responses in JSON format. Generally is use to 
+	 * treat exceptions and send back to the user an specific message. 
+	 * @param response
+	 * @param params
+	 */
+	public static void makeResponseInJSON(HttpServletResponse response, 
+													String... params) {
+		HttpServletResponse response1 = response;
+		response1.setContentType("application/json");
+		sendValuesInJson(response1, params);
+		response1.setStatus(HttpURLConnection.HTTP_OK);
+    }
+	
+	/**
+	 * This method writes, in JSON format, params in the HttpServletResponse.
+	 * @param response
+	 * @param params
+	 * @throws IOException
+	 */
+	public static void sendValuesInJson(HttpServletResponse response, String... params) {
+		PrintWriter printWriter;
+		try {
+			printWriter = response.getWriter();
+			if (params.length % 2 != 0) {
+				throw new IllegalArgumentException("Arguments should be name=value*");
+			} 
+			
+			printWriter.append('{');
+			for (int i = 0; i < params.length; i+=2) {
+				if (i > 0) {
+					printWriter.append(',');
+				}
+				printWriter.append('"');
+				printWriter.append(params[i]);
+				printWriter.append('"');
+				printWriter.append(':');
+				printWriter.append('"');
+				printWriter.append(params[i+1]);
+				printWriter.append('"');
+			}
+			printWriter.append('}');
+		} catch (IOException e) {			
+			throw new MaritacaException(e.getMessage());
+		}
+	}
 }

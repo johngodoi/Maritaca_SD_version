@@ -4,12 +4,14 @@ import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import br.unifesp.maritaca.persistence.annotations.Column;
 import br.unifesp.maritaca.persistence.annotations.Minimal;
 import br.unifesp.maritaca.util.ConstantsCore;
 
 @Entity
+@Table(name="OAuthToken")
 public class OAuthToken {
 	@Id
 	private UUID key;

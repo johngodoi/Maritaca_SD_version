@@ -134,8 +134,8 @@ var Field = function() {
 		html += createTextProperty('fieldHelp', this.help, help);
 		html += createRequiredProperty(this.required);
 		
-		if(nextQuestions = $('fieldset#xmlForm > ol > li.editing').nextAll().length<=1){
-			this.conditionals = new Array();
+		if(nextQuestions = $('fieldset#xmlForm > ol > li.editing').nextAll().length<1){
+			html += this.disabledConditions();
 		} else {
 			html += this.addConditions();
 		}
@@ -144,6 +144,13 @@ var Field = function() {
 		html += '</table>';
 		
 		$('#properties').append(html);
+	};
+	
+	this.disabledConditions = function(){
+		this.conditionals = new Array();
+		
+		var msg = jQuery.i18n.prop('msg_field_conditional_error_last_question');
+		return this.conditionalButton('addMessage(\''+msg+'\',\'error\');');
 	};
 	
 	this.addConditions = function(){
@@ -214,6 +221,14 @@ var Field = function() {
 			var questionOption = nextQuestions[i].textContent;
 			html += '<option '+selected+'>' + questionOption + '</option>';
 		}
+		
+		var endSelected = '';
+		if(goTo=='-1'){
+			endSelected = 'selected="selected"';
+		}
+		
+		var formEnd = jQuery.i18n.prop('msg_field_end_form');
+		html += '<option '+endSelected+'>' + formEnd + '</option>';
 		html += '</select>';
 				
 		return html;
@@ -239,13 +254,17 @@ var Field = function() {
 		return comboBox;
 	};
 		
-	this.addConditionalButton = function(){
+	this.addConditionalButton = function(){		
+		return this.conditionalButton('new Field().addConditionalProperty();');
+	};
+	
+	this.conditionalButton = function(onclick){
 		msgAdd = jQuery.i18n.prop('msg_field_add_conditional');
 		
 		var html =	'<tr><td colspan="2">'+
 		    '<table id="addConditionalTable">'+
 		    '<tr><td colspan="2">'+
-			'<button type="button" onclick="new Field().addConditionalProperty();">'+						
+			'<button type="button" onclick="'+onclick+'">'+						
 				msgAdd+
 			'</button>'+
 			'</td></tr>'+
@@ -279,7 +298,13 @@ var Field = function() {
 			
 			conditional.comparator=condComps[i].value;
 			conditional.value=condValues[i].value;
-			conditional.goTo=questionNumberToId(condGoTos[i].value);
+			
+			var formEnd = jQuery.i18n.prop('msg_field_end_form');
+			if(condGoTos[i].value == formEnd){
+				conditional.goTo='-1';
+			} else {
+				conditional.goTo=questionNumberToId(condGoTos[i].value);
+			}
 			conditional.id=condIds[i].attributes[1].value;
 			
 			localConditionals.push(conditional);
@@ -412,6 +437,7 @@ var Box = function(type) {
 	this.msgAddBox          = null; 
 	this.msgRemoveError     = null;
 	this.msgBoxLabel        = null;
+	this.byDefault	        = '';
 
 	this.toHTMLSpecific = function(){
 		var html = '';
@@ -451,10 +477,13 @@ var Box = function(type) {
 		var repeatedItem = null; 
 		$('input.'+this.optionLabelInputClass).each(function() {
 			var item = $(this).val();
-			if(itensToSave.indexOf(item)!=-1){
-				repeatedItem = $(this)[0];
-			}			
-			itensToSave.push(item);
+			if(item != null && item != ''){
+				if(itensToSave.indexOf(item)!=-1){
+					repeatedItem = $(this)[0];
+				} else {
+					itensToSave.push(item);
+				}
+			}
 		});
 
 		if(repeatedItem !=null){
@@ -469,7 +498,9 @@ var Box = function(type) {
 	};
 	
 	this.showSpecificProperties = function(){
-		var html = createLabelProperty("",this.msgBoxLabel);
+		var defaultTitle = jQuery.i18n.prop('msg_field_defaultProperty');
+		var html = createTextProperty('fieldDefault', this.bydefault, defaultTitle) ;
+		html += createLabelProperty("",this.msgBoxLabel);
 		
 		html += this.openTable();
 		for(var i=0; i<this.optionsTitles.length; i++){
@@ -530,8 +561,13 @@ var Box = function(type) {
 	};
 	
 	this.saveSpecificProperties = function(){
+		this.bydefault = $('#fieldDefault').val();
 		var itensToSave = new Array();
 		$('input.'+this.optionLabelInputClass).each(function() {
+			var item = $(this).val();
+			if(item==null){
+				item='';				
+			}
 			itensToSave.push( $(this).val() );
 		});
 		this.optionsTitles = itensToSave;
@@ -555,6 +591,23 @@ var CheckBox  = function(){
 	this.msgAddBox        = jQuery.i18n.prop('msg_box_add'); 
 	this.msgRemoveError   = jQuery.i18n.prop('msg_box_remove_error');
 	this.msgBoxLabel      = jQuery.i18n.prop('msg_box_label');
+	
+	this.toHTMLSpecific = function(){
+		var html = '';
+		for(var i=0; i<this.optionsTitles.length; i++){
+			html +='<input ';
+			html += attribCreator('type', this.type);
+			html += attribCreator('name', this.boxId);
+			html += attribCreator('readonly', 'readonly');
+			if(this.optionsTitles[i] == this.bydefault) {
+				html += 'checked';
+			}
+			html += '>';
+			html += this.optionsTitles[i];
+			html += '</input>';	
+		}				
+		return html;
+	};
 }; 
 CheckBox.prototype = new Box("checkbox");
 
@@ -564,6 +617,23 @@ var RadioBox  = function(){
 	this.msgAddBox        = jQuery.i18n.prop('msg_box_add'); 
 	this.msgRemoveError   = jQuery.i18n.prop('msg_box_remove_error');
 	this.msgBoxLabel      = jQuery.i18n.prop('msg_box_label');
+	
+	this.toHTMLSpecific = function(){
+		var html = '';
+		for(var i=0; i<this.optionsTitles.length; i++){
+			html +='<input ';
+			html += attribCreator('type', this.type);
+			html += attribCreator('name', this.boxId);
+			html += attribCreator('readonly', 'readonly');
+			if(this.optionsTitles[i] == this.bydefault) {
+				html += 'checked';
+			}
+			html += '>';
+			html += this.optionsTitles[i];
+			html += '</input>';	
+		}				
+		return html;
+	};
 }; 
 RadioBox.prototype = new Box("radio");
 
@@ -577,11 +647,15 @@ var ComboBox  = function(){
 	this.toHTMLSpecific = function(){
 		var html = "<select>";
 		for(var i = 0; i < this.optionsTitles.length; i++){
-			html += '<option value="' + this.optionsTitles[i] + '">';
+			html += '<option value="' + this.optionsTitles[i]+'"';
+			if(this.optionsTitles[i] == this.bydefault) {
+				html += 'selected';
+			}
+			html += '>';
 			html += this.optionsTitles[i];
 			html += '</option>';
 		}		
-		html += "</select>";		
+		html += "</select>";
 
 		return html;
 	};
