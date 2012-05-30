@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import br.unifesp.maritaca.business.base.dao.BaseDAO;
+import br.unifesp.maritaca.business.util.ConstantsBusiness;
 import br.unifesp.maritaca.persistence.EntityManagerFactory;
 import br.unifesp.maritaca.persistence.entity.Answer;
 import br.unifesp.maritaca.persistence.entity.Configuration;
