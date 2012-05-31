@@ -38,9 +38,9 @@ import br.unifesp.maritaca.persistence.permission.Permission;
 import br.unifesp.maritaca.persistence.util.UtilsPersistence;
 
 /**
+ * This class to manage the form edition
  * 
- * @author alvaro, jimvalsan
- *
+ * @author alvarohenry and jimvalsan
  */
 @Stateless
 public class FormEditorEJB extends AbstractEJB {

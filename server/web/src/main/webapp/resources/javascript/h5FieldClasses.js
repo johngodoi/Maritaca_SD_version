@@ -16,6 +16,7 @@
 var Field = function() {
 	this.type     = '';
 	this.id       = '';
+	this.next	  = '';
 	this.required = false;
 	
 	this.title    = '';
@@ -55,7 +56,7 @@ var Field = function() {
 	
 	this.toXML = function() {
 		var xml = '';
-		xml += '<' + this.type + ' id="' + this.id + '" required="' + this.required  + '" ';
+		xml += '<' + this.type + ' id="' + this.id + '" next="' + this.next + '" required="' + this.required  + '" ';
 		xml += this.addXMLSpecificAttributes();
 		xml += '>';
 		xml += tagCreator('label', this.title);
