@@ -145,6 +145,9 @@ var Field = function() {
 		html += '</table>';
 		
 		$('#properties').append(html);
+		
+		// initialize JQuery Datepicker;
+		$('.datepicker').datepicker();
 	};
 	
 	this.disabledConditions = function(){
@@ -714,9 +717,9 @@ var NumberField = function(){
 	};
 	
 	this.validateSpecific = function(){
-		maxValue  = $('#fieldMaxValue').val();
-		minValue  = $('#fieldMinValue').val();
-		bydefault = $('#fieldDefault').val();
+		maxValue  = parseInt( $('#fieldMaxValue').val() );
+		minValue  = parseInt( $('#fieldMinValue').val() );
+		bydefault = parseInt( $('#fieldDefault').val() );
 		
 		if(maxValue != '' && minValue != ''){
 			if(maxValue <= minValue){
@@ -777,7 +780,7 @@ var DateField = function() {
 		html += attribCreator('id', 'field_' + this.id);
 		html += attribCreator('readonly', 'readonly');
 		if(this.bydefault)
-			att += attribCreator('value', this.bydefault);
+			html += attribCreator('value', this.bydefault);
 		html += this.specificAttributes();
 		html += '/>';
 		
@@ -812,9 +815,9 @@ var DateField = function() {
 	};
 	
 	this.validateSpecific= function(){				
-		maxValue  = $('#fieldMaxValue').val();
-		minValue  = $('#fieldMinValue').val();
-		bydefault = $('#fieldDefault').val();
+		maxValue  = new Date( $('#fieldMaxValue').val() );
+		minValue  = new Date( $('#fieldMinValue').val() );
+		bydefault = new Date( $('#fieldDefault').val() );
 		
 		if(maxValue != '' && minValue != ''){
 			if(maxValue <= minValue){
