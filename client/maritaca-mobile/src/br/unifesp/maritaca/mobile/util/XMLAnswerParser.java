@@ -23,8 +23,8 @@ public class XMLAnswerParser {
     private XMLAnswerParser(XmlPullParser pullParser, XmlSerializer serializer, String formId, String userId, Question[] questions) {
         this.pullParser = pullParser;
         this.serializer = serializer;
-        this.formId 	 = formId;
-        this.userId		 = userId;
+        this.setFormId(formId);
+        this.setUserId(userId);
         this.questions	 = questions;
     }
 	
@@ -191,5 +191,21 @@ public class XMLAnswerParser {
 			//error
 		}
 		return null;
+	}
+
+	public String getFormId() {
+		return formId;
+	}
+
+	public void setFormId(String formId) {
+		this.formId = formId;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 }

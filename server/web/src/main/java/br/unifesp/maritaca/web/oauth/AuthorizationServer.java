@@ -40,11 +40,11 @@ public class AuthorizationServer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final Log log = LogFactory.getLog(AuthorizationServer.class);
 
-	private static final String WEB_LOGIN_URI = "/faces/views/login.xhtml";
+	private static final String WEB_LOGIN_URI = "/faces/views/mobileLogin.xhtml";
 
 	private static final String AUTHORIZATION_REQUEST = "/authorizationRequest";
 	private static final String AUTHORIZATION_CONFIRM = "/authorizationConfirm";
-	private static final String ACCESS_TOKEN_REQUEST = "/accessTokenRequest";
+	private static final String ACCESS_TOKEN_REQUEST  = "/accessTokenRequest";
 
 	private static final String OAUTH_USER_ID = "user_id";
 	private static final String OAUTH_ERROR_URI = "error_uri";
@@ -90,7 +90,7 @@ public class AuthorizationServer extends HttpServlet {
 	 * This method allows to the third-party application request an authorization
 	 * through a request URI by adding the following parameters: client_id, response_type
 	 * and redirect_uri, these parameters are mandatory. If the client_id exist in the
-	 * system this redirect to the user login to ask if it's agree. 
+	 * system this redirect to the user login to ask if he agrees. 
 	 * @param request 
 	 * @param response
 	 */
@@ -173,7 +173,7 @@ public class AuthorizationServer extends HttpServlet {
 	 * @param response
 	 */
 	public void accessToken(HttpServletRequest request, HttpServletResponse response) {
-		try {
+		try {					
 			oauthRequest = new OAuthAuthzRequest(request);
 			
 			String code = oauthRequest.getParam(OAuth.OAUTH_CODE);

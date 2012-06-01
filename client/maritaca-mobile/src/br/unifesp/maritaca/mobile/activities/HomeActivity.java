@@ -27,7 +27,7 @@ public class HomeActivity extends Activity implements OnClickListener {
 		switch (view.getId()) {
 		case R.id.button_login:
 			Log.d("Maritaca", "logging");
-			Intent intent = new Intent(this, ControllerActivity.class);
+			Intent intent = new Intent(this, LoginActivity.class);
 			startActivity(intent);
 			break;
 		}

@@ -89,11 +89,11 @@ public class XMLParser {
 			
 			NodeList nodeList = document.getElementsByTagName(Constants.FORM_ID);
 			Node node = nodeList.item(0);
-			formId = node.getFirstChild().getNodeValue();
+			setFormId(node.getFirstChild().getNodeValue());
 			
 			nodeList = document.getElementsByTagName(Constants.FORM_TITLE);
 			node = nodeList.item(0);
-			formTitle = node.getFirstChild().getNodeValue();
+			setFormTitle(node.getFirstChild().getNodeValue());
 			
 			nodeList = document.getElementsByTagName(Constants.FORM_XML);
 			node = nodeList.item(0);
@@ -235,5 +235,21 @@ public class XMLParser {
 			}
 		}
 		return clauses;
+	}
+
+	public String getFormId() {
+		return formId;
+	}
+
+	public void setFormId(String formId) {
+		this.formId = formId;
+	}
+
+	public String getFormTitle() {
+		return formTitle;
+	}
+
+	public void setFormTitle(String formTitle) {
+		this.formTitle = formTitle;
 	}
 }

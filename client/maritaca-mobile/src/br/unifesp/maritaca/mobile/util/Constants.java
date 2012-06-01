@@ -12,8 +12,10 @@ public class Constants {
 	// xml form elements
 	public static final String FORM_ID 			= "id";
 	public static final String FORM_TITLE 		= "title";
+	public static final String FORM_URL	 		= "url";
+	public static final String FORM_USER	 		= "user";
 	public static final String FORM_QUESTIONS 	= "questions";
-	public static final String FORM_XML 			= "xml";
+	public static final String FORM_XML 			= "sas";
 	
 	public static final String XML_ID 			= "id";
 	public static final String XML_NEXT 			= "next";
@@ -36,5 +38,16 @@ public class Constants {
 	public static final String ANSWER_USERID		= "userId";
 	public static final String ANSWER_ANSWERS		= "answers";
 	public static final String ANSWER_ANSWER		= "answer";
-	public static final String ANSWER_QUESTION	= "question";	
+	public static final String ANSWER_QUESTION	= "question";
+	
+	
+	// OAuth constants
+	public static final String CLIENT_URL = "http://localhost:8082/";
+	public static final String MARITACA_MOBILE = "maritacamobile";
+	public static final String AUTHORIZATION_REQUEST = "authorizationRequest";
+	public static final String SERVER_URL = "http://10.0.2.2:8080/maritaca-web/oauth/";	
+	public static final String RESPONSE_TYPE = "response_type";
+	public static final String MARITACA_SECRET = "maritacasecret";
+	public static final String ACCESS_TOKEN_REQUEST = "accessTokenRequest";
+	public static final int    SERVER_PORT = 8082;
 }
