@@ -147,7 +147,8 @@ var Field = function() {
 		$('#properties').append(html);
 		
 		// initialize JQuery Datepicker;
-		$('.datepicker').datepicker();
+		var locale = jQuery.i18n.prop('msg_datepicker_locale');
+		$('.datepicker').datepicker( $.datepicker.regional[locale] );
 	};
 	
 	this.disabledConditions = function(){
@@ -793,6 +794,9 @@ var DateField = function() {
 	
 	this.addXMLElements = function(){
 		var xml = tagCreator('default', this.bydefault);
+		// get date format from JQuery datepicker
+		var dateFormat = $( ".datepicker" ).datepicker( "option", "dateFormat" );
+		xml += tagCreator('format', dateFormat);
 		return xml;
 	};
 	
