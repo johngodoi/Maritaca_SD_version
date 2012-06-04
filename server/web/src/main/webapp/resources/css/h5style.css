@@ -146,9 +146,11 @@ select.goToCond{
 #xmlForm{
 	float: left;
 	width: 387px;
+	height: 460px;
 	background-color: #EFEFEF;
 	padding: 10px;
 	margin: 0 0 0 5px;
+	overflow-y: auto;
 }
 
 #xmlForm ol {
