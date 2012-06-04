@@ -72,7 +72,7 @@ public class FormEditorEJB extends AbstractEJB {
 		formDAO.persistForm(form);
 		formDTO.setKey(form.getKey());
 		//Build the app mobile
-		this.buildNewApkFromFormId(form);		
+		//this.buildNewApkFromFormId(form);		
 	}
 	
 	/**
@@ -138,7 +138,7 @@ public class FormEditorEJB extends AbstractEJB {
 			form.setPolicy(originalForm.getPolicy());			
 			formDAO.persistForm(form);
 			//Build the app mobile
-			this.buildNewApkFromFormId(form);
+			//this.buildNewApkFromFormId(form);
 		}
 		else {
 			throw new AuthorizationDenied(Document.FORM, originalForm.getKey(), user.getKey(), Operation.UPDATE);
@@ -219,7 +219,7 @@ public class FormEditorEJB extends AbstractEJB {
 				formEditorDAO.createOrUpdateFormAccessible(originalForm, user, checkDeletedLists(originalLists, originalForm.getLists()));
 			}
 			//Build the app mobile
-			this.buildNewApkFromFormId(originalForm);
+			//this.buildNewApkFromFormId(originalForm);
 			return true;
 		}
 		else {
@@ -417,5 +417,5 @@ public class FormEditorEJB extends AbstractEJB {
 
 	public void setCreateAnswers(boolean createAnswers) {
 		this.createAnswers = createAnswers;
-	}	
+	}
 }

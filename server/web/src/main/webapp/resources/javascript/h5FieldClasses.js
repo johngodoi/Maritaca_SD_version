@@ -470,7 +470,9 @@ var Box = function(type) {
 		var xml = '';
 		xml += tagCreator('default', this.bydefault);
 		for(var i=0; i<this.optionsTitles.length; i++){
-			xml += '<option>';
+			xml += '<option ';
+				xml += 'value="' + (parseInt(i)+1) + '"';
+			xml += '>';
 			xml += this.optionsTitles[i];
 			xml += '</option>';
 		}		

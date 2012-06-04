@@ -31,15 +31,20 @@ public class FormEditorBean extends MaritacaJSFBean {
 	private boolean editableForm;
 
 	public FormEditorBean() {
-		clean();
+		clean(true);
+	}
+	
+	public void clean(){
+		clean(true);
 	}
 
-	public void clean() {
+	public void clean(boolean cleanAll) {
 		setFormDTO(new FormDTO());
 		getFormDTO().setPermission(new Permission(Operation.READ, Operation.UPDATE, Operation.DELETE, Operation.SHARE));
-		setXml("");
 		setNewForm(true);
 		setEditableForm(true);
+		if(cleanAll)
+			setXml("");
 	}
 	
 	public void setFormFromLister(FormDTO formDTO){
@@ -51,6 +56,7 @@ public class FormEditorBean extends MaritacaJSFBean {
 		if (formDTO.getKey() == null) {
 			formEditorEJB.saveNewForm(formDTO);
 		} else {
+			// TODO maybe it has to have an modification date
 			formEditorEJB.updateForm(formDTO, getCurrentUser());			
 		}
 		
@@ -67,9 +73,7 @@ public class FormEditorBean extends MaritacaJSFBean {
 	}
 	
 	public void saveFormAs() {
-		setFormDTO(new FormDTO());
-		setNewForm(true);
-		setEditableForm(true);
+		clean(false);
 		formDTO.setXml(getXml());
 		formDTO.setTitle(getSaveFormAsTitle());
 		saveForm();
@@ -78,7 +82,7 @@ public class FormEditorBean extends MaritacaJSFBean {
 	public void deleteForm() {
 		if (getFormDTO().getKey() != null) {
 			formEditorEJB.deleteForm(getFormDTO(), getCurrentUser());
-			clean();
+			clean(true);
 			setNewForm(true);
 			addMessageInfo("form_edit_delete_success");
 			return;
@@ -90,10 +94,6 @@ public class FormEditorBean extends MaritacaJSFBean {
 		if(!formEditorEJB.downloadApkFromFormId(getFacesContext(), formDTO)) {
 			addMessageError("form_edit_download_app_failed");
 		}
-	}
-	
-	public void setFormAsCollectable(){
-		System.out.println("set as collectable: " + formDTO.getTitle());
 	}
 
 	////// Getters and Setters //////
