@@ -1,5 +1,7 @@
 package br.unifesp.maritaca.mobile.model.comparators;
 
+import java.util.Date;
+
 import br.unifesp.maritaca.mobile.model.Clause;
 
 public class Greater extends Clause {
@@ -35,4 +37,8 @@ public class Greater extends Clause {
 		return false;
 	}
 
+	@Override
+	public boolean evaluate(Date value) {
+		return true;
+	}
 }

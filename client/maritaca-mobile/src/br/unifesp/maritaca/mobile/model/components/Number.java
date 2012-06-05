@@ -1,5 +1,8 @@
 package br.unifesp.maritaca.mobile.model.components;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.w3c.dom.Element;
 
 import android.text.InputType;
@@ -10,6 +13,7 @@ import br.unifesp.maritaca.mobile.activities.ControllerActivity;
 import br.unifesp.maritaca.mobile.model.Question;
 import br.unifesp.maritaca.mobile.util.ComponentType;
 import br.unifesp.maritaca.mobile.util.Constants;
+import br.unifesp.maritaca.mobile.util.UtilConverters;
 import br.unifesp.maritaca.mobile.util.XMLFormParser;
 
 public class Number extends Question {
@@ -23,11 +27,11 @@ public class Number extends Question {
 					Element element) {
 		super(id, previous, next, help, label, required, element);
 		
-		this.min = XMLFormParser.convertStringToInteger(element.getAttribute(Constants.MIN));
-		this.max = XMLFormParser.convertStringToInteger(element.getAttribute(Constants.MAX));
+		this.min = UtilConverters.convertStringToInteger(element.getAttribute(Constants.MIN));
+		this.max = UtilConverters.convertStringToInteger(element.getAttribute(Constants.MAX));
 		String  attrDefault = XMLFormParser.getTagValue(Constants.DEFAULT, element);
 
-		super.value = XMLFormParser.convertStringToInteger(attrDefault);
+		super.value = UtilConverters.convertStringToInteger(attrDefault);
 	}
 
 	@Override
@@ -58,7 +62,7 @@ public class Number extends Question {
 		field.setInputType(InputType.TYPE_CLASS_NUMBER);
 		String value = getValue() != null ? getValue().toString() : ""; 
 		field.setText(value);
-		return field;
+		return field;	
 	}
 
 	@Override

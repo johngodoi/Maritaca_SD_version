@@ -22,13 +22,12 @@ public class HomeActivity extends Activity implements OnClickListener {
         continueButton.setOnClickListener(this); 
     }
 
-	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.button_login:
-			Log.d("Maritaca", "logging");
+			Log.i("Info", "Logging");
 			Intent intent = new Intent(this, ControllerActivity.class);
-			startActivity(intent);
+			this.startActivity(intent);
 			break;
 		}
 	}

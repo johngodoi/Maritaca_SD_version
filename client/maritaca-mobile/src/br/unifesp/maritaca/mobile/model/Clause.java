@@ -1,5 +1,7 @@
 package br.unifesp.maritaca.mobile.model;
 
+import java.util.Date;
+
 public abstract class Clause {
 	
 	protected String value;
@@ -15,6 +17,8 @@ public abstract class Clause {
 	public abstract boolean evaluate(Integer value);
 	
 	public abstract boolean evaluate(Float value);
+	
+	public abstract boolean evaluate(Date value);
 	
 	public Integer getGoToIndex() {
 		return goToIndex;
