@@ -15,14 +15,17 @@ public final class R {
         public static final int project_logo=0x7f020001;
     }
     public static final class id {
-        public static final int button_login=0x7f050004;
-        public static final int label_password=0x7f050002;
-        public static final int label_user=0x7f050000;
-        public static final int text_password=0x7f050003;
-        public static final int text_user=0x7f050001;
+        public static final int button_login=0x7f050006;
+        public static final int label_password=0x7f050004;
+        public static final int label_user=0x7f050002;
+        public static final int rowCheckBox=0x7f050001;
+        public static final int rowTextView=0x7f050000;
+        public static final int text_password=0x7f050005;
+        public static final int text_user=0x7f050003;
     }
     public static final class layout {
-        public static final int main=0x7f030000;
+        public static final int checkbox=0x7f030000;
+        public static final int main=0x7f030001;
     }
     public static final class string {
         public static final int app_name=0x7f040000;
