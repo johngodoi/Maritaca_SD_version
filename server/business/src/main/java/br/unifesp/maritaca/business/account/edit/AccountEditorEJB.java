@@ -3,7 +3,6 @@ package br.unifesp.maritaca.business.account.edit;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import br.unifesp.maritaca.business.account.edit.dao.AccountEditorDAO;
 import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
 import br.unifesp.maritaca.business.exception.MaritacaException;
 import br.unifesp.maritaca.business.util.UtilsBusiness;
@@ -40,7 +39,7 @@ public class AccountEditorEJB{
 	}
 	
 	private void saveAccount(UserDTO userDto) {
-		User user = UtilsBusiness.convertToClass(userDto, User.class);
+		User user = UtilsBusiness.reflectClasses(userDto, User.class);
 		getAccountEditorDAO().saveUser(user);
 		userDto.setKey(user.getKey());
 		userDto.setMaritacaList(user.getMaritacaList());

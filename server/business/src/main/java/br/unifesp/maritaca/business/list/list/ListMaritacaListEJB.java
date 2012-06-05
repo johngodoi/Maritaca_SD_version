@@ -7,7 +7,6 @@ import java.util.UUID;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import br.unifesp.maritaca.business.list.list.dao.ListMaritacaListDAO;
 import br.unifesp.maritaca.business.list.list.dto.MaritacaListDTO;
 import br.unifesp.maritaca.business.util.UtilsBusiness;
 import br.unifesp.maritaca.persistence.entity.MaritacaList;
@@ -29,7 +28,7 @@ public class ListMaritacaListEJB {
 		List<MaritacaList>    list    = maritacaListDAO.getMaritacaListsByOwner(user);
 		List<MaritacaListDTO> listDto = new ArrayList<MaritacaListDTO>();
 		for(MaritacaList listItem : list){
-			listDto.add(UtilsBusiness.convertToClass(listItem, MaritacaListDTO.class));
+			listDto.add(UtilsBusiness.reflectClasses(listItem, MaritacaListDTO.class));
 		}		
 		return listDto;
 	}
@@ -49,7 +48,7 @@ public class ListMaritacaListEJB {
 		
 		for(MaritacaList list : lists){
 			MaritacaListDTO listDto;
-			listDto = UtilsBusiness.convertToClass(list, MaritacaListDTO.class);
+			listDto = UtilsBusiness.reflectClasses(list, MaritacaListDTO.class);
 			foundLists.add(listDto);			
 		}		
 		return foundLists; 

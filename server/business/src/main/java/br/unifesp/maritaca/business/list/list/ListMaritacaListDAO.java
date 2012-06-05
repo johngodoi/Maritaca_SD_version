@@ -1,4 +1,4 @@
-package br.unifesp.maritaca.business.list.list.dao;
+package br.unifesp.maritaca.business.list.list;
 
 import java.util.Collection;
 import java.util.List;

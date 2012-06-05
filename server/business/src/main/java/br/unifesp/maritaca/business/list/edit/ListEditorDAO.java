@@ -1,4 +1,4 @@
-package br.unifesp.maritaca.business.list.edit.dao;
+package br.unifesp.maritaca.business.list.edit;
 
 import java.util.List;
 import java.util.UUID;

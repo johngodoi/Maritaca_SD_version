@@ -25,7 +25,7 @@ public class UtilBusinessTest {
 		mList.setKey(UUID_1);
 		
 		MaritacaListDTO mListDto;
-		mListDto = UtilsBusiness.convertToClass(mList, MaritacaListDTO.class);
+		mListDto = UtilsBusiness.reflectClasses(mList, MaritacaListDTO.class);
 		
 		assertEquals(mList.getName(),mListDto.getName());
 		assertEquals(mList.getKey(),mListDto.getKey());
@@ -33,7 +33,7 @@ public class UtilBusinessTest {
 		User user = new User();
 		user.setEmail(USER_EMAIL);
 		
-		UserDTO userDto = UtilsBusiness.convertToClass(user, UserDTO.class);		
+		UserDTO userDto = UtilsBusiness.reflectClasses(user, UserDTO.class);		
 		assertEquals(userDto.getEmail(),user.getEmail());
 	}
 	
@@ -44,14 +44,14 @@ public class UtilBusinessTest {
 		mListDto.setKey(UUID_1);
 		mListDto.setOwner(UUID.fromString(UUID_2));
 		
-		MaritacaList mList = UtilsBusiness.convertToClass(mListDto, MaritacaList.class);
+		MaritacaList mList = UtilsBusiness.reflectClasses(mListDto, MaritacaList.class);
 		assertEquals(mList.getName(),mListDto.getName());
 		assertEquals(mList.getKey(),mListDto.getKey());
 		assertEquals(mList.getOwner().getKey(),mListDto.getOwner());
 		
 		UserDTO userDto = new UserDTO();
 		userDto.setEmail(USER_EMAIL);
-		User user = UtilsBusiness.convertToClass(userDto, User.class);
+		User user = UtilsBusiness.reflectClasses(userDto, User.class);
 		assertEquals(userDto.getEmail(),user.getEmail());
 	}
 }

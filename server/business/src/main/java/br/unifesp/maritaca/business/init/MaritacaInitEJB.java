@@ -5,7 +5,6 @@ import java.util.Map;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import br.unifesp.maritaca.business.init.dao.MaritacaInitDAO;
 
 /**
  * Enterprise Java Bean to init Maritaca entities

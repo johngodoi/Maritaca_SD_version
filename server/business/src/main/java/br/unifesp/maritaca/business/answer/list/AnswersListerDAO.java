@@ -1,4 +1,4 @@
-package br.unifesp.maritaca.business.answer.list.dao;
+package br.unifesp.maritaca.business.answer.list;
 
 import java.util.List;
 import java.util.UUID;

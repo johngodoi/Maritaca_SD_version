@@ -67,7 +67,7 @@ var createNumberProperty = function(id, value, title) {
 //general method to create date component
 var createDateProperty = function(id, value, title) {
 	var label = '<tr><td>' + tagCreator('label', title) + '</td>';
-	label += '<td>' + inputCreator('date', id, value, null, null, null) + '</td></tr>';
+	label += '<td>' + inputCreator('date', id, value, null, null, 'datepicker') + '</td></tr>';
 	return label;
 };
 

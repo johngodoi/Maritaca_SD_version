@@ -9,7 +9,6 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import br.unifesp.maritaca.business.account.edit.dto.UserDTO;
-import br.unifesp.maritaca.business.answer.list.dao.AnswersListerDAO;
 import br.unifesp.maritaca.business.answer.list.dto.AnswerDTO;
 import br.unifesp.maritaca.business.answer.list.dto.AnswerListerDTO;
 import br.unifesp.maritaca.business.base.AbstractEJB;

@@ -20,11 +20,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import br.unifesp.maritaca.business.exception.MaritacaException;
-import br.unifesp.maritaca.business.oauth.DataAccessTokenDTO;
-import br.unifesp.maritaca.business.oauth.OAuthClientDTO;
-import br.unifesp.maritaca.business.oauth.OAuthCodeDTO;
 import br.unifesp.maritaca.business.oauth.OAuthEJB;
-import br.unifesp.maritaca.business.oauth.OAuthTokenDTO;
+import br.unifesp.maritaca.business.oauth.dto.DataAccessTokenDTO;
+import br.unifesp.maritaca.business.oauth.dto.OAuthClientDTO;
+import br.unifesp.maritaca.business.oauth.dto.OAuthCodeDTO;
+import br.unifesp.maritaca.business.oauth.dto.OAuthTokenDTO;
 import br.unifesp.maritaca.persistence.util.ConstantsPersistence;
 import br.unifesp.maritaca.web.utils.ConstantsWeb;
 import br.unifesp.maritaca.web.utils.UtilsWeb;

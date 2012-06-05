@@ -1,4 +1,4 @@
-package br.unifesp.maritaca.business.oauth;
+package br.unifesp.maritaca.business.oauth.dto;
 
 import java.util.UUID;
 

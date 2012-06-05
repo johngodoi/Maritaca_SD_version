@@ -34,13 +34,13 @@ public class UtilsPersistence {
 	}
 
 	/**
-	 * This method sets all the character  
+	 * This method sets all the string's characters in uppercase. 
 	 * 
-	 * @param valor
-	 * @return
+	 * @param value is the string to be set
+	 * @return a string with all the elements in uppercase.
 	 */
-	public static String toUpperFirst(String valor) {
-		StringBuilder result = new StringBuilder(valor);
+	public static String toUpperFirst(String value) {
+		StringBuilder result = new StringBuilder(value);
 		result.setCharAt(0, new String(Character.toString(result.charAt(0)))
 				.toUpperCase().charAt(0));
 

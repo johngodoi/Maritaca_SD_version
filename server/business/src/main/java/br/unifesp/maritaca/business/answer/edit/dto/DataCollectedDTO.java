@@ -1,4 +1,4 @@
-package br.unifesp.maritaca.business.answer.list.dto;
+package br.unifesp.maritaca.business.answer.edit.dto;
 
 import java.io.StringWriter;
 
@@ -7,6 +7,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
 
 @XmlRootElement(name="collecteddata")
 public class DataCollectedDTO {

@@ -17,15 +17,15 @@
         </date>   
         <radio id="2" next="3" required="true"> 
             <label>RadioBox title</label>
-            <help>hhh</help>
+            <help>radio</help>
             <default>a</default>
             <option>a</option>
             <option>b</option>
             <option>c</option>
         </radio>
         <combobox id="3" next="4" required="true"> 
-            <label>RadioBox title</label>
-            <help>hhh</help>
+            <label>ComboBox title</label>
+            <help>combobox</help>
             <default>cx</default>
             <option>ax</option>
             <option>bx</option>
@@ -33,7 +33,7 @@
         </combobox>
         <number id="4" max="40" min="10" next="-1" required="true">
             <label>Number title</label>
-            <help>20</help>
+            <help>number</help>
             <default>11</default>
         </number>        
     </questions>

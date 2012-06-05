@@ -18,7 +18,7 @@
 		<composite:attribute name="idScroller"    required="false" />
 	</composite:interface>
 	<composite:implementation>
-		<rich:dataTable value="#{cc.attrs.formList}" id="#{cc.attrs.idem}" 
+		<h:dataTable value="#{cc.attrs.formList}" id="#{cc.attrs.idem}" 
 			columnClasses="listFormColumnTitle, listFormColumnOwner, listFormColumnCreationDate, listFormColumnPolicy"   
 			var="aForm" width="100%" styleClass="maritacaTable" rows="#{cc.attrs.itemsPerPage}">
 			<f:facet name="header">
@@ -146,6 +146,6 @@
 			<f:facet name="footer">
                 <rich:dataScroller id="#{cc.attrs.idScroller}" rendered="#{cc.attrs.numberOfPages>1}" for="#{cc.attrs.idem}" maxPages="#{cc.attrs.numberOfPages}" page="1" />
             </f:facet>
-		</rich:dataTable>
+		</h:dataTable>
 	</composite:implementation>
 </ui:composition>

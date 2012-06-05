@@ -1,19 +1,15 @@
-package br.unifesp.maritaca.business.form.edit.dao;
+package br.unifesp.maritaca.business.form.edit;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 import javax.inject.Inject;
 
 import br.unifesp.maritaca.business.base.dao.BaseDAO;
 import br.unifesp.maritaca.business.base.dao.FormAccessibleByListDAO;
-import br.unifesp.maritaca.business.parser.RandomAnswersCreator;
-import br.unifesp.maritaca.persistence.entity.Answer;
 import br.unifesp.maritaca.persistence.entity.Form;
 import br.unifesp.maritaca.persistence.entity.FormAccessibleByList;
-import br.unifesp.maritaca.persistence.entity.MaritacaDate;
 import br.unifesp.maritaca.persistence.entity.MaritacaList;
 import br.unifesp.maritaca.persistence.entity.User;
 

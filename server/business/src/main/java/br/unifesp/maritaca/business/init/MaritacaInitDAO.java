@@ -1,4 +1,4 @@
-package br.unifesp.maritaca.business.init.dao;
+package br.unifesp.maritaca.business.init;
 
 import java.util.Map;
 import java.util.UUID;

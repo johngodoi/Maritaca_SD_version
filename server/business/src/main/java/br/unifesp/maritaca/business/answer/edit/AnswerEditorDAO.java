@@ -1,4 +1,4 @@
-package br.unifesp.maritaca.business.answer.edit.dao;
+package br.unifesp.maritaca.business.answer.edit;
 
 import me.prettyprint.cassandra.utils.TimeUUIDUtils;
 import me.prettyprint.hector.api.Cluster;
