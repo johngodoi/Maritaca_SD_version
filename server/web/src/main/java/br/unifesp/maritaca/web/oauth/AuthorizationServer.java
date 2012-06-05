@@ -27,6 +27,7 @@ import br.unifesp.maritaca.business.oauth.OAuthCodeDTO;
 import br.unifesp.maritaca.business.oauth.OAuthEJB;
 import br.unifesp.maritaca.business.oauth.OAuthTokenDTO;
 import br.unifesp.maritaca.util.ConstantsCore;
+import br.unifesp.maritaca.web.jsf.util.MaritacaConstants;
 
 /**
  * This Servlet provides the OAuth2 Services and generate the access code and
@@ -50,9 +51,10 @@ public class AuthorizationServer extends HttpServlet {
 	private static final String OAUTH_ERROR_URI = "error_uri";
 	private static final String OAUTH_ERROR_DESCRIPTION = "error_description";
 	private static final String OAUTH_ERROR = "error";
+	private static final String USER_PARAM = "user";
 
-	private OAuthAuthzRequest oauthRequest = null;	
-	private OAuthIssuerImpl oauthIssuerImpl = new OAuthIssuerImpl(new MD5Generator());
+	private OAuthAuthzRequest oauthRequest    = null;	
+	private OAuthIssuerImpl   oauthIssuerImpl = new OAuthIssuerImpl(new MD5Generator());
 
 	@Inject
 	private OAuthEJB oauthEJB;
@@ -178,8 +180,7 @@ public class AuthorizationServer extends HttpServlet {
 			
 			String code = oauthRequest.getParam(OAuth.OAUTH_CODE);
 			String clientId = oauthRequest.getClientId();
-			DataAccessTokenDTO dataDTO = 
-					oauthEJB.findOAuthCodeAndClient(code, clientId);
+			DataAccessTokenDTO dataDTO = oauthEJB.findOAuthCodeAndClient(code, clientId);
 			
 			// verify OAuthCode
 			OAuthCodeDTO oauthCodeDTO = dataDTO.getOauthCodeDTO();
@@ -228,7 +229,8 @@ public class AuthorizationServer extends HttpServlet {
 			sendValuesInJson(response, 
 							 OAuth.OAUTH_ACCESS_TOKEN, tokenDTO.getAccessToken(),
 							 OAuth.OAUTH_EXPIRES_IN, String.valueOf(ConstantsCore.OAUTH_EXPIRATION_DATE),
-							 OAuth.OAUTH_REFRESH_TOKEN, tokenDTO.getRefreshToken());
+							 OAuth.OAUTH_REFRESH_TOKEN, tokenDTO.getRefreshToken(),
+							 USER_PARAM, clientDTO.getUserEmail());
 			response.setStatus(HttpURLConnection.HTTP_OK);
 		} catch (OAuthProblemException e) {
 			treatException(response, 

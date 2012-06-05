@@ -12,5 +12,5 @@ public class MaritacaConstants {
 	public static final String ACCOUNT_CREATE_SUCCESS    = "account_create_success";
 	public static final String ACCOUNT_CREATE_USED_EMAIL = "account_create_used_email";
 	
-	public static final Integer ITEMS_PER_PAGE    = 10;
+	public static final Integer ITEMS_PER_PAGE    = 10;		
 }

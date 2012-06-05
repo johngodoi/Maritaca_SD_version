@@ -15,9 +15,20 @@
     <string name="label_confirmation">Confirmation</string>
     <string name="msg_confirmation">Do you want to save the data?</string>
            
+    <!-- menu -->
+    <string name="main_title">Maritaca Mobile</string>
+    
+    <string name="form_collect">Collect</string>
+    <string name="form_sync">Send Data</string>
+    <string name="form_settings">Settings</string>
+    
+    <string name="application_settings">Settings</string>
+    
     <!-- Button -->
     <string name="button_login">Login</string>
     <string name="button_save">Save</string>
     <string name="button_cancel">Cancel</string>
+    <string name="user">User:</string>
+    <string name="expires_in">Expires in:</string>
 
 </resources>

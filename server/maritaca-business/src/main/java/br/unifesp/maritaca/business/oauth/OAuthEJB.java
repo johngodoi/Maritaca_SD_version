@@ -47,9 +47,12 @@ public class OAuthEJB extends AbstractEJB {
 		if(authCode != null)
 			dataDTO.setOauthCodeDTO(UtilsBusiness.convertToClass(authCode, OAuthCodeDTO.class));
 		else 
-			dataDTO.setOauthCodeDTO(null);
+			dataDTO.setOauthCodeDTO(null);				
 		
 		dataDTO.setOauthClientDTO(this.findOAuthClientByClientId(clientId));
+		
+		User user = userDAO.findUserByKey(UUID.fromString(dataDTO.getOauthCodeDTO().getUser()));
+		dataDTO.getOauthClientDTO().setUserEmail(user.getEmail());
 		
 		return dataDTO;
 	}
@@ -57,7 +60,7 @@ public class OAuthEJB extends AbstractEJB {
 	public void saveOAuthToken(OAuthTokenDTO tokenDTO) {
 		OAuthToken oauthToken = UtilsBusiness.convertToClass(tokenDTO, OAuthToken.class);
 		
-		oauthDAO.persisteOAuthToken(oauthToken);
+		oauthDAO.persistOAuthToken(oauthToken);
 	}
 
 	public OAuthTokenDTO findOAuthTokenByToken(String accessToken) {

@@ -1,12 +1,12 @@
 package br.unifesp.maritaca.mobile.view;
 
-import br.unifesp.maritaca.mobile.activities.ControllerActivity;
-import br.unifesp.maritaca.mobile.activities.R;
-import br.unifesp.maritaca.mobile.model.Question;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import br.unifesp.maritaca.mobile.activities.ControllerActivity;
+import br.unifesp.maritaca.mobile.activities.R;
+import br.unifesp.maritaca.mobile.model.Question;
 
 public class Viewer {
 
