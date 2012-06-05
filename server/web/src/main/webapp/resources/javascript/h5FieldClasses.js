@@ -59,8 +59,8 @@ var Field = function() {
 		xml += '<' + this.type + ' id="' + this.id + '" next="' + this.next + '" required="' + this.required  + '" ';
 		xml += this.addXMLSpecificAttributes();
 		xml += '>';
-		xml += tagCreator('label', this.title);
-		xml += tagCreator('help', this.help);
+		xml += tagCreatorXML('label', this.title);
+		xml += tagCreatorXML('help', this.help);
 		xml += this.addConditionalsXML();
 		xml += this.addXMLElements();
 		xml += '</' + this.type + '>';
@@ -184,25 +184,25 @@ var Field = function() {
 	};
 
 	this.createConditionalProperty = function(comparison, value, goTo){		
-		var ifHtml        = tagCreator('label',jQuery.i18n.prop('msg_field_if_conditional'));
+		var ifHtml        = tagCreatorHTML('label',jQuery.i18n.prop('msg_field_if_conditional'));
 		var comboHtml     = this.conditionalComboBox(comparison);
 		var inputIfHtml   = inputCreator('text',null,value,null,null,'valueCond');
 		var removeIfBtHtml= this.removeConditionalButton(this.lastCondTableId);
 		
-		var ifTdOneHtml   = tagCreator('td', ifHtml);
-		var ifTdTwoHtml   = tagCreator('td', comboHtml+inputIfHtml+removeIfBtHtml);
+		var ifTdOneHtml   = tagCreatorHTML('td', ifHtml);
+		var ifTdTwoHtml   = tagCreatorHTML('td', comboHtml+inputIfHtml+removeIfBtHtml);
 		
 		var rowOne        = ifTdOneHtml + ifTdTwoHtml;	
-		var rowOneHtml    = tagCreator('tr', rowOne);
+		var rowOneHtml    = tagCreatorHTML('tr', rowOne);
 		
-		var thenHtml      = tagCreator('label',jQuery.i18n.prop('msg_field_then_conditional'));
+		var thenHtml      = tagCreatorHTML('label',jQuery.i18n.prop('msg_field_then_conditional'));
 		var inputThenHtml = this.goToBox(goTo);
 		
-		var thenTdOneHtml = tagCreator('td', thenHtml,'alignRight');
-		var thenTdTwoHtml = tagCreator('td', inputThenHtml);		
+		var thenTdOneHtml = tagCreatorHTML('td', thenHtml,'alignRight');
+		var thenTdTwoHtml = tagCreatorHTML('td', inputThenHtml);		
 		
 		var rowTwo        = thenTdOneHtml + thenTdTwoHtml; 
-		var rowTwoHtml    = tagCreator('tr',rowTwo);
+		var rowTwoHtml    = tagCreatorHTML('tr',rowTwo);
 		
 		var tableHtml     = '<table class="condPropTable" id="'+this.lastCondTableId+'">'; 
 		tableHtml        += rowOneHtml + rowTwoHtml + '</table>';
@@ -251,7 +251,7 @@ var Field = function() {
 			if(conditionals[i] == selectedValue){
 				options += '<option selected="selected">' + conditionals[i] + '</option>';
 			} else {
-				options += tagCreator('option',conditionals[i]);
+				options += tagCreatorHTML('option',conditionals[i]);
 			}
 		}
 		var comboBox = '<select class="compCond">'+options+'</select>';
@@ -378,8 +378,8 @@ var TextBox = function() {
 	};
 	
 	this.addXMLElements = function(){
-		var xml = tagCreator('size', this.size);
-		xml += tagCreator('default', this.bydefault);
+		var xml = tagCreatorXML('size', this.size);
+		xml += tagCreatorXML('default', this.bydefault);
 		return xml;
 
 	};
@@ -468,7 +468,7 @@ var Box = function(type) {
 	
 	this.addXMLElements = function(){
 		var xml = '';
-		xml += tagCreator('default', this.bydefault);
+		xml += tagCreatorXML('default', this.bydefault);
 		for(var i=0; i<this.optionsTitles.length; i++){
 			xml += '<option ';
 				xml += 'value="' + (parseInt(i)+1) + '"';
@@ -697,7 +697,7 @@ var NumberField = function(){
 	};
 	
 	this.addXMLElements = function(){
-		var xml = tagCreator('default', this.bydefault);
+		var xml = tagCreatorXML('default', this.bydefault);
 		return xml;
 	};
 	
@@ -795,10 +795,10 @@ var DateField = function() {
 	};
 	
 	this.addXMLElements = function(){
-		var xml = tagCreator('default', this.bydefault);
+		var xml = tagCreatorXML('default', this.bydefault);
 		// get date format from JQuery datepicker
 		var dateFormat = $( ".datepicker" ).datepicker( "option", "dateFormat" );
-		xml += tagCreator('format', dateFormat);
+		xml += tagCreatorXML('format', dateFormat);
 		return xml;
 	};
 	
