@@ -1,13 +1,10 @@
 package br.unifesp.maritaca.mobile.model.components;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 import org.w3c.dom.Element;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import br.unifesp.maritaca.mobile.activities.ControllerActivity;
@@ -65,7 +62,7 @@ public class DateQuestion extends Question {
 	public View getLayout(ControllerActivity activity) {
 		field = new DatePicker(activity);	
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(getValue()!=null?getValue():new Date());
+		cal.setTime(getValue());
 		field.init(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), null);
 		return field;
 	}

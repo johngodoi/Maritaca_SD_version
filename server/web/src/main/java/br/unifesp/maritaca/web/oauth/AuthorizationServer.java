@@ -21,6 +21,7 @@ import org.apache.commons.logging.LogFactory;
 
 import br.unifesp.maritaca.business.exception.MaritacaException;
 import br.unifesp.maritaca.business.oauth.OAuthEJB;
+
 import br.unifesp.maritaca.business.oauth.dto.DataAccessTokenDTO;
 import br.unifesp.maritaca.business.oauth.dto.OAuthClientDTO;
 import br.unifesp.maritaca.business.oauth.dto.OAuthCodeDTO;
@@ -43,10 +44,12 @@ public class AuthorizationServer extends HttpServlet {
 
 	private static final String AUTHORIZATION_REQUEST = "/authorizationRequest";
 	private static final String AUTHORIZATION_CONFIRM = "/authorizationConfirm";
-	private static final String ACCESS_TOKEN_REQUEST = "/accessTokenRequest";
+	private static final String ACCESS_TOKEN_REQUEST  = "/accessTokenRequest";
 
-	private OAuthAuthzRequest oauthRequest = null;	
-	private OAuthIssuerImpl oauthIssuerImpl = new OAuthIssuerImpl(new MD5Generator());
+	private static final String USER_PARAM            = "user";
+
+	private OAuthAuthzRequest oauthRequest    = null;	
+	private OAuthIssuerImpl   oauthIssuerImpl = new OAuthIssuerImpl(new MD5Generator());
 
 	@Inject
 	private OAuthEJB oauthEJB;
@@ -84,7 +87,7 @@ public class AuthorizationServer extends HttpServlet {
 	 * This method allows to the third-party application request an authorization
 	 * through a request URI by adding the following parameters: client_id, response_type
 	 * and redirect_uri, these parameters are mandatory. If the client_id exist in the
-	 * system this redirect to the user login to ask if it's agree. 
+	 * system this redirect to the user login to ask if he agrees. 
 	 * @param request 
 	 * @param response
 	 */
@@ -167,13 +170,12 @@ public class AuthorizationServer extends HttpServlet {
 	 * @param response
 	 */
 	public void accessToken(HttpServletRequest request, HttpServletResponse response) {
-		try {
+		try {					
 			oauthRequest = new OAuthAuthzRequest(request);
 			
 			String code = oauthRequest.getParam(OAuth.OAUTH_CODE);
 			String clientId = oauthRequest.getClientId();
-			DataAccessTokenDTO dataDTO = 
-					oauthEJB.findOAuthCodeAndClient(code, clientId);
+			DataAccessTokenDTO dataDTO = oauthEJB.findOAuthCodeAndClient(code, clientId);
 			
 			// verify OAuthCode
 			OAuthCodeDTO oauthCodeDTO = dataDTO.getOauthCodeDTO();
@@ -222,7 +224,8 @@ public class AuthorizationServer extends HttpServlet {
 			UtilsWeb.sendValuesInJson(response, 
 							 OAuth.OAUTH_ACCESS_TOKEN, tokenDTO.getAccessToken(),
 							 OAuth.OAUTH_EXPIRES_IN, String.valueOf(ConstantsPersistence.OAUTH_EXPIRATION_DATE),
-							 OAuth.OAUTH_REFRESH_TOKEN, tokenDTO.getRefreshToken());
+							 OAuth.OAUTH_REFRESH_TOKEN, tokenDTO.getRefreshToken(),
+							 USER_PARAM, clientDTO.getUserEmail());
 			response.setStatus(HttpURLConnection.HTTP_OK);
 		} catch (OAuthProblemException e) {
 			UtilsWeb.makeResponseInJSON(response, 

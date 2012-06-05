@@ -31,7 +31,15 @@
             <option>bx</option>
             <option>cx</option>
         </combobox>
-        <number id="4" max="40" min="10" next="-1" required="true">
+        <checkbox id="4" next="5" required="true"> 
+            <label>CheckBox title</label>
+            <help>checkbox</help>
+            <default>acx</default>
+            <option>aax</option>
+            <option>abx</option>
+            <option>acx</option>
+        </checkbox>
+        <number id="5" max="40" min="10" next="-1" required="true">
             <label>Number title</label>
             <help>number</help>
             <default>11</default>

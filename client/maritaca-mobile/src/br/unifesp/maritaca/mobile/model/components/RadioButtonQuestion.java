@@ -17,7 +17,7 @@ import br.unifesp.maritaca.mobile.util.XMLFormParser;
 
 public class RadioButtonQuestion extends Question {
 	
-	private RadioGroup field;
+	private RadioGroup radioGroup;
 	private int idWrapContent = RadioGroup.LayoutParams.WRAP_CONTENT;
 	private List<Option> options;
 
@@ -57,7 +57,7 @@ public class RadioButtonQuestion extends Question {
 
 	@Override
 	public View getLayout(ControllerActivity activity) {
-		field = new RadioGroup(activity);
+		radioGroup = new RadioGroup(activity);
 		for(int i = options.size()-1; i >= 0; i--) {
 			RadioButton radioButton = new RadioButton(activity);
 			radioButton.setId(options.get(i).getId());
@@ -66,9 +66,9 @@ public class RadioButtonQuestion extends Question {
 				radioButton.setChecked(true);
 			}			
 			LinearLayout.LayoutParams layoutParams = new RadioGroup.LayoutParams(idWrapContent, idWrapContent);
-			field.addView(radioButton, 0, layoutParams);
+			radioGroup.addView(radioButton, 0, layoutParams);
 		}
-		return field;	
+		return radioGroup;	
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class RadioButtonQuestion extends Question {
 
 	@Override
 	public void save(View answer) {
-		RadioButton radioButton = (RadioButton)field.findViewById(field.getCheckedRadioButtonId());
+		RadioButton radioButton = (RadioButton)radioGroup.findViewById(radioGroup.getCheckedRadioButtonId());
 		value = radioButton.getText();
 	}
 }

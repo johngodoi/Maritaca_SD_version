@@ -1,17 +1,13 @@
 package br.unifesp.maritaca.mobile.view;
 
-import java.util.Calendar;
-import java.util.Date;
 
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import br.unifesp.maritaca.mobile.activities.ControllerActivity;
 import br.unifesp.maritaca.mobile.activities.R;
 import br.unifesp.maritaca.mobile.model.Question;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 public class Viewer {
 

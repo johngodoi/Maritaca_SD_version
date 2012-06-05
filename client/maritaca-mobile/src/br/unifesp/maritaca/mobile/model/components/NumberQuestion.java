@@ -1,5 +1,8 @@
 package br.unifesp.maritaca.mobile.model.components;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.w3c.dom.Element;
 
 import android.text.InputType;
@@ -13,31 +16,34 @@ import br.unifesp.maritaca.mobile.util.Constants;
 import br.unifesp.maritaca.mobile.util.UtilConverters;
 import br.unifesp.maritaca.mobile.util.XMLFormParser;
 
-public class Text extends Question {
-	
+public class NumberQuestion extends Question {
+
+	private Integer min;
 	private Integer max;
 	
-	public Text(	Integer id, Integer previous, 
+	public NumberQuestion(	Integer id, Integer previous, 
 					Integer next, String help,
 					String label, Boolean required, 
 					Element element) {
 		super(id, previous, next, help, label, required, element);
 		
+		this.min = UtilConverters.convertStringToInteger(element.getAttribute(Constants.MIN));
 		this.max = UtilConverters.convertStringToInteger(element.getAttribute(Constants.MAX));
-		super.value = XMLFormParser.getTagValue(Constants.DEFAULT, element);
+		String  attrDefault = XMLFormParser.getTagValue(Constants.DEFAULT, element);
+
+		super.value = UtilConverters.convertStringToInteger(attrDefault);
 	}
-	
+
 	@Override
 	public ComponentType getComponentType() {
-		return ComponentType.TEXT;
+		return ComponentType.NUMBER;
 	}
 	
-	@Override
-	public Integer getNext() {
+	public Integer getNext() {		
 		if(clauses.length < 1)
 			return next;
 		for(int i = 0; i < clauses.length; i++){
-			String value = this.getValue();
+			Integer value = this.getValue();
 			if(clauses[i].evaluate(value)) {
 				return clauses[i].getGoToIndex(); 
 			}
@@ -46,26 +52,27 @@ public class Text extends Question {
 	}
 	
 	@Override
-	public String getValue() {
-		return value.toString();
+	public Integer getValue() {
+		return value != null ? new Integer(value.toString()) : null;
 	}
-	
+
 	@Override
 	public View getLayout(ControllerActivity activity) {
 		EditText field = new EditText(activity);
-		field.setInputType(InputType.TYPE_CLASS_TEXT);
-		field.setText(getValue().toString());
+		field.setInputType(InputType.TYPE_CLASS_NUMBER);
+		String value = getValue() != null ? getValue().toString() : ""; 
+		field.setText(value);
 		return field;	
 	}
-	
+
 	@Override
 	public boolean validate() {
-		if (getValue().length() <= max) {
+		if (getValue() >= min && getValue() <= max) {
 			return true;
-		}
+		}		
 		return false;
 	}
-	
+
 	@Override
 	public void save(View answer) {
 		value = ((TextView) answer).getText();	
@@ -74,8 +81,9 @@ public class Text extends Question {
 	@Override
 	public String toString() {
 		String result = super.toString() + 
+						", min: " + min +  
 						", max: " + max + 
-						", default: "	+ value;
+						", default: " + value;
 		return result;
 	}
 }

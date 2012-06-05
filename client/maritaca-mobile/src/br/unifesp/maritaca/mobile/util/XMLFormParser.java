@@ -27,11 +27,12 @@ import br.unifesp.maritaca.mobile.model.comparators.Greater;
 import br.unifesp.maritaca.mobile.model.comparators.GreaterEqual;
 import br.unifesp.maritaca.mobile.model.comparators.Less;
 import br.unifesp.maritaca.mobile.model.comparators.LessEqual;
+import br.unifesp.maritaca.mobile.model.components.CheckBoxQuestion;
 import br.unifesp.maritaca.mobile.model.components.ComboBoxQuestion;
 import br.unifesp.maritaca.mobile.model.components.DateQuestion;
-import br.unifesp.maritaca.mobile.model.components.Number;
+import br.unifesp.maritaca.mobile.model.components.NumberQuestion;
 import br.unifesp.maritaca.mobile.model.components.RadioButtonQuestion;
-import br.unifesp.maritaca.mobile.model.components.Text;
+import br.unifesp.maritaca.mobile.model.components.TextQuestion;
 import br.unifesp.maritaca.mobile.model.components.util.Option;
 
 public class XMLFormParser {
@@ -60,6 +61,7 @@ public class XMLFormParser {
 		try {			
 			NodeList nodeList = document.getElementsByTagName(Constants.FORM_ID);
 			Node node = nodeList.item(0);
+
 			node.getFirstChild().getNodeValue();
 			
 			nodeList = document.getElementsByTagName(Constants.FORM_TITLE);
@@ -138,10 +140,10 @@ public class XMLFormParser {
 		Question question = null;
 		switch (ComponentType.getComponentTypeByDescription(type)) {
 			case TEXT:
-				question = new Text(id, previous, next, help, label, required, element);
+				question = new TextQuestion(id, previous, next, help, label, required, element);
 				break;
 			case NUMBER:
-				question = new Number(id, previous, next, help, label, required, element);
+				question = new NumberQuestion(id, previous, next, help, label, required, element);
 				break;
 			case COMBOBOX:
 				question = new ComboBoxQuestion(id, previous, next, help, label, required, element);
@@ -150,6 +152,7 @@ public class XMLFormParser {
 				question = new RadioButtonQuestion(id, previous, next, help, label, required, element);
 				break;
 			case CHECKBOX:
+				question = new CheckBoxQuestion(id, previous, next, help, label, required, element);
 				break;
 			case DATE:
 				question = new DateQuestion(id, previous, next, help, label, required, element);
@@ -243,5 +246,13 @@ public class XMLFormParser {
 			}
 		}
 		return clauses;
+	}
+
+	public String getFormId() {
+		return formId;
+	}
+
+	public void setFormId(String formId) {
+		this.formId = formId;
 	}
 }

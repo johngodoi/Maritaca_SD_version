@@ -13,7 +13,8 @@ import javax.inject.Inject;
 @Stateless
 public class MaritacaInitEJB {
 	
-	@Inject MaritacaInitDAO maritacaInitDAO;
+	@Inject
+	private MaritacaInitDAO maritacaInitDAO;
 	
 	public void initMaritaca(Map<String, String> params) {
 		maritacaInitDAO.createAllEntities(params);
