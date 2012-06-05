@@ -29,10 +29,12 @@ var FormClass = function() {
 			xml += '<questions>';
 			for(var i in this.elements) {
 				this.elements[i].id		= i;
+				// add the next_id value
 				if(i < (this.elements.length-1))
 					this.elements[i].next	= parseInt(i)+1;
 				else 
 					this.elements[i].next	= -1;
+				
 				xml += this.elements[i].toXML(i);
 			}
 		xml += '</questions>';

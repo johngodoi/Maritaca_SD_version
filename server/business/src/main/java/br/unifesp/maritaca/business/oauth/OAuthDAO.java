@@ -31,7 +31,7 @@ public class OAuthDAO extends BaseDAO {
 		return null;
 	}
 
-	public void persisteOAuthToken(OAuthToken oauthToken) {
+	public void persistOAuthToken(OAuthToken oauthToken) {
 		entityManager.persist(oauthToken);		
 	}
 

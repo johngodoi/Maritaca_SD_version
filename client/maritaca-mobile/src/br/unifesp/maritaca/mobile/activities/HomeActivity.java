@@ -1,35 +1,36 @@
 package br.unifesp.maritaca.mobile.activities;
 
-import br.unifesp.maritaca.mobile.activities.R;
-
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
+import br.unifesp.maritaca.mobile.util.OAuthTokenManager;
 
-public class HomeActivity extends Activity implements OnClickListener {
+public class HomeActivity extends Activity{
 
+	private static Context context;
+	
 	/** Called when the activity is first created. */
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate(Bundle savedInstanceState) {         	
+    	super.onCreate(savedInstanceState);
+    	
+		HomeActivity.context = getApplicationContext();
+    	
         setContentView(R.layout.main);
         
-        // set up click listeners
-        View continueButton = findViewById(R.id.button_login);
-        continueButton.setOnClickListener(this); 
+        if(OAuthTokenManager.tokenExists()){        	
+        	OAuthTokenManager.loadTokenFile();
+        	Intent intent = new Intent(this, MenuActivity.class);
+        	startActivity(intent);        	
+        } else {
+        	Intent intent = new Intent(this, LoginActivity.class);
+        	startActivity(intent);
+        }        
     }
 
-	public void onClick(View view) {
-		switch (view.getId()) {
-		case R.id.button_login:
-			Log.i("Info", "Logging");
-			Intent intent = new Intent(this, ControllerActivity.class);
-			this.startActivity(intent);
-			break;
-		}
-	}
 
+	public static Context getContext() {
+		return context;
+	}
 }

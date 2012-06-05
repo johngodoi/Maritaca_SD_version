@@ -10,40 +10,64 @@ package br.unifesp.maritaca.mobile.activities;
 public final class R {
     public static final class attr {
     }
+    public static final class color {
+        public static final int black=0x7f040000;
+    }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
-        public static final int project_logo=0x7f020001;
+        public static final int bt_green=0x7f020000;
+        public static final int footer_gradient=0x7f020001;
+        public static final int ic_launcher=0x7f020002;
+        public static final int mobile_background=0x7f020003;
+        public static final int project_logo=0x7f020004;
     }
     public static final class id {
-        public static final int button_login=0x7f050006;
-        public static final int label_password=0x7f050004;
-        public static final int label_user=0x7f050002;
-        public static final int rowCheckBox=0x7f050001;
-        public static final int rowTextView=0x7f050000;
-        public static final int text_password=0x7f050005;
-        public static final int text_user=0x7f050003;
+        public static final int application_settings=0x7f070006;
+        public static final int expiration_time=0x7f070008;
+        public static final int form_collect=0x7f070004;
+        public static final int form_sync=0x7f070005;
+        public static final int logged_user=0x7f070007;
+        public static final int main_title=0x7f070003;
+        public static final int rowCheckBox=0x7f070001;
+        public static final int rowTextView=0x7f070000;
+        public static final int web_engine=0x7f070002;
     }
     public static final class layout {
         public static final int checkbox=0x7f030000;
-        public static final int main=0x7f030001;
+        public static final int login=0x7f030001;
+        public static final int main=0x7f030002;
+        public static final int menu=0x7f030003;
     }
     public static final class string {
-        public static final int app_name=0x7f040000;
-        public static final int button_cancel=0x7f04000a;
+        public static final int app_name=0x7f050000;
+        public static final int application_settings=0x7f05000c;
+        public static final int button_cancel=0x7f05000f;
         /**  Button 
          */
-        public static final int button_login=0x7f040008;
-        public static final int button_save=0x7f040009;
+        public static final int button_login=0x7f05000d;
+        public static final int button_save=0x7f05000e;
+        public static final int expires_in=0x7f050011;
+        public static final int form_collect=0x7f050009;
+        public static final int form_settings=0x7f05000b;
+        public static final int form_sync=0x7f05000a;
         /**  
          */
-        public static final int label_confirmation=0x7f040006;
-        public static final int label_help=0x7f040004;
-        public static final int label_next=0x7f040005;
-        public static final int label_password=0x7f040002;
-        public static final int label_previous=0x7f040003;
+        public static final int label_confirmation=0x7f050006;
+        public static final int label_help=0x7f050004;
+        public static final int label_next=0x7f050005;
+        public static final int label_password=0x7f050002;
+        public static final int label_previous=0x7f050003;
         /**  Label 
          */
-        public static final int label_user=0x7f040001;
-        public static final int msg_confirmation=0x7f040007;
+        public static final int label_user=0x7f050001;
+        /**  menu 
+         */
+        public static final int main_title=0x7f050008;
+        public static final int msg_confirmation=0x7f050007;
+        public static final int user=0x7f050010;
+    }
+    public static final class style {
+        public static final int MaritacaMobileTheme=0x7f060002;
+        public static final int button_gr=0x7f060000;
+        public static final int footer_font=0x7f060001;
     }
 }

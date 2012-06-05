@@ -61,6 +61,7 @@ public class XMLFormParser {
 		try {			
 			NodeList nodeList = document.getElementsByTagName(Constants.FORM_ID);
 			Node node = nodeList.item(0);
+
 			node.getFirstChild().getNodeValue();
 			
 			nodeList = document.getElementsByTagName(Constants.FORM_TITLE);
@@ -245,5 +246,13 @@ public class XMLFormParser {
 			}
 		}
 		return clauses;
+	}
+
+	public String getFormId() {
+		return formId;
+	}
+
+	public void setFormId(String formId) {
+		this.formId = formId;
 	}
 }

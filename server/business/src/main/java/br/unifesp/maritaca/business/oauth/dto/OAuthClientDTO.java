@@ -9,6 +9,8 @@ public class OAuthClientDTO {
 	private String clientId;
 	
 	private String secret;
+	
+	private String userEmail;
 
 	public UUID getKey() {
 		return key;
@@ -32,6 +34,14 @@ public class OAuthClientDTO {
 
 	public void setSecret(String secret) {
 		this.secret = secret;
+	}
+
+	public String getUserEmail() {
+		return userEmail;
+	}
+
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
 	}
 	
 }
