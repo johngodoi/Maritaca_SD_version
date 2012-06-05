@@ -16,6 +16,7 @@
 var Field = function() {
 	this.type     = '';
 	this.id       = '';
+	this.next	  = '';
 	this.required = false;
 	
 	this.title    = '';
@@ -55,7 +56,7 @@ var Field = function() {
 	
 	this.toXML = function() {
 		var xml = '';
-		xml += '<' + this.type + ' id="' + this.id + '" required="' + this.required  + '" ';
+		xml += '<' + this.type + ' id="' + this.id + '" next="' + this.next + '" required="' + this.required  + '" ';
 		xml += this.addXMLSpecificAttributes();
 		xml += '>';
 		xml += tagCreator('label', this.title);
@@ -144,6 +145,10 @@ var Field = function() {
 		html += '</table>';
 		
 		$('#properties').append(html);
+		
+		// initialize JQuery Datepicker;
+		var locale = jQuery.i18n.prop('msg_datepicker_locale');
+		$('.datepicker').datepicker( $.datepicker.regional[locale] );
 	};
 	
 	this.disabledConditions = function(){
@@ -369,13 +374,12 @@ var TextBox = function() {
 	
 	this.addXMLSpecificAttributes = function() {
 		var xml = '';
-		if(this.bydefault)
-			xml += attribCreator('value', this.bydefault);
 		return xml;
 	};
 	
 	this.addXMLElements = function(){
 		var xml = tagCreator('size', this.size);
+		xml += tagCreator('default', this.bydefault);
 		return xml;
 
 	};
@@ -410,7 +414,7 @@ var TextBox = function() {
 	
 	this.setSpecificFromXMLDoc = function($xmlDoc){
 		this.size = $xmlDoc.find('size').text();
-		this.bydefault = $xmlDoc.attr('value');
+		this.bydefault = $xmlDoc.find('default').text();
 	};
 };
 // Inheritance to TextBox from Field
@@ -464,8 +468,11 @@ var Box = function(type) {
 	
 	this.addXMLElements = function(){
 		var xml = '';
+		xml += tagCreator('default', this.bydefault);
 		for(var i=0; i<this.optionsTitles.length; i++){
-			xml += '<option>';
+			xml += '<option ';
+				xml += 'value="' + (parseInt(i)+1) + '"';
+			xml += '>';
 			xml += this.optionsTitles[i];
 			xml += '</option>';
 		}		
@@ -581,6 +588,7 @@ var Box = function(type) {
 			parsedOptions.push(foundOptions[i].textContent);
 		}
 		this.optionsTitles = parsedOptions;
+		this.bydefault = $xmlDoc.find('default').text();
 	};
 };
 Box.prototype = new Field();
@@ -676,6 +684,8 @@ var NumberField = function(){
 		html += attribCreator( 'type' , this.type);
 		html += attribCreator('id', 'field_' + this.id);
 		html += attribCreator('readonly', 'readonly');
+		if(this.bydefault)
+			html += attribCreator('value', this.bydefault);
 		html += this.specificAttributes();
 		html += '/>';
 		
@@ -687,8 +697,8 @@ var NumberField = function(){
 	};
 	
 	this.addXMLElements = function(){
-		//TODO: return IF comparisons
-		return "";
+		var xml = tagCreator('default', this.bydefault);
+		return xml;
 	};
 	
 	this.setJSONValuesSpecific = function(element) {
@@ -710,9 +720,9 @@ var NumberField = function(){
 	};
 	
 	this.validateSpecific = function(){
-		maxValue  = $('#fieldMaxValue').val();
-		minValue  = $('#fieldMinValue').val();
-		bydefault = $('#fieldDefault').val();
+		maxValue  = parseInt( $('#fieldMaxValue').val() );
+		minValue  = parseInt( $('#fieldMinValue').val() );
+		bydefault = parseInt( $('#fieldDefault').val() );
 		
 		if(maxValue != '' && minValue != ''){
 			if(maxValue <= minValue){
@@ -747,15 +757,13 @@ var NumberField = function(){
 	this.specificAttributes = function(){
 		var att = attribCreator('min', this.minValue);
 		att += attribCreator('max', this.maxValue);
-		if(this.bydefault)
-			att += attribCreator('value', this.bydefault);
 		return att;
 	};
 	
 	this.setSpecificFromXMLDoc = function($xmlDoc){
 		this.maxValue = $xmlDoc.attr('max');
 		this.minValue = $xmlDoc.attr('min');
-		this.bydefault = $xmlDoc.attr('value');
+		this.bydefault = $xmlDoc.find('default').text();
 	};
 };
 NumberField.prototype = new Field();
@@ -774,6 +782,8 @@ var DateField = function() {
 		html += attribCreator( 'type' , this.type);
 		html += attribCreator('id', 'field_' + this.id);
 		html += attribCreator('readonly', 'readonly');
+		if(this.bydefault)
+			html += attribCreator('value', this.bydefault);
 		html += this.specificAttributes();
 		html += '/>';
 		
@@ -785,8 +795,11 @@ var DateField = function() {
 	};
 	
 	this.addXMLElements = function(){
-		//TODO: return IF comparisons
-		return "";
+		var xml = tagCreator('default', this.bydefault);
+		// get date format from JQuery datepicker
+		var dateFormat = $( ".datepicker" ).datepicker( "option", "dateFormat" );
+		xml += tagCreator('format', dateFormat);
+		return xml;
 	};
 	
 	this.setJSONValuesSpecific = function(element) {
@@ -808,9 +821,9 @@ var DateField = function() {
 	};
 	
 	this.validateSpecific= function(){				
-		maxValue  = $('#fieldMaxValue').val();
-		minValue  = $('#fieldMinValue').val();
-		bydefault = $('#fieldDefault').val();
+		maxValue  = new Date( $('#fieldMaxValue').val() );
+		minValue  = new Date( $('#fieldMinValue').val() );
+		bydefault = new Date( $('#fieldDefault').val() );
 		
 		if(maxValue != '' && minValue != ''){
 			if(maxValue <= minValue){
@@ -849,15 +862,13 @@ var DateField = function() {
 	this.specificAttributes = function(){
 		var att = attribCreator('min', this.minValue);
 		att += attribCreator('max', this.maxValue);
-		if(this.bydefault)
-			att += attribCreator('value', this.bydefault);
 		return att;
 	};
 	
 	this.setSpecificFromXMLDoc = function($xmlDoc){
 		this.maxValue = $xmlDoc.attr('max');
 		this.minValue = $xmlDoc.attr('min');
-		this.bydefault = $xmlDoc.attr('value');
+		this.bydefault = $xmlDoc.find('default').text();
 	};
 };
 DateField.prototype = new Field();

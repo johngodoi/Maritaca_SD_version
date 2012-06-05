@@ -24,6 +24,7 @@ public class ListMaritacaListBean extends MaritacaJSFBean {
 	@Inject
 	private ListMaritacaListEJB   maritacaListEJB;	
 	private List<MaritacaListDTO> myLists;
+	@SuppressWarnings("unused")
 	private Integer numberOfPages;
 
 	public void removeList(MaritacaListDTO list) {

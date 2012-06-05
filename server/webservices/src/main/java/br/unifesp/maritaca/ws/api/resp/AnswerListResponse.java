@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import br.unifesp.maritaca.core.Answer;
+import br.unifesp.maritaca.persistence.entity.Answer;
 
 @XmlRootElement(name="answers")
 public class AnswerListResponse extends MaritacaResponse {

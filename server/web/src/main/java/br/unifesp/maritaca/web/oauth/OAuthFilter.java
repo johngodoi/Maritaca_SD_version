@@ -1,7 +1,6 @@
 package br.unifesp.maritaca.web.oauth;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 
 import javax.inject.Inject;
@@ -23,11 +22,13 @@ import org.apache.commons.logging.LogFactory;
 
 import br.unifesp.maritaca.business.exception.MaritacaException;
 import br.unifesp.maritaca.business.oauth.OAuthEJB;
-import br.unifesp.maritaca.business.oauth.OAuthTokenDTO;
+import br.unifesp.maritaca.business.oauth.dto.OAuthTokenDTO;
 import br.unifesp.maritaca.business.util.ConstantsBusiness;
+import br.unifesp.maritaca.web.utils.ConstantsWeb;
+import br.unifesp.maritaca.web.utils.UtilsWeb;
 
 /**
- * OAuth Filter that filter requests to resources.
+ * OAuth Filter filters requests to RESTFul resources.
  * 
  * @author alvarohenry
  */
@@ -63,26 +64,9 @@ public class OAuthFilter implements Filter {
 
 			OAuthTokenDTO oauthTokenDTO = oauthEJB.findOAuthTokenByToken(accessToken);
 			if(oauthTokenDTO == null) {
-				PrintWriter printWriter;
-				printWriter = response.getWriter();
-				
-				String[] params = {"error", String.valueOf(HttpURLConnection.HTTP_UNAUTHORIZED),
-									"error_description", "Invalid oauth_token"};
-				
-				printWriter.append('{');
-				for (int i = 0; i < params.length; i+=2) {
-					if (i > 0) {
-						printWriter.append(',');
-					}
-					printWriter.append('"');
-					printWriter.append(params[i]);
-					printWriter.append('"');
-					printWriter.append(':');
-					printWriter.append('"');
-					printWriter.append(params[i+1]);
-					printWriter.append('"');
-				}
-				printWriter.append('}');
+				UtilsWeb.sendValuesInJson(response, 
+						ConstantsWeb.OAUTH_ERROR, String.valueOf(HttpURLConnection.HTTP_UNAUTHORIZED),
+						ConstantsWeb.OAUTH_ERROR_DESCRIPTION, "Invalid oauth_token");
 				
 				response.setStatus(HttpURLConnection.HTTP_OK);
 				return;
@@ -93,9 +77,13 @@ public class OAuthFilter implements Filter {
 			log.info("doFilter");
 			filterChain.doFilter(request, response);
 		} catch (OAuthProblemException e) {
-			// TODO
-			throw new MaritacaException(e.getMessage());
+			UtilsWeb.makeResponseInJSON(response, 
+					ConstantsWeb.OAUTH_ERROR, String.valueOf(HttpURLConnection.HTTP_BAD_REQUEST), 
+					ConstantsWeb.OAUTH_ERROR_DESCRIPTION, e.getDescription());
 		} catch (Exception e) {
+			UtilsWeb.makeResponseInJSON(response, 
+					ConstantsWeb.OAUTH_ERROR, String.valueOf(HttpURLConnection.HTTP_INTERNAL_ERROR), 
+					ConstantsWeb.OAUTH_ERROR_DESCRIPTION, "internal server error");
 			throw new MaritacaException(e.getMessage());
 		}
 		

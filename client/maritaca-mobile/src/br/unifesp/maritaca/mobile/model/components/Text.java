@@ -10,7 +10,8 @@ import br.unifesp.maritaca.mobile.activities.ControllerActivity;
 import br.unifesp.maritaca.mobile.model.Question;
 import br.unifesp.maritaca.mobile.util.ComponentType;
 import br.unifesp.maritaca.mobile.util.Constants;
-import br.unifesp.maritaca.mobile.util.XMLParser;
+import br.unifesp.maritaca.mobile.util.UtilConverters;
+import br.unifesp.maritaca.mobile.util.XMLFormParser;
 
 public class Text extends Question {
 	
@@ -22,8 +23,8 @@ public class Text extends Question {
 					Element element) {
 		super(id, previous, next, help, label, required, element);
 		
-		this.max = XMLParser.convertStringToInteger(element.getAttribute(Constants.MAX));
-		super.value = XMLParser.getTagValue(Constants.DEFAULT, element);
+		this.max = UtilConverters.convertStringToInteger(element.getAttribute(Constants.MAX));
+		super.value = XMLFormParser.getTagValue(Constants.DEFAULT, element);
 	}
 	
 	@Override

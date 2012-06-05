@@ -5,10 +5,10 @@ import javax.ws.rs.ext.Provider;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
-import br.unifesp.maritaca.core.Answer;
-import br.unifesp.maritaca.core.Form;
-import br.unifesp.maritaca.core.OAuthToken;
-import br.unifesp.maritaca.core.User;
+import br.unifesp.maritaca.persistence.entity.Answer;
+import br.unifesp.maritaca.persistence.entity.Form;
+import br.unifesp.maritaca.persistence.entity.OAuthToken;
+import br.unifesp.maritaca.persistence.entity.User;
 import br.unifesp.maritaca.ws.api.resp.ErrorResponse;
 import br.unifesp.maritaca.ws.api.resp.MaritacaResponse;
 import br.unifesp.maritaca.ws.api.resp.XmlSavedResponse;

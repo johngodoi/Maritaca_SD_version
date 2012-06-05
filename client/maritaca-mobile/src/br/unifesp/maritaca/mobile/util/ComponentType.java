@@ -5,7 +5,7 @@ public enum ComponentType {
 	NUMBER		("number"),
 	COMBOBOX	("combobox"),
 	CHECKBOX	("checkbox"),
-	RADIOBOX	("radiobox"),
+	RADIOBOX	("radio"),
 	DATE		("date"),
 	TIME		("time"),
 	TIMESTAMP	("timestamp"),
@@ -16,7 +16,8 @@ public enum ComponentType {
 	LOCATION	("location"),
 	TEMPERATURE	("temperature"),
 	MOVEMENT	("movement"),
-	SIGNAL		("signal");
+	SIGNAL		("signal"),
+	GPS			("gps");
 	
 	private String description;
 	

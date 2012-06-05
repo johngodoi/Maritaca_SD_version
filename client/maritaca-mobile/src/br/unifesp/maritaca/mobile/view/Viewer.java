@@ -1,5 +1,6 @@
 package br.unifesp.maritaca.mobile.view;
 
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -83,24 +84,9 @@ public class Viewer {
 		middleLayout = new LinearLayout(activity);
 		middleLayout.setOrientation(LinearLayout.VERTICAL);
 		
-		switch (current.getComponentType()) {
-			case TEXT:				
-			case NUMBER:
-				TextView tvQuestion = new TextView(activity);			
-				tvQuestion.setText(current.getLabel());
-				middleLayout.addView(tvQuestion);
-				break;
-			case COMBOBOX:
-				break;
-			case CHECKBOX:
-				break;
-			case RADIOBOX:
-				break;
-			case DATE:
-				break;
-			default:
-				break;
-		}
+		TextView tvQuestion = new TextView(activity);			
+		tvQuestion.setText(current.getLabel());
+		middleLayout.addView(tvQuestion);
 	}
 
 	private void createBottonLayout(){
@@ -108,7 +94,6 @@ public class Viewer {
 		answer = current.getLayout(activity);
 		bottonLayout.addView(answer);
 	}
-
 
 	public LinearLayout getView(){
 		return baseView;

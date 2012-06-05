@@ -10,7 +10,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
 import net.smartam.leeloo.client.response.OAuthJSONAccessTokenResponse;
-
 import android.content.Context;
 import br.unifesp.maritaca.mobile.activities.HomeActivity;
 

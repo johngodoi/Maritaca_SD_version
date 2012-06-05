@@ -45,17 +45,10 @@
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.glassfish</groupId>
-			<artifactId>javax.faces</artifactId>
-			<version>2.1.4</version>
-			<scope>compile</scope>
-		</dependency>
-
 		<!-- MARITACA -->
 		<dependency>
 			<groupId>br.unifesp.maritaca</groupId>
-			<artifactId>maritaca-core</artifactId>
+			<artifactId>maritaca-persistence</artifactId>
 			<version>${maritaca.version}</version>
 		</dependency>
 		<dependency>

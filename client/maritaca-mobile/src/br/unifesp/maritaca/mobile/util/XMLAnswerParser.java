@@ -8,9 +8,8 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
-import br.unifesp.maritaca.mobile.model.Question;
-
 import android.util.Xml;
+import br.unifesp.maritaca.mobile.model.Question;
 
 public class XMLAnswerParser {
 	

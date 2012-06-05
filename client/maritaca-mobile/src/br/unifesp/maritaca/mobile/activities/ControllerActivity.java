@@ -68,7 +68,7 @@ public class ControllerActivity extends Activity {
 		else if (model.next()) {
 
 			//Create new layout
-			Log.v("ARLINDO", "MaritacaActivity::next, view screen " + model.getCurrentQuestion().getId());
+			Log.i("Info", "ControllerActivity::next, view screen " + model.getCurrentQuestion().getId());
 			viewer = new Viewer(this, model.getCurrentQuestion());			
 			setContentView(viewer.getView());
 		}
@@ -96,7 +96,6 @@ public class ControllerActivity extends Activity {
 		saveDialog.setTitle(R.string.label_confirmation);
 		saveDialog.setMessage(R.string.msg_confirmation);
 		saveDialog.setPositiveButton(R.string.button_save, new OnClickListener() {
-			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				Question[] data = model.save();
 				saveFile(formId, userId, data);
@@ -104,7 +103,6 @@ public class ControllerActivity extends Activity {
 			}
 		});
 		saveDialog.setNegativeButton(R.string.button_cancel, new OnClickListener() {			
-			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.cancel();
 			}

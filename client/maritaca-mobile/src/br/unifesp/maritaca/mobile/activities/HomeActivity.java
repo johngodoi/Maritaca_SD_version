@@ -1,12 +1,10 @@
 package br.unifesp.maritaca.mobile.activities;
 
-import br.unifesp.maritaca.mobile.activities.R;
-import br.unifesp.maritaca.mobile.util.OAuthTokenManager;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import br.unifesp.maritaca.mobile.util.OAuthTokenManager;
 
 public class HomeActivity extends Activity{
 
@@ -30,6 +28,7 @@ public class HomeActivity extends Activity{
         	startActivity(intent);
         }        
     }
+
 
 	public static Context getContext() {
 		return context;

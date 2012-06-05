@@ -1,7 +1,6 @@
 package br.unifesp.maritaca.web.oauth;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 
 import javax.inject.Inject;
@@ -21,13 +20,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import br.unifesp.maritaca.business.exception.MaritacaException;
-import br.unifesp.maritaca.business.oauth.DataAccessTokenDTO;
-import br.unifesp.maritaca.business.oauth.OAuthClientDTO;
-import br.unifesp.maritaca.business.oauth.OAuthCodeDTO;
 import br.unifesp.maritaca.business.oauth.OAuthEJB;
-import br.unifesp.maritaca.business.oauth.OAuthTokenDTO;
-import br.unifesp.maritaca.util.ConstantsCore;
-import br.unifesp.maritaca.web.jsf.util.MaritacaConstants;
+
+import br.unifesp.maritaca.business.oauth.dto.DataAccessTokenDTO;
+import br.unifesp.maritaca.business.oauth.dto.OAuthClientDTO;
+import br.unifesp.maritaca.business.oauth.dto.OAuthCodeDTO;
+import br.unifesp.maritaca.business.oauth.dto.OAuthTokenDTO;
+import br.unifesp.maritaca.persistence.util.ConstantsPersistence;
+import br.unifesp.maritaca.web.utils.ConstantsWeb;
+import br.unifesp.maritaca.web.utils.UtilsWeb;
 
 /**
  * This Servlet provides the OAuth2 Services and generate the access code and
@@ -41,17 +42,11 @@ public class AuthorizationServer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final Log log = LogFactory.getLog(AuthorizationServer.class);
 
-	private static final String WEB_LOGIN_URI = "/faces/views/mobileLogin.xhtml";
-
 	private static final String AUTHORIZATION_REQUEST = "/authorizationRequest";
 	private static final String AUTHORIZATION_CONFIRM = "/authorizationConfirm";
 	private static final String ACCESS_TOKEN_REQUEST  = "/accessTokenRequest";
 
-	private static final String OAUTH_USER_ID = "user_id";
-	private static final String OAUTH_ERROR_URI = "error_uri";
-	private static final String OAUTH_ERROR_DESCRIPTION = "error_description";
-	private static final String OAUTH_ERROR = "error";
-	private static final String USER_PARAM = "user";
+	private static final String USER_PARAM            = "user";
 
 	private OAuthAuthzRequest oauthRequest    = null;	
 	private OAuthIssuerImpl   oauthIssuerImpl = new OAuthIssuerImpl(new MD5Generator());
@@ -73,17 +68,17 @@ public class AuthorizationServer extends HttpServlet {
 		log.debug("Serving " + pathInfo);
 		log.debug("Query " + request.getQueryString());
 
-		if (pathInfo.equals(AUTHORIZATION_REQUEST)) {
+		if (AUTHORIZATION_REQUEST.equals(pathInfo)) {
 			authorize(request, response);
-		} else if(pathInfo.equals(AUTHORIZATION_CONFIRM)) {
+		} else if(AUTHORIZATION_CONFIRM.equals(pathInfo)) {
 			authorizationConfirm(request, response);
-		} else if(pathInfo.equals(ACCESS_TOKEN_REQUEST)) {
+		} else if(ACCESS_TOKEN_REQUEST.equals(pathInfo)) {
 			accessToken(request, response);
 		} else {
 			response.setContentType("application/json");
-			sendValuesInJson(response, 
-							 OAUTH_ERROR, String.valueOf(HttpURLConnection.HTTP_BAD_REQUEST),
-							 OAUTH_ERROR_DESCRIPTION, "Bad Request");
+			UtilsWeb.sendValuesInJson(response, 
+					ConstantsWeb.OAUTH_ERROR, String.valueOf(HttpURLConnection.HTTP_BAD_REQUEST),
+					ConstantsWeb.OAUTH_ERROR_DESCRIPTION, "Bad Request");
 			response.setStatus(HttpURLConnection.HTTP_OK);
 		}
 	}
@@ -101,30 +96,30 @@ public class AuthorizationServer extends HttpServlet {
 		try {
 			
 			oauthRequest = new OAuthAuthzRequest(request);
-			
+			// TODO In Login. Have to validate the client_id and validate again in login 
 			// Verify is the client_id exist, if not throw an exception
 			String clientId = oauthRequest.getClientId();
 			OAuthClientDTO clientDTO = oauthEJB.findOAuthClientByClientId(clientId);
 			if(clientDTO == null) {
-				treatException(response, 
-								OAUTH_ERROR, String.valueOf(HttpURLConnection.HTTP_NO_CONTENT), 
-								OAUTH_ERROR_DESCRIPTION, "client_id not found",
-								OAUTH_ERROR_URI, request.getParameter(OAuth.OAUTH_REDIRECT_URI));
+				UtilsWeb.makeResponseInJSON(response, 
+						ConstantsWeb.OAUTH_ERROR, String.valueOf(HttpURLConnection.HTTP_NO_CONTENT), 
+						ConstantsWeb.OAUTH_ERROR_DESCRIPTION, "client_id not found",
+						ConstantsWeb.OAUTH_ERROR_URI, request.getParameter(OAuth.OAUTH_REDIRECT_URI));
 				return;
 			}
 
 			response.setStatus(HttpURLConnection.HTTP_OK);
-			request.getRequestDispatcher(WEB_LOGIN_URI).forward(request, response);
+			request.getRequestDispatcher(ConstantsWeb.WEB_LOGIN_URI).forward(request, response);
 			
 		} catch (OAuthProblemException e) {
-			treatException(response, 
-					OAUTH_ERROR, String.valueOf(HttpURLConnection.HTTP_BAD_REQUEST), 
-					OAUTH_ERROR_DESCRIPTION, e.getDescription(),
-					OAUTH_ERROR_URI, request.getParameter(OAuth.OAUTH_REDIRECT_URI));
+			UtilsWeb.makeResponseInJSON(response, 
+					ConstantsWeb.OAUTH_ERROR, String.valueOf(HttpURLConnection.HTTP_BAD_REQUEST), 
+					ConstantsWeb.OAUTH_ERROR_DESCRIPTION, e.getDescription(),
+					ConstantsWeb.OAUTH_ERROR_URI, request.getParameter(OAuth.OAUTH_REDIRECT_URI));
 		} catch (Exception e) {
-			treatException(response, 
-					OAUTH_ERROR, String.valueOf(HttpURLConnection.HTTP_INTERNAL_ERROR), 
-					OAUTH_ERROR_DESCRIPTION, "internal server error");
+			UtilsWeb.makeResponseInJSON(response, 
+					ConstantsWeb.OAUTH_ERROR, String.valueOf(HttpURLConnection.HTTP_INTERNAL_ERROR), 
+					ConstantsWeb.OAUTH_ERROR_DESCRIPTION, "internal server error");
 			throw new MaritacaException(e.getMessage());
 		}
 	}
@@ -145,25 +140,25 @@ public class AuthorizationServer extends HttpServlet {
 			OAuthCodeDTO oauthCodeDTO = new OAuthCodeDTO();
 			oauthCodeDTO.setCode(oauthIssuerImpl.authorizationCode());
 			
-			String userId = oauthRequest.getParam(OAUTH_USER_ID);
+			String userId = oauthRequest.getParam(ConstantsWeb.OAUTH_USER_ID);
 			oauthCodeDTO.setUser(userId);
 			
 			oauthCodeDTO.setClientId(oauthRequest.getClientId());
 			
 			oauthEJB.saveAuthorizationCode(oauthCodeDTO);
 			
-			sendValuesInJson(response, OAuth.OAUTH_CODE, oauthCodeDTO.getCode());
+			UtilsWeb.sendValuesInJson(response, OAuth.OAUTH_CODE, oauthCodeDTO.getCode());
 			String redirectURI = oauthRequest.getRedirectURI() + "?code=" + oauthCodeDTO.getCode();
 			response.sendRedirect(redirectURI);
 		} catch (OAuthProblemException e) {
-			treatException(response, 
-							OAUTH_ERROR, String.valueOf(HttpURLConnection.HTTP_BAD_REQUEST), 
-							OAUTH_ERROR_DESCRIPTION, e.getDescription(),
-							OAUTH_ERROR_URI, request.getParameter(OAuth.OAUTH_REDIRECT_URI));
+			UtilsWeb.makeResponseInJSON(response, 
+					ConstantsWeb.OAUTH_ERROR, String.valueOf(HttpURLConnection.HTTP_BAD_REQUEST), 
+					ConstantsWeb.OAUTH_ERROR_DESCRIPTION, e.getDescription(),
+					ConstantsWeb.OAUTH_ERROR_URI, request.getParameter(OAuth.OAUTH_REDIRECT_URI));
 		} catch (Exception e) {
-			treatException(response, 
-					OAUTH_ERROR, String.valueOf(HttpURLConnection.HTTP_INTERNAL_ERROR), 
-					OAUTH_ERROR_DESCRIPTION, "internal server error");
+			UtilsWeb.makeResponseInJSON(response, 
+					ConstantsWeb.OAUTH_ERROR, String.valueOf(HttpURLConnection.HTTP_INTERNAL_ERROR), 
+					ConstantsWeb.OAUTH_ERROR_DESCRIPTION, "internal server error");
 			throw new MaritacaException(e.getMessage());
 		}
 	}
@@ -185,34 +180,34 @@ public class AuthorizationServer extends HttpServlet {
 			// verify OAuthCode
 			OAuthCodeDTO oauthCodeDTO = dataDTO.getOauthCodeDTO();
 			if(oauthCodeDTO == null) {
-				treatException(response, 
-								OAUTH_ERROR, String.valueOf(HttpURLConnection.HTTP_NO_CONTENT), 
-								OAUTH_ERROR_DESCRIPTION, "Invalid authorization code",
-								OAUTH_ERROR_URI, request.getParameter(OAuth.OAUTH_REDIRECT_URI));
+				UtilsWeb.makeResponseInJSON(response, 
+						ConstantsWeb.OAUTH_ERROR, String.valueOf(HttpURLConnection.HTTP_NO_CONTENT), 
+						ConstantsWeb.OAUTH_ERROR_DESCRIPTION, "Invalid authorization code",
+						ConstantsWeb.OAUTH_ERROR_URI, request.getParameter(OAuth.OAUTH_REDIRECT_URI));
 				return;
 			}
 			if (!oauthCodeDTO.getClientId().equals(clientId)) {
-				treatException(response, 
-						OAUTH_ERROR, String.valueOf(HttpURLConnection.HTTP_NO_CONTENT), 
-						OAUTH_ERROR_DESCRIPTION, "Invalid client_id",
-						OAUTH_ERROR_URI, request.getParameter(OAuth.OAUTH_REDIRECT_URI));
+				UtilsWeb.makeResponseInJSON(response, 
+						ConstantsWeb.OAUTH_ERROR, String.valueOf(HttpURLConnection.HTTP_NO_CONTENT), 
+						ConstantsWeb.OAUTH_ERROR_DESCRIPTION, "Invalid client_id",
+						ConstantsWeb.OAUTH_ERROR_URI, request.getParameter(OAuth.OAUTH_REDIRECT_URI));
 				return;
 			}
 			
 			// Verify OauthClient
 			OAuthClientDTO clientDTO = dataDTO.getOauthClientDTO();
 			if(clientDTO == null) {
-				treatException(response, 
-								OAUTH_ERROR, String.valueOf(HttpURLConnection.HTTP_NO_CONTENT), 
-								OAUTH_ERROR_DESCRIPTION, "client_id not found",
-								OAUTH_ERROR_URI, request.getParameter(OAuth.OAUTH_REDIRECT_URI));
+				UtilsWeb.makeResponseInJSON(response, 
+						ConstantsWeb.OAUTH_ERROR, String.valueOf(HttpURLConnection.HTTP_NO_CONTENT), 
+						ConstantsWeb.OAUTH_ERROR_DESCRIPTION, "client_id not found",
+						ConstantsWeb.OAUTH_ERROR_URI, request.getParameter(OAuth.OAUTH_REDIRECT_URI));
 				return;
 			}
 			if (!clientDTO.getSecret().equals(oauthRequest.getClientSecret())) {
-				treatException(response, 
-						OAUTH_ERROR, String.valueOf(HttpURLConnection.HTTP_UNAUTHORIZED), 
-						OAUTH_ERROR_DESCRIPTION, "Invalid client_secret",
-						OAUTH_ERROR_URI, request.getParameter(OAuth.OAUTH_REDIRECT_URI));
+				UtilsWeb.makeResponseInJSON(response, 
+						ConstantsWeb.OAUTH_ERROR, String.valueOf(HttpURLConnection.HTTP_UNAUTHORIZED), 
+						ConstantsWeb.OAUTH_ERROR_DESCRIPTION, "Invalid client_secret",
+						ConstantsWeb.OAUTH_ERROR_URI, request.getParameter(OAuth.OAUTH_REDIRECT_URI));
 				return;
 			}
 			
@@ -226,69 +221,22 @@ public class AuthorizationServer extends HttpServlet {
 			oauthEJB.saveOAuthToken(tokenDTO);
 			
 			response.setContentType("application/json");
-			sendValuesInJson(response, 
+			UtilsWeb.sendValuesInJson(response, 
 							 OAuth.OAUTH_ACCESS_TOKEN, tokenDTO.getAccessToken(),
-							 OAuth.OAUTH_EXPIRES_IN, String.valueOf(ConstantsCore.OAUTH_EXPIRATION_DATE),
+							 OAuth.OAUTH_EXPIRES_IN, String.valueOf(ConstantsPersistence.OAUTH_EXPIRATION_DATE),
 							 OAuth.OAUTH_REFRESH_TOKEN, tokenDTO.getRefreshToken(),
 							 USER_PARAM, clientDTO.getUserEmail());
 			response.setStatus(HttpURLConnection.HTTP_OK);
 		} catch (OAuthProblemException e) {
-			treatException(response, 
-							OAUTH_ERROR, String.valueOf(HttpURLConnection.HTTP_BAD_REQUEST), 
-							OAUTH_ERROR_DESCRIPTION, e.getDescription(),
-							OAUTH_ERROR_URI, request.getParameter(OAuth.OAUTH_REDIRECT_URI));
+			UtilsWeb.makeResponseInJSON(response, 
+					ConstantsWeb.OAUTH_ERROR, String.valueOf(HttpURLConnection.HTTP_BAD_REQUEST), 
+					ConstantsWeb.OAUTH_ERROR_DESCRIPTION, e.getDescription(),
+					ConstantsWeb.OAUTH_ERROR_URI, request.getParameter(OAuth.OAUTH_REDIRECT_URI));
 		} catch (Exception e) {
-			treatException(response, 
-					OAUTH_ERROR, String.valueOf(HttpURLConnection.HTTP_INTERNAL_ERROR), 
-					OAUTH_ERROR_DESCRIPTION, "internal server error");
+			UtilsWeb.makeResponseInJSON(response, 
+					ConstantsWeb.OAUTH_ERROR, String.valueOf(HttpURLConnection.HTTP_INTERNAL_ERROR), 
+					ConstantsWeb.OAUTH_ERROR_DESCRIPTION, "internal server error");
 			throw new MaritacaException(e.getMessage());
 		}
 	}
-
-	/**
-	 * This method writes, in JSON format, params in the HttpServletResponse.
-	 * @param response
-	 * @param params
-	 * @throws IOException
-	 */
-	private void sendValuesInJson(HttpServletResponse response, String... params) {
-		PrintWriter printWriter;
-		try {
-			printWriter = response.getWriter();
-			if (params.length % 2 != 0) {
-				throw new IllegalArgumentException("Arguments should be name=value*");
-			} 
-			
-			printWriter.append('{');
-			for (int i = 0; i < params.length; i+=2) {
-				if (i > 0) {
-					printWriter.append(',');
-				}
-				printWriter.append('"');
-				printWriter.append(params[i]);
-				printWriter.append('"');
-				printWriter.append(':');
-				printWriter.append('"');
-				printWriter.append(params[i+1]);
-				printWriter.append('"');
-			}
-			printWriter.append('}');
-		} catch (IOException e) {			
-			throw new MaritacaException(e.getMessage());
-		}
-	}
-	
-	/**
-	 * This method treats to catch exceptions and send back to the
-	 * user an specific message. 
-	 * @param response
-	 * @param params
-	 */
-	private void treatException(HttpServletResponse response, String... params) {
-		HttpServletResponse response1 = response;
-		response1.setContentType("application/json");
-		sendValuesInJson(response1, params);
-		response1.setStatus(HttpURLConnection.HTTP_OK);
-	}
-	
 }
