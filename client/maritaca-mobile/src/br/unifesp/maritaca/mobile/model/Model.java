@@ -45,7 +45,7 @@ public class Model {
 		currentIdQuestion = questions[currentIdQuestion].getPrevious();
 	}
 	
-	public Question[] save() {
+	public Question[] save2() {
 		String output = new String();
 		for(int i = 0 ; i < questions.length; i++){
 			output += i + ": " + questions[i].getValue() + "\n";
@@ -54,7 +54,7 @@ public class Model {
 		return questions;
 	}
 	
-	public Question[] save2() {
+	public Question[] save() {
 		return questions;
 	}
 	

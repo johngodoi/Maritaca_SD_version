@@ -23,6 +23,7 @@ public class TextQuestion extends Question {
 					Element element) {
 		super(id, previous, next, help, label, required, element);
 		
+		//TODO: delete max
 		this.max = UtilConverters.convertStringToInteger(element.getAttribute(Constants.MAX));
 		super.value = XMLFormParser.getTagValue(Constants.DEFAULT, element);
 	}
@@ -47,23 +48,25 @@ public class TextQuestion extends Question {
 	
 	@Override
 	public String getValue() {
-		return value.toString();
+		return value != null ? value.toString() : "";
 	}
 	
 	@Override
 	public View getLayout(ControllerActivity activity) {
 		EditText field = new EditText(activity);
 		field.setInputType(InputType.TYPE_CLASS_TEXT);
-		field.setText(getValue().toString());
+		field.setText(getValue());
 		return field;	
 	}
 	
 	@Override
 	public boolean validate() {
-		if (getValue().length() <= max) {
-			return true;
+		if(required) {
+			if(!getValue().equals("") && getValue().length() > 0)
+				return true;
+			return false;
 		}
-		return false;
+		return true;
 	}
 	
 	@Override

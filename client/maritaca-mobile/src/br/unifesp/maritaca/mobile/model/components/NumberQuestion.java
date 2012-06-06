@@ -53,7 +53,7 @@ public class NumberQuestion extends Question {
 	
 	@Override
 	public Integer getValue() {
-		return value != null ? new Integer(value.toString()) : null;
+		return (value != null && !value.equals("")) ? new Integer(value.toString()) : null;
 	}
 
 	@Override
@@ -67,10 +67,19 @@ public class NumberQuestion extends Question {
 
 	@Override
 	public boolean validate() {
-		if (getValue() >= min && getValue() <= max) {
-			return true;
-		}		
-		return false;
+		if(required) {
+			if(getValue() != null && min != null && max != null) {
+				return getValue() >= min && getValue() <= max;
+			}
+			else if(getValue() != null && min != null) {
+				return getValue() >= min;
+			}
+			else if(getValue() != null && max != null) {
+				return getValue() <= max;
+			}
+			return false;
+		}
+		return true;
 	}
 
 	@Override
