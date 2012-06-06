@@ -774,6 +774,7 @@ var DateField = function() {
 	this.bydefault = '';
 	this.maxValue = '';
 	this.minValue = '';
+	this.dateformat = 'mm/dd/yy';
 	
 	this.toHTMLSpecific = function() {
 		var html = '';
@@ -796,9 +797,7 @@ var DateField = function() {
 	
 	this.addXMLElements = function(){
 		var xml = tagCreatorXML('default', this.bydefault);
-		// get date format from JQuery datepicker
-		var dateFormat = $( ".datepicker" ).datepicker( "option", "dateFormat" );
-		xml += tagCreatorXML('format', dateFormat);
+		xml += tagCreatorXML('format', this.dateformat);
 		return xml;
 	};
 	

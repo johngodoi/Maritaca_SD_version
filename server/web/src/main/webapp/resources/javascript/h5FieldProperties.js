@@ -44,7 +44,7 @@ var  tagCreatorHTML = function (tag, value, styleClass){
 };
 
 var  tagCreatorXML = function (tag, value){
-	return '<' + tag + styleTag + '>' + replaceXMLEntityByCode(value) + '</' + tag + '>';
+	return '<' + tag + '>' + replaceXMLEntityByCode(value) + '</' + tag + '>';
 };
 
 //general method to create a label
@@ -101,6 +101,3 @@ function replaceXMLEntityByCode(string) {
 	return string; 
 }
 
-function replaceCodeByXMLSpecialChar() {
-	
-}
