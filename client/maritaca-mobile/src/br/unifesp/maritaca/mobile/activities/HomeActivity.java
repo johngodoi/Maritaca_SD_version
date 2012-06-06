@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import br.unifesp.maritaca.mobile.util.OAuthTokenManager;
 
-public class HomeActivity extends Activity{
+public class HomeActivity extends Activity {
 
 	private static Context context;
 	

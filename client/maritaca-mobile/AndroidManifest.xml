@@ -28,7 +28,10 @@
         </activity>
         
         <activity android:name=".MenuActivity">
-        </activity>                
+        </activity>
+        
+        <activity android:name=".ControllerActivity">
+        </activity>
     </application>
 
 </manifest>
