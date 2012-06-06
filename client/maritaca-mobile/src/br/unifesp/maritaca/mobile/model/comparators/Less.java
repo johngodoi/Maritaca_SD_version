@@ -1,5 +1,7 @@
 package br.unifesp.maritaca.mobile.model.comparators;
 
+import java.util.Date;
+
 import br.unifesp.maritaca.mobile.model.Clause;
 
 public class Less extends Clause {
@@ -32,6 +34,10 @@ public class Less extends Clause {
 		if (value < Float.parseFloat(super.value))
 			return true;
 		return false;
-	}	
+	}
 
+	@Override
+	public boolean evaluate(Date value) {
+		return true;
+	}
 }

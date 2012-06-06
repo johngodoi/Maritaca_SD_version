@@ -3,30 +3,5 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
-
-    <TextView android:id="@+id/label_user"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/label_user" />
     
-    <EditText android:id="@+id/text_user"         
-        android:layout_height="wrap_content" 
-        android:layout_width="fill_parent" 
-        android:inputType="text" />
-    
-    <TextView android:id="@+id/label_password" 
-        android:layout_height="wrap_content" 
-        android:layout_width="fill_parent" 
-        android:text="@string/label_password" />
-    
-    <EditText android:id="@+id/text_password"
-        android:layout_height="wrap_content" 
-        android:layout_width="fill_parent" 
-        android:inputType="textPassword" />
-    
-    <Button android:id="@+id/button_login" 
-        android:layout_height="wrap_content" 
-        android:layout_width="fill_parent" 
-        android:text="@string/button_login" />
-
 </LinearLayout>

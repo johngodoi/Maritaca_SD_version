@@ -4,5 +4,7 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry kind="lib" path="libs/oauth2-client.jar" sourcepath="/home/tbarabasz/downloads/leeloo/oauth2-client/dist/oauth2-client-sources.jar"/>
+	<classpathentry kind="lib" path="libs/oauth2-common.jar" sourcepath="/home/tbarabasz/downloads/leeloo/oauth2-common/dist/oauth2-common-sources.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

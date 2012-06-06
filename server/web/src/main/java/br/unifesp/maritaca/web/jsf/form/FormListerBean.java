@@ -18,7 +18,9 @@ public class FormListerBean extends MaritacaJSFBean {
 	private static final long serialVersionUID = 1L;
 
 	@Inject private FormListerEJB formListerEJB;
+	@SuppressWarnings("unused")
 	private Integer numberOfPagesOwnList;
+	@SuppressWarnings("unused")
 	private Integer numberOfPagesSharedList;
 	private Integer numberOfPages;
 		

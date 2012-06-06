@@ -1,19 +1,14 @@
 package br.unifesp.maritaca.mobile.activities;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.app.Activity;
@@ -73,7 +68,7 @@ public class ControllerActivity extends Activity {
 		else if (model.next()) {
 
 			//Create new layout
-			Log.v("ARLINDO", "MaritacaActivity::next, view screen " + model.getCurrentQuestion().getId());
+			Log.i("Info", "ControllerActivity::next, view screen " + model.getCurrentQuestion().getId());
 			viewer = new Viewer(this, model.getCurrentQuestion());			
 			setContentView(viewer.getView());
 		}
@@ -101,7 +96,6 @@ public class ControllerActivity extends Activity {
 		saveDialog.setTitle(R.string.label_confirmation);
 		saveDialog.setMessage(R.string.msg_confirmation);
 		saveDialog.setPositiveButton(R.string.button_save, new OnClickListener() {
-			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				Question[] data = model.save();
 				saveFile(formId, userId, data);
@@ -109,7 +103,6 @@ public class ControllerActivity extends Activity {
 			}
 		});
 		saveDialog.setNegativeButton(R.string.button_cancel, new OnClickListener() {			
-			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.cancel();
 			}

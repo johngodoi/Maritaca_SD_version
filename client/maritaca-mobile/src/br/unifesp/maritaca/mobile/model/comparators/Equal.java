@@ -1,5 +1,7 @@
 package br.unifesp.maritaca.mobile.model.comparators;
 
+import java.util.Date;
+
 import br.unifesp.maritaca.mobile.model.Clause;
 
 public class Equal extends Clause {
@@ -30,5 +32,9 @@ public class Equal extends Clause {
 	public boolean evaluate(Float value) {
 		return evaluate(value.toString());
 	}
-
+	
+	@Override
+	public boolean evaluate(Date value) {
+		return evaluate(value.toString());
+	}
 }

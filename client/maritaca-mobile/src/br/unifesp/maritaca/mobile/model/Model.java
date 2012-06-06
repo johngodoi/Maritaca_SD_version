@@ -17,7 +17,9 @@ public class Model {
 	//XMLParser xml;
 
 	public Model(InputStream is) {
-		this.questions 			= new XMLFormParser().getQuestions(is);
+		//this.questions 			= new XMLFormParser().getQuestions(is);
+		XMLFormParser xml = new XMLFormParser(is);
+		questions = xml.getQuestions();
 		this.currentIdQuestion 	= 0;
 	}
 	
@@ -43,16 +45,16 @@ public class Model {
 		currentIdQuestion = questions[currentIdQuestion].getPrevious();
 	}
 	
-	public void save2() {
+	public Question[] save() {
 		String output = new String();
 		for(int i = 0 ; i < questions.length; i++){
 			output += i + ": " + questions[i].getValue() + "\n";
 		}
 		Log.i("info", output);
-		//TODO Walkirya save data!!!
+		return questions;
 	}
 	
-	public Question[] save() {
+	public Question[] save2() {
 		return questions;
 	}
 	

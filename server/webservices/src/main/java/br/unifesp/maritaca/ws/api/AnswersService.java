@@ -8,7 +8,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-import br.unifesp.maritaca.business.answer.list.dto.DataCollectedDTO;
+import br.unifesp.maritaca.business.answer.edit.dto.DataCollectedDTO;
 import br.unifesp.maritaca.ws.api.resp.MaritacaResponse;
 import br.unifesp.maritaca.ws.exceptions.MaritacaWSException;
 

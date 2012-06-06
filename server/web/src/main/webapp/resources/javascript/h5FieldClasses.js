@@ -16,6 +16,7 @@
 var Field = function() {
 	this.type     = '';
 	this.id       = '';
+	this.next	  = '';
 	this.required = false;
 	
 	this.title    = '';
@@ -55,11 +56,11 @@ var Field = function() {
 	
 	this.toXML = function() {
 		var xml = '';
-		xml += '<' + this.type + ' id="' + this.id + '" required="' + this.required  + '" ';
+		xml += '<' + this.type + ' id="' + this.id + '" next="' + this.next + '" required="' + this.required  + '" ';
 		xml += this.addXMLSpecificAttributes();
 		xml += '>';
-		xml += tagCreator('label', this.title);
-		xml += tagCreator('help', this.help);
+		xml += tagCreatorXML('label', this.title);
+		xml += tagCreatorXML('help', this.help);
 		xml += this.addConditionalsXML();
 		xml += this.addXMLElements();
 		xml += '</' + this.type + '>';
@@ -144,6 +145,10 @@ var Field = function() {
 		html += '</table>';
 		
 		$('#properties').append(html);
+		
+		// initialize JQuery Datepicker;
+		var locale = jQuery.i18n.prop('msg_datepicker_locale');
+		$('.datepicker').datepicker( $.datepicker.regional[locale] );
 	};
 	
 	this.disabledConditions = function(){
@@ -179,25 +184,25 @@ var Field = function() {
 	};
 
 	this.createConditionalProperty = function(comparison, value, goTo){		
-		var ifHtml        = tagCreator('label',jQuery.i18n.prop('msg_field_if_conditional'));
+		var ifHtml        = tagCreatorHTML('label',jQuery.i18n.prop('msg_field_if_conditional'));
 		var comboHtml     = this.conditionalComboBox(comparison);
 		var inputIfHtml   = inputCreator('text',null,value,null,null,'valueCond');
 		var removeIfBtHtml= this.removeConditionalButton(this.lastCondTableId);
 		
-		var ifTdOneHtml   = tagCreator('td', ifHtml);
-		var ifTdTwoHtml   = tagCreator('td', comboHtml+inputIfHtml+removeIfBtHtml);
+		var ifTdOneHtml   = tagCreatorHTML('td', ifHtml);
+		var ifTdTwoHtml   = tagCreatorHTML('td', comboHtml+inputIfHtml+removeIfBtHtml);
 		
 		var rowOne        = ifTdOneHtml + ifTdTwoHtml;	
-		var rowOneHtml    = tagCreator('tr', rowOne);
+		var rowOneHtml    = tagCreatorHTML('tr', rowOne);
 		
-		var thenHtml      = tagCreator('label',jQuery.i18n.prop('msg_field_then_conditional'));
+		var thenHtml      = tagCreatorHTML('label',jQuery.i18n.prop('msg_field_then_conditional'));
 		var inputThenHtml = this.goToBox(goTo);
 		
-		var thenTdOneHtml = tagCreator('td', thenHtml,'alignRight');
-		var thenTdTwoHtml = tagCreator('td', inputThenHtml);		
+		var thenTdOneHtml = tagCreatorHTML('td', thenHtml,'alignRight');
+		var thenTdTwoHtml = tagCreatorHTML('td', inputThenHtml);		
 		
 		var rowTwo        = thenTdOneHtml + thenTdTwoHtml; 
-		var rowTwoHtml    = tagCreator('tr',rowTwo);
+		var rowTwoHtml    = tagCreatorHTML('tr',rowTwo);
 		
 		var tableHtml     = '<table class="condPropTable" id="'+this.lastCondTableId+'">'; 
 		tableHtml        += rowOneHtml + rowTwoHtml + '</table>';
@@ -246,7 +251,7 @@ var Field = function() {
 			if(conditionals[i] == selectedValue){
 				options += '<option selected="selected">' + conditionals[i] + '</option>';
 			} else {
-				options += tagCreator('option',conditionals[i]);
+				options += tagCreatorHTML('option',conditionals[i]);
 			}
 		}
 		var comboBox = '<select class="compCond">'+options+'</select>';
@@ -369,13 +374,12 @@ var TextBox = function() {
 	
 	this.addXMLSpecificAttributes = function() {
 		var xml = '';
-		if(this.bydefault)
-			xml += attribCreator('value', this.bydefault);
 		return xml;
 	};
 	
 	this.addXMLElements = function(){
-		var xml = tagCreator('size', this.size);
+		var xml = tagCreatorXML('size', this.size);
+		xml += tagCreatorXML('default', this.bydefault);
 		return xml;
 
 	};
@@ -410,7 +414,7 @@ var TextBox = function() {
 	
 	this.setSpecificFromXMLDoc = function($xmlDoc){
 		this.size = $xmlDoc.find('size').text();
-		this.bydefault = $xmlDoc.attr('value');
+		this.bydefault = $xmlDoc.find('default').text();
 	};
 };
 // Inheritance to TextBox from Field
@@ -464,8 +468,11 @@ var Box = function(type) {
 	
 	this.addXMLElements = function(){
 		var xml = '';
+		xml += tagCreatorXML('default', this.bydefault);
 		for(var i=0; i<this.optionsTitles.length; i++){
-			xml += '<option>';
+			xml += '<option ';
+				xml += 'value="' + (parseInt(i)+1) + '"';
+			xml += '>';
 			xml += this.optionsTitles[i];
 			xml += '</option>';
 		}		
@@ -581,6 +588,7 @@ var Box = function(type) {
 			parsedOptions.push(foundOptions[i].textContent);
 		}
 		this.optionsTitles = parsedOptions;
+		this.bydefault = $xmlDoc.find('default').text();
 	};
 };
 Box.prototype = new Field();
@@ -676,6 +684,8 @@ var NumberField = function(){
 		html += attribCreator( 'type' , this.type);
 		html += attribCreator('id', 'field_' + this.id);
 		html += attribCreator('readonly', 'readonly');
+		if(this.bydefault)
+			html += attribCreator('value', this.bydefault);
 		html += this.specificAttributes();
 		html += '/>';
 		
@@ -687,8 +697,8 @@ var NumberField = function(){
 	};
 	
 	this.addXMLElements = function(){
-		//TODO: return IF comparisons
-		return "";
+		var xml = tagCreatorXML('default', this.bydefault);
+		return xml;
 	};
 	
 	this.setJSONValuesSpecific = function(element) {
@@ -710,9 +720,9 @@ var NumberField = function(){
 	};
 	
 	this.validateSpecific = function(){
-		maxValue  = $('#fieldMaxValue').val();
-		minValue  = $('#fieldMinValue').val();
-		bydefault = $('#fieldDefault').val();
+		maxValue  = parseInt( $('#fieldMaxValue').val() );
+		minValue  = parseInt( $('#fieldMinValue').val() );
+		bydefault = parseInt( $('#fieldDefault').val() );
 		
 		if(maxValue != '' && minValue != ''){
 			if(maxValue <= minValue){
@@ -747,15 +757,13 @@ var NumberField = function(){
 	this.specificAttributes = function(){
 		var att = attribCreator('min', this.minValue);
 		att += attribCreator('max', this.maxValue);
-		if(this.bydefault)
-			att += attribCreator('value', this.bydefault);
 		return att;
 	};
 	
 	this.setSpecificFromXMLDoc = function($xmlDoc){
 		this.maxValue = $xmlDoc.attr('max');
 		this.minValue = $xmlDoc.attr('min');
-		this.bydefault = $xmlDoc.attr('value');
+		this.bydefault = $xmlDoc.find('default').text();
 	};
 };
 NumberField.prototype = new Field();
@@ -766,6 +774,7 @@ var DateField = function() {
 	this.bydefault = '';
 	this.maxValue = '';
 	this.minValue = '';
+	this.dateformat = 'mm/dd/yy';
 	
 	this.toHTMLSpecific = function() {
 		var html = '';
@@ -774,6 +783,8 @@ var DateField = function() {
 		html += attribCreator( 'type' , this.type);
 		html += attribCreator('id', 'field_' + this.id);
 		html += attribCreator('readonly', 'readonly');
+		if(this.bydefault)
+			html += attribCreator('value', this.bydefault);
 		html += this.specificAttributes();
 		html += '/>';
 		
@@ -785,8 +796,9 @@ var DateField = function() {
 	};
 	
 	this.addXMLElements = function(){
-		//TODO: return IF comparisons
-		return "";
+		var xml = tagCreatorXML('default', this.bydefault);
+		xml += tagCreatorXML('format', this.dateformat);
+		return xml;
 	};
 	
 	this.setJSONValuesSpecific = function(element) {
@@ -808,9 +820,9 @@ var DateField = function() {
 	};
 	
 	this.validateSpecific= function(){				
-		maxValue  = $('#fieldMaxValue').val();
-		minValue  = $('#fieldMinValue').val();
-		bydefault = $('#fieldDefault').val();
+		maxValue  = new Date( $('#fieldMaxValue').val() );
+		minValue  = new Date( $('#fieldMinValue').val() );
+		bydefault = new Date( $('#fieldDefault').val() );
 		
 		if(maxValue != '' && minValue != ''){
 			if(maxValue <= minValue){
@@ -849,15 +861,13 @@ var DateField = function() {
 	this.specificAttributes = function(){
 		var att = attribCreator('min', this.minValue);
 		att += attribCreator('max', this.maxValue);
-		if(this.bydefault)
-			att += attribCreator('value', this.bydefault);
 		return att;
 	};
 	
 	this.setSpecificFromXMLDoc = function($xmlDoc){
 		this.maxValue = $xmlDoc.attr('max');
 		this.minValue = $xmlDoc.attr('min');
-		this.bydefault = $xmlDoc.attr('value');
+		this.bydefault = $xmlDoc.find('default').text();
 	};
 };
 DateField.prototype = new Field();

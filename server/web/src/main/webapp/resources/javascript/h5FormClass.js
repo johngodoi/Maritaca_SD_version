@@ -27,10 +27,16 @@ var FormClass = function() {
 			xml += '<form>';
 			xml += '<title>' + this.title + '</title>';
 			xml += '<questions>';
-		for(var i in this.elements) {
-			this.elements[i].id=i;
-			xml += this.elements[i].toXML(i);
-		}
+			for(var i in this.elements) {
+				this.elements[i].id		= i;
+				// add the next_id value
+				if(i < (this.elements.length-1))
+					this.elements[i].next	= parseInt(i)+1;
+				else 
+					this.elements[i].next	= -1;
+				
+				xml += this.elements[i].toXML(i);
+			}
 		xml += '</questions>';
 		xml += '</form>';
 		return xml;

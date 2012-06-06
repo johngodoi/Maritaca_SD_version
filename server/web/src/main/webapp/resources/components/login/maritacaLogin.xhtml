@@ -20,27 +20,28 @@
 		<h:form>
 			<h:outputText value="#{msgs.login_maritaca}" styleClass="label1"/>
 			<h:panelGrid id="formRenderTable" columns="2">
-				<h:outputText value="#{msgs.account_email}:" />
-				<h:inputText id="name" value="#{loginBean.loginDTO.email}" />
+				<h:outputText  value="#{msgs.account_email}:" />
+				<h:inputText   id="name" value="#{loginBean.loginDTO.email}" />
 
-				<h:outputText value="#{msgs.account_password}:" />
+				<h:outputText  value="#{msgs.account_password}:" />
 				<h:inputSecret id="pass" />
 				
 				<h:inputHidden value="#{loginBean.loginDTO.password}" 
-						id="passwordEncrypted"/>
+						       id="passwordEncrypted"/>
 						
-				<h:outputText	value="#{loginBean.status}" id="loginStatus"
-								class="error" />
+				<h:outputText  value="#{loginBean.status}" id="loginStatus"
+							   class="error" />
 			</h:panelGrid>
-			<h:commandButton	value="#{msgs.login}" action="#{loginBean.submit}"
-  				        		onclick="encryptPassword()"/>
-			<h:commandLink value="#{msgs.login_create_account_link}"
-					styleClass="createAccountLink"
-					action="#{accountEditorBean.createAccount()}">
+			<h:commandButton  value="#{msgs.login}" action="#{loginBean.submit}"
+  				        	  onclick="encryptPassword()">
 				<f:param name="#{oAuthParametersBean.redirectUri}"  value="#{loginManagerBean.redirectUri}"/>
 				<f:param name="#{oAuthParametersBean.clientId}"     value="#{loginManagerBean.clientId}"/>
 				<f:param name="#{oAuthParametersBean.responseType}" value="#{loginManagerBean.responseType}"/>
-			</h:commandLink>	
+			</h:commandButton>  				        	  
+  				        	    				        	
+			<h:commandLink value="#{msgs.login_create_account_link}"
+					styleClass="createAccountLink"
+					action="#{accountEditorBean.createAccount()}"/>
 		</h:form>
 	</composite:implementation>
 </body>

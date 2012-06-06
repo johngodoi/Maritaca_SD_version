@@ -18,7 +18,7 @@
 		<composite:attribute name="idScroller"    required="false" />
 	</composite:interface>
 	<composite:implementation>
-		<rich:dataTable value="#{cc.attrs.formList}" id="#{cc.attrs.idem}" 
+		<h:dataTable value="#{cc.attrs.formList}" id="#{cc.attrs.idem}" 
 			columnClasses="listFormColumnTitle, listFormColumnOwner, listFormColumnCreationDate, listFormColumnPolicy"   
 			var="aForm" width="100%" styleClass="maritacaTable" rows="#{cc.attrs.itemsPerPage}">
 			<f:facet name="header">
@@ -70,6 +70,13 @@
 					<rich:menuItem icon="#{resource['img:save.png']}"
 						label="#{msgs.form_download_xml}"
 						action="#{formDownloader.download(aForm)}"
+						mode="server"
+						rendered="#{aForm.permission.read}">								
+					</rich:menuItem>
+					
+					<rich:menuItem icon="#{resource['img:app-mobile.png']}"
+						label="#{msgs.form_download_app_mobile}"
+						action="#{formEditorBean.downloadApk(aForm)}"
 						mode="server"
 						rendered="#{aForm.permission.read}">								
 					</rich:menuItem>
@@ -176,6 +183,6 @@
                     </f:facet>
                 </rich:dataScroller>
             </f:facet>
-		</rich:dataTable>
+		</h:dataTable>
 	</composite:implementation>
 </ui:composition>
