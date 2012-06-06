@@ -109,7 +109,7 @@ public class AuthorizationServer extends HttpServlet {
 			}
 
 			response.setStatus(HttpURLConnection.HTTP_OK);
-			request.getRequestDispatcher(ConstantsWeb.WEB_LOGIN_URI).forward(request, response);
+			request.getRequestDispatcher(ConstantsWeb.MOBILE_LOGIN_URI).forward(request, response);
 			
 		} catch (OAuthProblemException e) {
 			UtilsWeb.makeResponseInJSON(response, 

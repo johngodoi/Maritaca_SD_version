@@ -5,7 +5,7 @@ import static br.unifesp.maritaca.mobile.util.Constants.CLIENT_URL;
 import static br.unifesp.maritaca.mobile.util.Constants.MARITACA_MOBILE;
 import static br.unifesp.maritaca.mobile.util.Constants.MARITACA_SECRET;
 import static br.unifesp.maritaca.mobile.util.Constants.RESPONSE_TYPE;
-import static br.unifesp.maritaca.mobile.util.Constants.SERVER_URL;
+import static br.unifesp.maritaca.mobile.util.Constants.OAUTH_URL;
 import br.unifesp.maritaca.mobile.util.OAuthTokenManager;
 import net.smartam.leeloo.client.OAuthClient;
 import net.smartam.leeloo.client.URLConnectionClient;
@@ -49,7 +49,7 @@ public class OAuthWebViewClient extends WebViewClient {
 	private void retrieveAccessToken(String code) {
 		try {
 			OAuthClientRequest request = OAuthClientRequest
-					.tokenLocation(SERVER_URL + ACCESS_TOKEN_REQUEST)
+					.tokenLocation(OAUTH_URL + ACCESS_TOKEN_REQUEST)
 					.setGrantType(GrantType.AUTHORIZATION_CODE)
 					.setClientId(MARITACA_MOBILE)
 					.setClientSecret(MARITACA_SECRET)

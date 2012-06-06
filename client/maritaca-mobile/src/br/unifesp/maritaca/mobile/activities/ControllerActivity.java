@@ -2,9 +2,12 @@ package br.unifesp.maritaca.mobile.activities;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+
+import net.smartam.leeloo.common.OAuth;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPut;
@@ -23,6 +26,7 @@ import android.widget.Toast;
 import br.unifesp.maritaca.mobile.model.Model;
 import br.unifesp.maritaca.mobile.model.Question;
 import br.unifesp.maritaca.mobile.util.Constants;
+import br.unifesp.maritaca.mobile.util.OAuthTokenManager;
 import br.unifesp.maritaca.mobile.util.XMLAnswerParser;
 import br.unifesp.maritaca.mobile.view.Viewer;
 
@@ -133,28 +137,27 @@ public class ControllerActivity extends Activity {
 					fout.close();
 				}
 			}
-			//
+			
 			sendCollectedData(content);
-			//
 		}
-		catch (Exception ex) {
-			//ex
+		catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 	}
 	
 	private void sendCollectedData(String collectedData) {
 		try {
-			String uri = "http://172.20.22.7:8080/maritaca/ws/answer/add/";
 			String contentType = "application/xml";
 			DefaultHttpClient httpClient = new DefaultHttpClient();
+			String uri = Constants.WS_ANSW_URL + "?" + OAuth.OAUTH_TOKEN + "=" + OAuthTokenManager.getToken();
 			HttpPut putRequest = new HttpPut(uri);
 			StringEntity input = new StringEntity(collectedData);
 			input.setContentType(contentType);
 			putRequest.setEntity(input);
-			HttpResponse response = httpClient.execute(putRequest);
-			
+			putRequest.getParams().setParameter(OAuth.OAUTH_TOKEN, OAuthTokenManager.getToken());
+			HttpResponse response = httpClient.execute(putRequest);			
 		} catch (Exception e) {
-			//ex
+			throw new RuntimeException(e);
 		}
 	}
 
