@@ -343,62 +343,6 @@ public class FormEditorEJB extends AbstractEJB {
 		return formDTO;
 	}
 	
-	public void buildNewApkFromFormId(Form form) {			
-		try {
-			String scriptLocation	= configurationDAO.getValueByName(ConstantsBusiness.MOB_SCRIPT_LOCATION);
-			String maritacaPath 	= configurationDAO.getValueByName(ConstantsBusiness.MOB_MARITACA_PATH);
-			String projectsPath 	= configurationDAO.getValueByName(ConstantsBusiness.MOB_PROJECTS_PATH);
-			if(!scriptLocation.equals("") && !maritacaPath.equals("") && !projectsPath.equals("")) {
-				List<String> commands = new ArrayList<String>();
-				commands.add(scriptLocation);
-				commands.add(form.getUrl());
-				commands.add(form.getTitle());
-				commands.add(maritacaPath);
-				commands.add(projectsPath);			
-				ProcessBuilder processBuilder = new ProcessBuilder(commands);			
-				processBuilder.start();
-				return;
-			}
-			log.error("Error running maritaca.sh");
-		} catch (Exception e) {
-			log.error(e.getMessage());
-		}		 
-	}
-	
-	public boolean downloadApkFromFormId(FacesContext facesContext, FormDTO formDTO) {
-		boolean isValidApp = false;
-		try {
-			String projectsPath = configurationDAO.getValueByName(ConstantsBusiness.MOB_PROJECTS_PATH);
-			String filePath = projectsPath+formDTO.getUrl()+ConstantsBusiness.MOB_BIN_PATH+"maritaca-mobile-release.apk";
-			File file = new File(filePath);
-			if(file.isFile()) {
-				ExternalContext context = facesContext.getExternalContext();
-				HttpServletResponse response = (HttpServletResponse) context.getResponse();  
-		        response.setHeader("Content-Disposition", "attachment;filename=\"" + formDTO.getUrl() + ".apk\"");  
-		        response.setContentLength((int) file.length());  
-		        response.setContentType(ConstantsBusiness.MOB_MIMETYPE);			
-				FileInputStream fis = new FileInputStream(file);			
-				OutputStream os = response.getOutputStream();
-				byte[] buf = new byte[(int)file.length()];  
-	            int count;  
-	            while ((count = fis.read(buf)) >= 0) {  
-	                os.write(buf, 0, count);  
-	            }	             
-	            os.flush();
-	            fis.close(); 
-	            os.close();	            
-	            isValidApp = true;
-			}
-		}
-		catch (FileNotFoundException e) {
-			log.error(e.getMessage());
-		}
-		catch (IOException e) {		
-			log.error(e.getMessage());
-		}
-		return isValidApp;
-	}
-	
 	public void setFormDAO(FormDAO formDAO) {
 		this.formDAO = formDAO;
 	}

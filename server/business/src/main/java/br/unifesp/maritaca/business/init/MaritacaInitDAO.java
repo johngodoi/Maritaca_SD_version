@@ -1,5 +1,6 @@
 package br.unifesp.maritaca.business.init;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -56,6 +57,7 @@ public class MaritacaInitDAO extends BaseDAO {
 					entityManager.delete(rootUser);
 					rootUser = null;
 				}
+				this.createMobileConstants();
 			} else {
 				rootUser = null;
 			}
@@ -97,9 +99,6 @@ public class MaritacaInitDAO extends BaseDAO {
 			oaclient.setSecret(MARITACASECRET);
 			entityManager.persist(oaclient);
 		}
-		
-		//
-		this.createMobileConstants();
 	}
 	
 	public void destroyEntityManager(){
@@ -129,19 +128,26 @@ public class MaritacaInitDAO extends BaseDAO {
 	}
 	
 	private void createMobileConstants() {
-		Configuration cfScriptLocation = new Configuration();
-		cfScriptLocation.setName(ConstantsBusiness.MOB_SCRIPT_LOCATION);
-		cfScriptLocation.setValue("/home/maritaca/test-mobile/maritaca.sh");
-		entityManager.persist(cfScriptLocation);
-		//
-		Configuration cfMaritacaPath = new Configuration();
-		cfMaritacaPath.setName(ConstantsBusiness.MOB_MARITACA_PATH);
-		cfMaritacaPath.setValue("/home/maritaca/test-mobile/");
-		entityManager.persist(cfMaritacaPath);
-		//
-		Configuration cfProjectsPath = new Configuration();
-		cfProjectsPath.setName(ConstantsBusiness.MOB_PROJECTS_PATH);
-		cfProjectsPath.setValue("/home/maritaca/test-mobile/apps/");
-		entityManager.persist(cfProjectsPath);
+		List<Configuration> scriptLocationLst 	= entityManager.cQuery(Configuration.class, "name", ConstantsBusiness.MOB_SCRIPT_LOCATION);
+		List<Configuration> maritacaPathLst 	= entityManager.cQuery(Configuration.class, "name", ConstantsBusiness.MOB_MARITACA_PATH);
+		List<Configuration> projectsPathLst 	= entityManager.cQuery(Configuration.class, "name", ConstantsBusiness.MOB_PROJECTS_PATH);
+		if(scriptLocationLst.isEmpty()) {
+			Configuration cfScriptLocation = new Configuration();
+			cfScriptLocation.setName(ConstantsBusiness.MOB_SCRIPT_LOCATION);
+			cfScriptLocation.setValue("/home/alvaro/workspace/maritaca.sh");
+			entityManager.persist(cfScriptLocation);
+		}
+		if(maritacaPathLst.isEmpty()) {
+			Configuration cfMaritacaPath = new Configuration();
+			cfMaritacaPath.setName(ConstantsBusiness.MOB_MARITACA_PATH);
+			cfMaritacaPath.setValue("/home/alvaro/workspace/mobile/");
+			entityManager.persist(cfMaritacaPath);
+		}
+		if(projectsPathLst.isEmpty()) {
+			Configuration cfProjectsPath = new Configuration();
+			cfProjectsPath.setName(ConstantsBusiness.MOB_PROJECTS_PATH);
+			cfProjectsPath.setValue("/home/alvaro/workspace/mobile/apps/");
+			entityManager.persist(cfProjectsPath);
+		}
 	}	
 }

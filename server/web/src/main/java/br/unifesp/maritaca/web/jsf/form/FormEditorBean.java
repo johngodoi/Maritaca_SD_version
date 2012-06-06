@@ -6,6 +6,7 @@ import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
 import br.unifesp.maritaca.business.form.dto.FormDTO;
+import br.unifesp.maritaca.business.form.edit.ApkCreatorEJB;
 import br.unifesp.maritaca.business.form.edit.FormEditorEJB;
 import br.unifesp.maritaca.persistence.permission.Operation;
 import br.unifesp.maritaca.persistence.permission.Permission;
@@ -19,6 +20,7 @@ public class FormEditorBean extends MaritacaJSFBean {
 	private static final long serialVersionUID = 1L;
 	
 	@Inject private FormEditorEJB formEditorEJB;
+	@Inject private ApkCreatorEJB apkCreatorEJB;
 
 	@ManagedProperty("#{manager}")
 	private Manager manager;
@@ -91,7 +93,7 @@ public class FormEditorBean extends MaritacaJSFBean {
 	}
 	
 	public void downloadApk(FormDTO formDTO) {
-		if(!formEditorEJB.downloadApkFromFormId(getFacesContext(), formDTO)) {
+		if(!apkCreatorEJB.downloadApkFromFormId(getFacesContext(), formDTO)) {
 			addMessageError("form_edit_download_app_failed");
 		}
 	}
