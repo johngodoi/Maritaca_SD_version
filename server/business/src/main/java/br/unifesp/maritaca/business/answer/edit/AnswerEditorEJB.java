@@ -23,7 +23,7 @@ public class AnswerEditorEJB extends AbstractEJB {
 	@Inject
 	private AnswerEditorDAO answerEditorDAO;
 	
-	public void saveAnswers(DataCollectedDTO collectedDTO) throws Exception{
+	public void saveAnswers(DataCollectedDTO collectedDTO){
 		Answer answer;
 		for (AnswerWSDTO answerDTO : collectedDTO.getAnswerList().getAnswers()) {
 			answer = new Answer();
@@ -39,8 +39,16 @@ public class AnswerEditorEJB extends AbstractEJB {
 			
 			answer.setQuestions(questions);
 			
-			answerEditorDAO.saveAnswer(answer);		
+			getAnswerEditorDAO().saveAnswer(answer);		
 		}
 		
+	}
+
+	public AnswerEditorDAO getAnswerEditorDAO() {
+		return answerEditorDAO;
+	}
+
+	public void setAnswerEditorDAO(AnswerEditorDAO answerEditorDAO) {
+		this.answerEditorDAO = answerEditorDAO;
 	}
 }

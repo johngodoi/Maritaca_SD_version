@@ -8,7 +8,7 @@ public final class ConstantsWeb {
 	public static final String ROOT_FOR_SHARING 	= "/ws/form/share/";
 
 	// oauth service
-	public static final String WEB_LOGIN_URI = "/faces/views/login.xhtml";
+	public static final String MOBILE_LOGIN_URI = "/faces/views/mobileLogin.xhtml";
 	
 	public static final String OAUTH_USER_ID = "user_id";
 	public static final String OAUTH_ERROR_URI = "error_uri";

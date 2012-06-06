@@ -3,12 +3,13 @@ package br.unifesp.maritaca.mobile.activities;
 import static br.unifesp.maritaca.mobile.util.Constants.AUTHORIZATION_REQUEST;
 import static br.unifesp.maritaca.mobile.util.Constants.CLIENT_URL;
 import static br.unifesp.maritaca.mobile.util.Constants.MARITACA_MOBILE;
-import static br.unifesp.maritaca.mobile.util.Constants.SERVER_URL;
+import static br.unifesp.maritaca.mobile.util.Constants.OAUTH_URL;
 import br.unifesp.maritaca.mobile.util.OAuthTokenManager;
 import net.smartam.leeloo.client.request.OAuthClientRequest;
 import net.smartam.leeloo.common.exception.OAuthSystemException;
 import net.smartam.leeloo.common.message.types.ResponseType;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -39,7 +40,7 @@ public class LoginActivity extends Activity {
 		setContentView(R.layout.login);
 		try {
 			OAuthClientRequest request = OAuthClientRequest
-					.authorizationLocation(SERVER_URL + AUTHORIZATION_REQUEST)
+					.authorizationLocation(OAUTH_URL + AUTHORIZATION_REQUEST)
 					.setClientId(MARITACA_MOBILE).setRedirectURI(CLIENT_URL)
 					.setResponseType(ResponseType.CODE.toString())
 					.buildQueryMessage();
@@ -72,7 +73,8 @@ public class LoginActivity extends Activity {
 	private void closeBrowserWindow(){
 		getWebView().setVisibility(View.GONE);
 		OAuthTokenManager.loadTokenFile();
-		setContentView(R.layout.menu);		
+		Intent intent = new Intent(this, MenuActivity.class);
+    	startActivity(intent);  		
 	}
 
 	public WebView getWebView() {

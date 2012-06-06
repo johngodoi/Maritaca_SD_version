@@ -13,7 +13,7 @@ public class AnswerEditorDAO extends BaseDAO {
 	private Cluster cluster = HFactory.getOrCreateCluster("Test Cluster", "localhost:9160");
 	private Keyspace keyspace = HFactory.createKeyspace("Maritaca", cluster);
 	
-	public void saveAnswer(Answer answer) throws Exception {
+	public void saveAnswer(Answer answer){
 		answer.setKey(TimeUUIDUtils.getUniqueTimeUUIDinMillis());
 		
 		EntityManagerImpl em = new EntityManagerImpl(keyspace, "br.unifesp");

@@ -42,7 +42,7 @@ import br.unifesp.maritaca.persistence.permission.Policy;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "/cassandra-context-test-v2.xml")
-public class AnswersTest  extends BaseEmbededServerSetupTest {
+public class AnswersPermissionsTest  extends BaseEmbededServerSetupTest {
 	
 	@Resource
 	private EntityManagerHectorImpl emHectorImpl;	

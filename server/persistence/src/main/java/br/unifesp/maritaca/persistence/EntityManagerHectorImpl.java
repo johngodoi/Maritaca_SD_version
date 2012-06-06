@@ -380,11 +380,11 @@ public class EntityManagerHectorImpl implements EntityManager, Serializable {
 				// log.info("Creating column " + cName);
 				if (f.getAnnotation(Column.class) != null && f.getAnnotation(Column.class).indexed())
 					columns.add(newIndexedColumnDef(cName, cl.getSimpleName()
-							+ cName, ComparatorType.UTF8TYPE.getTypeName()));
+							+ cName, ComparatorType.BYTESTYPE.getTypeName()));
 				// TODO temporal solution while all the entities will be migrate to the new annotation Column
 				if (f.getAnnotation(Index.class) != null &&	f.getAnnotation(Index.class).indexed()) {
 					columns.add(newIndexedColumnDef(cName, cl.getSimpleName()
-							+ cName, ComparatorType.UTF8TYPE.getTypeName()));
+							+ cName, ComparatorType.BYTESTYPE.getTypeName()));
 				}
 			}
 
@@ -393,7 +393,7 @@ public class EntityManagerHectorImpl implements EntityManager, Serializable {
 
 			ColumnFamilyDefinition cfdef = createColumnFamilyDefinition(
 					keyspace.getKeyspaceName(), cl.getSimpleName(),
-					ComparatorType.UTF8TYPE, columnMetadata);
+					ComparatorType.BYTESTYPE, columnMetadata);
 			cfdef.setKeyValidationClass(UUIDType.class.getSimpleName());
 
 			cluster.addColumnFamily(cfdef);

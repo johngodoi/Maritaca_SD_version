@@ -49,7 +49,11 @@ public class Constants {
 	public static final String CLIENT_URL = "http://localhost:8082/";
 	public static final String MARITACA_MOBILE = "maritacamobile";
 	public static final String AUTHORIZATION_REQUEST = "authorizationRequest";
-	public static final String SERVER_URL = "http://10.0.2.2:8080/maritaca-web/oauth/";	
+	
+	public static final String SERVER_ADDR  = "http://10.0.2.2:8080/maritaca-web";
+	public static final String OAUTH_URL    = SERVER_ADDR + "/oauth/";
+	public static final String WS_ANSW_URL  = SERVER_ADDR + "/ws/answer/add/";
+	
 	public static final String RESPONSE_TYPE = "response_type";
 	public static final String MARITACA_SECRET = "maritacasecret";
 	public static final String ACCESS_TOKEN_REQUEST = "accessTokenRequest";

@@ -1,48 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form>
     <title>New Form</title>
-    <id>001</id>
+    <id>02753970-9f5c-11e1-b730-4666cfaa37dc</id>
     <url>http</url>
     <questions>
-        <text id="0" next="1" required="true" max="100">
-            <label>TextBox title</label>
-            <help>5</help>
-            <default>abc</default>
-        </text>  
-        <date id="1" max="12/12/2012" min="10/12/2012" next="2" required="true">
-            <label>Date title</label>
-            <help>date</help>
-            <format>dd/MM/yyyy</format>
-            <default>11/12/2012</default>
-        </date>   
-        <radio id="2" next="3" required="true"> 
-            <label>RadioBox title</label>
-            <help>radio</help>
-            <default>a</default>
-            <option>a</option>
-            <option>b</option>
-            <option>c</option>
-        </radio>
-        <combobox id="3" next="4" required="true"> 
-            <label>ComboBox title</label>
-            <help>combobox</help>
-            <default>cx</default>
-            <option>ax</option>
-            <option>bx</option>
-            <option>cx</option>
-        </combobox>
-        <checkbox id="4" next="5" required="true"> 
-            <label>CheckBox title</label>
-            <help>checkbox</help>
-            <default>acx</default>
-            <option>aax</option>
-            <option>abx</option>
-            <option>acx</option>
-        </checkbox>
-        <number id="5" max="40" min="10" next="-1" required="true">
-            <label>Number title</label>
-            <help>number</help>
-            <default>11</default>
-        </number>        
+		<text id="0" next="1" required="true" max="100">
+			<help>Enter with name of user.</help>
+			<label>0: Your Name:</label>
+			<default>Arlindo Flavio</default>
+		</text>
+	    
+	    <number id="1" next="2" required="false" min="0" max="100">
+	            <help>How old are you?</help>
+	            <label>1: Your age:</label>
+	            <default>24</default>
+	            <if comparison="equal" value="24" goto="2" />
+	            <if comparison="greater" value="100" goto="3" />
+	            <if comparison="less" value="18" goto="4" />
+	            <if comparison="greaterequal" value="50" goto="5" />
+	            <if comparison="lessequal" value="20" goto="6" />
+	    </number>
+	    
+	    <text id="2" next="3" required="false" max="2800">
+			<help>Terceira question, sem help</help>
+			<label>2: Nome do autor:</label>
+			<default>Sir Bruno</default>
+	    </text>
+	    
+	   <text id="3" next="4" required="true" max="100">
+			<help>Enter with name of user.</help>
+			<label>3: Name:</label>
+			<default>ciclano</default>
+			<if comparison="equal" value="ciclano" goto="5" />
+	   </text>
+	   
+	   <number id="4" next="5" required="false" min="0" max="100">
+	            <help>How old are the user?</help>
+	            <label>4: Age:</label>
+	            <default>0</default>
+	            <if comparison="equal" value="24" goto="2" />
+	            <!-- special tag -1, that sends the user to the end of the data gathering 
+	                (a screen asking if he/she wants to quit, continue, save, or upload data...) -->
+	            <if comparison="greater" value="100" goto="-1" /> <!-- sorry, you should be dead -->
+	            <if comparison="less" value="18" goto="-1" /> <!-- forbidden for under 18 -->
+	            <if comparison="greaterequal" value="10" goto="2" />
+	            <if comparison="lessequal" value="10" goto="2" />
+	    </number>
+	   <number id="5" next="-1" required="false" min="0" max="100">
+	            <help>Nessa idade, você tem certeza de que é Homem?</help>
+	            <label>5: Confirme a idade:</label>
+	            <default>24</default>
+	            <!--  if comparison="equal" value="24" goto="5" /-->
+	    </number>
+	   <number id="6" next="-1" required="false" min="0" max="100">
+	            <help>Nessa idade, você tem certeza de que é Homem?</help>
+	            <label>6: Confirme a idade:</label>
+	            <default>24</default>
+	            <!--  if comparison="equal" value="24" goto="5" /-->
+	    </number>
     </questions>
 </form>
