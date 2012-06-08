@@ -6,7 +6,7 @@ package br.com.maritaca.questions;
 import java.io.InputStream;
 
 import android.util.Log;
-import br.com.maritaca.parser.XMLParser;
+import br.com.maritaca.xml.parser.XMLParser;
 
 /**
  * @author Arlindo

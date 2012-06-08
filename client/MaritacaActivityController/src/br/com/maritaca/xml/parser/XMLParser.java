@@ -1,4 +1,4 @@
-package br.com.maritaca.parser;
+package br.com.maritaca.xml.parser;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -200,19 +200,21 @@ public class XMLParser {
 			return null; // Ocorreu algum erro do XML ? Formato invalido ?
 
 		Question[] questions = new Question[sizeQuestions];
-
+		NodeList list;
+		Node teste;
+		// FIXME comentado pois o formulario ainda nao possui formId e userId
 		// Get FORMID
-		NodeList list = document.getElementsByTagName("formid");
-		Node teste = list.item(0);
+		// NodeList list = document.getElementsByTagName("formid");
+		// Node teste = list.item(0);
 		// Log.v("ARLINDO", "testes: + "+teste.getNodeName());
-		setFormid(teste.getFirstChild().getNodeValue());
+		// setFormid(teste.getFirstChild().getNodeValue());
 		// Log.v("ARLINDO", "testes: + "+teste.getFirstChild().getNodeValue());
 
 		// Get USERID
-		list = document.getElementsByTagName("userid");
-		teste = list.item(0);
+		// list = document.getElementsByTagName("userid");
+		// teste = list.item(0);
 		// Log.v("ARLINDO", "testes: + "+teste.getNodeName());
-		setUserid(teste.getFirstChild().getNodeValue());
+		// setUserid(teste.getFirstChild().getNodeValue());
 		// Log.v("ARLINDO", "testes: + "+teste.getFirstChild().getNodeValue());
 
 		list = document.getElementsByTagName("questions");
@@ -230,7 +232,7 @@ public class XMLParser {
 
 		int questionIndex = 0; // Indice do array
 
-		for (int i = 1; i < list.getLength(); i++) {
+		for (int i = 0; i < list.getLength(); i++) {
 			Node node = list.item(i);
 
 			// Integer previous = i-1;//questionIndex - 1;
@@ -274,8 +276,10 @@ public class XMLParser {
 
 	/* Recebe uma tag e um element retornando o conteudo em String */
 	public static String getTagValue(String tag, Element element) {
-		NodeList list = element.getElementsByTagName(tag).item(0)
-				.getChildNodes();
+		NodeList nodeTag = element.getElementsByTagName(tag);
+		if (nodeTag == null || nodeTag.getLength() == 0)
+			return null;
+		NodeList list = nodeTag.item(0).getChildNodes();
 		Node node = (Node) list.item(0);
 		return node.getNodeValue();
 	}

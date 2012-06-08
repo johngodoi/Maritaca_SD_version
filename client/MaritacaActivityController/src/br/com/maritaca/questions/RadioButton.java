@@ -10,7 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RadioGroup;
 import br.com.maritaca.MaritacaActivityController;
-import br.com.maritaca.parser.XMLParser;
+import br.com.maritaca.xml.parser.XMLParser;
 
 public class RadioButton extends Question {
 
