@@ -7,8 +7,6 @@ import net.smartam.leeloo.client.response.OAuthJSONAccessTokenResponse;
 import net.smartam.leeloo.common.exception.OAuthSystemException;
 import net.smartam.leeloo.common.message.types.GrantType;
 import net.smartam.leeloo.common.message.types.ResponseType;
-import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
-import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -31,8 +29,6 @@ public class MaritacaHomeActivity extends Activity {
 			+ ":8080/maritaca/oauth/authorizationConfirm";
 	// "maritaca:urlCall//";
 	private static final String URL_CALLBACK = "maritaca://urlCall";
-	private CommonsHttpOAuthConsumer consumer;
-	private CommonsHttpOAuthProvider provider;
 
 	/**
 	 * Cria um request para a chave Oauth

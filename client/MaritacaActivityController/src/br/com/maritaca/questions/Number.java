@@ -100,10 +100,11 @@ public class Number extends Question {
 			return false;
 		}
 		if (valor != null) {
-			return (valor >= min && valor <= max) ? true : false;
-		} else {
-			return !this.getRequired();
+			if (min != null && max != null) {
+				return (valor >= min && valor <= max) ? true : false;
+			}
 		}
+		return !this.getRequired();
 
 	}
 

@@ -14,10 +14,13 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import android.util.Log;
+import br.com.maritaca.questions.Location;
 import br.com.maritaca.questions.Number;
+import br.com.maritaca.questions.Picture;
 import br.com.maritaca.questions.Question;
 import br.com.maritaca.questions.RadioButton;
 import br.com.maritaca.questions.Text;
+import br.com.maritaca.questions.Timestamp;
 
 public class XMLParser {
 
@@ -167,8 +170,11 @@ public class XMLParser {
 		} else if (type.compareTo(TIME) == 0) {
 
 		} else if (type.compareTo(TIMESTAMP) == 0) {
-
+			question = new Timestamp(id, previous, next, help, label, required,
+					element);
 		} else if (type.compareTo(PICTURE) == 0) {
+			question = new Picture(id, previous, next, help, label, required,
+					element);
 
 		} else if (type.compareTo(COMBOBOX) == 0) {
 
@@ -177,7 +183,8 @@ public class XMLParser {
 		} else if (type.compareTo(VIDEO) == 0) {
 
 		} else if (type.compareTo(LOCATION) == 0) {
-
+			question = new Location(id, previous, next, help, label, required,
+					element);
 		} else if (type.compareTo(TEMPERATURE) == 0) {
 
 		} else if (type.compareTo(SIGNAL) == 0) {
@@ -247,7 +254,9 @@ public class XMLParser {
 
 				/* Elementos basicos da question, previous acima */
 				Integer id = myParseInteger(element.getAttribute("id"));
-				Integer next = myParseInteger(element.getAttribute("next"));
+				Integer next = myParseInteger(element.getAttribute("next")) != null ? myParseInteger(element
+						.getAttribute("next"))
+						: i + 1 < list.getLength() ? i + 1 : -1;
 				Boolean required = Boolean.parseBoolean(element
 						.getAttribute("required"));
 
@@ -292,5 +301,15 @@ public class XMLParser {
 		} catch (NumberFormatException e) {
 			return null;
 		}
+	}
+
+	/**
+	 * Usado para show.
+	 * 
+	 * @param str
+	 * @return true se str eh "yes", false se for "no"
+	 */
+	public static Boolean myParseBoolean(String str) {
+		return str.equals("yes") ? true : false;
 	}
 }
