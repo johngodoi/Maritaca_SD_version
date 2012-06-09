@@ -22,6 +22,7 @@ public class FormListerBean extends MaritacaJSFBean {
 	private Integer numberOfPagesOwnList;
 	@SuppressWarnings("unused")
 	private Integer numberOfPagesSharedList;
+	private Integer numberOfPages;
 		
 	private Collection<FormDTO> ownForms;
 	private Collection<FormDTO> sharedForms;
@@ -75,7 +76,8 @@ public class FormListerBean extends MaritacaJSFBean {
 
 	public Integer getNumberOfPagesOwnList() {
 		Integer numPages = ownForms!=null?ownForms.size():0;
-		return super.getNumberOfPages(numPages, getItemsPerPage());
+		this.numberOfPages= super.getNumberOfPages(numPages, getItemsPerPage());
+		return this.numberOfPages;
 	}
 
 	public void setNumberOfPagesOwnList(Integer numberOfPagesOwnList) {
@@ -89,5 +91,12 @@ public class FormListerBean extends MaritacaJSFBean {
 
 	public void setNumberOfPagesSharedList(Integer numberOfPagesSharedList) {
 		this.numberOfPagesSharedList = numberOfPagesSharedList;
+	}
+	
+	public int[] getPagesToScroll(){
+		int vector[] = new int[this.numberOfPages];
+		for(Integer i =1; i<=this.numberOfPages; i++)
+			vector[i-1]=i;
+		return vector;
 	}
 }

@@ -1,0 +1,73 @@
+<datacollected>
+
+    <formId>
+ABC
+    </formId>
+
+    <userId>
+XYZ
+    </userId>
+
+    <answers>
+
+        <answer timestamp="1337730043342" >
+
+            <question id="0" >
+
+                <value>
+Arlindo Flavio
+                </value>
+            </question>
+
+            <question id="1" >
+
+                <value>
+24
+                </value>
+            </question>
+
+            <question id="2" >
+
+                <value>
+Sir Bruno
+                </value>
+            </question>
+
+            <question id="3" >
+
+                <value>
+Fulano
+                </value>
+            </question>
+
+            <question id="4" >
+
+                <value>
+0
+                </value>
+            </question>
+
+            <question id="5" >
+
+                <value>
+Arlindo Flavio
+                </value>
+            </question>
+
+            <question id="6" >
+
+                <value>
+Arlindo Flavio
+                </value>
+            </question>
+
+            <question id="7" >
+
+                <value>
+Arlindo Flavio
+                </value>
+            </question>
+        </answer>
+    </answers>
+
+</datacollected>

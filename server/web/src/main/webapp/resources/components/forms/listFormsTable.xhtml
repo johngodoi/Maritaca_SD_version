@@ -144,7 +144,44 @@
 				<h:outputText value="#{msgs.form_list_empty}"/>				
             </f:facet>
 			<f:facet name="footer">
-                <rich:dataScroller id="#{cc.attrs.idScroller}" rendered="#{cc.attrs.numberOfPages>1}" for="#{cc.attrs.idem}" maxPages="#{cc.attrs.numberOfPages}" page="1" />
+                <rich:dataScroller id="#{cc.attrs.idScroller}" rendered="#{cc.attrs.numberOfPages>1}" for="#{cc.attrs.idem}" maxPages="#{cc.attrs.numberOfPages}" page="1" 
+                  fastControls="hide"
+                     pagesVar="pages">
+                    <f:facet name="first">
+                        <h:outputText value="First" styleClass="scrollerCell" />
+                    </f:facet>
+                    <f:facet name="first_disabled">
+                        <h:outputText value="First" styleClass="scrollerCell" />
+                    </f:facet>
+                    <f:facet name="last">
+                        <h:outputText value="Last" styleClass="scrollerCell" />
+                    </f:facet>
+                    <f:facet name="last_disabled">
+                        <h:outputText value="Last" styleClass="scrollerCell" />
+                    </f:facet>
+                    <f:facet name="previous">
+                        <h:outputText value="Previous" styleClass="scrollerCell" />
+                    </f:facet>
+                    <f:facet name="previous_disabled">
+                        <h:outputText value="Previous" styleClass="scrollerCell" />
+                    </f:facet>
+                    <f:facet name="next">
+                        <h:outputText value="Next" styleClass="scrollerCell" />
+                    </f:facet>
+                    <f:facet name="next_disabled">
+                        <h:outputText value="Next" styleClass="scrollerCell" />
+                    </f:facet>
+                    <f:facet name="pages">
+                        <h:panelGroup>
+                            <h:outputText value="Page "/>
+                            <h:selectOneMenu value="1" 
+                                onchange="#{rich:component('ds')}.switchToPage(this.value)">
+                                <f:selectItems value="#{formListerBean.pagesToScroll}" />
+                            </h:selectOneMenu>
+                            <h:outputText value=" of #{pages}" />
+                        </h:panelGroup>
+                    </f:facet>
+                </rich:dataScroller>
             </f:facet>
 		</h:dataTable>
 	</composite:implementation>
