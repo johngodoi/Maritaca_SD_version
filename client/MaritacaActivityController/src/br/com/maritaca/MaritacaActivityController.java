@@ -1,6 +1,7 @@
 package br.com.maritaca;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -12,7 +13,11 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -23,10 +28,17 @@ import br.com.maritaca.view.Viewer;
 import br.com.maritaca.xml.XMLUtils;
 import br.org.maritaca.R;
 
-public class MaritacaActivityController extends Activity {
+public class MaritacaActivityController extends Activity implements
+		LocationListener {
 
 	final static String urlTeste = "10.0.2.2";
+	final static String maritacaDir = "maritaca";
+	public static final File diretorio = new File(
+			Environment.getExternalStorageDirectory(), maritacaDir);
 	private String accessToken = "";
+
+	public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
+
 	Viewer viewer;
 	Model model;
 	String formId;
@@ -37,6 +49,7 @@ public class MaritacaActivityController extends Activity {
 		// TODO move
 		super.onCreate(savedInstanceState);
 		accessToken = (String) this.getIntent().getExtras().get("accessToken");
+		diretorio.mkdir();
 		Log.d("ACCESSTOKEN", accessToken);
 		inicio();
 	}
@@ -56,6 +69,22 @@ public class MaritacaActivityController extends Activity {
 				getForm(id);
 			}
 		});
+	}
+
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+			if (resultCode == RESULT_OK) {
+				Log.d("REQUEST", "" + requestCode);
+				Log.d("RESULT", String.valueOf(resultCode));
+				// Image captured and saved to fileUri specified in the Intent
+				Toast.makeText(this, "Image saved!", Toast.LENGTH_LONG).show();
+			} else if (resultCode == RESULT_CANCELED) {
+				// User cancelled the image capture
+			} else {
+				// Image capture failed, advise user
+			}
+		}
 	}
 
 	public void next() {
@@ -174,7 +203,7 @@ public class MaritacaActivityController extends Activity {
 				Toast.makeText(this, "RECEBI ALGO: " + is.toString(),
 						Toast.LENGTH_LONG).show();
 
-			// is = getResources().getAssets().open("parseado.xml");
+			is = getResources().getAssets().open("parseado.xml");
 			model = new Model(is);
 			if (model.getSize() > 0) {
 				// Create layout
@@ -202,5 +231,25 @@ public class MaritacaActivityController extends Activity {
 	 */
 	private String parseResponse(String xmlString) {
 		return XMLUtils.parseXMLResponse(xmlString);
+	}
+
+	public void onLocationChanged(Location location) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void onProviderDisabled(String provider) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void onProviderEnabled(String provider) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		// TODO Auto-generated method stub
+
 	}
 }
