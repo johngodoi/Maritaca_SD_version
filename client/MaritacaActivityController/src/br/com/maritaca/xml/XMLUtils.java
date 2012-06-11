@@ -52,7 +52,7 @@ public class XMLUtils {
 		return "";
 	}
 
-	public static String getXmlAsString(String formId, String userId,
+	public static String getXmlAnswerAsString(String formId, String userId,
 			Model model) throws IllegalArgumentException,
 			IllegalStateException, IOException {
 		XmlSerializer xmlSerializer = Xml.newSerializer();
@@ -62,11 +62,11 @@ public class XMLUtils {
 		xmlSerializer.startTag("", "datacollected");
 
 		xmlSerializer.startTag("", "formId");
-		xmlSerializer.text(formId);
+		xmlSerializer.text("testeFormId");
 		xmlSerializer.endTag("", "formId");
 
 		xmlSerializer.startTag("", "userId");
-		xmlSerializer.text(userId);
+		xmlSerializer.text("testeUserId");
 		xmlSerializer.endTag("", "userId");
 
 		xmlSerializer.startTag("", "answers");
@@ -79,7 +79,7 @@ public class XMLUtils {
 					.toString());
 			xmlSerializer.startTag("", "value");
 			xmlSerializer
-					.text(model.getQuestionIndex(i).getValue().toString() == null ? ""
+					.text(model.getQuestionIndex(i).getValue() == null ? ""
 							: model.getQuestionIndex(i).getValue().toString());
 			xmlSerializer.endTag("", "value");
 			xmlSerializer.endTag("", "question");

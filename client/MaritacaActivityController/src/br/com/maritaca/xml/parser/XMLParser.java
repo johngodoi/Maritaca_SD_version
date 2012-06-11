@@ -238,7 +238,7 @@ public class XMLParser {
 		}
 
 		int questionIndex = 0; // Indice do array
-
+		Log.d("Questions size", "" + list.getLength());
 		for (int i = 0; i < list.getLength(); i++) {
 			Node node = list.item(i);
 
@@ -256,7 +256,7 @@ public class XMLParser {
 				Integer id = myParseInteger(element.getAttribute("id"));
 				Integer next = myParseInteger(element.getAttribute("next")) != null ? myParseInteger(element
 						.getAttribute("next"))
-						: i + 1 < list.getLength() ? i + 1 : -1;
+						: i + 1 < list.getLength() ? id + 1 : -1;
 				Boolean required = Boolean.parseBoolean(element
 						.getAttribute("required"));
 

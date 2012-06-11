@@ -17,7 +17,7 @@ import br.org.maritaca.R;
 
 public class MaritacaHomeActivity extends Activity {
 
-	public static final String IP = "10.0.2.2";
+	public static final String IP = "192.168.1.101";// "10.0.2.2";
 
 	private static final String SECRET = "maritacasecret";
 	private static final String CLIENTID = "maritacamobile";

@@ -9,6 +9,8 @@ import java.net.URISyntaxException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
@@ -31,11 +33,11 @@ import br.org.maritaca.R;
 public class MaritacaActivityController extends Activity implements
 		LocationListener {
 
-	final static String urlTeste = "10.0.2.2";
 	final static String maritacaDir = "maritaca";
 	public static final File diretorio = new File(
 			Environment.getExternalStorageDirectory(), maritacaDir);
 	private String accessToken = "";
+	private static View lastView = null;;
 
 	public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 
@@ -48,10 +50,13 @@ public class MaritacaActivityController extends Activity implements
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO move
 		super.onCreate(savedInstanceState);
+		Toast.makeText(this, "Chamou on create", Toast.LENGTH_LONG).show();
 		accessToken = (String) this.getIntent().getExtras().get("accessToken");
 		diretorio.mkdir();
 		Log.d("ACCESSTOKEN", accessToken);
+
 		inicio();
+
 	}
 
 	/**
@@ -71,14 +76,22 @@ public class MaritacaActivityController extends Activity implements
 		});
 	}
 
+	// protected void onNewIntent(Intent intent) {
+	//
+	// }
+
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
+		// super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
 				Log.d("REQUEST", "" + requestCode);
 				Log.d("RESULT", String.valueOf(resultCode));
 				// Image captured and saved to fileUri specified in the Intent
-				Toast.makeText(this, "Image saved!", Toast.LENGTH_LONG).show();
+				Toast.makeText(this, "Imagem armazenada!", Toast.LENGTH_LONG)
+						.show();
+				Log.d("NULL", "" + (model == null) + " " + (this == null) + " ");
+				// this.setContentView(MaritacaActivityController.lastView);
 			} else if (resultCode == RESULT_CANCELED) {
 				// User cancelled the image capture
 			} else {
@@ -93,7 +106,7 @@ public class MaritacaActivityController extends Activity implements
 			// Create new layout
 			viewer = new Viewer(this, model.getCurrent(),
 					model.isCurrentLastQuestion(), model.isCurrentFirst());
-
+			lastView = viewer.getView();
 			setContentView(viewer.getView());
 		} else {
 			if (model.isCurrentLastQuestion()) {
@@ -105,7 +118,7 @@ public class MaritacaActivityController extends Activity implements
 					}
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
-					Toast.makeText(this, "Erro na conexão", Toast.LENGTH_LONG)
+					Toast.makeText(this, e.toString(), Toast.LENGTH_LONG)
 							.show();
 				}
 			} else {
@@ -125,6 +138,7 @@ public class MaritacaActivityController extends Activity implements
 			// Create new layout
 			viewer = new Viewer(this, model.getCurrent(),
 					model.isCurrentLastQuestion(), model.isCurrentFirst());
+			lastView = viewer.getView();
 
 			setContentView(viewer.getView());
 		} else {
@@ -142,19 +156,27 @@ public class MaritacaActivityController extends Activity implements
 
 	private String getXmlAsString() throws IllegalArgumentException,
 			IllegalStateException, IOException {
-		return XMLUtils.getXmlAsString(formId, userId, model);
+		return XMLUtils.getXmlAnswerAsString(formId, userId, model);
 	}
 
 	private boolean sendAnswer(String formId, String userId, String xmlAsString)
 			throws URISyntaxException, IllegalArgumentException,
 			IllegalStateException, IOException {
+		String uri = "http://10.0.2.2:8080/maritaca/ws/answer/add/";
+		// + "?oauth_token=" + accessToken;
+		String contentType = "application/xml";
+		DefaultHttpClient httpClient = new DefaultHttpClient();
+		HttpPut putRequest = new HttpPut(uri);
+		StringEntity input = new StringEntity(XMLUtils.getXmlAnswerAsString(
+				formId, userId, model));
+		input.setContentType(contentType);
+		putRequest.setEntity(input);
+		HttpResponse response = httpClient.execute(putRequest);
 		// List<NameValuePair> params = new LinkedList<NameValuePair>();
 		// params.add(new BasicNameValuePair("xml", xmlAsString));
-		// params.add(new BasicNameValuePair("formId", formId));
-		// params.add(new BasicNameValuePair("oauth_token",
-		// "359999a2b143d883fba82867f191fadc"));
+		// params.add(new BasicNameValuePair("oauth_token", this.accessToken));
 		//
-		// URI uri = URIUtils.createURI("http", this.urlTeste, 8080,
+		// URI uri = URIUtils.createURI("http", MaritacaHomeActivity.IP, 8080,
 		// "/maritaca/ws/answer/",
 		// URLEncodedUtils.format(params, "UTF-8"), null);
 		//
@@ -209,6 +231,7 @@ public class MaritacaActivityController extends Activity implements
 				// Create layout
 				viewer = new Viewer(this, model.getCurrent(),
 						model.isCurrentLastQuestion(), model.isCurrentFirst());
+				lastView = viewer.getView();
 				// Show it
 				setContentView(viewer.getView());
 

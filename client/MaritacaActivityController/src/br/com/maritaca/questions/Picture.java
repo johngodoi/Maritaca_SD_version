@@ -1,17 +1,17 @@
 package br.com.maritaca.questions;
 
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 
-import javax.imageio.ImageIO;
-
-import org.apache.commons.codec.binary.Base64;
 import org.w3c.dom.Element;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -26,6 +26,7 @@ public class Picture extends Question {
 			String label, Boolean required, Element element) {
 		super(id, previous, next, help, label, required, element);
 		// TODO Auto-generated constructor stub
+		Log.d("PICTURE", "" + next);
 	}
 
 	@Override
@@ -50,13 +51,22 @@ public class Picture extends Question {
 	@Override
 	public void save(View answer) {
 		try {
-			Base64 base64 = new Base64();
-			BufferedImage img = ImageIO.read(new File(filePath));
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ImageIO.write(img, "png", baos);
-			baos.flush();
-			value = base64.encodeToString(baos.toByteArray());
-			baos.close();
+
+			Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+			ByteArrayOutputStream bStream = new ByteArrayOutputStream();
+			bitmap.compress(Bitmap.CompressFormat.JPEG, 90, bStream);
+			value = Base64
+					.encodeToString(bStream.toByteArray(), Base64.DEFAULT);
+			bStream.close();
+			Log.d("PICTURE", value.toString());
+			// BufferedImage img = ImageIO.read(new File(filePath));
+			// ByteArrayOutputStream byteArrayOutputStream = new
+			// ByteArrayOutputStream();
+			// ImageIO.write(img, "jpg", byteArrayOutputStream);
+			// byteArrayOutputStream.flush();
+			// value =
+			// base64.encodeToString(byteArrayOutputStream.toByteArray());
+			// byteArrayOutputStream.close();
 		} catch (Exception e) {
 			Toast.makeText(answer.getContext(),
 					"Erro durante a codificacao da imagem", Toast.LENGTH_LONG)
@@ -67,7 +77,7 @@ public class Picture extends Question {
 
 	@Override
 	public View getLayout(final MaritacaActivityController controller) {
-		Button button = new Button(controller);
+		Button button = new Button(controller.getApplicationContext());
 		button.setText("Picture");
 		button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View arg0) {
@@ -79,7 +89,6 @@ public class Picture extends Question {
 				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				filePath = image.getAbsolutePath();
 
-				// start the image capture Intent
 				controller
 						.startActivityForResult(
 								intent,
