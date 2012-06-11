@@ -14,6 +14,7 @@
 <title>Not present in rendered output</title>
 </head>
 <body>
+
 	<composite:interface>
 		<composite:attribute name="submodule" required="true" />
 	</composite:interface>
@@ -30,20 +31,24 @@
 			<c:when test="#{cc.attrs.submodule.component eq 'listAnswers'}">
 				<answ:listAnswers submodule="#{cc.attrs.submodule}" />
 			</c:when>
-			
-			<c:when test="#{cc.attrs.submodule.component eq 'listEditor'}">
-				<lists:listEditor submodule="#{cc.attrs.submodule}"/>
+
+			<c:when test="#{cc.attrs.submodule.component eq 'newAnswer'}">
+				<answ:newAnswer submodule="#{cc.attrs.submodule}" />
 			</c:when>
-			
+
+			<c:when test="#{cc.attrs.submodule.component eq 'listEditor'}">
+				<lists:listEditor submodule="#{cc.attrs.submodule}" />
+			</c:when>
+
 			<c:when test="#{cc.attrs.submodule.component eq 'myLists'}">
 				<lists:myLists submodule="#{cc.attrs.submodule}" />
-			</c:when>						
-			
+			</c:when>
+
 			<c:when test="#{cc.attrs.submodule.component eq 'accountEditor'}">
 				<settings:accountEditor submodule="#{cc.attrs.submodule}"
-										cancelNavigation="#{accountEditorBean.cancelUserEdition}"/>
-			</c:when>	
-														
+					cancelNavigation="#{accountEditorBean.cancelUserEdition}" />
+			</c:when>
+
 			<c:otherwise> ${msgs.commons_emptyComponent}</c:otherwise>
 		</c:choose>
 	</composite:implementation>
