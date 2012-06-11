@@ -3,11 +3,11 @@ package br.unifesp.maritaca.persistence.entity;
 import java.util.List;
 import java.util.UUID;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import br.unifesp.maritaca.persistence.annotation.Column;
 import br.unifesp.maritaca.persistence.annotation.Index;
 import br.unifesp.maritaca.persistence.annotation.Minimal;
 
@@ -19,16 +19,16 @@ public class Answer {
 	private UUID key;
 
 	@Minimal
-	@Index(indexed=true)
+	@Index(indexed = true)
 	@Column(name="form")
 	private UUID form;
 
 	@Minimal
-	@Index(indexed=true)
+	@Index(indexed = true)
 	@Column(name="user")
 	private UUID user;
 
-	@me.prettyprint.hom.annotations.Column(name="questions")
+	@Column(name="questions")
 	private List<QuestionAnswer> questions;
 	
 	@Column(name="creationDate")

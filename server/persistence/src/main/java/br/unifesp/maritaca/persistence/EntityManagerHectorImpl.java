@@ -52,14 +52,17 @@ import org.apache.cassandra.thrift.IndexType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import br.unifesp.maritaca.persistence.annotation.Column;
 import br.unifesp.maritaca.persistence.annotation.Index;
 import br.unifesp.maritaca.persistence.annotation.JSONValue;
 import br.unifesp.maritaca.persistence.annotation.Minimal;
+import br.unifesp.maritaca.persistence.entity.Answer;
+import br.unifesp.maritaca.persistence.entity.QuestionAnswer;
+import br.unifesp.maritaca.persistence.util.MaritacaEntityUtils;
 import br.unifesp.maritaca.persistence.util.UtilsPersistence;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class EntityManagerHectorImpl implements EntityManager, Serializable {
 	
@@ -166,9 +169,12 @@ public class EntityManagerHectorImpl implements EntityManager, Serializable {
 
 	private void saveColumn(Object obj, Mutator<UUID> mutator, UUID key, Field f,
 			HColumn column) {
-		int timeToLive = (f.getAnnotation(Column.class)).ttl();				
-		if(timeToLive>0) {					
-			column.setTtl(timeToLive);
+		Column annotation = f.getAnnotation(Column.class);
+		if(annotation != null) {
+			int timeToLive = annotation.ttl(); 
+			if(timeToLive>0) {
+				column.setTtl(timeToLive);				
+			}
 		}		
 		mutator.addInsertion(key, obj.getClass().getSimpleName(), column);
 	}
@@ -551,6 +557,11 @@ public class EntityManagerHectorImpl implements EntityManager, Serializable {
 					method.invoke(result, date);
 				} catch (ParseException e) {
 					log.error("date not set", e);
+				}
+			} else if(f.getType() == List.class) {
+				//TODO generalizar para qualquer entidade
+				if(result.getClass() == Answer.class) {
+					method.invoke(result, MaritacaEntityUtils.parseStringToAnswerList(value));
 				}
 			} else {
 				try {

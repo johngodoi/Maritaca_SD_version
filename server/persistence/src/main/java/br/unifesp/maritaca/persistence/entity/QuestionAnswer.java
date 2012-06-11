@@ -55,4 +55,9 @@ public class QuestionAnswer implements Serializable {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "{id="+ this.id + ", value="+ this.value + "}";
+	}
 }
