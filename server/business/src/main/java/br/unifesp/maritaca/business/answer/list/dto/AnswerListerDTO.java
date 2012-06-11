@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import br.unifesp.maritaca.business.image.process.ImageBuilder;
-
 /**
  * DTO used to retrieve all the answers for one form.
  * It is used mainly in the "List Answers" view.
@@ -16,7 +14,6 @@ public class AnswerListerDTO {
 	private List<AnswerDTO> answers;	
 	private List<String>    questions;	
 	private String          formTitle;
-	private ImageBuilder imageBuilder;
 	
 	public List<AnswerDTO> getAnswers() {
 		return answers;
@@ -41,7 +38,7 @@ public class AnswerListerDTO {
 
 	public void setAnswers(List<AnswerDTO> answers) {
 		this.answers = answers;
-//		código chubadaço para testar resposta
+//		código chumbadaço para testar resposta
 		AnswerDTO answer = new AnswerDTO();
 		List<String> answersList = new ArrayList<String>();
 		answersList.add("teste");

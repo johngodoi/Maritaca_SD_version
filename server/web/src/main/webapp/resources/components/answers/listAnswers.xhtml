@@ -32,58 +32,23 @@
 						<h:outputText value="#{aAnswer.userEmail}" />
 						<h:outputText value="#{msgs.answer_list_date}:"></h:outputText>
 						<h:outputText value="#{aAnswer.collectDate}" />
-						<!-- 				</h:panelGrid> -->
-						<!-- 			</rich:panel> -->
-						<!--             <f:facet name="footer"> -->
-						<!--                 <rich:datascroller></rich:datascroller> -->
-						<!--             </f:facet> -->
-						<!-- 		</rich:dataGrid> -->
-						<!-- 		<rich:dataTable value="#{answersListerBean.answerListerDTO.answers}" -->
-						<!-- 			id="answersTable" var="aAnswer" styleClass="maritacaTable"> -->
-						<!-- 			<f:facet name="header"> -->
-						<!-- 				<h:outputText value="#{answersListerBean.answerListerDTO.formTitle}" /> -->
-						<!-- 			</f:facet> -->
-
-						<!-- 			<rich:column> -->
-						<!-- 				<f:facet name="header"> -->
-						<!-- 					<h:outputText value="#{msgs.answer_list_author}" /> -->
-						<!-- 				</f:facet> -->
-						<!-- 				<h:outputText value="#{aAnswer.userEmail}" /> -->
-						<!-- 			</rich:column> -->
-
-						<!-- 			<rich:column> -->
-						<!-- 				<f:facet name="header"> -->
-						<!-- 					<h:outputText value="#{msgs.answer_list_date}" /> -->
-						<!-- 				</f:facet> -->
-						<!-- 				<h:outputText value="#{aAnswer.collectDate}" /> -->
-						<!-- 			</rich:column> -->
 
 						<c:forEach items="#{answersListerBean.answerListerDTO.questions}"
 							var="aQuestion">
-							<!-- 				<rich:column> -->
-							<!-- 					<f:facet name="header"> -->
 							<h:outputText value="#{aQuestion}:"></h:outputText>
-							<!-- 					</f:facet> -->
-							<!-- 					verificar se aQuestion é a string de picture usando c:choose,when e otherwise para mostrar a imagem -->
 							<c:choose>
 								<c:when
 									test="#{answersListerBean.answerListerDTO.isQuestionPicture(aQuestion)}">
 									<h:graphicImage
 										value="#{answersListerBean.answerListerDTO.getAnswerLikeImage(aQuestion,aAnswer)}" />
-									<!-- 												<rich:hotKey key="ctrl+up" -->
-									<!-- 													handler="enlarge('#{rich:clientId('pic')}');return false;" /> -->
-									<!-- 												<rich:hotKey key="ctrl+down" -->
-									<!-- 													handler="decrease('#{rich:clientId('pic')}');return false;" /> -->
 								</c:when>
 								<c:otherwise>
 									<h:outputText
 										value="#{answersListerBean.answerListerDTO.answerFromQuestion(aQuestion,aAnswer)}" />
 								</c:otherwise>
 							</c:choose>
-							<!-- 				</rich:column> -->
 						</c:forEach>
 					</h:panelGrid>
-					<!-- 		</rich:dataTable> -->
 					<h:commandButton action="#{answersListerBean.exportAnswersAsCsv}"
 						value="#{msgs.answer_list_download_csv}" />
 					<f:facet name="footer">
