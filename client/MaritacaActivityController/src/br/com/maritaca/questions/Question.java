@@ -10,7 +10,7 @@ import org.w3c.dom.NodeList;
 
 import android.util.Log;
 import android.view.View;
-import br.com.maritaca.MaritacaActivityController;
+import br.com.maritaca.activity.MaritacaActivityController;
 
 public abstract class Question {
 	/* Elementos basicos de qualquer Question */
@@ -59,8 +59,6 @@ public abstract class Question {
 
 	public Integer getNext() {
 		Integer nextQuestion = this.solveNextQuestion();
-		Log.v("NEXT", "" + nextQuestion);
-		Log.v("NEXTori", "" + this.next);
 		return nextQuestion != null ? nextQuestion : this.next;
 	}
 
@@ -159,6 +157,8 @@ public abstract class Question {
 
 	private Integer solveNextQuestion() {
 		String valorDaResposta = value.toString();
+		if (valorDaResposta.equals(""))
+			return null;
 		Log.v("VALUE", valorDaResposta);
 		if (equal.containsKey(valorDaResposta))
 			return Integer.valueOf(equal.get(valorDaResposta));

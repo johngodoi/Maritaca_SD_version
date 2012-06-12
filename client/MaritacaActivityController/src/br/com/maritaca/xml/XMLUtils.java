@@ -90,6 +90,8 @@ public class XMLUtils {
 		xmlSerializer.endTag("", "datacollected");
 
 		xmlSerializer.endDocument();
+		// Log.d("Resposta", stringWriter.toString());
+		// System.out.println(stringWriter.toString());
 		return stringWriter.toString();
 	}
 

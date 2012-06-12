@@ -15,7 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-import br.com.maritaca.MaritacaActivityController;
+import br.com.maritaca.activity.MaritacaActivityController;
 
 public class Picture extends Question {
 

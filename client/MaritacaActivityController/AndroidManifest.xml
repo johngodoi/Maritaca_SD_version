@@ -21,42 +21,44 @@
         <!-- </intent-filter> -->
         <!-- </activity> -->
         <activity
-            android:name="br.com.maritaca.MaritacaHomeActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTask" >
+            android:name="br.com.maritaca.activity.MaritacaHomeActivity"
+            android:label="@string/app_name">
+<!--             android:launchMode="singleTask" > -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+<!--             <intent-filter> -->
+<!--                 <action android:name="android.intent.action.VIEW" /> -->
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+<!--                 <category android:name="android.intent.category.DEFAULT" /> -->
+<!--                 <category android:name="android.intent.category.BROWSABLE" /> -->
 
-                <data
-                    android:host="urlCall"
-                    android:scheme="maritaca" />
-            </intent-filter>
+<!--                 <data -->
+<!--                     android:host="urlCall" -->
+<!--                     android:scheme="maritaca" /> -->
+<!--             </intent-filter> -->
         </activity>
         <activity
-            android:name="br.com.maritaca.MaritacaActivityController"
+            android:name="br.com.maritaca.activity.MaritacaActivityController"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
+        
+        <activity
+            android:name="br.com.maritaca.activity.LoginActivity"
+            android:label="@string/app_name" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.USE_CREDENTIALS" >
-    </uses-permission>
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" >
-    </uses-permission>
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" >
-        <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-        <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-        <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+   	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     </uses-permission>
 
 </manifest>

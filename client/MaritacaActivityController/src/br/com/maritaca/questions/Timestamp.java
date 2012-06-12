@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import br.com.maritaca.MaritacaActivityController;
+import br.com.maritaca.activity.MaritacaActivityController;
 import br.com.maritaca.xml.parser.XMLParser;
 
 public class Timestamp extends Question {

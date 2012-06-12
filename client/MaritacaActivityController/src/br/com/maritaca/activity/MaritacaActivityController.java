@@ -1,4 +1,4 @@
-package br.com.maritaca;
+package br.com.maritaca.activity;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -162,8 +162,11 @@ public class MaritacaActivityController extends Activity implements
 	private boolean sendAnswer(String formId, String userId, String xmlAsString)
 			throws URISyntaxException, IllegalArgumentException,
 			IllegalStateException, IOException {
-		String uri = "http://10.0.2.2:8080/maritaca/ws/answer/add/";
-		// + "?oauth_token=" + accessToken;
+		Log.d(getClass().getCanonicalName(), "Enviando resposta");
+		Toast.makeText(this, "Enviando resposta", Toast.LENGTH_SHORT).show();
+		String uri = "http://" + MaritacaHomeActivity.IP
+				+ ":8080/maritaca/ws/answer/add" + "?oauth_token="
+				+ accessToken;
 		String contentType = "application/xml";
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		HttpPut putRequest = new HttpPut(uri);

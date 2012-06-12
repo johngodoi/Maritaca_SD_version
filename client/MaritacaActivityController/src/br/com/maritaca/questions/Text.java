@@ -5,7 +5,7 @@ import org.w3c.dom.Element;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import br.com.maritaca.MaritacaActivityController;
+import br.com.maritaca.activity.MaritacaActivityController;
 import br.com.maritaca.xml.parser.XMLParser;
 
 public class Text extends Question {
