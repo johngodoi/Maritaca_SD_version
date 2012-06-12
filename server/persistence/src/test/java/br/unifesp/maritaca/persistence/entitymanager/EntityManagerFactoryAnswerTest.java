@@ -44,6 +44,13 @@ public class EntityManagerFactoryAnswerTest {
 		Assert.assertNotNull(this.answer.getUser());
 		Assert.assertNotNull(this.answer.getQuestions());
 		Assert.assertEquals(6, this.answer.getQuestions().size());
+		String imageXmlForTest = this.getImageXmlForTest().trim();
+		Assert.assertEquals("eeessscvcvx", this.answer.getQuestions().get(0).getValue());
+		Assert.assertEquals(imageXmlForTest, this.answer.getQuestions().get(1).getValue());
+		Assert.assertEquals(imageXmlForTest, this.answer.getQuestions().get(2).getValue());
+		Assert.assertEquals(imageXmlForTest, this.answer.getQuestions().get(3).getValue());
+		Assert.assertEquals(imageXmlForTest, this.answer.getQuestions().get(4).getValue());
+		Assert.assertEquals("1", this.answer.getQuestions().get(5).getValue());
 	}
 
 	private Answer findAnswerByUUID() {
@@ -81,7 +88,7 @@ public class EntityManagerFactoryAnswerTest {
 
 		QuestionAnswer answer6 = new QuestionAnswer();
 		answer6.setId("6");
-		answer6.setValue("ndosandoqsa");
+		answer6.setValue("1");
 		
 		answers.add(answer1);
 		answers.add(answer2);

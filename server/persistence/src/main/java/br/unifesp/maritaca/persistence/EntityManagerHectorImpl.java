@@ -57,7 +57,6 @@ import br.unifesp.maritaca.persistence.annotation.Index;
 import br.unifesp.maritaca.persistence.annotation.JSONValue;
 import br.unifesp.maritaca.persistence.annotation.Minimal;
 import br.unifesp.maritaca.persistence.entity.Answer;
-import br.unifesp.maritaca.persistence.entity.QuestionAnswer;
 import br.unifesp.maritaca.persistence.util.MaritacaEntityUtils;
 import br.unifesp.maritaca.persistence.util.UtilsPersistence;
 
