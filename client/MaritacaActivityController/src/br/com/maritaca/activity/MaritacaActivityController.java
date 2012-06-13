@@ -15,11 +15,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -28,7 +26,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import br.com.maritaca.questions.Model;
-import br.com.maritaca.utils.LocationHolder;
 import br.com.maritaca.utils.XMLUtils;
 import br.com.maritaca.view.Viewer;
 import br.org.maritaca.R;
@@ -40,8 +37,6 @@ public class MaritacaActivityController extends Activity implements
 	public static final File diretorio = new File(
 			Environment.getExternalStorageDirectory(), maritacaDir);
 	private String accessToken = "";
-	private final LocationHolder locationHolder = LocationHolder
-			.getInstanceOfLocationHolder();
 
 	public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 
@@ -49,8 +44,6 @@ public class MaritacaActivityController extends Activity implements
 	private Model model;
 	private String formId;
 	private String userId;
-	private LocationManager locationManager;
-	private LocationListener locationListener;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -60,40 +53,9 @@ public class MaritacaActivityController extends Activity implements
 		accessToken = (String) this.getIntent().getExtras().get("accessToken");
 		diretorio.mkdir();
 		Log.d("ACCESSTOKEN", accessToken);
-		turnOnLocation();
+		// turnOnLocation();
 		inicio();
 
-	}
-
-	private void turnOnLocation() {
-		locationManager = (LocationManager) this
-				.getSystemService(Context.LOCATION_SERVICE);
-		locationListener = new LocationListener() {
-			public void onLocationChanged(android.location.Location location) {
-				if (location != null) {
-					locationHolder.setLat(location.getLatitude());
-					locationHolder.setLog(location.getLongitude());
-					Log.d("LOCATION", "" + location.getLatitude());
-				}
-			}
-
-			public void onStatusChanged(String provider, int status,
-					Bundle extras) {
-			}
-
-			public void onProviderEnabled(String provider) {
-			}
-
-			public void onProviderDisabled(String provider) {
-			}
-		};
-		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-			locationManager.requestLocationUpdates(
-					LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-		} else {
-			locationManager.requestLocationUpdates(
-					LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-		}
 	}
 
 	/**
@@ -114,7 +76,10 @@ public class MaritacaActivityController extends Activity implements
 	}
 
 	protected void onDestroy() {
-		locationManager.removeUpdates(locationListener);
+		super.onDestroy();
+		MaritacaHomeActivity.getLocationManager().removeUpdates(
+				MaritacaHomeActivity.getLocationListener());
+
 	}
 
 	@Override
@@ -209,6 +174,12 @@ public class MaritacaActivityController extends Activity implements
 		input.setContentType(contentType);
 		putRequest.setEntity(input);
 		HttpResponse response = httpClient.execute(putRequest);
+		// Log.d("ANSWER_WS", EntityUtils.toString(response.getEntity()));
+		if (EntityUtils.toString(response.getEntity()).contains("success"))
+			return true;
+		else
+			return false;
+
 		// List<NameValuePair> params = new LinkedList<NameValuePair>();
 		// params.add(new BasicNameValuePair("xml", xmlAsString));
 		// params.add(new BasicNameValuePair("oauth_token", this.accessToken));
@@ -237,7 +208,6 @@ public class MaritacaActivityController extends Activity implements
 		// return true;
 		// }
 		// return false;
-		return true;
 	}
 
 	private void getForm(String id) {

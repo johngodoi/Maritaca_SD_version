@@ -75,10 +75,11 @@ public class Location extends Question {
 		if (show) {
 			EditText campoDeResposta = new EditText(controller);
 			campoDeResposta.setText(value.toString());
+			campoDeResposta.setKeyListener(null);
 			return campoDeResposta;
 		}
 		Button button = new Button(controller);
-		button.setText("Obter data");
+		button.setText("Obter localizacao");
 		button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View arg0) {
 				Toast.makeText(controller, value.toString(), Toast.LENGTH_LONG)

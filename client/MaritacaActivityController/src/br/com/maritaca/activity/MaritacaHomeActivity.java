@@ -3,9 +3,12 @@ package br.com.maritaca.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import br.com.maritaca.oauth.OAuthTokenManager;
+import br.com.maritaca.utils.LocationHolder;
 import br.org.maritaca.R;
 
 public class MaritacaHomeActivity extends Activity {
@@ -23,16 +26,24 @@ public class MaritacaHomeActivity extends Activity {
 	// "maritaca:urlCall//";
 	public static final String URL_CALLBACK = "http://localhost:8082/";// "maritaca://urlCall";
 
-	public static Context context = null;
+	private static LocationManager locationManager;
+	private static LocationListener locationListener;
+	private final LocationHolder locationHolder = LocationHolder
+			.getInstanceOfLocationHolder();
+
+	private static Context context = null;
 
 	public void onCreate(Bundle savedInstanceState) {
 		Log.d(getClass().getCanonicalName(), "Start");
 		super.onCreate(savedInstanceState);
 
 		MaritacaHomeActivity.context = this.getApplicationContext();
+		MaritacaHomeActivity.locationManager = (LocationManager) this
+				.getSystemService(Context.LOCATION_SERVICE);
+		MaritacaHomeActivity.locationListener = new CustomLocationListener();
 
 		setContentView(R.layout.main);
-
+		turnOnLocation();
 		if (OAuthTokenManager.tokenExists()) {
 			OAuthTokenManager.loadTokenFile();
 			Bundle questionBundle = new Bundle();
@@ -48,6 +59,68 @@ public class MaritacaHomeActivity extends Activity {
 		} else {
 			Intent intent = new Intent(this, LoginActivity.class);
 			startActivity(intent);
+		}
+	}
+
+	private void turnOnLocation() {
+		locationManager = (LocationManager) this
+				.getSystemService(Context.LOCATION_SERVICE);
+		locationListener = new LocationListener() {
+			public void onLocationChanged(android.location.Location location) {
+				if (location != null) {
+					locationHolder.setLat(location.getLatitude());
+					locationHolder.setLog(location.getLongitude());
+					Log.d("LOCATION", "" + location.getLatitude());
+				}
+			}
+
+			public void onStatusChanged(String provider, int status,
+					Bundle extras) {
+			}
+
+			public void onProviderEnabled(String provider) {
+			}
+
+			public void onProviderDisabled(String provider) {
+			}
+		};
+		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+			locationManager.requestLocationUpdates(
+					LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+		} else {
+			locationManager.requestLocationUpdates(
+					LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+		}
+	}
+
+	public static Context getContext() {
+		return context;
+	}
+
+	public static LocationManager getLocationManager() {
+		return locationManager;
+	}
+
+	public static LocationListener getLocationListener() {
+		return locationListener;
+	}
+
+	private class CustomLocationListener implements LocationListener {
+		public void onLocationChanged(android.location.Location location) {
+			if (location != null) {
+				locationHolder.setLat(location.getLatitude());
+				locationHolder.setLog(location.getLongitude());
+				Log.d("LOCATION", "" + location.getLatitude());
+			}
+		}
+
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+		}
+
+		public void onProviderEnabled(String provider) {
+		}
+
+		public void onProviderDisabled(String provider) {
 		}
 	}
 

@@ -29,7 +29,7 @@ public class OAuthTokenManager {
 
 	public static void loadTokenFile() {
 		try {
-			FileInputStream fis = MaritacaHomeActivity.context
+			FileInputStream fis = MaritacaHomeActivity.getContext()
 					.openFileInput(TOKEN_FILE_NAME);
 			DataInputStream in = new DataInputStream(fis);
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
@@ -72,8 +72,8 @@ public class OAuthTokenManager {
 			String refreshToken, int expiresIn) {
 		try {
 			FileOutputStream fos;
-			fos = MaritacaHomeActivity.context.openFileOutput(TOKEN_FILE_NAME,
-					Context.MODE_PRIVATE);
+			fos = MaritacaHomeActivity.getContext().openFileOutput(
+					TOKEN_FILE_NAME, Context.MODE_PRIVATE);
 
 			PrintWriter pr = new PrintWriter(fos);
 			pr.println(user);
@@ -90,7 +90,7 @@ public class OAuthTokenManager {
 
 	public static boolean tokenExists() {
 		try {
-			FileInputStream fis = MaritacaHomeActivity.context
+			FileInputStream fis = MaritacaHomeActivity.getContext()
 					.openFileInput(TOKEN_FILE_NAME);
 			DataInputStream in = new DataInputStream(fis);
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
@@ -115,7 +115,7 @@ public class OAuthTokenManager {
 	}
 
 	public void deleteToken() {
-		MaritacaHomeActivity.context.deleteFile(TOKEN_FILE_NAME);
+		MaritacaHomeActivity.getContext().deleteFile(TOKEN_FILE_NAME);
 	}
 
 	public static long getExpiresIn() {
