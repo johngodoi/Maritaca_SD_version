@@ -1,4 +1,4 @@
-package br.com.maritaca.activity;
+package br.com.maritaca.utils;
 
 public class LocationHolder {
 	public Double lat;

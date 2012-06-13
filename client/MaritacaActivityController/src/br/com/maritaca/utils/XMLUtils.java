@@ -1,4 +1,4 @@
-package br.com.maritaca.xml;
+package br.com.maritaca.utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

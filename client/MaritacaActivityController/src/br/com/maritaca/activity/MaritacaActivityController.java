@@ -28,8 +28,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import br.com.maritaca.questions.Model;
+import br.com.maritaca.utils.LocationHolder;
+import br.com.maritaca.utils.XMLUtils;
 import br.com.maritaca.view.Viewer;
-import br.com.maritaca.xml.XMLUtils;
 import br.org.maritaca.R;
 
 public class MaritacaActivityController extends Activity implements
@@ -59,21 +60,12 @@ public class MaritacaActivityController extends Activity implements
 		accessToken = (String) this.getIntent().getExtras().get("accessToken");
 		diretorio.mkdir();
 		Log.d("ACCESSTOKEN", accessToken);
-
+		turnOnLocation();
 		inicio();
 
 	}
 
-	/**
-	 * Seta dados do layout e baixa o formulario
-	 */
-	private void inicio() {
-		setContentView(R.layout.main_layout);
-		Button button = (Button) findViewById(R.id.botaoEnviar);
-		final EditText editText = (EditText) findViewById(R.id.campoID);
-		// apenas para teste
-		editText.setText("e9955ef0-af3a-11e1-b4c3-c01885e5c4ed");
-
+	private void turnOnLocation() {
 		locationManager = (LocationManager) this
 				.getSystemService(Context.LOCATION_SERVICE);
 		locationListener = new LocationListener() {
@@ -95,9 +87,24 @@ public class MaritacaActivityController extends Activity implements
 			public void onProviderDisabled(String provider) {
 			}
 		};
-		locationManager.requestLocationUpdates(
-				LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+			locationManager.requestLocationUpdates(
+					LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+		} else {
+			locationManager.requestLocationUpdates(
+					LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+		}
+	}
 
+	/**
+	 * Seta dados do layout e baixa o formulario
+	 */
+	private void inicio() {
+		setContentView(R.layout.main_layout);
+		Button button = (Button) findViewById(R.id.botaoEnviar);
+		final EditText editText = (EditText) findViewById(R.id.campoID);
+		// apenas para teste
+		editText.setText("e9955ef0-af3a-11e1-b4c3-c01885e5c4ed");
 		button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View arg0) {
 				String id = editText.getText().toString();
@@ -109,10 +116,6 @@ public class MaritacaActivityController extends Activity implements
 	protected void onDestroy() {
 		locationManager.removeUpdates(locationListener);
 	}
-
-	// protected void onNewIntent(Intent intent) {
-	//
-	// }
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -127,9 +130,9 @@ public class MaritacaActivityController extends Activity implements
 				Log.d("NULL", "" + (model == null) + " " + (this == null) + " ");
 				// this.setContentView(MaritacaActivityController.lastView);
 			} else if (resultCode == RESULT_CANCELED) {
-				// User cancelled the image capture
+
 			} else {
-				// Image capture failed, advise user
+
 			}
 		}
 	}
