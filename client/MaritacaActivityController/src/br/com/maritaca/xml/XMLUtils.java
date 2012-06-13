@@ -59,14 +59,14 @@ public class XMLUtils {
 		StringWriter stringWriter = new StringWriter();
 		xmlSerializer.setOutput(stringWriter);
 		xmlSerializer.startDocument("UTF-8", true);
-		xmlSerializer.startTag("", "datacollected");
+		xmlSerializer.startTag("", "collecteddata");
 
 		xmlSerializer.startTag("", "formId");
-		xmlSerializer.text("testeFormId");
+		xmlSerializer.text("02753970-9f5c-11e1-b730-4666cfaa37dc");
 		xmlSerializer.endTag("", "formId");
 
 		xmlSerializer.startTag("", "userId");
-		xmlSerializer.text("testeUserId");
+		xmlSerializer.text("e43dc800-9f5b-11e1-b730-4666cfaa37dc");
 		xmlSerializer.endTag("", "userId");
 
 		xmlSerializer.startTag("", "answers");
@@ -87,7 +87,7 @@ public class XMLUtils {
 		}
 		xmlSerializer.endTag("", "answer");
 		xmlSerializer.endTag("", "answers");
-		xmlSerializer.endTag("", "datacollected");
+		xmlSerializer.endTag("", "collecteddata");
 
 		xmlSerializer.endDocument();
 		// Log.d("Resposta", stringWriter.toString());

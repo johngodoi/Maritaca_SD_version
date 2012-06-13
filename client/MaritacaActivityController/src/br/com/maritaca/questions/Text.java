@@ -25,7 +25,8 @@ public class Text extends Question {
 		super(id, previous, next, help, label, required, element);
 		Integer max = XMLParser.myParseInteger(element.getAttribute("max"));
 		// FIXME o formulario ainda nao possui campo default
-		// String myDefault = XMLParser.getTagValue("default", element);
+		defaultValue = XMLParser.getTagValue("default", element) == null ? ""
+				: XMLParser.getTagValue("default", element);
 		/* Elementos da classe Text */
 		this.max = max;
 		this.value = "";// myDefault;
@@ -45,6 +46,7 @@ public class Text extends Question {
 	public View getLayout(MaritacaActivityController controller) {
 		EditText campoDeResposta = new EditText(controller);
 		campoDeResposta.setText(getValue().toString());
+		campoDeResposta.setText(defaultValue);
 		return campoDeResposta;
 	}
 

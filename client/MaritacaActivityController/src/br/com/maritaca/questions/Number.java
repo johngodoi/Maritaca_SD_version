@@ -24,7 +24,8 @@ public class Number extends Question {
 		super(id, previous, next, help, label, required, element);
 		Integer max = XMLParser.myParseInteger(element.getAttribute("max"));
 		// FIXME o mesmo do Text
-		// String myDefault = XMLParser.getTagValue("default", element);
+		defaultValue = XMLParser.getTagValue("default", element) == null ? ""
+				: XMLParser.getTagValue("default", element);
 		Integer min = XMLParser.myParseInteger(element.getAttribute("min"));
 
 		/* Elementos da classe MyNumber */
@@ -112,8 +113,7 @@ public class Number extends Question {
 	public View getLayout(MaritacaActivityController controller) {
 		EditText campoDeResposta = new EditText(controller);
 		campoDeResposta.setInputType(InputType.TYPE_CLASS_NUMBER);
-		campoDeResposta
-				.setText(getValue() == null ? "" : getValue().toString());
+		campoDeResposta.setText(defaultValue);
 		return campoDeResposta;
 	}
 

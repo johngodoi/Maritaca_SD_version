@@ -15,9 +15,11 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -37,14 +39,17 @@ public class MaritacaActivityController extends Activity implements
 	public static final File diretorio = new File(
 			Environment.getExternalStorageDirectory(), maritacaDir);
 	private String accessToken = "";
-	private static View lastView = null;;
+	private final LocationHolder locationHolder = LocationHolder
+			.getInstanceOfLocationHolder();
 
 	public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 
-	Viewer viewer;
-	Model model;
-	String formId;
-	String userId;
+	private Viewer viewer;
+	private Model model;
+	private String formId;
+	private String userId;
+	private LocationManager locationManager;
+	private LocationListener locationListener;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -68,12 +73,41 @@ public class MaritacaActivityController extends Activity implements
 		final EditText editText = (EditText) findViewById(R.id.campoID);
 		// apenas para teste
 		editText.setText("e9955ef0-af3a-11e1-b4c3-c01885e5c4ed");
+
+		locationManager = (LocationManager) this
+				.getSystemService(Context.LOCATION_SERVICE);
+		locationListener = new LocationListener() {
+			public void onLocationChanged(android.location.Location location) {
+				if (location != null) {
+					locationHolder.setLat(location.getLatitude());
+					locationHolder.setLog(location.getLongitude());
+					Log.d("LOCATION", "" + location.getLatitude());
+				}
+			}
+
+			public void onStatusChanged(String provider, int status,
+					Bundle extras) {
+			}
+
+			public void onProviderEnabled(String provider) {
+			}
+
+			public void onProviderDisabled(String provider) {
+			}
+		};
+		locationManager.requestLocationUpdates(
+				LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+
 		button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View arg0) {
 				String id = editText.getText().toString();
 				getForm(id);
 			}
 		});
+	}
+
+	protected void onDestroy() {
+		locationManager.removeUpdates(locationListener);
 	}
 
 	// protected void onNewIntent(Intent intent) {
@@ -106,7 +140,6 @@ public class MaritacaActivityController extends Activity implements
 			// Create new layout
 			viewer = new Viewer(this, model.getCurrent(),
 					model.isCurrentLastQuestion(), model.isCurrentFirst());
-			lastView = viewer.getView();
 			setContentView(viewer.getView());
 		} else {
 			if (model.isCurrentLastQuestion()) {
@@ -138,8 +171,6 @@ public class MaritacaActivityController extends Activity implements
 			// Create new layout
 			viewer = new Viewer(this, model.getCurrent(),
 					model.isCurrentLastQuestion(), model.isCurrentFirst());
-			lastView = viewer.getView();
-
 			setContentView(viewer.getView());
 		} else {
 			Toast.makeText(this,
@@ -234,7 +265,6 @@ public class MaritacaActivityController extends Activity implements
 				// Create layout
 				viewer = new Viewer(this, model.getCurrent(),
 						model.isCurrentLastQuestion(), model.isCurrentFirst());
-				lastView = viewer.getView();
 				// Show it
 				setContentView(viewer.getView());
 

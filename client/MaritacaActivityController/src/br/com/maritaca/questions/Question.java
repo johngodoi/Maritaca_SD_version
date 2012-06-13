@@ -18,6 +18,7 @@ public abstract class Question {
 	private Integer id, previous, next;
 	private String label, help;
 	private Boolean required;
+	protected String defaultValue = "";
 
 	public final static Integer END = new Integer(-1);
 
