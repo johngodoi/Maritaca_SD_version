@@ -83,10 +83,8 @@ public class MaritacaActivityController extends Activity implements
 			if (resultCode == RESULT_OK) {
 				Log.d("REQUEST", "" + requestCode);
 				Log.d("RESULT", String.valueOf(resultCode));
-				// Image captured and saved to fileUri specified in the Intent
 				Toast.makeText(this, "Imagem armazenada!", Toast.LENGTH_LONG)
 						.show();
-				Log.d("NULL", "" + (model == null) + " " + (this == null) + " ");
 				// this.setContentView(MaritacaActivityController.lastView);
 			} else if (resultCode == RESULT_CANCELED) {
 
@@ -222,10 +220,6 @@ public class MaritacaActivityController extends Activity implements
 					.getBytes("UTF-8"));
 			Log.d("FORMULARIO", this.parseResponse(xmlString));
 			// is = connection.getInputStream();
-			if (is != null)
-				Toast.makeText(this, "RECEBI ALGO: " + is.toString(),
-						Toast.LENGTH_LONG).show();
-
 			// is = getResources().getAssets().open("parseado.xml");
 			model = new Model(is);
 			if (model.getSize() > 0) {
@@ -241,7 +235,8 @@ public class MaritacaActivityController extends Activity implements
 		} catch (Exception e) {
 			// Log.v("ERROR", e.toString());
 			e.printStackTrace();
-			Toast.makeText(this, "Erro na comunicacao com o servidor",
+			Toast.makeText(this,
+					"Ocorreu algum erro ao tentar obter o formulario",
 					Toast.LENGTH_LONG).show();
 		}
 	}

@@ -7,6 +7,8 @@ import java.util.UUID;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import org.apache.log4j.Logger;
+
 import br.unifesp.maritaca.business.answer.edit.dto.AnswerWSDTO;
 import br.unifesp.maritaca.business.answer.edit.dto.DataCollectedDTO;
 import br.unifesp.maritaca.business.answer.edit.dto.QuestionAnswerDTO;
@@ -19,29 +21,35 @@ import br.unifesp.maritaca.persistence.entity.QuestionAnswer;
 public class AnswerEditorEJB extends AbstractEJB {
 
 	private static final long serialVersionUID = 1L;
-	
+	private Logger logger = Logger
+			.getLogger(this.getClass().getCanonicalName());
+
 	@Inject
 	private AnswerEditorDAO answerEditorDAO;
-	
-	public void saveAnswers(DataCollectedDTO collectedDTO){
+
+	public void saveAnswers(DataCollectedDTO collectedDTO) {
 		Answer answer;
 		for (AnswerWSDTO answerDTO : collectedDTO.getAnswerList().getAnswers()) {
 			answer = new Answer();
 			answer.setForm(UUID.fromString(collectedDTO.getFormId()));
 			answer.setUser(UUID.fromString(collectedDTO.getUserId()));
+			answer.setKey(UUID.fromString(collectedDTO.getFormId()));
 			answer.setCreationDate(answerDTO.getTimestamp());
-			
+			logger.info("FORMID " + collectedDTO.getFormId());
+			logger.info("USERID " + collectedDTO.getUserId());
+
 			List<QuestionAnswer> questions = new ArrayList<QuestionAnswer>();
 			for (QuestionAnswerDTO qaDTO : answerDTO.getQuestions()) {
-				QuestionAnswer qa = UtilsBusiness.reflectClasses(qaDTO, QuestionAnswer.class);
-				questions.add(qa);				
+				QuestionAnswer qa = UtilsBusiness.reflectClasses(qaDTO,
+						QuestionAnswer.class);
+				questions.add(qa);
 			}
-			
+
 			answer.setQuestions(questions);
-			
-			getAnswerEditorDAO().saveAnswer(answer);		
+
+			getAnswerEditorDAO().saveAnswer(answer);
 		}
-		
+
 	}
 
 	public AnswerEditorDAO getAnswerEditorDAO() {
