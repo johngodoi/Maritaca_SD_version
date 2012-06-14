@@ -232,7 +232,7 @@ public class MaritacaActivityController extends Activity implements
 				Toast.makeText(this, "RECEBI ALGO: " + is.toString(),
 						Toast.LENGTH_LONG).show();
 
-			is = getResources().getAssets().open("parseado.xml");
+			// is = getResources().getAssets().open("parseado.xml");
 			model = new Model(is);
 			if (model.getSize() > 0) {
 				// Create layout

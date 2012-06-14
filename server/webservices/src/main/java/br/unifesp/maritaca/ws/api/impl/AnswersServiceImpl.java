@@ -21,31 +21,33 @@ import br.unifesp.maritaca.ws.util.UtilsWS;
 @Stateless
 @Path("/answer")
 public class AnswersServiceImpl implements AnswersService {
-	
+
 	private static final Log log = LogFactory.getLog(AnswersServiceImpl.class);
 
 	@Inject
 	private AnswerEditorEJB answerEditorEJB;
-	
+
 	private UserDTO userDTO;
-	
-	public AnswersServiceImpl() { 
+
+	public AnswersServiceImpl() {
 		log.info("in AnswersServiceImpl");
 	}
 
 	@Override
-	public MaritacaResponse putAnswer(HttpServletRequest request, DataCollectedDTO collectedDTO) 
-				throws MaritacaWSException {
-		try{
+	public MaritacaResponse putAnswer(HttpServletRequest request,
+			DataCollectedDTO collectedDTO) throws MaritacaWSException {
+		try {
+			log.info("call putAnswer");
 			setUserDTO(UtilsWS.createUserDTO(request));
-			
+
 			answerEditorEJB.saveAnswers(collectedDTO);
-			
+
 			XmlSavedResponse okresp = new XmlSavedResponse();
 			okresp.setStatus("Opereration successful");
 			okresp.setType(MaritacaResponse.RESPONSE_TYPE);
 			return okresp;
 		} catch (Exception e) {
+			log.info("call error");
 			ErrorResponse error = new ErrorResponse();
 			error.setCode(javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR
 					.getStatusCode());
@@ -53,7 +55,7 @@ public class AnswersServiceImpl implements AnswersService {
 			throw new MaritacaWSException(error);
 		}
 	}
-	
+
 	public UserDTO getUserDTO() {
 		return userDTO;
 	}
@@ -61,6 +63,5 @@ public class AnswersServiceImpl implements AnswersService {
 	public void setUserDTO(UserDTO userDTO) {
 		this.userDTO = userDTO;
 	}
-
 
 }
