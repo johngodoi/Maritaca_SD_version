@@ -207,22 +207,24 @@ public class XMLParser {
 			return null; // Ocorreu algum erro do XML ? Formato invalido ?
 
 		Question[] questions = new Question[sizeQuestions];
-		// NodeList list;
-		// Node teste;
+		NodeList list;
+		Node teste;
 		// FIXME comentado pois o formulario ainda nao possui formId e userId
 		// Get FORMID
-		NodeList list = document.getElementsByTagName("formid");
-		Node teste = list.item(0);
-		Log.v("ARLINDO", "testes: + " + teste.getNodeName());
-		setFormid(teste.getFirstChild().getNodeValue());
-		Log.v("ARLINDO", "testes: + " + teste.getFirstChild().getNodeValue());
+		// NodeList list = document.getElementsByTagName("formid");
+		// Node teste = list.item(0);
+		// Log.v("ARLINDO", "testes: + " + teste.getNodeName());
+		// setFormid(teste.getFirstChild().getNodeValue());
+		// Log.v("ARLINDO", "testes: + " +
+		// teste.getFirstChild().getNodeValue());
 
 		// Get USERID
-		list = document.getElementsByTagName("userid");
-		teste = list.item(0);
-		Log.v("ARLINDO", "testes: + " + teste.getNodeName());
-		setUserid(teste.getFirstChild().getNodeValue());
-		Log.v("ARLINDO", "testes: + " + teste.getFirstChild().getNodeValue());
+		// list = document.getElementsByTagName("userid");
+		// teste = list.item(0);
+		// Log.v("ARLINDO", "testes: + " + teste.getNodeName());
+		// setUserid(teste.getFirstChild().getNodeValue());
+		// Log.v("ARLINDO", "testes: + " +
+		// teste.getFirstChild().getNodeValue());
 
 		list = document.getElementsByTagName("questions");
 		teste = list.item(0);
@@ -261,8 +263,10 @@ public class XMLParser {
 						.getAttribute("required"));
 
 				/* Elementos internos, usa o metodo getTagValue */
-				String help = getTagValue("help", element);
-				String label = getTagValue("label", element);
+				String help = getTagValue("help", element) == null ? ""
+						: getTagValue("help", element);
+				String label = getTagValue("label", element) == null ? ""
+						: getTagValue("label", element);
 
 				Log.v("TAG", "ID: " + id + "\nNext: " + next + "\nRequeried: "
 						+ required);
@@ -285,12 +289,16 @@ public class XMLParser {
 
 	/* Recebe uma tag e um element retornando o conteudo em String */
 	public static String getTagValue(String tag, Element element) {
-		NodeList nodeTag = element.getElementsByTagName(tag);
-		if (nodeTag == null || nodeTag.getLength() == 0)
+		try {
+			NodeList nodeTag = element.getElementsByTagName(tag);
+			if (nodeTag == null || nodeTag.getLength() == 0)
+				return null;
+			NodeList list = nodeTag.item(0).getChildNodes();
+			Node node = (Node) list.item(0);
+			return node.getNodeValue();
+		} catch (Exception e) {
 			return null;
-		NodeList list = nodeTag.item(0).getChildNodes();
-		Node node = (Node) list.item(0);
-		return node.getNodeValue();
+		}
 	}
 
 	/* Retorna um null caso nao seja number */

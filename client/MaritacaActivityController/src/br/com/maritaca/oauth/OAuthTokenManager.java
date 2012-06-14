@@ -13,7 +13,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import net.smartam.leeloo.client.response.OAuthJSONAccessTokenResponse;
-import android.content.Context;
 import android.util.Log;
 import br.com.maritaca.activity.MaritacaHomeActivity;
 
@@ -26,11 +25,12 @@ public class OAuthTokenManager {
 
 	private final static String TOKEN_FILE_NAME = "token.dat";
 	private static final String USER_PARAM = "user";
+	private static File arquivoToken = new File(MaritacaHomeActivity.diretorio,
+			TOKEN_FILE_NAME);
 
 	public static void loadTokenFile() {
 		try {
-			FileInputStream fis = MaritacaHomeActivity.getContext()
-					.openFileInput(TOKEN_FILE_NAME);
+			FileInputStream fis = new FileInputStream(arquivoToken);
 			DataInputStream in = new DataInputStream(fis);
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
 
@@ -49,7 +49,7 @@ public class OAuthTokenManager {
 			String user = br.readLine();
 			String token = br.readLine();
 			String refreshToken = br.readLine();
-			int expiresIn = Integer.parseInt(br.readLine());
+			long expiresIn = Long.parseLong(br.readLine());
 
 			OAuthTokenManager.setUser(user);
 			OAuthTokenManager.setToken(token);
@@ -69,11 +69,13 @@ public class OAuthTokenManager {
 	}
 
 	private static void writeTokenFile(String user, String token,
-			String refreshToken, int expiresIn) {
+			String refreshToken, long expiresIn) {
 		try {
-			FileOutputStream fos;
-			fos = MaritacaHomeActivity.getContext().openFileOutput(
-					TOKEN_FILE_NAME, Context.MODE_PRIVATE);
+			arquivoToken.createNewFile();
+			FileOutputStream fos = new FileOutputStream(arquivoToken);
+
+			// fos = MaritacaHomeActivity.getContext().openFileOutput(
+			// TOKEN_FILE_NAME, Context.MODE_PRIVATE);
 
 			PrintWriter pr = new PrintWriter(fos);
 			pr.println(user);
@@ -88,26 +90,35 @@ public class OAuthTokenManager {
 		}
 	}
 
-	public static boolean tokenExists() {
+	/**
+	 * Verifica se token existe e se é valida
+	 * 
+	 * @return
+	 */
+	public static boolean isValid() {
 		try {
-			FileInputStream fis = MaritacaHomeActivity.getContext()
-					.openFileInput(TOKEN_FILE_NAME);
+			FileInputStream fis = new FileInputStream(arquivoToken);
 			DataInputStream in = new DataInputStream(fis);
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
 			parseTokenFile(br);
 			Calendar expire = Calendar.getInstance();
 			expire.setTime(new Date(getExpiresIn()));
+			Log.d("OAUTHMANAGER", "" + getExpiresIn());
 			// expirou
+			Log.d("OAUTHMANAGER", "expira em " + expire.getTime().toString()
+					+ " e agora sao: "
+					+ Calendar.getInstance().getTime().toString());
 			if (Calendar.getInstance().after(expire)) {
-				Log.d("Expirou", "expirou");
+				Log.d("OAUTHMANAGER", "expirou");
 				File f = new File(TOKEN_FILE_NAME);
 				f.delete();
 				return false;
 			}
-
+			Log.d("OAUTHMANAGER", "ehvalido");
 			fis.close();
 			return true;
 		} catch (FileNotFoundException e) {
+			Log.d("OAUTHMANAGER", "naoexiste");
 			return false;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -149,9 +160,11 @@ public class OAuthTokenManager {
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.SECOND, expiresIn);
 		long expireTime = calendar.getTime().getTime();
+		Log.d("OAUTHMANAGER", "expira em " + calendar.getTime().toString()
+				+ " " + expireTime);
 		String user = oAuthResponse.getParam(USER_PARAM);
 
-		OAuthTokenManager.writeTokenFile(user, token, refreshToken, expiresIn);
+		OAuthTokenManager.writeTokenFile(user, token, refreshToken, expireTime);
 
 		OAuthTokenManager.setUser(user);
 		OAuthTokenManager.setToken(token);

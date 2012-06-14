@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 import br.com.maritaca.activity.MaritacaActivityController;
+import br.com.maritaca.activity.MaritacaHomeActivity;
 
 public class Picture extends Question {
 
@@ -83,8 +84,7 @@ public class Picture extends Question {
 			public void onClick(View arg0) {
 				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-				File image = new File(MaritacaActivityController.diretorio,
-						fileName);
+				File image = new File(MaritacaHomeActivity.diretorio, fileName);
 				intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(image));
 				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				filePath = image.getAbsolutePath();

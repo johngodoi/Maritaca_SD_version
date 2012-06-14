@@ -1,11 +1,14 @@
 package br.com.maritaca.activity;
 
+import java.io.File;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import br.com.maritaca.oauth.OAuthTokenManager;
 import br.com.maritaca.utils.LocationHolder;
@@ -26,6 +29,10 @@ public class MaritacaHomeActivity extends Activity {
 	// "maritaca:urlCall//";
 	public static final String URL_CALLBACK = "http://localhost:8082/";// "maritaca://urlCall";
 
+	final static String maritacaDir = "maritaca";
+	public static final File diretorio = new File(
+			Environment.getExternalStorageDirectory(), maritacaDir);
+
 	private static LocationManager locationManager;
 	private static LocationListener locationListener;
 	private final LocationHolder locationHolder = LocationHolder
@@ -36,6 +43,7 @@ public class MaritacaHomeActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		Log.d(getClass().getCanonicalName(), "Start");
 		super.onCreate(savedInstanceState);
+		diretorio.mkdir();
 
 		MaritacaHomeActivity.context = this.getApplicationContext();
 		MaritacaHomeActivity.locationManager = (LocationManager) this
@@ -44,7 +52,7 @@ public class MaritacaHomeActivity extends Activity {
 
 		setContentView(R.layout.main);
 		turnOnLocation();
-		if (OAuthTokenManager.tokenExists()) {
+		if (OAuthTokenManager.isValid()) {
 			OAuthTokenManager.loadTokenFile();
 			Bundle questionBundle = new Bundle();
 			questionBundle.putString("accessToken",

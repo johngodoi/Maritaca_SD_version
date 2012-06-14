@@ -1,7 +1,6 @@
 package br.com.maritaca.activity;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -19,7 +18,6 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -33,9 +31,6 @@ import br.org.maritaca.R;
 public class MaritacaActivityController extends Activity implements
 		LocationListener {
 
-	final static String maritacaDir = "maritaca";
-	public static final File diretorio = new File(
-			Environment.getExternalStorageDirectory(), maritacaDir);
 	private String accessToken = "";
 
 	public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
@@ -51,7 +46,6 @@ public class MaritacaActivityController extends Activity implements
 		super.onCreate(savedInstanceState);
 		Toast.makeText(this, "Chamou on create", Toast.LENGTH_LONG).show();
 		accessToken = (String) this.getIntent().getExtras().get("accessToken");
-		diretorio.mkdir();
 		Log.d("ACCESSTOKEN", accessToken);
 		// turnOnLocation();
 		inicio();
@@ -66,7 +60,7 @@ public class MaritacaActivityController extends Activity implements
 		Button button = (Button) findViewById(R.id.botaoEnviar);
 		final EditText editText = (EditText) findViewById(R.id.campoID);
 		// apenas para teste
-		editText.setText("e9955ef0-af3a-11e1-b4c3-c01885e5c4ed");
+		editText.setText("d8835950-b5cf-11e1-8821-c01885e5c4ed");
 		button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View arg0) {
 				String id = editText.getText().toString();
