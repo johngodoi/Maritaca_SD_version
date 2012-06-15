@@ -207,24 +207,22 @@ public class XMLParser {
 			return null; // Ocorreu algum erro do XML ? Formato invalido ?
 
 		Question[] questions = new Question[sizeQuestions];
-		NodeList list;
-		Node teste;
+		// NodeList list;
+		// Node teste;
 		// FIXME comentado pois o formulario ainda nao possui formId e userId
 		// Get FORMID
-		// NodeList list = document.getElementsByTagName("formid");
-		// Node teste = list.item(0);
-		// Log.v("ARLINDO", "testes: + " + teste.getNodeName());
-		// setFormid(teste.getFirstChild().getNodeValue());
-		// Log.v("ARLINDO", "testes: + " +
-		// teste.getFirstChild().getNodeValue());
+		NodeList list = document.getElementsByTagName("formid");
+		Node teste = list.item(0);
+		Log.v("ARLINDO", "testes: + " + teste.getNodeName());
+		setFormid(teste.getFirstChild().getNodeValue());
+		Log.v("ARLINDO", "testes: + " + teste.getFirstChild().getNodeValue());
 
 		// Get USERID
-		// list = document.getElementsByTagName("userid");
-		// teste = list.item(0);
-		// Log.v("ARLINDO", "testes: + " + teste.getNodeName());
-		// setUserid(teste.getFirstChild().getNodeValue());
-		// Log.v("ARLINDO", "testes: + " +
-		// teste.getFirstChild().getNodeValue());
+		list = document.getElementsByTagName("userid");
+		teste = list.item(0);
+		Log.v("ARLINDO", "testes: + " + teste.getNodeName());
+		setUserid(teste.getFirstChild().getNodeValue());
+		Log.v("ARLINDO", "testes: + " + teste.getFirstChild().getNodeValue());
 
 		list = document.getElementsByTagName("questions");
 		teste = list.item(0);

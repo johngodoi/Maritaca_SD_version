@@ -62,11 +62,11 @@ public class XMLUtils {
 		xmlSerializer.startTag("", "collecteddata");
 
 		xmlSerializer.startTag("", "formId");
-		xmlSerializer.text("02753970-9f5c-11e1-b730-4666cfaa37dc");
+		xmlSerializer.text(formId);
 		xmlSerializer.endTag("", "formId");
 
 		xmlSerializer.startTag("", "userId");
-		xmlSerializer.text("e43dc800-9f5b-11e1-b730-4666cfaa37dc");
+		xmlSerializer.text(userId);
 		xmlSerializer.endTag("", "userId");
 
 		xmlSerializer.startTag("", "answers");

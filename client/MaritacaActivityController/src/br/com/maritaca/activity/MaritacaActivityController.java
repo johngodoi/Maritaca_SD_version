@@ -60,7 +60,7 @@ public class MaritacaActivityController extends Activity implements
 		Button button = (Button) findViewById(R.id.botaoEnviar);
 		final EditText editText = (EditText) findViewById(R.id.campoID);
 		// apenas para teste
-		editText.setText("d8835950-b5cf-11e1-8821-c01885e5c4ed");
+		editText.setText("25323150-b679-11e1-814c-c01885e5c4ed");
 		button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View arg0) {
 				String id = editText.getText().toString();
@@ -231,6 +231,8 @@ public class MaritacaActivityController extends Activity implements
 
 				formId = model.getFormId();
 				userId = model.getUserId();
+				Toast.makeText(this, userId + " " + formId, Toast.LENGTH_LONG)
+						.show();
 			}
 		} catch (Exception e) {
 			// Log.v("ERROR", e.toString());

@@ -1,5 +1,6 @@
 package br.unifesp.maritaca.web;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -12,6 +13,7 @@ import javax.faces.context.FacesContext;
 
 import org.richfaces.component.UIPanelMenu;
 import org.richfaces.event.ItemChangeEvent;
+
 import br.unifesp.maritaca.web.module.Module;
 import br.unifesp.maritaca.web.module.ModuleImpl;
 import br.unifesp.maritaca.web.submodule.SubModule;
@@ -19,7 +21,7 @@ import br.unifesp.maritaca.web.submodule.SubModuleImpl;
 
 @ManagedBean
 @SessionScoped
-public class Manager {
+public class Manager implements Serializable {
 	private List<Module> enabledModules;
 	private Module activeModule;
 
@@ -71,9 +73,9 @@ public class Manager {
 		submod.setTitle("List Editor");
 		submod.setComponent("listEditor");
 		mod.addModule(submod);
-		
+
 		getEnabledModules().add(mod);
-		
+
 		mod = new ModuleImpl();
 		mod.setTitle("Settings");
 		mod.setId("settings");
