@@ -56,11 +56,13 @@ var Field = function() {
 	
 	this.toXML = function() {
 		var xml = '';
-		xml += '<' + this.type + ' id="' + this.id + '" next="' + this.next + '" required="' + this.required  + '" ';
+		var next=this.next;
+		if(this.next!="-1")			next=parseInt(this.next)+2;
+		xml += '<' + this.type + ' id="' + this.id + '" next="' + next + '" required="' + this.required  + '" ';
 		xml += this.addXMLSpecificAttributes();
 		xml += '>';
-		xml += tagCreatorXML('label', this.title);
 		xml += tagCreatorXML('help', this.help);
+		xml += tagCreatorXML('label', this.title);
 		xml += this.addConditionalsXML();
 		xml += this.addXMLElements();
 		xml += '</' + this.type + '>';
@@ -131,13 +133,14 @@ var Field = function() {
 		var help  = jQuery.i18n.prop('msg_field_helpProperty');
 		
 		var html = '<table>';
-		html += createTextProperty('fieldLabel', this.title, label);
 		html += createTextProperty('fieldHelp', this.help, help);
+		html += createTextProperty('fieldLabel', this.title, label);
 		html += createRequiredProperty(this.required);
 		
 		if(nextQuestions = $('fieldset#xmlForm > ol > li.editing').nextAll().length<1){
 			html += this.disabledConditions();
 		} else {
+			if(this.type != 'picture')
 			html += this.addConditions();
 		}
 		
@@ -420,6 +423,43 @@ var TextBox = function() {
 // Inheritance to TextBox from Field
 TextBox.prototype = new Field();
 
+
+
+
+var Picture = function(type) {
+	this.type = 'picture';
+
+	this.toHTMLSpecific = function(){
+		var html = '';
+			html +='<img src="../../resources/img/pictureQuestion.png" />';
+		return html;
+	};
+	
+	this.setJSONValuesSpecific = function(element) {};
+	
+	this.addXMLSpecificAttributes = function(){
+		return "";
+	};
+	
+	this.addXMLElements = function(){
+		return '';
+	};
+	
+	this.validateSpecific = function(){
+		return true;
+	};
+	
+	this.showSpecificProperties = function(){
+		return '';
+	};
+	this.saveSpecificProperties = function(){
+	};
+	
+	this.setSpecificFromXMLDoc = function($xmlDoc){
+	};
+};
+Picture.prototype = new Field();
+
 /// Box ///
 var globalId = 0;
 var generateUUID = function(){
@@ -469,13 +509,15 @@ var Box = function(type) {
 	this.addXMLElements = function(){
 		var xml = '';
 		xml += tagCreatorXML('default', this.bydefault);
+		xml += '<items>';
 		for(var i=0; i<this.optionsTitles.length; i++){
-			xml += '<option ';
+			xml += '<item ';
 				xml += 'value="' + (parseInt(i)+1) + '"';
 			xml += '>';
 			xml += this.optionsTitles[i];
-			xml += '</option>';
+			xml += '</item>';
 		}		
+		xml += '</items>';
 		return xml;
 	};
 	
@@ -895,6 +937,10 @@ var fieldFactory = function(type){
 	case 'radio':
 		field = new RadioBox();
 		field.title = jQuery.i18n.prop('msg_form_radioBoxTitle');
+		break;
+	case 'picture':
+		field = new Picture();
+		field.title = jQuery.i18n.prop('msg_form_pictureTitle');
 		break;
 	case 'combobox':
 		field = new ComboBox();

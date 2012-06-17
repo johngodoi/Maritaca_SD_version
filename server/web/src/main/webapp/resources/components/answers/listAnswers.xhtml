@@ -40,11 +40,11 @@
 								<c:when
 									test="#{answersListerBean.answerListerDTO.isQuestionPicture(aQuestion)}">
 									<h:graphicImage
-										value="#{answersListerBean.answerListerDTO.getAnswerLikeImage(aQuestion,aAnswer)}" />
+										value="#{answersListerBean.answerListerDTO.getAnswerLikeImage(aAnswer)}" />
 								</c:when>
 								<c:otherwise>
 									<h:outputText
-										value="#{answersListerBean.answerListerDTO.answerFromQuestion(aQuestion,aAnswer)}" />
+										value="#{answersListerBean.answerListerDTO.answerFromQuestion(aAnswer)}" />
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>

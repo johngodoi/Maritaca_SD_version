@@ -52,6 +52,22 @@ function initFormEditor(formtitle) {
 					.find('img').attr('id'));
 		});
 	}
+	
+	var timestampCheck = document.createElement('input');
+	$(timestampCheck).attr('type', 'checkbox');
+	$(timestampCheck).attr('value', '1');
+	$(timestampCheck).attr('id', 'timestampCheck');
+
+	$('#divFormTitle').append(timestampCheck);
+	$('#divFormTitle').append('Timestamp?');
+	
+	var locationCheck = document.createElement('input');
+	$(locationCheck).attr('type', 'checkbox');
+	$(locationCheck).attr('value', '1');
+	$(locationCheck).attr('id', 'locationCheck');
+
+	$('#divFormTitle').append(locationCheck);
+	$('#divFormTitle').append('Locatização?');
 
 	var destiny = document.querySelector('#xmlForm');
 

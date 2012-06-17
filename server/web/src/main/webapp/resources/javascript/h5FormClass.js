@@ -23,12 +23,30 @@ var FormClass = function() {
 	};
 	
 	this.toXML = function() {
+		var usrId = $('.loggedUserPanel a').first().text();
 		var xml = '<?xml version="1.0" encoding="UTF-8"?>';
 			xml += '<form>';
+			xml += '<userid>'+ usrId + '</userid>';
+			xml += '<formid>'+ new Date().getTime()+'</formid>';
 			xml += '<title>' + this.title + '</title>';
 			xml += '<questions>';
+
+			xml+= '<timestamp id="0" show="';
+			if($('#timestampCheck').attr('checked') == 'checked')
+				xml += 'yes';
+			else
+				xml += 'no';
+			xml += '"></timestamp>';
+			
+			xml+= '<location id="1" show="';
+			if($('#locationCheck').attr('checked') == 'checked')
+				xml += 'yes';
+			else
+				xml += 'no';
+			xml += '"></location>';
+			
 			for(var i in this.elements) {
-				this.elements[i].id		= i;
+				this.elements[i].id		= parseInt(i)+2;
 				// add the next_id value
 				if(i < (this.elements.length-1))
 					this.elements[i].next	= parseInt(i)+1;
