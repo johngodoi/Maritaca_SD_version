@@ -28,7 +28,7 @@ public class XMLParser {
 	public static final String TEXT = "text";
 	public static final String NUMBER = "number";
 	public static final String CHECKLIST = "checklist";
-	public static final String COMBOBOX = "radiobutton";
+	public static final String COMBOBOX = "combobox";
 	public static final String SLIDE = "slide";
 	public static final String DATE = "date";
 	public static final String TIME = "time";
@@ -207,6 +207,7 @@ public class XMLParser {
 			return null; // Ocorreu algum erro do XML ? Formato invalido ?
 
 		Question[] questions = new Question[sizeQuestions];
+		Log.d("QUESTION[] SIZE", "" + sizeQuestions);
 		// NodeList list;
 		// Node teste;
 		// FIXME comentado pois o formulario ainda nao possui formId e userId
@@ -271,6 +272,7 @@ public class XMLParser {
 
 				/* Pega a question atual */
 				// System.out.println (node.getNodeName());
+				Log.d("QUESTIONINDEX", "" + questionIndex);
 				questions[questionIndex] = specificQuestion(node.getNodeName(),
 						id, previous, next, help, label, required, element);
 
