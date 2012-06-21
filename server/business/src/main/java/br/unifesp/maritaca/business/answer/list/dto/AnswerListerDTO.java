@@ -1,5 +1,7 @@
 package br.unifesp.maritaca.business.answer.list.dto;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,15 +19,20 @@ public class AnswerListerDTO {
 	private int questionPosition = 0;
 
 	public List<AnswerDTO> getAnswers() {
+		this.questionPosition=0;
 		return answers;
 	}
 
+	public boolean isNotQuestionPicture(String question){
+		return !(this.isQuestionPicture(question));
+	}
+	
 	public boolean isQuestionPicture(String question) {
-		this.isWhatQuestion(question);
-		return types.get(this.questionPosition).equals("picture");
+		boolean assertType = types.get(this.questionPosition).equals("picture");
+		return assertType;
 	}
 
-	public String getAnswerLikeImage(String question, AnswerDTO answer) {
+	public String getAnswerLikeImage(AnswerDTO answer) {
 		return "data:image/jpeg;base64," + this.answerFromQuestion(answer);
 	}
 
@@ -33,14 +40,14 @@ public class AnswerListerDTO {
 		return answer.getAnswers().get(this.questionPosition);
 	}
 
-	private Integer isWhatQuestion(String question) {
+	public boolean isWhatQuestion(String question) {
 		for (int i = this.questionPosition; i < questions.size(); i++) {
 			if (questions.get(i).equals(question)) {
 				this.questionPosition = i;
-				return this.questionPosition;
+				return true;
 			}
 		}
-		throw new RuntimeException();
+		return false;
 	}
 
 	public void setAnswers(List<AnswerDTO> answers) {

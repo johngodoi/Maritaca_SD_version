@@ -35,7 +35,7 @@ public class XmlParser {
 				String question = questionLabelFromNode(node);
 				questions.add(question);
 			} else {
-				questions.add("");
+				questions.add("-");
 			}
 		}
 		questionsTypes.add(types);

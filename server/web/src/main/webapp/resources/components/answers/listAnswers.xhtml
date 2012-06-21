@@ -21,7 +21,7 @@
 
 		<rich:panel bodyClass="maritacaTable">
 			<h:form>
-				<rich:dataGrid value="#{answersListerBean.answerListerDTO.answers}"
+				<rich:dataGrid value="#{answersListerBean.answerListerDTO.getAnswers()}"
 					var="aAnswer" columns="1" elements="9" width="600px">
 					<f:facet name="header">
 						<h:outputText
@@ -35,18 +35,13 @@
 
 						<c:forEach items="#{answersListerBean.answerListerDTO.questions}"
 							var="aQuestion">
-							<h:outputText value="#{aQuestion}:"></h:outputText>
-							<c:choose>
-								<c:when
-									test="#{answersListerBean.answerListerDTO.isQuestionPicture(aQuestion)}">
-									<h:graphicImage
-										value="#{answersListerBean.answerListerDTO.getAnswerLikeImage(aAnswer)}" />
-								</c:when>
-								<c:otherwise>
-									<h:outputText
-										value="#{answersListerBean.answerListerDTO.answerFromQuestion(aAnswer)}" />
-								</c:otherwise>
-							</c:choose>
+							<h:outputText value="#{aQuestion}:" rendered="#{answersListerBean.answerListerDTO.isWhatQuestion(aQuestion)}"/>
+							<h:graphicImage
+								value="#{answersListerBean.answerListerDTO.getAnswerLikeImage(aAnswer)}"
+								rendered="#{answersListerBean.answerListerDTO.isQuestionPicture(aQuestion)}" />
+							<h:outputText
+								value="#{answersListerBean.answerListerDTO.answerFromQuestion(aAnswer)}"
+								rendered="#{answersListerBean.answerListerDTO.isNotQuestionPicture(aQuestion)}" />
 						</c:forEach>
 					</h:panelGrid>
 					<h:commandButton action="#{answersListerBean.exportAnswersAsCsv}"
