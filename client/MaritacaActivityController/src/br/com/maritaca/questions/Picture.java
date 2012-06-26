@@ -20,7 +20,7 @@ import br.com.maritaca.activity.MaritacaHomeActivity;
 
 public class Picture extends Question {
 
-	private String fileName = String.valueOf(System.currentTimeMillis());
+	private String fileName;
 	private String filePath = null;
 
 	public Picture(Integer id, Integer previous, Integer next, String help,
@@ -46,11 +46,12 @@ public class Picture extends Question {
 	@Override
 	public boolean validate() {
 		// TODO Auto-generated method stub
-		return value != null;
+		return value != null && !value.equals("");
 	}
 
 	@Override
-	public void save(View answer) {
+	public boolean save(View answer) {
+		File file = new File(filePath);
 		try {
 
 			Bitmap bitmap = BitmapFactory.decodeFile(filePath);
@@ -60,6 +61,9 @@ public class Picture extends Question {
 					.encodeToString(bStream.toByteArray(), Base64.DEFAULT);
 			bStream.close();
 			Log.d("PICTURE", value.toString());
+			// boolean deletou = file.delete();
+			// Log.d(this.getClass().getName(), "deletou ? " + deletou);
+			return true;
 			// BufferedImage img = ImageIO.read(new File(filePath));
 			// ByteArrayOutputStream byteArrayOutputStream = new
 			// ByteArrayOutputStream();
@@ -69,15 +73,22 @@ public class Picture extends Question {
 			// base64.encodeToString(byteArrayOutputStream.toByteArray());
 			// byteArrayOutputStream.close();
 		} catch (Exception e) {
-			Toast.makeText(answer.getContext(),
-					"Erro durante a codificacao da imagem", Toast.LENGTH_LONG)
-					.show();
+			Toast.makeText(
+					answer.getContext(),
+					"Erro durante a codificacao da imagem, tire novamente a imagem",
+					Toast.LENGTH_LONG)
+
+			.show();
+			// file.delete();
+			value = "";
+			return false;
 		}
 
 	}
 
 	@Override
 	public View getLayout(final MaritacaActivityController controller) {
+		fileName = String.valueOf(System.currentTimeMillis());
 		Button button = new Button(controller.getApplicationContext());
 		button.setText("Picture");
 		button.setOnClickListener(new View.OnClickListener() {

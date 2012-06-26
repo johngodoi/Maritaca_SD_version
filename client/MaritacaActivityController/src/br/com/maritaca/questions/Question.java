@@ -207,7 +207,7 @@ public abstract class Question {
 
 	public abstract boolean validate();
 
-	public abstract void save(View answer);
+	public abstract boolean save(View answer);
 
 	public abstract View getLayout(MaritacaActivityController controller);
 }

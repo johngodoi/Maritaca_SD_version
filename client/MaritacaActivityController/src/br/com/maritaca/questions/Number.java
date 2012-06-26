@@ -125,8 +125,9 @@ public class Number extends Question {
 	}
 
 	@Override
-	public void save(View answer) {
+	public boolean save(View answer) {
 		// TODO Auto-generated method stub
 		value = ((TextView) answer).getText();
+		return true;
 	}
 }

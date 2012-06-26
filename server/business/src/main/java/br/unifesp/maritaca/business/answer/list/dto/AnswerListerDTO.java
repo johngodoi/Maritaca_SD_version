@@ -1,7 +1,5 @@
 package br.unifesp.maritaca.business.answer.list.dto;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,14 +17,13 @@ public class AnswerListerDTO {
 	private int questionPosition = 0;
 
 	public List<AnswerDTO> getAnswers() {
-		this.questionPosition=0;
 		return answers;
 	}
 
-	public boolean isNotQuestionPicture(String question){
+	public boolean isNotQuestionPicture(String question) {
 		return !(this.isQuestionPicture(question));
 	}
-	
+
 	public boolean isQuestionPicture(String question) {
 		boolean assertType = types.get(this.questionPosition).equals("picture");
 		return assertType;
@@ -73,6 +70,11 @@ public class AnswerListerDTO {
 	public void setTypes(List<String> types) {
 		this.types = types;
 
+	}
+
+	public boolean reset() {
+		this.questionPosition = 0;
+		return true;
 	}
 
 }

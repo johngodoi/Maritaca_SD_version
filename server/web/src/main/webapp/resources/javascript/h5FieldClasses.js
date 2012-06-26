@@ -77,7 +77,7 @@ var Field = function() {
 			var comparator = this.symbolToString(this.conditionals[i].comparator);
 			xml += 'comparison="'+comparator+'" ';
 			xml += 'value="'+this.conditionals[i].value+'" ';
-			xml += 'goto="'+this.conditionals[i].goTo+'" />';
+			xml += 'goto="'+(parseInt(this.conditionals[i].goTo.replace('field_', ''))+2)+'" />';
 		}
 		
 		return xml;
@@ -624,7 +624,7 @@ var Box = function(type) {
 	
 	this.setSpecificFromXMLDoc = function($xmlDoc){
 		var parsedOptions = new Array();		
-		var foundOptions  = $xmlDoc.find('option');
+		var foundOptions  = $xmlDoc.find('item');
 		
 		for(var i=0; i<foundOptions.length; i++){
 			parsedOptions.push(foundOptions[i].textContent);

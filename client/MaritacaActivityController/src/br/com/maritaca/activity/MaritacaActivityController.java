@@ -40,6 +40,8 @@ public class MaritacaActivityController extends Activity implements
 	private String formId;
 	private String userId;
 
+	String formUUID = "2637ee00-bc0a-11e1-813f-c01885e5c4ed";
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO move
@@ -60,7 +62,7 @@ public class MaritacaActivityController extends Activity implements
 		Button button = (Button) findViewById(R.id.botaoEnviar);
 		final EditText editText = (EditText) findViewById(R.id.campoID);
 		// apenas para teste
-		editText.setText("25323150-b679-11e1-814c-c01885e5c4ed");
+		editText.setText(formUUID);
 		button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View arg0) {
 				String id = editText.getText().toString();
@@ -170,7 +172,9 @@ public class MaritacaActivityController extends Activity implements
 		if (EntityUtils.toString(response.getEntity()).contains("success"))
 			return true;
 		else
-			return false;
+			Toast.makeText(this, "Erro ao enviar a resposta",
+					Toast.LENGTH_SHORT).show();
+		return false;
 
 		// List<NameValuePair> params = new LinkedList<NameValuePair>();
 		// params.add(new BasicNameValuePair("xml", xmlAsString));
@@ -215,7 +219,6 @@ public class MaritacaActivityController extends Activity implements
 			HttpGet request = new HttpGet(urlAsString);
 			HttpResponse response = httpClient.execute(request);
 			String xmlString = EntityUtils.toString(response.getEntity());
-
 			is = new ByteArrayInputStream(this.parseResponse(xmlString)
 					.getBytes("UTF-8"));
 			Log.d("FORMULARIO", this.parseResponse(xmlString));

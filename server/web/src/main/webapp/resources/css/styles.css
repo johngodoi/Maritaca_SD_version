@@ -281,7 +281,7 @@ tr > td > span.error{
 
 .panelContent {
 	width: 853px;
-	height: 560px;
+	height: auto;
 	padding: 0px;
 }
 

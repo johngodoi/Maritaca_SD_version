@@ -20,15 +20,15 @@
 	<composite:implementation>
 
 		<rich:panel bodyClass="maritacaTable">
-			<h:form>
-				<rich:dataGrid value="#{answersListerBean.answerListerDTO.getAnswers()}"
+<!-- 			<h:form> -->
+				<rich:dataGrid value="#{answersListerBean.answerListerDTO.answers}"
 					var="aAnswer" columns="1" elements="9" width="600px">
 					<f:facet name="header">
 						<h:outputText
 							value="#{answersListerBean.answerListerDTO.formTitle}"></h:outputText>
 					</f:facet>
 					<h:panelGrid columns="2">
-						<h:outputText value="#{msgs.answer_list_author}:"></h:outputText>
+						<h:outputText value="#{msgs.answer_list_author}:" rendered="#{answersListerBean.answerListerDTO.reset()}"></h:outputText>
 						<h:outputText value="#{aAnswer.userEmail}" />
 						<h:outputText value="#{msgs.answer_list_date}:"></h:outputText>
 						<h:outputText value="#{aAnswer.collectDate}" />
@@ -38,7 +38,7 @@
 							<h:outputText value="#{aQuestion}:" rendered="#{answersListerBean.answerListerDTO.isWhatQuestion(aQuestion)}"/>
 							<h:graphicImage
 								value="#{answersListerBean.answerListerDTO.getAnswerLikeImage(aAnswer)}"
-								rendered="#{answersListerBean.answerListerDTO.isQuestionPicture(aQuestion)}" />
+								rendered="#{answersListerBean.answerListerDTO.isQuestionPicture(aQuestion)}" ></h:graphicImage>
 							<h:outputText
 								value="#{answersListerBean.answerListerDTO.answerFromQuestion(aAnswer)}"
 								rendered="#{answersListerBean.answerListerDTO.isNotQuestionPicture(aQuestion)}" />
@@ -51,7 +51,7 @@
 					</f:facet>
 
 				</rich:dataGrid>
-			</h:form>
+<!-- 			</h:form> -->
 		</rich:panel>
 	</composite:implementation>
 

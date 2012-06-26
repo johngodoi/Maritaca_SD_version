@@ -86,7 +86,7 @@ public class FormEditorEJB extends AbstractEJB {
 
 		formDAO.persistForm(form);
 		formDTO.setKey(form.getKey());
-
+		log.info(xmlAlterado.toString());
 		// Build the app mobile
 		// this.buildNewApkFromFormId(form);
 	}

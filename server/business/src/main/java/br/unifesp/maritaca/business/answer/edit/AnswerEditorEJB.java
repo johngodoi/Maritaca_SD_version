@@ -7,6 +7,8 @@ import java.util.UUID;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import me.prettyprint.cassandra.utils.TimeUUIDUtils;
+
 import org.apache.log4j.Logger;
 
 import br.unifesp.maritaca.business.answer.edit.dto.AnswerWSDTO;
@@ -33,7 +35,7 @@ public class AnswerEditorEJB extends AbstractEJB {
 			answer = new Answer();
 			answer.setForm(UUID.fromString(collectedDTO.getFormId()));
 			answer.setUser(UUID.fromString(collectedDTO.getUserId()));
-			answer.setKey(UUID.fromString(collectedDTO.getFormId()));
+			answer.setKey(TimeUUIDUtils.getUniqueTimeUUIDinMillis());
 			answer.setCreationDate(answerDTO.getTimestamp());
 			logger.info("FORMID " + collectedDTO.getFormId());
 			logger.info("USERID " + collectedDTO.getUserId());

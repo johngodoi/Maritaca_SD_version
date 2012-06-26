@@ -44,7 +44,7 @@ public class RadioButton extends Question {
 	}
 
 	@Override
-	public void save(View answer) {
+	public boolean save(View answer) {
 		RadioGroup radioGroup = (RadioGroup) answer;
 		Integer id = radioGroup.getCheckedRadioButtonId();
 		Log.v("ID ", id.toString());
@@ -52,15 +52,17 @@ public class RadioButton extends Question {
 				.findViewById(id);
 		if (radio != null) {
 			String label = (String) radio.getText();
-			for (String radioLabel : radiosOptions) {
-				if (radioLabel.equals(label)) {
-					value = "" + (radiosOptions.indexOf(radioLabel));
-				}
-			}
+			value = label;
+			// for (String radioLabel : radiosOptions) {
+			// if (radioLabel.equals(label)) {
+			// value = "" + (radiosOptions.indexOf(radioLabel));
+			// }
+			// }
 		} else {
 			value = "";
 		}
 		Log.v("RADIOVALUE", value.toString());
+		return true;
 	}
 
 	@Override
@@ -72,7 +74,7 @@ public class RadioButton extends Question {
 		for (String label : radiosOptions) {
 			radio = new android.widget.RadioButton(controller);
 			radio.setText(label);
-			if (!labelDefault.equals("")) {
+			if (labelDefault != null && !labelDefault.equals("")) {
 				if (radiosOptions.indexOf(label) == Integer
 						.parseInt(labelDefault))
 					radioDefault = radio;

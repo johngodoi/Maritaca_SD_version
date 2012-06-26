@@ -42,8 +42,9 @@ public class Timestamp extends Question {
 	}
 
 	@Override
-	public void save(View answer) {
+	public boolean save(View answer) {
 		// TODO Auto-generated method stub
+		return true;
 
 	}
 
